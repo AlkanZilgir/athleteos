@@ -47,7 +47,7 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
 .bag{background:var(--adim);color:var(--accent)}.bab{background:var(--bdim);color:var(--blue)}.bay{background:rgba(251,191,36,.15);color:var(--yel)}
 .navbar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,14,25,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--bdr);display:flex;padding-bottom:max(env(safe-area-inset-bottom),8px)}
-.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 8px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:color .15s}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 2px 9px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:color .15s}
 .nv .ico{font-size:22px;line-height:1}
 .nv.on{color:var(--accent)}
 .panel{display:none;padding:16px 15px 8px}.panel.on{display:block}
@@ -111,8 +111,8 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 #toast.on{transform:translateX(-50%) translateY(0)}
 .hidden{display:none!important}
 .chart-wrap{height:175px;position:relative}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;flex-shrink:0}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .fu{animation:fadeUp .3s ease forwards}
 video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:cover}
@@ -146,6 +146,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
         <div class="f"><label>Protein goal (g)</label><input type="number" id="r-pg" placeholder="170"></div>
       </div>
       <button class="btn" onclick="doReg()">Create Account →</button>
+      <p style="color:var(--t3);font-size:11px;margin-top:10px;text-align:center;line-height:1.6">🔒 Your data is saved on <b style="color:var(--t2)">this device only</b> — nothing is sent to any server.</p>
     </div>
     <div class="errmsg" id="aerr"></div>
   </div>
@@ -212,7 +213,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
         <div class="fb" style="margin-bottom:14px">
           <div>
             <div class="ctitle" style="margin:0">ACTIVE SESSION</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><div class="dot"></div><span id="wtimer" class="tm">0:00</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:4px"><span style="color:var(--accent);font-size:11px;font-weight:700">● LIVE</span><span id="wtimer" class="tm">0:00</span></div>
           </div>
           <button class="btn btn-sm" style="background:var(--red)" onclick="finishW()">Finish 🏁</button>
         </div>
@@ -331,10 +332,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       <div class="ptitle" style="margin:0">AI TRAINER</div>
       <button class="btn-g" onclick="clearChat()">Clear</button>
     </div>
-    <div style="display:flex;align-items:center;gap:7px;margin-bottom:13px">
-      <div style="width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite"></div>
-      <span class="tm" style="font-size:12px">Free AI · No key needed · Powered by Pollinations</span>
-    </div>
+    <p class="tm" style="margin-bottom:13px;font-size:12px">✅ Free AI · No key needed · Powered by Pollinations</p>
     <div class="chat-wrap">
       <div class="chat-msgs" id="chat-msgs">
         <div class="msg a">👋 Hey! I'm your personal AI trainer — completely free, no API key needed. Ask me anything about your workouts, nutrition, recovery, or progress. I can see your stats!</div>
@@ -361,8 +359,21 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       </div>
     </div>
     <div class="card">
-      <div class="ctitle">📲 INSTALL ON PHONE</div>
-      <p class="tm" style="margin-bottom:11px;line-height:1.7">Add AthleteOS to your home screen. Works fully offline — including Kosovo. No internet needed for workouts, meals, sleep, or body stats.</p>
+      <div class="ctitle">🔒 WHERE IS YOUR DATA STORED?</div>
+      <p class="tm" style="margin-bottom:11px;line-height:1.8">Everything stays <b style="color:var(--t)">on this device only</b> — in your browser's local storage. Nothing is sent to any server, cloud, or third party. Your workouts, meals, weight, and sleep are 100% private.</p>
+      <div style="background:var(--bg2);border-radius:10px;padding:12px;margin-bottom:11px">
+        <p style="font-size:12px;color:var(--t2);line-height:1.9">
+          ✅ <b style="color:var(--t)">Stored locally</b> — browser localStorage on this phone<br>
+          ✅ <b style="color:var(--t)">No account server</b> — login works offline too<br>
+          ✅ <b style="color:var(--t)">No tracking</b> — no analytics, no ads, no third-party<br>
+          ⚠️ <b style="color:var(--yel)">Same device only</b> — data won't appear on another phone<br>
+          ⚠️ <b style="color:var(--yel)">Don't clear browser data</b> — that would delete your history
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">📲 INSTALL — REMOVES BROWSER CIRCLE</div>
+      <p class="tm" style="margin-bottom:8px;line-height:1.7">When using AthleteOS in Safari/Chrome you'll see the browser's navigation pill overlapping the bottom bar. <b style="color:var(--t)">Installing as an app removes it entirely</b> and gives you full-screen mode.</p>
       <p class="tm" style="font-size:12.5px;line-height:2.1"><b style="color:var(--t)">iPhone (Safari):</b> Tap Share ↑ → "Add to Home Screen"<br><b style="color:var(--t)">Android (Chrome):</b> Tap ⋮ → "Add to Home Screen"</p>
     </div>
     <div class="tc" style="padding:18px 0;color:var(--t3);font-size:12px">AthleteOS v1.0 · Offline-First · No keys · No tracking</div>
