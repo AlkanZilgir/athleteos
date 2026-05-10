@@ -17,7 +17,7 @@
 <style>
 :root{--bg:#070A12;--bg2:#0C1120;--card:#111827;--card2:#1a2235;--accent:#00FF87;--adim:rgba(0,255,135,.12);--blue:#38BDF8;--bdim:rgba(56,189,248,.12);--red:#F43F5E;--yel:#FBBF24;--pur:#A78BFA;--t:#F1F5F9;--t2:#94A3B8;--t3:#475569;--bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.12)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
+html,body{height:100%;-webkit-user-select:none;user-select:none;scroll-behavior:smooth}
 body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
 #s-auth{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:24px;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(0,255,135,.08),transparent 70%)}
@@ -29,9 +29,9 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 .tab.on{background:var(--accent);color:var(--bg)}
 .f{margin-bottom:14px}
 .f label{display:block;font-size:10.5px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600}
-.f input,.f select{width:100%;background:var(--bg2);border:1px solid var(--bdr2);border-radius:11px;padding:13px 15px;color:var(--t);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;transition:border-color .2s}
+.f input,.f select{width:100%;background:var(--bg2);border:1px solid var(--bdr2);border-radius:11px;padding:13px 15px;color:var(--t);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;transition:border-color .2s}
 .f input:focus,.f select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,135,.08)}
-.btn{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .1s,opacity .2s;margin-top:4px}
+.btn{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .1s,opacity .2s;margin-top:4px;-webkit-appearance:none;appearance:none}
 .btn:active{transform:scale(.98);opacity:.9}
 .btn-sm{padding:9px 16px;font-size:13px;border-radius:10px;width:auto;margin-top:0}
 .btn-o{background:transparent;color:var(--t);border:1px solid var(--bdr2);border-radius:11px;padding:10px 18px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
@@ -47,10 +47,10 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
 .bag{background:var(--adim);color:var(--accent)}.bab{background:var(--bdim);color:var(--blue)}.bay{background:rgba(251,191,36,.15);color:var(--yel)}
 .navbar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,14,25,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--bdr);display:flex;padding-bottom:max(env(safe-area-inset-bottom),8px)}
-.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 2px 9px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:color .15s}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 2px 9px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:color .15s;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:rgba(0,0,0,0);outline:none;border-radius:0}
 .nv .ico{font-size:22px;line-height:1}
-.nv.on{color:var(--accent)}
-.panel{display:none;padding:16px 15px 8px}.panel.on{display:block}
+.nv.on{color:var(--accent)}.nv.on .ico{position:relative}.nv.on::before{content:"";display:block;width:18px;height:3px;border-radius:2px;background:var(--accent);margin:0 auto 2px;order:-1}
+.panel{display:none;padding:16px 15px 8px;-webkit-overflow-scrolling:touch}.panel.on{display:block}
 .ptitle{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:14px}
 .ctitle{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:12px}
 .fb{display:flex;align-items:center;justify-content:space-between}
@@ -90,9 +90,9 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 .sring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .sring-val{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1}
 .sring-lbl{font-size:11px;color:var(--t2)}
-.chat-wrap{display:flex;flex-direction:column;height:calc(100dvh - 160px)}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100svh - 158px);min-height:200px}
 .chat-msgs{flex:1;overflow-y:auto;padding:8px 0;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
-.msg{max-width:88%;padding:12px 14px;border-radius:16px;font-size:14px;line-height:1.6}
+.msg{max-width:88%;padding:12px 14px;border-radius:16px;font-size:14px;line-height:1.6;-webkit-user-select:text;user-select:text}
 .msg.u{align-self:flex-end;background:var(--accent);color:var(--bg);font-weight:500;border-bottom-right-radius:4px}
 .msg.a{align-self:flex-start;background:var(--card);border:1px solid var(--bdr2);border-bottom-left-radius:4px;white-space:pre-wrap}
 .msg.ty{align-self:flex-start;background:var(--card);border:1px solid var(--bdr2);border-bottom-left-radius:4px;padding:16px}
@@ -100,8 +100,8 @@ body{background:var(--bg);color:var(--t);font-family:'DM Sans',system-ui,sans-se
 .dots span:nth-child(2){animation-delay:.16s}.dots span:nth-child(3){animation-delay:.32s}
 @keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 .chat-row{display:flex;gap:9px;padding:10px 0 4px;align-items:flex-end}
-.chat-in{flex:1;background:var(--card);border:1px solid var(--bdr2);border-radius:14px;padding:12px 14px;color:var(--t);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:none;max-height:100px}
-.chat-in:focus{border-color:var(--accent)}
+.chat-in{flex:1;background:var(--card);border:1px solid var(--bdr2);border-radius:14px;padding:12px 14px;color:var(--t);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:none;max-height:100px;font-size:16px}
+.chat-in:focus{border-color:var(--accent)}.chat-in{font-size:16px}
 .chat-send{width:44px;height:44px;border-radius:12px;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:none;align-items:flex-end;backdrop-filter:blur(6px)}
 .modal.on{display:flex}
@@ -126,7 +126,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
 <!-- AUTH -->
 <div id="s-auth">
   <div class="logo">ATHLETEOS</div>
-  <div class="tagline">Your Personal Training OS</div>
+  <div class="tagline">Personal Training OS</div>
   <div class="auth-box">
     <div class="tabs">
       <button class="tab on" id="tl" onclick="aTab('l')">Sign In</button>
@@ -146,11 +146,10 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
         <div class="f"><label>Protein goal (g)</label><input type="number" id="r-pg" placeholder="170"></div>
       </div>
       <button class="btn" onclick="doReg()">Create Account →</button>
-      <p style="color:var(--t3);font-size:11px;margin-top:10px;text-align:center;line-height:1.6">🔒 Your data is saved on <b style="color:var(--t2)">this device only</b> — nothing is sent to any server.</p>
     </div>
     <div class="errmsg" id="aerr"></div>
   </div>
-  <p style="color:var(--t3);font-size:11.5px;margin-top:22px;text-align:center">100% offline · No setup · Free AI included</p>
+  
 </div>
 
 <!-- APP -->
@@ -177,6 +176,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       <div style="margin-bottom:12px">
         <div class="fb" style="margin-bottom:5px"><span class="tm">Protein</span><b id="p-lbl" style="font-size:13px">0/170g</b></div>
         <div class="pbar"><div class="pfill" id="p-bar" style="width:0%"></div></div>
+        <div style="text-align:right;margin-top:4px"><span id="p-rem" style="font-size:11px;color:var(--accent);font-weight:600">170g left</span></div>
       </div>
       <div style="margin-bottom:12px">
         <div class="fb" style="margin-bottom:5px"><span class="tm">Water</span><b id="w-lbl" style="font-size:13px">0/8 cups</b></div>
@@ -190,10 +190,10 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     <div class="card">
       <div class="ctitle">QUICK ADD</div>
       <div class="g2">
-        <button class="btn-o" style="width:100%" onclick="goTab('workout')">💪 Log Workout</button>
-        <button class="btn-o" style="width:100%" onclick="qWater()">💧 +1 Cup</button>
-        <button class="btn-o" style="width:100%" onclick="openMealM()">🥗 Log Meal</button>
-        <button class="btn-o" style="width:100%" onclick="goTab('ai')">🤖 Ask AI</button>
+        <button type="button" class="btn-o" style="width:100%" onclick="goTab('workout')">💪 Log Workout</button>
+        <button type="button" class="btn-o" style="width:100%" onclick="qWater()">💧 +1 Cup</button>
+        <button type="button" class="btn-o" style="width:100%" onclick="openMealM()">🥗 Log Meal</button>
+        <button type="button" class="btn-o" style="width:100%" onclick="goTab('ai')">🤖 Ask AI</button>
       </div>
     </div>
     <div class="card">
@@ -206,7 +206,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
   <div class="panel hidden" id="p-workout">
     <div class="fb" style="margin-bottom:14px">
       <div class="ptitle" style="margin:0">WORKOUT</div>
-      <button class="btn btn-sm" onclick="startW()">+ New Session</button>
+      <button type="button" class="btn btn-sm" onclick="startW()">+ New Session</button>
     </div>
     <div id="active-sess" class="hidden">
       <div class="card" style="border-color:var(--accent)">
@@ -215,10 +215,10 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
             <div class="ctitle" style="margin:0">ACTIVE SESSION</div>
             <div style="display:flex;align-items:center;gap:7px;margin-top:4px"><span style="color:var(--accent);font-size:11px;font-weight:700">● LIVE</span><span id="wtimer" class="tm">0:00</span></div>
           </div>
-          <button class="btn btn-sm" style="background:var(--red)" onclick="finishW()">Finish 🏁</button>
+          <button type="button" class="btn btn-sm" style="background:var(--red)" onclick="finishW()">Finish 🏁</button>
         </div>
         <div id="ex-list"></div>
-        <button class="btn-o" style="width:100%;margin-top:8px" onclick="openExM()">+ Add Exercise</button>
+        <button type="button" class="btn-o" style="width:100%;margin-top:8px" onclick="openExM()">+ Add Exercise</button>
       </div>
     </div>
     <div class="card">
@@ -251,8 +251,8 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       <div class="fb" style="margin-bottom:13px">
         <div class="ctitle" style="margin:0">TODAY'S MACROS</div>
         <div style="display:flex;gap:7px">
-          <button class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openBcM()">📷 Scan</button>
-          <button class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
+          <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openBcM()">📷 Scan</button>
+          <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;text-align:center">
@@ -289,7 +289,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     <div class="card">
       <div class="fb" style="margin-bottom:14px">
         <div class="ctitle" style="margin:0">WEIGHT CHART</div>
-        <button class="btn-o" style="padding:8px 14px;font-size:12px" onclick="openWtM()">+ Log</button>
+        <button type="button" class="btn-o" style="padding:8px 14px;font-size:12px" onclick="openWtM()">+ Log</button>
       </div>
       <div class="chart-wrap"><canvas id="w-chart"></canvas></div>
     </div>
@@ -326,16 +326,15 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     <div class="card"><div class="ctitle">SLEEP HISTORY</div><div id="s-hist"><p class="tm tc" style="padding:18px 0">No sleep data yet</p></div></div>
   </div>
 
-  <!-- AI — No key needed, uses Pollinations AI (free) -->
+  
   <div class="panel hidden" id="p-ai">
     <div class="fb" style="margin-bottom:4px">
       <div class="ptitle" style="margin:0">AI TRAINER</div>
-      <button class="btn-g" onclick="clearChat()">Clear</button>
+      <button type="button" class="btn-g" onclick="clearChat()">Clear</button>
     </div>
-    <p class="tm" style="margin-bottom:13px;font-size:12px">✅ Free AI · No key needed · Powered by Pollinations</p>
     <div class="chat-wrap">
       <div class="chat-msgs" id="chat-msgs">
-        <div class="msg a">👋 Hey! I'm your personal AI trainer — completely free, no API key needed. Ask me anything about your workouts, nutrition, recovery, or progress. I can see your stats!</div>
+        <div class="msg a">👋 Hey! I'm your AI trainer. Ask me anything — workouts, nutrition, recovery, PRs, goals. I can see your stats!</div>
       </div>
       <div class="chat-row">
         <textarea class="chat-in" id="chat-in" placeholder="Ask your trainer..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}" oninput="autoH(this)"></textarea>
@@ -359,33 +358,19 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       </div>
     </div>
     <div class="card">
-      <div class="ctitle">🔒 WHERE IS YOUR DATA STORED?</div>
-      <p class="tm" style="margin-bottom:11px;line-height:1.8">Everything stays <b style="color:var(--t)">on this device only</b> — in your browser's local storage. Nothing is sent to any server, cloud, or third party. Your workouts, meals, weight, and sleep are 100% private.</p>
-      <div style="background:var(--bg2);border-radius:10px;padding:12px;margin-bottom:11px">
-        <p style="font-size:12px;color:var(--t2);line-height:1.9">
-          ✅ <b style="color:var(--t)">Stored locally</b> — browser localStorage on this phone<br>
-          ✅ <b style="color:var(--t)">No account server</b> — login works offline too<br>
-          ✅ <b style="color:var(--t)">No tracking</b> — no analytics, no ads, no third-party<br>
-          ⚠️ <b style="color:var(--yel)">Same device only</b> — data won't appear on another phone<br>
-          ⚠️ <b style="color:var(--yel)">Don't clear browser data</b> — that would delete your history
-        </p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">📲 INSTALL — REMOVES BROWSER CIRCLE</div>
-      <p class="tm" style="margin-bottom:8px;line-height:1.7">When using AthleteOS in Safari/Chrome you'll see the browser's navigation pill overlapping the bottom bar. <b style="color:var(--t)">Installing as an app removes it entirely</b> and gives you full-screen mode.</p>
+      <div class="ctitle">📲 ADD TO HOME SCREEN</div>
+      <p class="tm" style="margin-bottom:11px;line-height:1.7">For the best experience install AthleteOS as an app — full screen, offline, instant launch.</p>
       <p class="tm" style="font-size:12.5px;line-height:2.1"><b style="color:var(--t)">iPhone (Safari):</b> Tap Share ↑ → "Add to Home Screen"<br><b style="color:var(--t)">Android (Chrome):</b> Tap ⋮ → "Add to Home Screen"</p>
     </div>
-    <div class="tc" style="padding:18px 0;color:var(--t3);font-size:12px">AthleteOS v1.0 · Offline-First · No keys · No tracking</div>
   </div>
 
   <nav class="navbar">
-    <button class="nv on" id="n-home" onclick="goTab('home')"><span class="ico">🏠</span><span>Home</span></button>
-    <button class="nv" id="n-workout" onclick="goTab('workout')"><span class="ico">💪</span><span>Workout</span></button>
-    <button class="nv" id="n-nutrition" onclick="goTab('nutrition')"><span class="ico">🥗</span><span>Nutrition</span></button>
-    <button class="nv" id="n-body" onclick="goTab('body')"><span class="ico">📊</span><span>Body</span></button>
-    <button class="nv" id="n-sleep" onclick="goTab('sleep')"><span class="ico">😴</span><span>Sleep</span></button>
-    <button class="nv" id="n-ai" onclick="goTab('ai')"><span class="ico">🤖</span><span>AI</span></button>
+    <button type="button" class="nv on" id="n-home" onclick="goTab(\'home\')"><span class="ico">🏠</span><span>Home</span></button>
+    <button type="button" class="nv" id="n-workout" onclick="goTab(\'workout\')"><span class="ico">💪</span><span>Workout</span></button>
+    <button type="button" class="nv" id="n-nutrition" onclick="goTab(\'nutrition\')"><span class="ico">🥗</span><span>Nutrition</span></button>
+    <button type="button" class="nv" id="n-body" onclick="goTab(\'body\')"><span class="ico">📊</span><span>Body</span></button>
+    <button type="button" class="nv" id="n-sleep" onclick="goTab(\'sleep\')"><span class="ico">😴</span><span>Sleep</span></button>
+    <button type="button" class="nv" id="n-ai" onclick="goTab(\'ai\')"><span class="ico">🤖</span><span>AI</span></button>
   </nav>
 </div>
 
@@ -412,9 +397,9 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     </div>
     <div class="sh" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div>
     <div id="sets-list"></div>
-    <button class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button>
+    <button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button>
     <div class="g2" style="margin-top:12px">
-      <button class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button>
+      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button>
       <button class="btn" onclick="saveEx()">Add Exercise</button>
     </div>
   </div>
@@ -432,7 +417,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       <div class="f"><label>Calories (kcal)</label><input type="number" id="m-k" placeholder="0" min="0"></div>
     </div>
     <div class="g2" style="margin-top:4px">
-      <button class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button>
+      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button>
       <button class="btn" onclick="saveMeal()">Log Meal</button>
     </div>
   </div>
@@ -444,7 +429,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     <div class="ctitle">LOG WEIGHT</div>
     <div class="f"><label>Weight (kg)</label><input type="number" id="wt-in" placeholder="e.g. 82.5" step="0.1" min="30" max="300"></div>
     <div class="g2">
-      <button class="btn-o" style="width:100%" onclick="cModal('m-wt')">Cancel</button>
+      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-wt')">Cancel</button>
       <button class="btn" onclick="saveWt()">Log Weight</button>
     </div>
   </div>
@@ -461,7 +446,7 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
       <div class="f"><label>Calorie Goal</label><input type="number" id="g-k" placeholder="2500"></div>
     </div>
     <div class="g2" style="margin-top:6px">
-      <button class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button>
+      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button>
       <button class="btn" onclick="saveGoals()">Save Goals</button>
     </div>
   </div>
@@ -480,11 +465,11 @@ video{width:100%;border-radius:13px;background:#000;max-height:250px;object-fit:
     <div id="bc-manual" class="hidden" style="margin-top:13px">
       <p class="tm" style="margin-bottom:9px;font-size:12px">Camera scan unavailable — enter barcode number manually:</p>
       <div style="display:flex;gap:8px">
-        <input type="number" id="bc-manual-in" placeholder="e.g. 5000159407236" style="flex:1;background:var(--bg2);border:1px solid var(--bdr2);border-radius:11px;padding:12px;color:var(--t);font-size:14px;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="number" id="bc-manual-in" placeholder="e.g. 5000159407236" style="flex:1;background:var(--bg2);border:1px solid var(--bdr2);border-radius:11px;padding:12px;color:var(--t);font-size:16px;font-family:'DM Sans',sans-serif;outline:none">
         <button class="btn" style="width:auto;padding:12px 16px" onclick="manualBarcode()">Look Up</button>
       </div>
     </div>
-    <button class="btn-g" style="width:100%;margin-top:10px" onclick="closeBc()">Close</button>
+    <button type="button" class="btn-g" style="width:100%;margin-top:10px" onclick="closeBc()">Close</button>
   </div>
 </div>
 
@@ -601,6 +586,7 @@ function refresh(){
   document.getElementById('w-lbl').textContent=`${waterCups}/${G.water} cups`;
   document.getElementById('k-lbl').textContent=`${Math.round(t.k)} kcal`;
   document.getElementById('p-bar').style.width=pp+'%';
+  const pRem=Math.max(0,G.protein-Math.round(t.p));const remEl=document.getElementById('p-rem');if(remEl)remEl.textContent=pRem>0?pRem+'g left':'✅ Goal hit!';
   document.getElementById('w-bar').style.width=wp+'%';
   document.getElementById('k-bar').style.width=kp+'%';
   document.getElementById('n-p').textContent=Math.round(t.p);
@@ -779,8 +765,8 @@ function loadSleepHist(){
   el.innerHTML=entries.map(s=>{const em={great:'😊',good:'🙂',ok:'😐',poor:'😴'}[s.quality]||'🙂';const col=s.hours>=7?'var(--accent)':s.hours>=5.5?'var(--yel)':'var(--red)';return `<div class="fb" style="padding:10px 0;border-bottom:1px solid var(--bdr)"><div><div style="font-weight:600">${fdate(s.date)}</div><div style="font-size:11.5px;color:var(--t3)">${s.bedtime} → ${s.waketime} ${em}</div></div><span style="color:${col};font-family:'Bebas Neue',sans-serif;font-size:24px">${s.hours.toFixed(1)}h</span></div>`;}).join('');
 }
 
-// ── AI — Pollinations (100% free, zero API key) ───────────────
-// Uses https://text.pollinations.ai — no account, no key, no cost
+
+
 async function sendMsg(){
   const inp=document.getElementById('chat-in'),msg=inp.value.trim();
   if(!msg)return;
@@ -809,7 +795,7 @@ async function sendMsg(){
   }catch(e){
     tdiv.remove();
     const offline=e.message.includes('fetch')||e.message.includes('network')||e.message.includes('Failed');
-    addMsg('a',offline?'⚠️ No internet. The AI needs a connection — all other features work offline!':'⚠️ AI is temporarily unavailable. Try again in a moment.');
+    addMsg('a',offline?'⚠️ No internet connection.':'⚠️ AI is temporarily unavailable. Try again in a moment.');
   }
 }
 function buildCtx(){
@@ -819,7 +805,7 @@ function buildCtx(){
 }
 function addMsg(role,text){const el=document.getElementById('chat-msgs');const d=document.createElement('div');d.className=`msg ${role} fu`;d.textContent=text;el.appendChild(d);el.scrollTop=el.scrollHeight;return d;}
 function addTyping(){const el=document.getElementById('chat-msgs');const d=document.createElement('div');d.className='msg ty';d.innerHTML='<div class="dots"><span></span><span></span><span></span></div>';el.appendChild(d);el.scrollTop=el.scrollHeight;return d;}
-function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML='<div class="msg a">👋 Hey! I\'m your personal AI trainer — completely free, no API key needed. Ask me anything about your workouts, nutrition, recovery, or progress. I can see your stats!</div>';}
+function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML='<div class="msg a">👋 Hey! I\'m your AI trainer. Ask me anything — workouts, nutrition, recovery, PRs, goals. I can see your stats!</div>';}
 
 async function loadTip(){
   const el=document.getElementById('dtip');
