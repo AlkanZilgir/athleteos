@@ -23,9 +23,9 @@
   --t:#F0F4FF;--t2:#8896B3;--t3:#3d4f6e;
   --bdr:rgba(255,255,255,.06);--bdr2:rgba(255,255,255,.1);
   --topH:56px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
   --nav-items-h:58px;
-  /* safe area for bottom — env() gives us iPhone home indicator height */
-  --nav-items-h:58px;
+  --nav-total-h:calc(var(--nav-items-h) + var(--safe-bottom));
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html,body{height:100%;overflow:hidden;background:var(--bg)}
@@ -85,7 +85,7 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
   position:absolute;inset:0;
   overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
-  padding:0 0 calc(var(--nav-items-h) + 8px);
+  padding:0 0 calc(var(--nav-total-h) + 8px);
 }
 .panel{display:none;padding:16px 15px 0}.panel.on{display:block}
 
@@ -112,7 +112,7 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
   background:rgba(6,9,16,1);
   border-top:1px solid var(--bdr);
   display:flex;
-  padding-bottom:0;
+  padding-bottom:var(--safe-bottom);
   z-index:50;
 }
 
@@ -134,7 +134,7 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
   position:fixed;
   top:var(--topH);
   /* bottom = navbar items height + home indicator safe area */
-  bottom:var(--nav-items-h);
+  bottom:var(--nav-total-h);
   left:0;right:0;
   display:none;flex-direction:column;
   padding:14px 15px 10px;
@@ -220,7 +220,7 @@ video{width:100%;border-radius:14px;background:#000;max-height:260px;object-fit:
 #toast{
   position:fixed;
   /* sits above navbar: items height + safe area + gap */
-  bottom:calc(var(--nav-items-h) + 10px);
+  bottom:calc(var(--nav-total-h) + 10px);
   left:50%;transform:translateX(-50%) translateY(80px);
   background:var(--card2);color:var(--t);
   padding:11px 20px;border-radius:14px;font-size:14px;font-weight:500;
