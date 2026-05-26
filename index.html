@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AthleteOS">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>AthleteOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- WELCOME (first-launch intro) -->
+<div id="welcome" class="hidden">
+  <div class="wc-inner">
+    <div class="wc-hero" aria-hidden="true">
+      <svg width="280" height="240" viewBox="0 0 280 240" fill="none">
+        <circle cx="140" cy="120" r="110" fill="#E8F8EE"/>
+        <circle cx="140" cy="120" r="92" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="2 7" opacity="0.4"/>
+        <path d="M40 170 L75 145 L105 155 L140 110 L175 90 L210 65 L245 50" stroke="#22C55E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="40" cy="170" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="75" cy="145" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="105" cy="155" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="140" cy="110" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="175" cy="90" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="210" cy="65" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
+        <circle cx="245" cy="50" r="20" fill="#22C55E" opacity="0.18"/>
+        <circle cx="245" cy="50" r="12" fill="#22C55E"/>
+        <g transform="translate(28 70)">
+          <rect class="wc-chip" width="74" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
+          <text x="14" y="21" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0A0A0A">🔥 5d</text>
+        </g>
+        <g transform="translate(180 175)">
+          <rect class="wc-chip" width="84" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
+          <text x="12" y="21" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0A0A0A">💪 +12%</text>
+        </g>
+      </svg>
+    </div>
+    <div class="wc-brand">Athlete<span>OS</span></div>
+    <div class="wc-tag">Train smart. Track everything.</div>
+  </div>
+  <div class="wc-actions">
+    <button type="button" class="wc-cta" onclick="welcomeContinue('r')">
+      Get started
+      <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
+        <path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="wc-foot">Already have an account? <button type="button" class="wc-link" onclick="welcomeContinue('l')">Sign in</button></div>
+  </div>
+</div>
+
+<!-- ONBOARDING PAYWALL (second-to-last step of new-account flow) -->
+<div id="ob-paywall" class="hidden">
+  <div class="obp-inner">
+    <div class="obp-title-block">
+      <div class="obp-eyebrow"><span class="obp-eyedot"></span>FINAL STEP · PRO</div>
+      <h2 class="obp-title">Unlock your <span>full plan</span></h2>
+    </div>
+
+    <div class="obp-feats">
+      <div class="obp-feat">
+        <div class="obp-tile" style="background:#E8F8EE">💪</div>
+        <div class="obp-feat-text">
+          <div class="obp-feat-t">Personalized training plans</div>
+          <div class="obp-feat-b">Built around your goal, schedule, equipment &amp; experience.</div>
+        </div>
+      </div>
+      <div class="obp-feat">
+        <div class="obp-tile" style="background:#EDE9FE">🎬</div>
+        <div class="obp-feat-text">
+          <div class="obp-feat-t">Exercise demos &amp; cues</div>
+          <div class="obp-feat-b">Looping demos for every lift with key technique tips.</div>
+        </div>
+      </div>
+      <div class="obp-feat">
+        <div class="obp-tile" style="background:#FFEDD5">📈</div>
+        <div class="obp-feat-text">
+          <div class="obp-feat-t">Advanced analytics</div>
+          <div class="obp-feat-b">Volume per muscle, 1RM trends, weight projections.</div>
+        </div>
+      </div>
+      <div class="obp-feat">
+        <div class="obp-tile" style="background:#DBEAFE">📷</div>
+        <div class="obp-feat-text">
+          <div class="obp-feat-t">Unlimited photos &amp; templates</div>
+          <div class="obp-feat-b">Track progress visually, save every workout split.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obp-plans">
+      <button type="button" class="obp-plan" data-plan="monthly" onclick="obp_pick('monthly')">
+        <span class="obp-radio"></span>
+        <div class="obp-plan-body">
+          <div class="obp-plan-t">Monthly</div>
+          <div class="obp-plan-b">Flexible — pause anytime</div>
+        </div>
+        <div class="obp-plan-price">
+          <div class="obp-plan-v">€4.99</div>
+          <div class="obp-plan-u">per month</div>
+        </div>
+      </button>
+      <button type="button" class="obp-plan on" data-plan="yearly" onclick="obp_pick('yearly')">
+        <span class="obp-badge">BEST VALUE</span>
+        <span class="obp-radio"></span>
+        <div class="obp-plan-body">
+          <div class="obp-plan-t">Yearly</div>
+          <div class="obp-plan-b">7 days free · saves €43.89/yr</div>
+        </div>
+        <div class="obp-plan-price">
+          <div class="obp-plan-v">€1.33</div>
+          <div class="obp-plan-u">per month, billed yearly</div>
+        </div>
+      </button>
+      <button type="button" class="obp-plan" data-plan="lifetime" onclick="obp_pick('lifetime')">
+        <span class="obp-radio"></span>
+        <div class="obp-plan-body">
+          <div class="obp-plan-t">Lifetime</div>
+          <div class="obp-plan-b">Pay once, use forever</div>
+        </div>
+        <div class="obp-plan-price">
+          <div class="obp-plan-v">€49.99</div>
+          <div class="obp-plan-u">one-time</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="obp-actions">
+      <button type="button" class="obp-cta" id="obp-cta" onclick="obp_start()">Start 7-day free trial</button>
+      <button type="button" class="obp-later" onclick="obp_skip()">Maybe later</button>
+    </div>
+
+    <div class="obp-trust">
+      <span>
+        <svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden="true">
+          <rect x="1" y="6" width="9" height="6.5" rx="1.4" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M3 6V4a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        Secure checkout
+      </span>
+      <span class="obp-dot-sep"></span>
+      <span>Cancel anytime</span>
+      <span class="obp-dot-sep"></span>
+      <span>€0 today</span>
+    </div>
+    <div class="obp-fine">
+      By continuing you agree to our <b>Terms</b> &amp; <b>Privacy</b>.<br>
+      Renews automatically. Manage in Settings.
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="alogo">Athlete<span>OS</span></div>
+  <div class="asub">Train smart. Track everything.</div>
+  <div class="acard">
+    <div class="atabs">
+      <button type="button" class="atab on" id="tl" onclick="aTab('l')">Sign In</button>
+      <button type="button" class="atab" id="tr2" onclick="aTab('r')">Sign Up</button>
+    </div>
+    <div id="fl">
+      <div class="f"><label>Email</label><input type="email" id="l-u" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="f" style="margin-bottom:6px"><label>Password</label><input type="password" id="l-p" placeholder="••••••••" autocomplete="current-password"></div>
+      <div style="text-align:right;margin-bottom:14px"><button type="button" class="lnk" onclick="openForgot()">Forgot password?</button></div>
+      <button type="button" class="btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+      <div class="oauth-divider"><span>or</span></div>
+      <button type="button" class="btn btn-oauth" onclick="oauthGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+      <div id="resend-row" class="hidden" style="text-align:center;margin-top:12px"><button type="button" class="lnk" onclick="resendConfirm()">Resend confirmation email</button></div>
+    </div>
+    <div id="fr" class="hidden">
+      <div class="f"><label>Your Name</label><input type="text" id="r-n" placeholder="e.g. Alex"></div>
+      <div class="f"><label>Email</label><input type="email" id="r-e" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="f"><label>Password</label><input type="password" id="r-p" placeholder="Min 6 characters" autocomplete="new-password"></div>
+      <div class="g2">
+        <div class="f"><label>Weight goal (kg)</label><input type="number" id="r-wg" placeholder="85"></div>
+        <div class="f"><label>Protein goal (g)</label><input type="number" id="r-pg" placeholder="170"></div>
+      </div>
+      <button type="button" class="btn" id="reg-btn" onclick="doReg()">Create Account →</button>
+      <div class="oauth-divider"><span>or</span></div>
+      <button type="button" class="btn btn-oauth" onclick="oauthGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+    <div class="errmsg" id="aerr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- SIDEBAR (desktop) -->
+  <aside class="sidebar">
+    <div class="sb-head" onclick="goTab('home')">
+      <div class="sb-logo">Athlete<span>OS</span></div>
+      <div class="sb-sub">Train smart.</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item on" id="s-home" onclick="goTab('home')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+      <div class="sb-item" id="s-workout" onclick="goTab('workout')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Workout</div>
+      <div class="sb-item" id="s-nutrition" onclick="goTab('nutrition')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.3.78-4.42 2.08-6.12"/><path d="M12 6v6l4 2"/></svg>Nutrition</div>
+      <div class="sb-item" id="s-body" onclick="goTab('body')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Body Stats</div>
+      <div class="sb-item" id="s-sleep" onclick="goTab('sleep')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Sleep</div>
+      <div class="sb-div"></div>
+      <div class="sb-item" id="s-ai" onclick="goTab('ai')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI Trainer</div>
+      <div class="sb-item" id="s-settings" onclick="goTab('settings')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+    </nav>
+    <div class="sb-foot">
+      <!-- Pro upsell (free users) or status badge (paying users) -->
+      <div class="sb-pro" id="sb-pro" onclick="openPaywall()">
+        <div class="sb-pro-ico" id="sb-pro-ico">✨</div>
+        <div class="sb-pro-body">
+          <div class="sb-pro-t" id="sb-pro-t">Try AthleteOS Pro</div>
+          <div class="sb-pro-b" id="sb-pro-b">7 days free</div>
+        </div>
+      </div>
+      <div class="sb-user" onclick="goTab('settings')">
+        <div class="sb-avatar" id="sb-ava">?</div>
+        <div>
+          <div class="sb-uname" id="sb-name">—</div>
+          <div class="sb-ustreak" id="sb-streak">🔥 0 day streak</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="app-main">
+
+    <!-- TOPBAR (mobile only) -->
+    <header class="topbar">
+      <div class="tlogo" onclick="goTab('home')">Athlete<span>OS</span></div>
+      <div class="tright">
+        <button type="button" class="tb-pro-pill" id="tb-pro" onclick="openPaywall()" style="display:none">✨ Pro</button>
+        <span class="badge by" id="streak">🔥 0d</span>
+        <button type="button" class="badge bb" id="freeze-pill" onclick="useStreakFreeze()" style="display:none;border:none;cursor:pointer;font-family:inherit" title="Use your monthly streak freeze">🧊 Freeze</button>
+        <div class="avatar" id="ava" onclick="goTab('settings')">?</div>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="panel on" id="p-home">
+        <div class="seclabel"><span class="seclabel-dot"></span><span id="hero-label">DAILY OVERVIEW</span></div>
+        <div class="hero-title" id="hero-greet">Today</div>
+        <p class="tm" id="hero-sub" style="margin-bottom:18px;font-size:14px">Welcome back. Here's how today is shaping up.</p>
+
+        <!-- Hero stat: weekly volume with sparkline -->
+        <div class="card hero-card">
+          <div class="fb" style="margin-bottom:6px">
+            <div>
+              <div class="ctitle" style="margin:0;font-size:12px;color:var(--t2);font-weight:600">This week</div>
+              <div class="hero-stat" id="hero-stat">0<span class="hero-stat-unit">kg total volume</span></div>
+            </div>
+            <span class="badge bg" id="hero-badge">● LIVE</span>
+          </div>
+          <div class="hero-spark"><canvas id="hero-spark"></canvas></div>
+          <div class="hero-foot">
+            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-sessions">0</div><div class="hero-foot-l">Sessions</div></div>
+            <div class="hero-foot-divider"></div>
+            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-duration">0m</div><div class="hero-foot-l">Time</div></div>
+            <div class="hero-foot-divider"></div>
+            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-sets">0</div><div class="hero-foot-l">Sets</div></div>
+            <div class="hero-foot-divider"></div>
+            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-streak">0d</div><div class="hero-foot-l">Streak</div></div>
+          </div>
+        </div>
+
+        <!-- Tile grid -->
+        <div class="sg">
+          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--adim);color:var(--accent-d)">💪</div><div class="sv" id="h-w">–</div><div class="sl">Workout</div></div>
+          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--adim);color:var(--accent-d)">🥩</div><div class="sv" id="h-p">0<span class="su">g</span></div><div class="sl">Protein</div></div>
+          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--bdim);color:var(--blue)">💧</div><div class="sv" id="h-wa">0<span class="su">L</span></div><div class="sl">Water</div></div>
+          <div class="sc tile-mini"><div class="tile-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">🌙</div><div class="sv" id="h-s">–<span class="su">h</span></div><div class="sl">Sleep</div></div>
+        </div>
+
+        <!-- Daily progress bars -->
+        <div class="card">
+          <div class="ctitle">Daily Targets</div>
+          <div style="margin-bottom:14px">
+            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Protein</span><div style="display:flex;align-items:center;gap:10px"><span id="p-rem" style="font-size:12px;color:var(--accent-d);font-weight:600"></span><b id="p-lbl" style="font-size:13.5px;letter-spacing:-.2px">0/170g</b></div></div>
+            <div class="pbar"><div class="pfill" id="p-bar" style="width:0%"></div></div>
+          </div>
+          <div style="margin-bottom:14px">
+            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Water</span><b id="w-lbl" style="font-size:13.5px;letter-spacing:-.2px">0/8 cups</b></div>
+            <div class="pbar"><div class="pfill" id="w-bar" style="width:0%;background:var(--blue)"></div></div>
+          </div>
+          <div>
+            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Calories</span><b id="k-lbl" style="font-size:13.5px;letter-spacing:-.2px">0 kcal</b></div>
+            <div class="pbar"><div class="pfill" id="k-bar" style="width:0%;background:var(--yel)"></div></div>
+          </div>
+        </div>
+
+        <!-- Adaptive plan refinement banner -->
+        <div class="card" id="plan-tweak-banner" style="display:none;background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.06) 100%);border-color:var(--accent)">
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="font-size:24px;line-height:1">📋</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:800;font-size:15px;color:var(--t);letter-spacing:-.2px">Time to refine your plan</div>
+              <div style="font-size:13px;color:var(--t2);margin-top:3px;line-height:1.4" id="plan-tweak-sub">You've been crushing it — let's tune the next 4 weeks to your latest progress.</div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button type="button" class="btn" style="padding:8px 16px;font-size:13px;width:auto" onclick="refinePlanWithAI()">Refine now</button>
+                <button type="button" class="btn-g" style="padding:8px 14px;font-size:13px" onclick="dismissPlanTweak()">Later</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily summary (today's activity + vs-last-session comparison) -->
+        <div class="card" id="daily-sum-card" style="display:none">
+          <div class="fb" style="margin-bottom:10px">
+            <div class="ctitle" style="margin:0">Today's recap</div>
+            <span class="tm" id="daily-sum-date" style="font-size:11.5px;font-weight:600">—</span>
+          </div>
+          <div id="daily-sum-body"></div>
+        </div>
+
+        <!-- Coach tip -->
+        <div class="card coach-card" onclick="rotateCoachTip()">
+          <div class="fb" style="margin-bottom:6px;align-items:flex-start">
+            <div class="coach-ico">💡</div>
+            <span class="badge bg" style="font-size:10.5px;padding:3px 8px">Tip</span>
+          </div>
+          <div class="coach-title" id="coach-title">Loading…</div>
+          <div class="coach-body" id="coach-body"></div>
+        </div>
+
+        <!-- Recent activity feed -->
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Recent Activity</div>
+            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px" onclick="goTab('workout')">All →</button>
+          </div>
+          <div id="activity-feed"></div>
+        </div>
+
+        <!-- Check-in -->
+        <div class="card" id="ckin-card">
+          <div class="fb" style="margin-bottom:10px">
+            <div class="ctitle" style="margin:0">Daily Check-In</div>
+            <button type="button" class="btn-g" onclick="openCheckin()" id="ckin-btn">+ Log</button>
+          </div>
+          <div id="ckin-disp" class="tm" style="font-size:13.5px;line-height:1.65">Take 5 seconds to log how you feel — mood, energy, soreness. It feeds into your AI advice.</div>
+          <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;background:none;border:none;color:var(--accent-d);font-family:inherit;font-size:13px;font-weight:600;padding:8px 0 0;cursor:pointer;letter-spacing:-.1px">😌 I'm resting today — keep my streak →</button>
+        </div>
+
+        <!-- Recent PRs -->
+        <div class="card" id="pr-feed-card">
+          <div class="fb" style="margin-bottom:8px">
+            <div class="ctitle" style="margin:0">Recent PRs 🏆</div>
+            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px" onclick="goTab('workout')">All →</button>
+          </div>
+          <div id="pr-feed"></div>
+        </div>
+
+        <!-- Quick add -->
+        <div class="card">
+          <div class="ctitle">Quick Actions</div>
+          <div class="g2">
+            <button type="button" class="qa-btn" onclick="goTab('workout')"><span class="qa-ico" style="background:var(--adim);color:var(--accent-d)">🏋️</span><span class="qa-lbl">New Workout</span></button>
+            <button type="button" class="qa-btn" onclick="qWater()"><span class="qa-ico" style="background:var(--bdim);color:var(--blue)">💧</span><span class="qa-lbl">+1 Water</span></button>
+            <button type="button" class="qa-btn" onclick="openMealM()"><span class="qa-ico" style="background:rgba(245,158,11,.12);color:var(--yel)">🥗</span><span class="qa-lbl">Log Meal</span></button>
+            <button type="button" class="qa-btn" onclick="goTab('ai')"><span class="qa-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">✨</span><span class="qa-lbl">Ask AI</span></button>
+            <button type="button" class="qa-btn hidden" id="qa-repeat-meal" style="grid-column:1/-1" onclick="repeatLastMeal()"><span class="qa-ico" style="background:rgba(34,197,94,.12);color:var(--accent-d)">↻</span><span class="qa-lbl" id="qa-repeat-meal-lbl">Re-log last meal</span></button>
+            <button type="button" class="qa-btn" style="grid-column:1/-1" onclick="openWtM()"><span class="qa-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">⚖️</span><span class="qa-lbl">Log weight</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKOUT -->
+      <div class="panel hidden" id="p-workout">
+        <div class="fb" style="margin-bottom:15px">
+          <div class="ptitle" style="margin:0">Workout</div>
+          <button type="button" class="btn btnsm" id="newsess-btn" onclick="startW()">+ New Session</button>
+        </div>
+        <div id="active-sess" class="hidden">
+          <div class="card" style="border-color:var(--accent)">
+            <div class="fb" style="margin-bottom:13px">
+              <div>
+                <div class="ctitle" style="margin:0">Active Session</div>
+                <span id="wtimer" class="tm" style="color:var(--accent);font-weight:600;margin-top:4px;display:block">0:00</span>
+              </div>
+              <button type="button" class="btn btnsm" style="background:var(--red);box-shadow:none" onclick="finishW()">Finish</button>
+            </div>
+            <div id="ex-list"></div>
+            <div class="g2" style="margin-top:9px">
+              <button type="button" class="btn-o" onclick="openExM()">+ Add Exercise</button>
+              <button type="button" class="btn-o" style="border-color:var(--accent);color:var(--accent)" onclick="openRestGeneric()">Rest Timer</button>
+            </div>
+            <button type="button" class="btn-o" id="voice-log-btn" style="width:100%;margin-top:8px;font-size:13px;padding:11px 12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="voiceLogSet(this)" aria-label="Voice log a set">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              <span id="voice-log-lbl">Voice log a set</span>
+            </button>
+            <div style="margin-top:12px">
+              <button type="button" class="btn-g" style="font-size:12px;padding:6px 10px" id="wn-toggle" onclick="toggleSessNote(this)">📝 Add session note</button>
+              <textarea id="wn-text" placeholder="How did this session feel? Anything to remember for next time…" style="display:none;width:100%;margin-top:8px;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:10px 12px;color:var(--t);font-family:inherit;font-size:13.5px;font-weight:500;resize:vertical;min-height:56px;outline:none" oninput="wNote=this.value"></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- AI TRAINING PLAN -->
+        <div id="plan-sec"></div>
+
+        <!-- CARDIO -->
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Cardio</div>
+            <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openCardio()">+ Log</button>
+          </div>
+          <div id="cd-list"><p class="tm tc" style="padding:14px 0">No cardio logged yet</p></div>
+        </div>
+
+        <!-- HEATMAP -->
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Activity (last 6 months)</div><span class="tm" style="font-size:12px" id="hm-count">0 workouts</span></div>
+          <div id="hm-grid"></div>
+          <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-top:8px;font-size:10.5px;color:var(--t3);font-weight:500">Less<span class="hm-c0"></span><span class="hm-c1"></span><span class="hm-c2"></span><span class="hm-c3"></span>More</div>
+        </div>
+
+        <!-- CALENDAR -->
+        <div class="card">
+          <div class="cal-head">
+            <div class="ctitle" style="margin:0">Training Calendar</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button type="button" class="cal-nav" onclick="calNav(-1)">‹</button>
+              <div class="cal-title" id="cal-title">—</div>
+              <button type="button" class="cal-nav" onclick="calNav(1)">›</button>
+            </div>
+          </div>
+          <div class="cal-dows" id="cal-dows"></div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <!-- EXERCISE LIBRARY -->
+        <div class="card">
+          <div class="ctitle">Exercise Library</div>
+          <p class="tm" style="font-size:13px;margin-bottom:14px">Pick a muscle group to see all exercises with demos and tips, top picks first.</p>
+          <div class="musc-grid">
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:rgba(239,68,68,.12);color:#EF4444">🫀</span><span>Chest</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:rgba(59,130,246,.12);color:#3B82F6">🦅</span><span>Back</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:rgba(245,158,11,.12);color:#F59E0B">🪶</span><span>Shoulders</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:rgba(34,197,94,.12);color:#22C55E">💪</span><span>Arms</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:rgba(168,85,247,.12);color:#A855F7">🦵</span><span>Legs</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:rgba(236,72,153,.12);color:#EC4899">🧱</span><span>Core</span></button>
+          </div>
+        </div>
+
+        <!-- TOOLS -->
+        <div class="card">
+          <div class="ctitle">Tools &amp; Templates</div>
+          <div class="g2">
+            <button type="button" class="btn-o" onclick="openTemplates()">📋 Templates</button>
+            <button type="button" class="btn-o" onclick="open1RM()">📈 1RM Calc</button>
+            <button type="button" class="btn-o" onclick="openPlate()">🏋 Plate Calc</button>
+            <button type="button" class="btn-o" onclick="saveTemplateOpen()">💾 Save Session</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="fb" style="margin-bottom:13px"><div class="ctitle" style="margin:0">Personal Records</div></div>
+          <div class="pills" id="pr-pills">
+            <button type="button" class="pill on" onclick="filterPR('all',this)">All</button>
+            <button type="button" class="pill" onclick="filterPR('chest',this)">Chest</button>
+            <button type="button" class="pill" onclick="filterPR('back',this)">Back</button>
+            <button type="button" class="pill" onclick="filterPR('legs',this)">Legs</button>
+            <button type="button" class="pill" onclick="filterPR('shoulders',this)">Shoulders</button>
+            <button type="button" class="pill" onclick="filterPR('arms',this)">Arms</button>
+            <button type="button" class="pill" onclick="filterPR('core',this)">Core</button>
+          </div>
+          <div id="pr-list"><p class="tm tc" style="padding:18px 0">Log workouts to see PRs</p></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">This Week</div>
+          <div class="wkdays" id="wk-days"></div>
+          <div id="wk-cmp"></div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">History</div></div>
+          <input type="text" id="wh-search" placeholder="Search by exercise…" oninput="filterWHist(this.value)" style="width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:9px 12px;color:var(--t);font-family:inherit;font-size:13px;font-weight:500;outline:none;margin-bottom:10px">
+          <div id="w-hist"><p class="tm tc" style="padding:18px 0">No workouts yet</p></div>
+        </div>
+      </div>
+
+      <!-- NUTRITION -->
+      <div class="panel hidden" id="p-nutrition">
+        <div class="ptitle">Nutrition</div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:13px">
+            <div class="ctitle" style="margin:0">Macros</div>
+            <div style="display:flex;gap:7px">
+              <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openBcM()">📷 Scan</button>
+              <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;text-align:center">
+            <div><div class="sv ta" id="n-p">0</div><div class="sl">Protein g</div></div>
+            <div><div class="sv" id="n-c" style="color:var(--blue)">0</div><div class="sl">Carbs g</div></div>
+            <div><div class="sv" id="n-f" style="color:var(--yel)">0</div><div class="sl">Fat g</div></div>
+          </div>
+          <div class="pbar" style="margin-bottom:5px"><div class="pfill" id="nb-p" style="width:0%"></div></div>
+          <div class="pbar" style="margin-bottom:5px"><div class="pfill" id="nb-c" style="width:0%;background:var(--blue)"></div></div>
+          <div class="pbar"><div class="pfill" id="nb-f" style="width:0%;background:var(--yel)"></div></div>
+          <div style="height:170px;margin-top:18px;position:relative"><canvas id="macro-pie"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:9px"><div class="ctitle" style="margin:0">Water</div><span id="w-cnt" style="font-weight:700;color:var(--blue);font-size:14px;font-family:'Inter',sans-serif">0/8</span></div>
+          <div class="wg" id="w-grid"></div>
+          <p class="tm tc" style="font-size:11.5px;margin-top:4px">Tap to log · 250ml per cup</p>
+        </div>
+        <div class="card">
+          <div class="ctitle">Meals</div>
+          <div id="meal-log"><p class="tm tc" style="padding:18px 0">No meals logged today</p></div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Suggestions</div></div>
+          <div id="meal-sugg"></div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Recipe Library</div><span class="tm" style="font-size:11px">tap for details</span></div>
+          <div id="recipe-list"></div>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="panel hidden" id="p-body">
+        <div class="ptitle">Body Stats</div>
+        <div class="sg" style="margin-bottom:12px">
+          <div class="sc" style="--sc:var(--accent)"><div class="sv" id="b-cw">–<span class="su">kg</span></div><div class="sl">Current</div></div>
+          <div class="sc" style="--sc:var(--blue)"><div class="sv" id="b-gw">–<span class="su">kg</span></div><div class="sl">Goal</div></div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:14px">
+            <div class="ctitle" style="margin:0">Weight</div>
+            <button type="button" class="btn-o" style="padding:8px 14px;font-size:12px" onclick="openWtM()">+ Log</button>
+          </div>
+          <div class="chart-wrap"><canvas id="w-chart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Log</div>
+          <div id="w-log"><p class="tm tc" style="padding:18px 0">No entries yet</p></div>
+        </div>
+        <div class="card" id="wproj-card" style="display:none">
+          <div class="fb" style="margin-bottom:6px">
+            <div>
+              <div class="ctitle" style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--accent-d);text-transform:uppercase">Average</div>
+              <div style="font-family:'Inter',sans-serif;font-weight:800;font-size:32px;letter-spacing:-1.4px;line-height:1.05;margin-top:2px" id="wproj-avg">–<span style="font-size:14px;color:var(--t2);font-weight:500;margin-left:6px" id="wproj-avg-unit">kg</span></div>
+              <div class="tm" style="font-size:12px;margin-top:2px" id="wproj-range">–</div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:200px;margin-top:12px"><canvas id="wproj-chart"></canvas></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr)">
+            <div><div class="tm" style="font-size:11.5px;font-weight:600">Current</div><div style="font-size:20px;font-weight:800;letter-spacing:-.6px;color:var(--t);margin-top:2px" id="wproj-cur">–</div></div>
+            <div><div class="tm" style="font-size:11.5px;font-weight:600">Goal</div><div style="font-size:20px;font-weight:800;letter-spacing:-.6px;color:var(--t);margin-top:2px" id="wproj-goal">–</div></div>
+            <div><div class="tm" style="font-size:11.5px;font-weight:600">Best Case</div><div style="font-size:15px;font-weight:700;color:var(--pur);margin-top:2px" id="wproj-best">–</div></div>
+            <div><div class="tm" style="font-size:11.5px;font-weight:600">Worst Case</div><div style="font-size:15px;font-weight:700;color:var(--pur);margin-top:2px" id="wproj-worst">–</div></div>
+          </div>
+        </div>
+        <div class="card" id="vol-card">
+          <div class="fb" style="margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Weekly Volume</div>
+            <span class="tm" style="font-size:11px">last 6 weeks</span>
+          </div>
+          <div class="chart-wrap" style="height:200px"><canvas id="vol-chart"></canvas></div>
+          <p id="vol-empty" class="tm tc" style="padding:14px 0;display:none">Log a strength workout to see volume per muscle.</p>
+        </div>
+        <div class="card" id="bf-card" style="display:none">
+          <div class="fb" style="margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Body Fat Trend</div>
+            <span id="bf-cur" class="tm" style="font-size:11px">–</span>
+          </div>
+          <div class="chart-wrap" style="height:180px"><canvas id="bf-chart"></canvas></div>
+        </div>
+        <div class="card" id="body-mm-card">
+          <div class="fb" style="margin-bottom:6px">
+            <div class="ctitle" style="margin:0">Target Body Areas</div>
+            <button type="button" class="btn-o" id="body-mm-edit" style="padding:7px 12px;font-size:12px" onclick="openMuscleEditor()">Edit <span class="pro-lock" id="body-mm-pro" style="display:none">PRO</span></button>
+          </div>
+          <div class="mm-legend" style="margin:8px 0 4px">
+            <div class="mm-leg"><span class="mm-leg-dot grow"></span>Grow</div>
+            <div class="mm-leg"><span class="mm-leg-dot def"></span>Define</div>
+            <div class="mm-leg"><span class="mm-leg-dot exc"></span>Exclude</div>
+          </div>
+          <div class="mm-wrap" id="body-mm-wrap"></div>
+          <div id="body-mm-summary" class="tm" style="font-size:12.5px;text-align:center;margin-top:6px">Tap Edit to mark which muscles you want to grow, define, or skip.</div>
+        </div>
+        <div class="card" id="mes-card">
+          <div class="fb" style="margin-bottom:14px">
+            <div class="ctitle" style="margin:0">Body Measurements</div>
+            <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMeasure()">+ Log</button>
+          </div>
+          <div id="mes-grid" class="mes-grid"></div>
+          <div id="mes-summary" class="mes-summary" style="display:none;margin-top:10px"></div>
+          <div id="mes-empty" class="tm tc" style="padding:14px 0">No measurements yet — tap "Log" to start tracking</div>
+        </div>
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Progress Photos</div>
+          </div>
+          <div id="ph-grid" class="ph-grid"></div>
+          <p class="tm" style="font-size:11px;text-align:center;margin-top:8px">Stored privately. Only you can see them.</p>
+        </div>
+        <!-- Achievements (moved to bottom — celebratory, not load-bearing) -->
+        <div class="card">
+          <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Achievements</div><div style="display:flex;align-items:center;gap:10px"><span class="tm" style="font-size:12px" id="ach-count">0/0</span><button type="button" class="btn-g" style="font-size:12px;padding:4px 10px" onclick="openCustomAch()">+ Add</button></div></div>
+          <div class="ach-grid" id="ach-grid"></div>
+        </div>
+      </div>
+
+      <!-- SLEEP -->
+      <div class="panel hidden" id="p-sleep">
+        <div class="ptitle">Sleep</div>
+        <div class="card tc">
+          <div class="sring-wrap">
+            <svg viewBox="0 0 160 160" width="160" height="160">
+              <circle cx="80" cy="80" r="66" fill="none" stroke-width="14" class="sring-track"/>
+              <circle cx="80" cy="80" r="66" fill="none" stroke="var(--pur)" stroke-width="14" stroke-linecap="round" stroke-dasharray="415" id="s-ring" stroke-dashoffset="415"/>
+            </svg>
+            <div class="sring-in"><div class="sring-val" id="s-disp">–</div><div class="sring-lbl">hours</div></div>
+          </div>
+          <p class="tm">Goal: 8 hours</p>
+        </div>
+        <div class="card">
+          <div class="ctitle">Log Sleep</div>
+          <div class="stime-block" onclick="openTimePicker('bed')">
+            <div class="stime-ico" style="background:rgba(167,139,250,.13)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pur)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="stime-lbl">Bedtime</div>
+              <div class="stime-val" id="s-bed-disp">10:30 PM</div>
+              <input type="hidden" id="s-bed" value="22:30">
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="stime-block" onclick="openTimePicker('wk')">
+            <div class="stime-ico" style="background:rgba(251,191,36,.12)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--yel)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="stime-lbl">Wake Time</div>
+              <div class="stime-val" id="s-wk-disp">6:30 AM</div>
+              <input type="hidden" id="s-wk" value="06:30">
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="f" style="margin-top:14px"><label>Sleep Quality</label>
+            <select id="s-q"><option value="great">Great</option><option value="good" selected>Good</option><option value="ok">OK</option><option value="poor">Poor</option></select>
+          </div>
+          <button type="button" class="btn" onclick="logSleep()">Save Sleep</button>
+        </div>
+        <div class="card"><div class="ctitle">History</div><div id="s-hist"><p class="tm tc" style="padding:18px 0">No sleep data yet</p></div></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="panel hidden" id="p-settings">
+        <div class="ptitle">Settings</div>
+        <!-- Profile header -->
+        <div class="card" style="text-align:center;padding:24px 18px 20px;margin-bottom:10px">
+          <div id="set-ava" style="width:68px;height:68px;border-radius:50%;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 12px;font-family:'Inter',sans-serif;letter-spacing:1px">?</div>
+          <div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:2px" id="set-name">—</div>
+          <div class="tm" style="font-size:12px" id="set-email">—</div>
+          <button type="button" class="btn-o" style="margin-top:16px;padding:9px 22px;font-size:13px;width:auto;display:inline-block" onclick="openProfileM()">Edit Profile</button>
+        </div>
+        <!-- Profile & Goals -->
+        <div class="card">
+          <div class="sit" onclick="openProfileM()">
+            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Personal Info</div><div class="tm" id="prof-sub" style="font-size:12px;margin-top:1px">Age, height, gender</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none" onclick="openGoalsM()">
+            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Training Goals</div><div class="tm" id="g-sub" style="font-size:12px;margin-top:1px">Protein &amp; weight targets</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+        <!-- Account -->
+        <div class="card">
+          <div class="ctitle">Account</div>
+          <div class="sit" onclick="openChangeEmailM()">
+            <div class="sib" style="background:rgba(59,130,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Change email</div><div class="tm" style="font-size:12px">We'll send a confirmation link</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none" onclick="openChangePasswordM()">
+            <div class="sib" style="background:rgba(168,85,247,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pur)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Change password</div><div class="tm" style="font-size:12px">Update your sign-in password</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+        <!-- Appearance -->
+        <div class="card">
+          <div class="ctitle">Appearance</div>
+          <div class="f" style="margin-bottom:18px">
+            <label>Theme · <span id="theme-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Currently dark</span></label>
+            <div class="gpills" style="margin-top:8px">
+              <button type="button" class="gpill on" id="thm-light" onclick="setThemeMode('light')">Light</button>
+              <button type="button" class="gpill" id="thm-dark" onclick="setThemeMode('dark')">Dark</button>
+              <button type="button" class="gpill" id="thm-system" onclick="setThemeMode('system')">System</button>
+            </div>
+          </div>
+          <div class="f" style="margin-bottom:0">
+            <label>Accent color · <span id="accent-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Green</span></label>
+            <div class="acc-row">
+              <button type="button" class="acc-pick on" data-acc="green" onclick="setAccent('green')" style="--c:#22C55E" aria-label="Green"></button>
+              <button type="button" class="acc-pick" data-acc="forge" onclick="setAccent('forge')" style="--c:#F97316" aria-label="Forge"></button>
+              <button type="button" class="acc-pick" data-acc="cool" onclick="setAccent('cool')" style="--c:#3B82F6" aria-label="Cool"></button>
+              <button type="button" class="acc-pick" data-acc="purple" onclick="setAccent('purple')" style="--c:#A855F7" aria-label="Purple"></button>
+              <button type="button" class="acc-pick" data-acc="pink" onclick="setAccent('pink')" style="--c:#EC4899" aria-label="Pink"></button>
+            </div>
+          </div>
+        </div>
+        <!-- Reminders -->
+        <div class="card">
+          <div class="ctitle">Reminders</div>
+          <div class="tog-row">
+            <div class="sib" style="background:var(--adim);font-size:18px">💪</div>
+            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Workout reminder</div><div class="tm" style="font-size:12px"><span id="rt-wo-time">5:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('workout')">change</span></div></div>
+            <label class="tog-sw"><input type="checkbox" id="rm-wo" onchange="saveReminders()"><span class="tog-track"></span></label>
+          </div>
+          <div class="tog-row">
+            <div class="sib" style="background:rgba(56,189,248,.1);font-size:18px">🥩</div>
+            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Protein nudge</div><div class="tm" style="font-size:12px"><span id="rt-pr-time">8:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('protein')">change</span></div></div>
+            <label class="tog-sw"><input type="checkbox" id="rm-pr" onchange="saveReminders()"><span class="tog-track"></span></label>
+          </div>
+          <div class="tog-row">
+            <div class="sib" style="background:rgba(251,191,36,.12);font-size:18px">💧</div>
+            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Hydration check</div><div class="tm" style="font-size:12px">Every 3 hours, 9 AM – 9 PM</div></div>
+            <label class="tog-sw"><input type="checkbox" id="rm-wt" onchange="saveReminders()"><span class="tog-track"></span></label>
+          </div>
+        </div>
+
+        <!-- Subscription -->
+        <div class="card" id="set-pro-card" style="background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.06) 100%);border:1px solid rgba(34,197,94,.22);cursor:pointer" onclick="openPaywall()">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;border-radius:14px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✨</div>
+            <div style="flex:1">
+              <div style="font-size:15.5px;font-weight:800;color:var(--t);letter-spacing:-.2px" id="set-pro-title">Try AthleteOS Pro</div>
+              <div class="tm" style="font-size:12.5px;margin-top:2px" id="set-pro-sub">7 days free — unlock plans, demos &amp; analytics</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Personalization -->
+        <div class="card">
+          <div class="ctitle">Personalization</div>
+          <div class="sit" onclick="replayOnboarding()">
+            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Replay setup walkthrough</div><div class="tm" style="font-size:12px">Re-answer goal, experience, muscle map &amp; more</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none" onclick="openMuscleEditor()">
+            <div class="sib" style="background:rgba(139,92,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/><circle cx="12" cy="12" r="4"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Target body areas</div><div class="tm" id="set-mm-sub" style="font-size:12px">Edit your muscle map</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Data -->
+        <div class="card">
+          <div class="ctitle">Your Data</div>
+          <div class="sit" onclick="openImport()">
+            <div class="sib" style="background:rgba(34,197,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Import from Apple Health / Google Fit</div><div class="tm" style="font-size:12px">Bring in weights, workouts &amp; sleep</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" onclick="exportData()">
+            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Export my data</div><div class="tm" style="font-size:12px">Download as CSV bundle</div></div>
+          </div>
+          <div class="sit" onclick="openLegal('privacy')">
+            <div class="sib" style="background:rgba(167,139,250,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pur)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Privacy Policy</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none" onclick="openLegal('terms')">
+            <div class="sib" style="background:var(--surface)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Terms of Service</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Advanced -->
+        <details class="card" style="padding:0">
+          <summary style="cursor:pointer;list-style:none;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:var(--t)"><span>Advanced</span><span style="color:var(--t3);transition:transform .2s">▾</span></summary>
+          <div style="padding:0 20px 16px">
+            <div class="tog-row">
+              <div class="sib" style="background:var(--adim);font-size:18px">⏱</div>
+              <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Auto rest timer</div><div class="tm" style="font-size:12px">Starts <span id="ar-time">90s</span> after saving an exercise · <span class="lnk" style="font-size:12px;padding:0" onclick="pickRestDefault()">change</span></div></div>
+              <label class="tog-sw"><input type="checkbox" id="ar-tog" onchange="saveAutoRest()"><span class="tog-track"></span></label>
+            </div>
+          </div>
+        </details>
+
+        <!-- Account -->
+        <div class="card">
+          <div class="ctitle">Account</div>
+          <div class="sit" onclick="exportMyData()">
+            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Export my data</div><div class="tm" style="font-size:12px">Download a JSON file of everything you've logged</div></div>
+          </div>
+          <div class="sit" onclick="doLogout()">
+            <div class="sib" style="background:rgba(244,63,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--red)">Sign Out</div></div>
+          </div>
+          <div class="sit" style="border:none" onclick="openDeleteAccount()">
+            <div class="sib" style="background:rgba(244,63,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--red)">Delete Account</div><div class="tm" style="font-size:12px">Permanently erase all your data</div></div>
+          </div>
+        </div>
+        <!-- Get on phone (desktop + tablet only) -->
+        <div class="card" id="install-card">
+          <div class="ctitle">Get AthleteOS on your phone</div>
+          <p class="tm" style="margin-bottom:14px;line-height:1.6;font-size:13px">Scan the QR code with your phone camera, or download from your app store.</p>
+          <div class="get-app-wrap">
+            <div class="get-app-qr">
+              <img id="install-qr" alt="QR code to open AthleteOS on your phone" width="160" height="160" style="display:block;width:160px;height:160px;border-radius:10px;background:#FFFFFF;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.12)">
+              <div class="tm" style="font-size:11px;text-align:center;margin-top:6px;font-weight:600">Scan to open on phone</div>
+            </div>
+            <div class="get-app-stores">
+              <a href="#" onclick="event.preventDefault();toast('iOS app coming soon');" class="store-btn" aria-label="Download on the App Store">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                <span class="store-btn-body"><span class="store-btn-pre">Coming to</span><span class="store-btn-name">App Store</span></span>
+              </a>
+              <a href="#" onclick="event.preventDefault();toast('Android app coming soon');" class="store-btn" aria-label="Get it on Google Play">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M3.6 2.3c-.4.4-.6 1-.6 1.7v16c0 .7.2 1.3.6 1.7l9-9-9-10.4zM14.6 11.3l2.7-1.5c.9-.5.9-1.9 0-2.4L14.6 5.9 12.5 8l2.1 3.3zM12.5 8L4.2 2.5C4.4 2.4 4.7 2.3 5 2.3c.3 0 .6.1.9.3L14.6 7l-2.1 1zM4.2 21.5l8.3-13.5 2.1 3.3-8.6 5.6c-.3.2-.6.3-.9.3-.4 0-.6-.1-.9-.7z"/></svg>
+                <span class="store-btn-body"><span class="store-btn-pre">Coming to</span><span class="store-btn-name">Google Play</span></span>
+              </a>
+              <button type="button" class="btn-o hidden" id="install-btn" onclick="doInstall()" style="margin-top:4px">+ Install web app</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Help & support -->
+        <div class="card">
+          <div class="ctitle">Help &amp; Support</div>
+          <div class="sit" onclick="window.open('mailto:support@athleteos.app?subject=AthleteOS%20support%20request')">
+            <div class="sib" style="background:rgba(34,197,94,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Contact support</div><div class="tm" style="font-size:12px">Get help via email — we reply within 24h</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none" onclick="openFeedback()">
+            <div class="sib" style="background:rgba(59,130,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Send feedback</div><div class="tm" style="font-size:12px">Tell us what to build next</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="card">
+          <div class="ctitle">About</div>
+          <div class="sit" style="cursor:default">
+            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Version</div><div class="tm" style="font-size:12px">AthleteOS <span id="app-version">v1.0.0</span></div></div>
+          </div>
+          <div class="sit" onclick="window.open('https://athleteos.app','_blank')">
+            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Website</div><div class="tm" style="font-size:12px">athleteos.app</div></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" style="border:none;cursor:default">
+            <div class="sib" style="background:rgba(245,158,11,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--yel)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:600">Made with care</div><div class="tm" style="font-size:12px">Built by Alkan · 2026</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- AI PANEL -->
+    <div id="p-ai">
+      <div class="ai-header">
+        <div>
+          <div class="ptitle" style="margin:0;line-height:1.05">AI Trainer</div>
+          <div id="ai-page-sub" class="tm" style="font-size:12px;margin-top:4px"></div>
+        </div>
+        <button type="button" class="btn-g" onclick="clearChat()">Clear</button>
+      </div>
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="msg a">Hey! I'm your AI trainer. Ask me anything about workouts, nutrition, recovery, or your goals — I have your stats.</div>
+      </div>
+      <div id="chat-suggest" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 8px;flex-shrink:0">
+        <button type="button" class="chat-chip" onclick="askAI('Build me a 4-week training plan based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')">📋 Plan my next 4 weeks</button>
+        <button type="button" class="chat-chip" onclick="askAI('What should I eat today to hit my protein goal? Give me 3 quick meal ideas.')">🥗 Meal ideas</button>
+        <button type="button" class="chat-chip" onclick="askAI('Look at my recent lifts and tell me which muscle group I am neglecting this week.')">🔍 What am I missing?</button>
+      </div>
+      <div class="chat-row">
+        <textarea class="chat-in" id="chat-in" placeholder="Ask your trainer..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
+          oninput="autoH(this)"></textarea>
+        <button type="button" class="chat-mic" id="chat-mic-btn" onclick="toggleVoice('chat-in',this)" title="Voice input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+        <button type="button" class="chat-send" onclick="sendMsg()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV (mobile) -->
+    <nav class="navbar">
+      <div class="nv on" id="n-home" onclick="goTab('home')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+      <div class="nv" id="n-workout" onclick="goTab('workout')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Train</span></div>
+      <div class="nv" id="n-nutrition" onclick="goTab('nutrition')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.3.78-4.42 2.08-6.12"/><path d="M12 6v6l4 2"/></svg><span>Nutrition</span></div>
+      <div class="nv" id="n-sleep" onclick="goTab('sleep')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Sleep</span></div>
+      <div class="nv" id="n-body" onclick="goTab('body')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Body</span></div>
+      <div class="nv" id="n-ai" onclick="goTab('ai')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>AI</span></div>
+    </nav>
+
+  </div><!-- /app-main -->
+
+</div><!-- /app -->
+
+<!-- MODALS -->
+<!-- PROFILE -->
+<div class="modal" id="m-profile"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Profile</div><div class="f"><label>Full Name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name"></div><div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div><div class="g2"><div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100"></div><div class="f"><label id="ht-lbl">Height (cm)</label><input type="number" id="pf-ht" placeholder="175" min="50" max="300"></div></div><div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div><div class="g2" style="margin-top:14px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-profile')">Cancel</button><button type="button" class="btn" onclick="saveProfile()">Save Profile</button></div></div></div>
+
+<!-- EXERCISE INFO -->
+<div class="modal" id="m-exi">
+  <div class="msheet" style="overflow-y:auto;max-height:90vh">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:12px">
+      <div id="exi-name" style="font-family:'Inter',sans-serif;font-weight:700;font-size:22px;letter-spacing:.5px;color:var(--t)">Exercise</div>
+      <button type="button" class="btn-g" onclick="cModal('m-exi')">Done</button>
+    </div>
+    <div id="exi-img-wrap" style="position:relative;width:100%;aspect-ratio:3/2;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#FFFFFF 0%,#F5F5F7 100%);margin-bottom:14px;border:1px solid var(--bdr)">
+      <div id="exi-img-skel" class="skel" style="position:absolute;inset:0;border-radius:16px"></div>
+      <img id="exi-img-0" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease;background:transparent">
+      <img id="exi-img-1" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease;background:transparent">
+      <div id="exi-img-fallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--t3);font-size:13px;font-weight:500;text-align:center;padding:18px"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Demo not available</div>
+      <div id="exi-img-pill" style="position:absolute;top:10px;left:10px;display:none;align-items:center;gap:5px;padding:4px 9px;background:rgba(10,10,15,.72);color:#FFFFFF;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.4px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)"><span id="exi-img-pill-dot" style="width:6px;height:6px;border-radius:50%;background:#22C55E"></span><span id="exi-img-pill-txt">PLAYING</span></div>
+      <div id="exi-img-ctrls" style="position:absolute;bottom:8px;left:8px;right:8px;display:none;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;background:rgba(10,10,15,.72);border-radius:999px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
+        <button type="button" id="exi-play" onclick="exDemo_togglePlay()" style="background:none;border:none;color:#FFFFFF;cursor:pointer;padding:2px 4px;display:flex;align-items:center;justify-content:center" aria-label="Pause"><svg id="exi-play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+        <div style="display:flex;gap:4px;flex:1;justify-content:center">
+          <span id="exi-dot-0" style="width:7px;height:7px;border-radius:50%;background:#FFFFFF;opacity:.95"></span>
+          <span id="exi-dot-1" style="width:7px;height:7px;border-radius:50%;background:#FFFFFF;opacity:.30"></span>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button type="button" class="exi-spd" data-s="900" onclick="exDemo_setSpeed(900)" style="background:none;border:none;color:#FFFFFF;cursor:pointer;font-size:11px;font-weight:700;padding:3px 6px;border-radius:6px;opacity:.55;font-family:inherit">.5×</button>
+          <button type="button" class="exi-spd" data-s="500" onclick="exDemo_setSpeed(500)" style="background:rgba(255,255,255,.18);border:none;color:#FFFFFF;cursor:pointer;font-size:11px;font-weight:700;padding:3px 6px;border-radius:6px;font-family:inherit">1×</button>
+          <button type="button" class="exi-spd" data-s="300" onclick="exDemo_setSpeed(300)" style="background:none;border:none;color:#FFFFFF;cursor:pointer;font-size:11px;font-weight:700;padding:3px 6px;border-radius:6px;opacity:.55;font-family:inherit">2×</button>
+        </div>
+      </div>
+    </div>
+    <div class="mtags" id="exi-muscles"></div>
+    <p class="tm" id="exi-desc" style="line-height:1.72;font-size:13.5px"></p>
+    <div id="exi-tips"></div>
+    <div id="exi-history"></div>
+  </div>
+</div>
+
+<div class="modal" id="m-ex"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Add Exercise</div><button type="button" class="btn-g" style="font-size:12px" onclick="openExPicker()">📋 Browse</button></div><div class="f"><label>Exercise Name</label><input type="text" id="ex-n" placeholder="e.g. Bench Press" list="ex-dl" autocomplete="off" oninput="_onExNameInput(this.value)"><div id="ex-last-hint" style="font-size:12px;color:var(--accent-d);font-weight:600;margin-top:6px;display:none"></div><datalist id="ex-dl"><option value="Bench Press"><option value="Incline Press"><option value="Decline Press"><option value="Close-Grip Bench"><option value="Dumbbell Fly"><option value="Cable Fly"><option value="Dips"><option value="Push-up"><option value="Squat"><option value="Romanian Deadlift"><option value="Leg Press"><option value="Hip Thrust"><option value="Deadlift"><option value="Bulgarian Split Squat"><option value="Lunge"><option value="Leg Extension"><option value="Leg Curl"><option value="Calf Raise"><option value="Barbell Row"><option value="Dumbbell Row"><option value="Cable Row"><option value="Pull-up"><option value="Lat Pulldown"><option value="Face Pull"><option value="Overhead Press"><option value="Arnold Press"><option value="Lateral Raise"><option value="Front Raise"><option value="Rear Delt Fly"><option value="Barbell Curl"><option value="Dumbbell Curl"><option value="Hammer Curl"><option value="Tricep Pushdown"><option value="Skull Crusher"><option value="Plank"><option value="Crunches"><option value="Russian Twist"><option value="Hanging Leg Raise"><option value="Ab Wheel"></datalist></div><div class="f"><label>Muscle Group</label><select id="ex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option></select></div><div class="shrow" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div><div id="sets-list"></div><button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button><div class="g2" style="margin-top:12px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button><button type="button" class="btn" onclick="saveEx()">Add Exercise</button></div></div></div>
+
+<div class="modal" id="m-meal"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Log Meal</div><button type="button" class="btn-g" style="font-size:12px;padding:7px 12px;display:flex;align-items:center;gap:6px" onclick="openBarcodeScan()" aria-label="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="6" x2="6" y2="18"/><line x1="10" y1="6" x2="10" y2="18"/><line x1="14" y1="6" x2="14" y2="18"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scan</button></div><div class="f"><label>Meal Name</label><input type="text" id="mn" placeholder="e.g. Chicken & Rice"></div><div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="m-p" placeholder="0" min="0"></div><div class="f"><label>Carbs (g)</label><input type="number" id="m-c" placeholder="0" min="0"></div><div class="f"><label>Fat (g)</label><input type="number" id="m-f" placeholder="0" min="0"></div><div class="f"><label>Calories</label><input type="number" id="m-k" placeholder="0" min="0"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button><button type="button" class="btn" onclick="saveMeal()">Log Meal</button></div></div></div>
+
+<!-- BARCODE SCANNER -->
+<div class="modal" id="m-barcode"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:10px"><div class="ctitle" style="margin:0">Scan Barcode</div><button type="button" class="btn-g" onclick="closeBarcodeScan()">Cancel</button></div><div id="bc-stage" style="position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:14px;overflow:hidden"><video id="bc-video" playsinline muted autoplay style="width:100%;height:100%;object-fit:cover"></video><div id="bc-frame" style="position:absolute;inset:18%;border:2px solid rgba(255,255,255,.8);border-radius:10px;box-shadow:0 0 0 4000px rgba(0,0,0,.45);pointer-events:none"></div></div><div id="bc-status" style="margin-top:10px;font-size:13px;color:var(--t2);text-align:center;font-weight:600">Point at the barcode on the package.</div></div></div>
+
+<div class="modal" id="m-wt"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Log Weight</div><div class="f"><label>Weight (kg)</label><input type="number" id="wt-in" placeholder="e.g. 82.5" step="0.1" min="30" max="300"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-wt')">Cancel</button><button type="button" class="btn" onclick="saveWt()">Log Weight</button></div></div></div>
+
+<!-- REST TIMER -->
+<div class="modal" id="m-rest">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:16px">
+      <div class="ctitle" style="margin:0">Rest Timer</div>
+      <button type="button" id="notif-btn" class="btn-g" onclick="reqNotifPerm()" style="font-size:11px;padding:5px 10px">Allow Notifications</button>
+    </div>
+    <div class="rest-presets" id="rest-presets">
+      <button type="button" class="rest-preset" data-s="60" onclick="setRest(60)"><span class="rp-ico">🔥</span><div class="rp-body"><div class="rp-time">1 min</div><div class="rp-tip">More sets, less joint stress</div><div class="rp-emph">Time Efficient</div></div></button>
+      <button type="button" class="rest-preset on" data-s="120" onclick="setRest(120)"><span class="rp-ico">🛠️</span><div class="rp-body"><div class="rp-time">2 min</div><div class="rp-tip">Get toned / bigger</div><div class="rp-emph">Build Muscle</div></div></button>
+      <button type="button" class="rest-preset" data-s="300" onclick="setRest(300)"><span class="rp-ico">⚡</span><div class="rp-body"><div class="rp-time">5 min</div><div class="rp-tip">Maximize muscular power</div><div class="rp-emph">Increase Strength</div></div></button>
+    </div>
+    <div class="rring-wrap">
+      <svg width="180" height="180" viewBox="0 0 180 180" style="display:block">
+        <circle cx="90" cy="90" r="80" fill="none" stroke="var(--bdr2)" stroke-width="8"/>
+        <circle id="rring" cx="90" cy="90" r="80" fill="none" stroke="var(--accent)" stroke-width="8"
+          stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="0"
+          transform="rotate(-90 90 90)" style="transition:stroke-dashoffset 1s linear,stroke .4s"/>
+      </svg>
+      <div class="rring-lbl">
+        <div class="rring-time" id="rest-disp">1:30</div>
+        <div class="rring-sub">remaining</div>
+      </div>
+    </div>
+    <div class="g2" style="margin-top:8px">
+      <button type="button" class="btn-g" id="rest-mute-btn" style="font-size:12.5px;padding:10px" onclick="toggleRestMute(this)" aria-label="Toggle rest sound">🔔 Sound on</button>
+      <button type="button" class="btn-o" style="border-color:var(--red);color:var(--red)" onclick="cancelRest()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIME PICKER -->
+<div class="modal" id="m-timepick">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="ctitle" id="tp-title">Bedtime</div>
+    <div class="tp-wrap">
+      <div class="tp-inner">
+        <div class="tp-col" id="tp-hrs"></div>
+        <div class="tp-colon">:</div>
+        <div class="tp-col" id="tp-mins"></div>
+      </div>
+      <div class="tp-mask"></div>
+      <div class="tp-bar"></div>
+    </div>
+    <button type="button" class="btn" style="width:100%" onclick="confirmTime()">Set Time</button>
+  </div>
+</div>
+
+<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()">📐 Calculate from my body & goal</button><div class="g2"><div class="f"><label>Daily Protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target Weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water Goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie Goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save Goals</button></div></div></div>
+
+<!-- MACRO CALCULATOR -->
+<div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv" id="mc-f" style="color:var(--yel)">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
+
+<div class="modal" id="m-bc"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Scan Barcode</div><p class="tm" style="margin-bottom:11px">Point camera at a food barcode</p><video id="bc-vid" autoplay muted playsinline></video><div id="bc-result" class="hidden" style="margin-top:13px"><div class="mc"><div class="mcn" id="bc-name">–</div><div class="mcm" id="bc-macros">–</div></div><button type="button" class="btn" style="margin-top:10px" onclick="addScanned()">Add to Today</button></div><div id="bc-manual" class="hidden" style="margin-top:13px"><p class="tm" style="margin-bottom:9px;font-size:12px">Enter barcode manually:</p><div style="display:flex;gap:8px"><input type="number" id="bc-manual-in" placeholder="e.g. 5000159407236" style="flex:1;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:13px;color:var(--t);font-size:16px;outline:none;font-weight:600"><button type="button" class="btn" style="width:auto;padding:12px 16px" onclick="manualBarcode()">Look Up</button></div></div><button type="button" class="btn-g" style="width:100%;margin-top:12px" onclick="closeBc()">Close</button></div></div>
+
+<!-- FORGOT PASSWORD -->
+<div class="modal" id="m-forgot"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Reset Password</div><p class="tm" style="margin-bottom:14px">Enter your email and we'll send you a reset link.</p><div class="f"><label>Email</label><input type="email" id="fp-email" placeholder="you@email.com" autocomplete="email"></div><div id="fp-msg" style="font-size:12.5px;margin-top:4px;margin-bottom:8px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-forgot')">Cancel</button><button type="button" class="btn" id="fp-btn" onclick="sendReset()">Send Link</button></div></div></div>
+
+<!-- LOG CARDIO -->
+<div class="modal" id="m-cardio"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Log Activity</div>
+<div class="f"><label>Activity</label>
+<select id="cd-act" onchange="if(this.value==='__more'){cardio_loadMore(this);}">
+  <optgroup label="Popular">
+    <option value="run">Running</option>
+    <option value="walk">Walking</option>
+    <option value="bike">Cycling</option>
+    <option value="hike">Hiking</option>
+    <option value="swim">Swimming</option>
+    <option value="row">Rowing</option>
+    <option value="hiit">HIIT</option>
+    <option value="yoga">Yoga / Pilates</option>
+    <option value="soccer">Soccer</option>
+    <option value="basketball">Basketball</option>
+    <option value="tennis">Tennis</option>
+    <option value="boxing">Boxing</option>
+  </optgroup>
+  <optgroup id="cd-act-more-grp" label="—"><option value="__more">+ Show all activities…</option></optgroup>
+</select></div>
+<div class="g2"><div class="f"><label>Duration (min)</label><input type="number" id="cd-dur" placeholder="30" min="1"></div><div class="f"><label>Distance (km)</label><input type="number" id="cd-dist" placeholder="5" step="0.1" min="0"></div><div class="f"><label>Calories</label><input type="number" id="cd-cal" placeholder="300" min="0"></div><div class="f"><label>Avg HR (opt.)</label><input type="number" id="cd-hr" placeholder="140" min="40" max="220"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cardio')">Cancel</button><button type="button" class="btn" onclick="saveCardio()">Save</button></div></div></div>
+
+<!-- PLATE CALCULATOR -->
+<div class="modal" id="m-plate"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
+  <div class="ctitle">Plate Calculator</div>
+  <div class="pc-row">
+    <div class="f" style="margin-bottom:0"><label>Target weight</label><input type="number" id="pc-w" placeholder="100" step="0.5" min="0" inputmode="decimal" oninput="pc_calc()"></div>
+    <div class="f" style="margin-bottom:0"><label>Unit</label><select id="pc-u" onchange="pc_calc()"><option value="kg" selected>kg</option><option value="lb">lb</option></select></div>
+  </div>
+  <div class="pc-row" style="margin-top:10px">
+    <div class="f" style="margin-bottom:0"><label>Bar weight</label><select id="pc-bar" onchange="pc_calc()"><option value="20">Olympic 20kg</option><option value="15">Women's 15kg</option><option value="10">Training 10kg</option><option value="7">EZ bar 7kg</option><option value="0">No bar</option></select></div>
+    <div class="f" style="margin-bottom:0"><label>Plates</label><select id="pc-set" onchange="pc_calc()"><option value="metric" selected>Metric</option><option value="imperial">Imperial</option></select></div>
+  </div>
+  <div class="pc-out" id="pc-out"><div class="pc-empty">Enter a target weight to see plate loading.</div></div>
+  <div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-plate')">Close</button></div>
+</div></div>
+
+<!-- PAYWALL -->
+<div class="modal" id="m-paywall"><div class="msheet pw-sheet">
+  <button type="button" class="pw-close" onclick="cModal('m-paywall')" aria-label="Close">✕</button>
+  <div class="pw-scroll">
+    <!-- Hero with gradient -->
+    <div class="pw-hero">
+      <div class="pw-hero-badge">ATHLETEOS PRO</div>
+      <h2 class="pw-hero-title">Train like<br>you mean it.</h2>
+      <p class="pw-hero-sub">Get the full toolkit — AI coaching, plan generator, demos &amp; analytics. 7 days free.</p>
+    </div>
+
+    <!-- Feature list -->
+    <div class="pw-feats">
+      <div class="pw-feat"><div class="pw-feat-ico">∞</div><div><div class="pw-feat-t">Unlimited AI trainer</div><div class="pw-feat-b">Form coaching, meal ideas, plan tweaks — chat all you want.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7">🎯</div><div><div class="pw-feat-t">Personalized training plans</div><div class="pw-feat-b">Built around your goal, schedule, equipment &amp; experience.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(59,130,246,.12);color:#3B82F6">🎬</div><div><div class="pw-feat-t">Exercise demos &amp; cues</div><div class="pw-feat-b">Looping demos for every lift with key technique tips.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(245,158,11,.12);color:#F59E0B">📈</div><div><div class="pw-feat-t">Advanced analytics</div><div class="pw-feat-b">Volume per muscle, 1RM trends, weight projections.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(236,72,153,.12);color:#EC4899">📷</div><div><div class="pw-feat-t">Unlimited photos &amp; templates</div><div class="pw-feat-b">Track progress visually, save every workout split.</div></div></div>
+    </div>
+
+    <!-- Plans -->
+    <div class="pw-plans">
+      <button type="button" class="pw-plan" data-plan="monthly" onclick="pw_pick('monthly')">
+        <span class="pw-plan-radio"></span>
+        <div class="pw-plan-body"><div class="pw-plan-t">Monthly</div><div class="pw-plan-b">Flexible — pause anytime</div></div>
+        <div class="pw-plan-price"><div class="pw-plan-price-v">€4.99</div><div class="pw-plan-price-u">per month</div></div>
+      </button>
+      <button type="button" class="pw-plan on" data-plan="yearly" onclick="pw_pick('yearly')">
+        <span class="pw-plan-badge">Best value</span>
+        <span class="pw-plan-radio"></span>
+        <div class="pw-plan-body"><div class="pw-plan-t">Yearly</div><div class="pw-plan-b">7 days free · saves €43.89/yr</div></div>
+        <div class="pw-plan-price"><div class="pw-plan-price-v">€1.33</div><div class="pw-plan-price-u">per month, billed yearly</div></div>
+      </button>
+      <button type="button" class="pw-plan" data-plan="lifetime" onclick="pw_pick('lifetime')">
+        <span class="pw-plan-radio"></span>
+        <div class="pw-plan-body"><div class="pw-plan-t">Lifetime</div><div class="pw-plan-b">Pay once, use forever</div></div>
+        <div class="pw-plan-price"><div class="pw-plan-price-v">€49.99</div><div class="pw-plan-price-u">one-time</div></div>
+      </button>
+    </div>
+
+    <button type="button" class="btn pw-cta" id="pw-cta" onclick="pw_checkout()">Start 7-day free trial</button>
+
+    <div class="pw-trust">
+      <span>🔒 Secure checkout</span>
+      <span class="pw-trust-sep">·</span>
+      <span>Cancel anytime</span>
+      <span class="pw-trust-sep">·</span>
+      <span>€0 today</span>
+    </div>
+    <div class="pw-fineprint">By continuing you agree to our Terms &amp; Privacy.<br>Renews automatically. Manage in Settings.</div>
+
+    <details class="pw-timeline">
+      <summary>How your free trial works</summary>
+      <div class="pw-tl-body">
+        <div class="pw-tl-rail">
+          <div class="pw-tl-dot now">🔓</div>
+          <div class="pw-tl-line a"></div>
+          <div class="pw-tl-dot warn">🔔</div>
+          <div class="pw-tl-line b"></div>
+          <div class="pw-tl-dot charge">⭐</div>
+        </div>
+        <div style="flex:1">
+          <div class="pw-tl-step"><div class="pw-tl-step-t">Today</div><div class="pw-tl-step-b">Full access to AthleteOS Pro — every feature unlocked.</div></div>
+          <div class="pw-tl-step"><div class="pw-tl-step-t">In 5 days</div><div class="pw-tl-step-b">We remind you the trial ends in 2 days.</div></div>
+          <div class="pw-tl-step"><div class="pw-tl-step-t">In 7 days</div><div class="pw-tl-step-b">Subscription starts. Cancel before then for €0.</div></div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div></div>
+
+<!-- TARGET BODY AREAS (Muscle Map editor) -->
+<div class="modal" id="m-muscle"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div>
+  <div class="ctitle">Target body areas</div>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">Tap a muscle to mark it. Tap again with the same mode to un-mark.</p>
+  <div class="mm-mode">
+    <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Grow</button>
+    <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Define</button>
+    <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Exclude</button>
+  </div>
+  <div class="mm-wrap" id="ob-mm-wrap" style="margin-bottom:14px"></div>
+  <div class="mm-quick" style="margin-bottom:18px">
+    <button type="button" onclick="mm_quick('upper')">+ Upper body</button>
+    <button type="button" onclick="mm_quick('lower')">+ Lower body</button>
+    <button type="button" onclick="mm_quick('clear')">Clear all</button>
+  </div>
+  <div class="g2">
+    <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-muscle')">Cancel</button>
+    <button type="button" class="btn" onclick="saveMuscleMap()">Save</button>
+  </div>
+</div></div>
+
+<!-- LOG MEASUREMENTS -->
+<div class="modal" id="m-measure"><div class="msheet" style="overflow-y:auto;max-height:90vh"><div class="mhandle"></div><div class="ctitle">Log Measurements</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Leave any field blank to skip it.</p><div class="g2"><div class="f"><label>Waist (cm)</label><input type="number" id="mes-waist" step="0.1" min="30" max="200"></div><div class="f"><label>Chest (cm)</label><input type="number" id="mes-chest" step="0.1" min="40" max="200"></div><div class="f"><label>Hips (cm)</label><input type="number" id="mes-hips" step="0.1" min="40" max="200"></div><div class="f"><label>Neck (cm)</label><input type="number" id="mes-neck" step="0.1" min="20" max="80"></div><div class="f"><label>Arm (cm)</label><input type="number" id="mes-arm" step="0.1" min="15" max="80"></div><div class="f"><label>Thigh (cm)</label><input type="number" id="mes-thigh" step="0.1" min="20" max="100"></div></div><div class="f"><label>Body Fat % (optional)</label><input type="number" id="mes-bf" step="0.1" min="3" max="60"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-measure')">Cancel</button><button type="button" class="btn" onclick="saveMeasure()">Save</button></div></div></div>
+
+<!-- UPLOAD PROGRESS PHOTO -->
+<div class="modal" id="m-photo"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Add Progress Photo</div><div class="f"><label>Pose</label><select id="ph-pose"><option value="front">Front</option><option value="side">Side</option><option value="back">Back</option><option value="flex">Flex</option></select></div><div class="f"><label>Pick a photo</label><input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" style="font-size:14px;padding:10px"></div><div id="ph-prev-wrap" class="hidden" style="margin-bottom:10px;text-align:center"><img id="ph-prev" style="max-width:100%;max-height:240px;border-radius:10px"></div><div id="ph-msg" class="tm" style="font-size:12px;margin-bottom:6px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-photo')">Cancel</button><button type="button" class="btn" id="ph-btn" onclick="savePhoto()">Upload</button></div></div></div>
+
+<!-- VIEW PHOTO -->
+<div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()">⇆ Compare</button><button type="button" class="btn-o" style="width:100%;border-color:var(--red);color:var(--red)" onclick="deletePhoto()">Delete</button></div></div></div>
+
+<!-- PHOTO COMPARE -->
+<div class="modal" id="m-photocomp">
+  <div class="msheet" style="max-height:92vh;overflow-y:auto">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:12px">
+      <div class="ctitle" style="margin:0">Before / After</div>
+      <button type="button" class="btn-g" onclick="cModal('m-photocomp')">Done</button>
+    </div>
+    <div class="f" style="margin-bottom:12px"><label>Compare with</label><select id="pc-pick" onchange="renderPhotoCompare()"></select></div>
+    <div id="pc-stage" style="position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;user-select:none;touch-action:none;aspect-ratio:3/4">
+      <img id="pc-old" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:block">
+      <div id="pc-new-wrap" style="position:absolute;inset:0;clip-path:inset(0 0 0 50%);transition:clip-path .05s linear">
+        <img id="pc-new" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:block">
+      </div>
+      <div id="pc-handle" style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:#FFFFFF;transform:translateX(-50%);box-shadow:0 0 18px rgba(0,0,0,.6);cursor:ew-resize">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:18px;color:#0A0A0A;font-weight:700">⇆</div>
+      </div>
+    </div>
+    <div class="fb" style="margin-top:8px;font-size:12px;color:var(--t2);font-weight:600"><span id="pc-old-lbl">Before</span><span id="pc-new-lbl">After</span></div>
+  </div>
+</div>
+
+<!-- DAILY CHECK-IN -->
+<div class="modal" id="m-checkin"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Daily Check-In</div><div class="cki-row"><div class="cki-label">Mood</div><div class="cki-pills" id="cki-mood" data-key="mood"><div class="cki-pill" data-v="1">😖</div><div class="cki-pill" data-v="2">😕</div><div class="cki-pill" data-v="3">😐</div><div class="cki-pill" data-v="4">🙂</div><div class="cki-pill" data-v="5">😄</div></div></div><div class="cki-row"><div class="cki-label">Energy</div><div class="cki-pills" id="cki-energy" data-key="energy"><div class="cki-pill" data-v="1">🪫</div><div class="cki-pill" data-v="2">🔅</div><div class="cki-pill" data-v="3">⚡</div><div class="cki-pill" data-v="4">🔥</div><div class="cki-pill" data-v="5">🚀</div></div></div><div class="cki-row"><div class="cki-label">Soreness</div><div class="cki-pills" id="cki-soreness" data-key="soreness"><div class="cki-pill" data-v="1">😎</div><div class="cki-pill" data-v="2">🙂</div><div class="cki-pill" data-v="3">😬</div><div class="cki-pill" data-v="4">😣</div><div class="cki-pill" data-v="5">🥵</div></div></div><div class="g2" style="margin-top:18px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-checkin')">Cancel</button><button type="button" class="btn" onclick="saveCheckin()">Save</button></div></div></div>
+
+<!-- 1RM CALCULATOR -->
+<div class="modal" id="m-1rm"><div class="msheet"><div class="mhandle"></div><div class="ctitle">1-Rep Max Calculator</div><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="rm-w" step="0.5" placeholder="100" oninput="calc1RM()"></div><div class="f"><label>Reps</label><input type="number" id="rm-r" placeholder="5" min="1" max="20" oninput="calc1RM()"></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);text-align:center;padding:18px;margin:6px 0 14px"><div class="sl" style="margin-bottom:6px">Estimated 1RM</div><div id="rm-out" style="font-family:'Inter',sans-serif;font-weight:700;font-size:42px;color:var(--accent);line-height:1">–</div></div><div id="rm-pct" style="font-size:12.5px;color:var(--t2);line-height:1.8"></div><button type="button" class="btn-o" style="width:100%;margin-top:12px" onclick="cModal('m-1rm')">Close</button></div></div>
+
+<!-- QUICK SET LOG -->
+<div class="modal" id="m-quickset">
+  <div class="msheet" style="overflow-y:auto;max-height:90vh">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:8px">
+      <div>
+        <div class="ctitle" style="margin:0" id="qs-ex">Exercise</div>
+        <div class="tm" style="font-size:12px;margin-top:2px" id="qs-prev"></div>
+      </div>
+      <span class="tag" id="qs-num">Set 1</span>
+    </div>
+    <div class="g2">
+      <div class="f"><label>Weight (kg) <span class="tm" style="font-weight:500;font-size:11px">— leave 0 for bodyweight</span></label><input type="number" id="qs-w" placeholder="0" step="0.5" inputmode="decimal" autofocus></div>
+      <div class="f"><label>Reps</label><input type="number" id="qs-r" placeholder="0" inputmode="numeric"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);margin:4px 0 12px;cursor:pointer"><input type="checkbox" id="qs-rest" checked style="width:18px;height:18px;accent-color:var(--accent)"> Start rest timer after saving</label>
+    <div class="g2">
+      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-quickset')">Cancel</button>
+      <button type="button" class="btn" onclick="saveQuickSet()">Save Set</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST-WORKOUT SUMMARY -->
+<div class="modal" id="m-summary">
+  <div class="msheet" style="overflow-y:auto;max-height:90vh">
+    <div class="mhandle"></div>
+    <div style="text-align:center;padding:8px 0 18px">
+      <div style="font-size:42px;line-height:1;margin-bottom:8px">🎉</div>
+      <div style="font-family:'Inter',sans-serif;font-weight:800;font-size:24px;letter-spacing:-1px;color:var(--t)">Session Complete</div>
+      <div class="tm" id="sum-sub" style="font-size:13.5px;margin-top:4px">Great work.</div>
+    </div>
+    <div class="sg" style="margin-bottom:14px">
+      <div class="sc"><div class="sv" id="sum-dur">0<span class="su">min</span></div><div class="sl">Duration</div></div>
+      <div class="sc"><div class="sv" id="sum-vol">0<span class="su">kg</span></div><div class="sl">Volume</div></div>
+      <div class="sc"><div class="sv" id="sum-sets">0</div><div class="sl">Sets</div></div>
+      <div class="sc"><div class="sv" id="sum-kcal">0<span class="su">kcal</span></div><div class="sl">Burned</div></div>
+    </div>
+    <div id="sum-vs" style="display:none;margin-bottom:14px;padding:12px 14px;background:var(--surface);border-radius:14px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);font-weight:700;margin-bottom:8px">vs last session</div>
+      <div id="sum-vs-rows" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
+    </div>
+    <div id="sum-prs" style="display:none">
+      <div class="ctitle" style="margin:14px 0 8px;color:var(--accent-d)">🏆 New Personal Records</div>
+      <div id="sum-prs-list" style="margin-bottom:14px"></div>
+    </div>
+    <div id="sum-exs" style="margin-bottom:14px"></div>
+    <div id="sum-note-wrap" style="display:none;margin-bottom:14px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);font-weight:700;margin-bottom:6px">Session note</div>
+      <div id="sum-note" style="background:var(--surface);padding:10px 12px;border-radius:10px;font-size:13.5px;line-height:1.5;font-style:italic;color:var(--t2)"></div>
+    </div>
+    <div class="g2">
+      <button type="button" class="btn-o" style="width:100%" onclick="shareWorkout()">↗ Share</button>
+      <button type="button" class="btn" onclick="cModal('m-summary')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT FROM APPLE HEALTH / GOOGLE FIT -->
+<div class="modal" id="m-impt">
+  <div class="msheet" style="max-height:90vh;overflow-y:auto;padding-bottom:24px">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:14px">
+      <div class="ctitle" style="margin:0">Import health data</div>
+      <button type="button" class="btn-g" onclick="cModal('m-impt')">Done</button>
+    </div>
+
+    <!-- Source picker (Apple / Google) -->
+    <div id="impt-srcs">
+      <p class="tm" style="font-size:13.5px;line-height:1.55;margin-bottom:14px">Bring weights, cardio sessions and sleep into AthleteOS from your phone. We dedupe by date so re-imports are safe.</p>
+      <div style="display:grid;gap:10px">
+        <button type="button" class="btn-o" style="display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left" onclick="impt_pick('apple')">
+          <span style="width:36px;height:36px;border-radius:10px;background:#000000;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px"></span>
+          <span style="flex:1"><span style="display:block;font-weight:700;font-size:14.5px">Apple Health</span><span class="tm" style="font-size:11.5px">Upload export.xml from the Health app</span></span>
+        </button>
+        <button type="button" class="btn-o" style="display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left" onclick="impt_pick('google')">
+          <span style="width:36px;height:36px;border-radius:10px;background:#FFFFFF;color:#4285F4;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900">G</span>
+          <span style="flex:1"><span style="display:block;font-weight:700;font-size:14.5px">Google Fit</span><span class="tm" style="font-size:11.5px">Upload a CSV from Google Takeout</span></span>
+        </button>
+      </div>
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--t2)">How to get my file</summary>
+        <div style="font-size:12.5px;line-height:1.6;color:var(--t2);margin-top:10px">
+          <div style="font-weight:700;color:var(--t);margin-bottom:4px">Apple Health (iPhone)</div>
+          <ol style="padding-left:18px;margin:0 0 12px">
+            <li>Open <b>Health</b> app → tap your profile picture (top-right).</li>
+            <li>Scroll to <b>Export All Health Data</b> → wait for the zip.</li>
+            <li>Share the zip to your phone's files, unzip, and upload the file named <code>export.xml</code> here.</li>
+          </ol>
+          <div style="font-weight:700;color:var(--t);margin-bottom:4px">Google Fit (Android)</div>
+          <ol style="padding-left:18px;margin:0">
+            <li>Go to <b>takeout.google.com</b>, deselect all, then pick only <b>Fit</b>.</li>
+            <li>Export and download the zip.</li>
+            <li>Unzip and upload the <code>Daily activity metrics.csv</code> or <code>All Sessions.csv</code> file here.</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+
+    <!-- Working / preview area -->
+    <div id="impt-work" style="display:none">
+      <div id="impt-status" style="text-align:center;padding:24px 0">
+        <div class="skel" style="height:6px;border-radius:999px;margin-bottom:14px;width:60%;margin-left:auto;margin-right:auto"></div>
+        <div id="impt-status-msg" style="font-weight:700;font-size:14px">Parsing your file…</div>
+        <div class="tm" style="font-size:12px;margin-top:4px">This can take a minute for large files</div>
+      </div>
+      <div id="impt-preview" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+          <div class="card" style="padding:14px;text-align:center;background:var(--surface);border:none">
+            <div id="impt-c-w" style="font-family:Inter,sans-serif;font-weight:900;font-size:24px;letter-spacing:-1px">0</div>
+            <div class="tm" style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin-top:2px">Weights</div>
+          </div>
+          <div class="card" style="padding:14px;text-align:center;background:var(--surface);border:none">
+            <div id="impt-c-c" style="font-family:Inter,sans-serif;font-weight:900;font-size:24px;letter-spacing:-1px">0</div>
+            <div class="tm" style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin-top:2px">Cardio</div>
+          </div>
+          <div class="card" style="padding:14px;text-align:center;background:var(--surface);border:none">
+            <div id="impt-c-s" style="font-family:Inter,sans-serif;font-weight:900;font-size:24px;letter-spacing:-1px">0</div>
+            <div class="tm" style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin-top:2px">Sleep</div>
+          </div>
+        </div>
+        <div id="impt-sample" class="tm" style="font-size:12px;line-height:1.6;background:var(--surface);padding:12px 14px;border-radius:12px;margin-bottom:16px"></div>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn-o" style="flex:1" onclick="impt_reset()">Back</button>
+          <button type="button" class="btn" style="flex:1.6" onclick="impt_commit()">Import to AthleteOS</button>
+        </div>
+      </div>
+      <div id="impt-progress" style="display:none">
+        <div style="font-weight:700;font-size:14px;text-align:center;margin-bottom:10px" id="impt-prog-lbl">Importing…</div>
+        <div style="height:8px;border-radius:999px;background:var(--surface);overflow:hidden;margin-bottom:14px"><div id="impt-prog-bar" style="height:100%;width:0%;background:var(--accent);transition:width .25s ease"></div></div>
+      </div>
+      <div id="impt-done" style="display:none;text-align:center;padding:18px 0">
+        <div style="font-size:48px;margin-bottom:8px">✅</div>
+        <div style="font-weight:900;font-size:20px;margin-bottom:6px">Import complete</div>
+        <div class="tm" id="impt-done-sub" style="font-size:13px;line-height:1.55;margin-bottom:16px"></div>
+        <button type="button" class="btn" onclick="cModal('m-impt');impt_reset()">Done</button>
+      </div>
+    </div>
+
+    <!-- Hidden file pickers -->
+    <input type="file" id="impt-file-apple" accept=".xml,application/xml" style="display:none" onchange="impt_handleFile(event,'apple')">
+    <input type="file" id="impt-file-google" accept=".csv,text/csv" style="display:none" onchange="impt_handleFile(event,'google')">
+  </div>
+</div>
+
+<!-- MUSCLE BROWSER -->
+<div class="modal" id="m-musc">
+  <div class="msheet" style="max-height:90vh;overflow-y:auto;padding-bottom:20px">
+    <div class="mhandle"></div>
+    <div class="fb" style="margin-bottom:14px">
+      <div class="ctitle" style="margin:0" id="musc-title">Exercises</div>
+      <button type="button" class="btn-g" onclick="cModal('m-musc')">Done</button>
+    </div>
+    <div class="pills" id="musc-pills" style="margin-bottom:14px">
+      <button type="button" class="pill" data-mg="chest" onclick="filterMusc('chest')">Chest</button>
+      <button type="button" class="pill" data-mg="back" onclick="filterMusc('back')">Back</button>
+      <button type="button" class="pill" data-mg="shoulders" onclick="filterMusc('shoulders')">Shoulders</button>
+      <button type="button" class="pill" data-mg="arms" onclick="filterMusc('arms')">Arms</button>
+      <button type="button" class="pill" data-mg="legs" onclick="filterMusc('legs')">Legs</button>
+      <button type="button" class="pill" data-mg="core" onclick="filterMusc('core')">Core</button>
+    </div>
+    <div id="musc-best-section">
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent-d);font-weight:700;margin-bottom:8px">★ Top Picks</div>
+      <div id="musc-best-list" style="margin-bottom:18px"></div>
+    </div>
+    <div id="musc-rest-section">
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);font-weight:700;margin-bottom:8px">All exercises</div>
+      <div id="musc-rest-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE EMAIL -->
+<div class="modal" id="m-chmail"><div class="msheet"><div class="mhandle"></div>
+  <div class="ctitle">Change email</div>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">We'll send a confirmation link to the new address. You'll stay signed in with the old one until you click it.</p>
+  <div class="f"><label>New email</label><input type="email" id="chmail-new" placeholder="new@example.com" autocomplete="off"></div>
+  <div class="g2" style="margin-top:6px">
+    <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-chmail')">Cancel</button>
+    <button type="button" class="btn" id="chmail-btn" onclick="saveChangeEmail()">Send link</button>
+  </div>
+</div></div>
+
+<!-- CHANGE PASSWORD -->
+<div class="modal" id="m-chpw"><div class="msheet"><div class="mhandle"></div>
+  <div class="ctitle">Change password</div>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">Pick a new password — at least 8 characters.</p>
+  <div class="f"><label>New password</label><input type="password" id="chpw-new" placeholder="••••••••" autocomplete="new-password"></div>
+  <div class="f"><label>Confirm password</label><input type="password" id="chpw-conf" placeholder="••••••••" autocomplete="new-password"></div>
+  <div class="g2" style="margin-top:6px">
+    <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-chpw')">Cancel</button>
+    <button type="button" class="btn" id="chpw-btn" onclick="saveChangePassword()">Update password</button>
+  </div>
+</div></div>
+
+<!-- FEEDBACK FORM -->
+<div class="modal" id="m-feedback"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
+  <div class="ctitle">Send feedback</div>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">We read every one. Tell us what's broken, missing, or great.</p>
+  <div class="f"><label>Category</label>
+    <div class="gpills" style="margin-top:8px">
+      <button type="button" class="gpill on" id="fb-cat-bug" onclick="fb_cat('bug')">🐛 Bug</button>
+      <button type="button" class="gpill" id="fb-cat-idea" onclick="fb_cat('idea')">💡 Idea</button>
+      <button type="button" class="gpill" id="fb-cat-love" onclick="fb_cat('love')">❤️ Love</button>
+      <button type="button" class="gpill" id="fb-cat-other" onclick="fb_cat('other')">Other</button>
+    </div>
+  </div>
+  <div class="f"><label>Your message</label><textarea id="fb-msg" placeholder="What's on your mind?" style="width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:12px 14px;color:var(--t);font-family:inherit;font-size:14.5px;outline:none;resize:vertical;min-height:120px;font-weight:500"></textarea></div>
+  <p class="tm" style="font-size:11px;margin-bottom:14px;color:var(--t3)">We'll attach your account email and app version. No other data is sent.</p>
+  <div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-feedback')">Cancel</button><button type="button" class="btn" id="fb-send" onclick="sendFeedback()">Send</button></div>
+</div></div>
+<!-- (legacy plate calc removed — visual version is the m-plate above) -->
+
+<!-- EXERCISE PROGRESSION CHART -->
+<div class="modal" id="m-exchart"><div class="msheet" style="max-height:90vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="exc-name">Exercise</div><button type="button" class="btn-g" onclick="cModal('m-exchart')">Done</button></div><div class="tm" style="font-size:12px;margin-bottom:10px" id="exc-meta">–</div><div class="chart-wrap" style="height:200px;margin-bottom:6px"><canvas id="exc-chart"></canvas></div><div id="exc-hist" style="max-height:200px;overflow-y:auto"></div></div></div>
+
+<!-- WORKOUT TEMPLATES -->
+<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
+
+<!-- SAVE TEMPLATE -->
+<div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template Name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
+
+<!-- RECIPE DETAIL -->
+<div class="modal" id="m-recipe"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="rc-name">Recipe</div><button type="button" class="btn-g" onclick="cModal('m-recipe')">Done</button></div><div id="rc-macros" class="tm" style="font-size:12.5px;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Ingredients</div><div id="rc-ing" class="tm" style="font-size:13px;line-height:1.85;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Steps</div><div id="rc-steps" class="tm" style="font-size:13px;line-height:1.7;margin-bottom:16px"></div><button type="button" class="btn" style="width:100%" onclick="logRecipeAsMeal()">+ Log as Meal</button></div></div>
+
+<!-- IMPORT SHARED ROUTINE -->
+<div class="modal" id="m-import"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Import shared routine?</div><p class="tm" style="margin-bottom:12px;font-size:12.5px">Someone shared a workout template with you. Add it to your templates?</p><div class="card" style="background:var(--surface);padding:14px;margin-bottom:14px;border-radius:14px"><div id="imp-info"></div></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="declineShare()">Skip</button><button type="button" class="btn" onclick="acceptShare()">Add to Templates</button></div></div></div>
+
+<!-- EXERCISE PICKER (search) -->
+<div class="modal" id="m-expk"><div class="msheet" style="max-height:80vh;display:flex;flex-direction:column"><div class="mhandle"></div><div class="ctitle">Pick Exercise</div><input type="text" id="expk-q" placeholder="Search exercises..." style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px 14px;color:var(--t);font-size:15px;outline:none;margin-bottom:10px" oninput="filterExPk()"><div id="expk-list" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch"></div></div></div>
+
+<!-- CREATE CUSTOM EXERCISE -->
+<div class="modal" id="m-cuex"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Exercise</div><div class="f"><label>Name</label><input type="text" id="cuex-n" placeholder="e.g. Cable Crossover Variant" autocomplete="off"></div><div class="f"><label>Primary Muscle</label><select id="cuex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option><option value="other">Other</option></select></div><div class="f"><label>Demo video URL (optional)</label><input type="url" id="cuex-demo" placeholder="https://youtube.com/..." autocomplete="off"></div><div class="f"><label>Tips (one per line, optional)</label><textarea id="cuex-tips" rows="4" placeholder="e.g.&#10;Pause at the contraction&#10;Slow eccentric on the way down" style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px;color:var(--t);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px"></textarea></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuex')">Cancel</button><button type="button" class="btn" onclick="saveCustomEx()">Save</button></div></div></div>
+
+<!-- CREATE CUSTOM ACHIEVEMENT -->
+<div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="🏆" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
+
+<!-- DELETE ACCOUNT -->
+<div class="modal" id="m-delacc"><div class="msheet"><div class="mhandle"></div><div class="ctitle" style="color:var(--red)">Delete Account</div><p class="tm" style="line-height:1.65;margin-bottom:10px">This is permanent. We'll erase your profile, all workouts, meals, sleep, weight, photos, measurements, and chat history. There is no undo.</p><div class="f"><label>Type <b style="color:var(--red)">DELETE</b> to confirm</label><input type="text" id="del-confirm" placeholder="DELETE" autocomplete="off" autocapitalize="characters"></div><div id="del-msg" style="font-size:12.5px;margin:4px 0 8px;display:none;color:var(--red)"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-delacc')">Cancel</button><button type="button" class="btn" id="del-btn" style="background:var(--red);color:#fff" onclick="deleteMyAccount()">Erase forever</button></div></div></div>
+
+<!-- DAY DETAIL -->
+<div class="modal" id="m-day"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="day-title">Day</div><button type="button" class="btn-g" onclick="cModal('m-day')">Done</button></div><div id="day-body"></div></div></div>
+
+<!-- PRIVACY / TERMS -->
+<div class="modal" id="m-legal"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="legal-title">Privacy Policy</div><button type="button" class="btn-g" onclick="cModal('m-legal')">Done</button></div><div id="legal-body" class="tm" style="font-size:13px;line-height:1.7;color:var(--t2)"></div></div></div>
+
+<!-- ONBOARDING WIZARD -->
+<div id="onb">
+  <div class="onb-body-wrap">
+    <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
+
+    <!-- 0: Welcome -->
+    <div class="onb-step on" id="os-0">
+      <div class="onb-hero">Welcome to <span>AthleteOS</span></div>
+      <div class="onb-sub">Train smart. Eat well. Sleep deep. Built around the way you actually live.</div>
+      <div class="onb-feat-list">
+        <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--adim);color:var(--accent-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Beat last session</div><div class="onb-feat-b">See exactly what you did last time and what to aim for now.</div></div></div>
+        <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--bdim);color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Log in seconds</div><div class="onb-feat-b">Your last set is pre-filled. Tap, save, get back to training.</div></div></div>
+        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">AI coach in your pocket</div><div class="onb-feat-b">Ask anything — meals, form, recovery. It knows your full history.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 1: Motivations (multi) -->
+    <div class="onb-step" id="os-1">
+      <div class="onb-h">What brings you here?</div>
+      <div class="onb-sub">Pick all that apply. We'll prioritize features around your goals.</div>
+      <div class="onb-multi" id="ob-mot">
+        <button type="button" class="onb-multi-chip" data-v="progress" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">📈</span>Track progress</button>
+        <button type="button" class="onb-multi-chip" data-v="muscle" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">💪</span>Build muscle</button>
+        <button type="button" class="onb-multi-chip" data-v="lose" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">⚖️</span>Lose weight</button>
+        <button type="button" class="onb-multi-chip" data-v="eat" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🥗</span>Eat better</button>
+        <button type="button" class="onb-multi-chip" data-v="sleep" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🌙</span>Sleep deeper</button>
+        <button type="button" class="onb-multi-chip" data-v="rest" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">⏱</span>Rest timer</button>
+        <button type="button" class="onb-multi-chip" data-v="plan" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">📋</span>Personal plan</button>
+        <button type="button" class="onb-multi-chip" data-v="streak" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🔥</span>Stay consistent</button>
+      </div>
+    </div>
+
+    <!-- 2: Main goal -->
+    <div class="onb-step" id="os-2">
+      <div class="onb-h">What's your main training goal?</div>
+      <div class="onb-sub">Your AI trainer will tailor every suggestion to this.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-goal-list">
+          <button type="button" class="opt-item" data-v="strength" onclick="ob_pick('main_goal',this)"><span class="opt-ico">🏋️</span><div class="opt-body"><div class="opt-title">Get stronger, lift heavier</div><div class="opt-sub">Powerlifting / barbell focus</div></div></button>
+          <button type="button" class="opt-item" data-v="muscle" onclick="ob_pick('main_goal',this)"><span class="opt-ico">💪</span><div class="opt-body"><div class="opt-title">Build muscle</div><div class="opt-sub">Hypertrophy &amp; size</div></div></button>
+          <button type="button" class="opt-item" data-v="lean" onclick="ob_pick('main_goal',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Get lean and defined</div><div class="opt-sub">Recomposition</div></div></button>
+          <button type="button" class="opt-item" data-v="lose" onclick="ob_pick('main_goal',this)"><span class="opt-ico">⚖️</span><div class="opt-body"><div class="opt-title">Lose weight</div><div class="opt-sub">Sustainable fat loss</div></div></button>
+          <button type="button" class="opt-item" data-v="general" onclick="ob_pick('main_goal',this)"><span class="opt-ico">🌱</span><div class="opt-body"><div class="opt-title">General fitness &amp; health</div><div class="opt-sub">Feel good, move well, live longer</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: Goal blueprint (educational, dynamic) -->
+    <div class="onb-step" id="os-3">
+      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div class="onb-h" id="ob-bp-title">Your Muscle Blueprint</div>
+      <div class="onb-sub" id="ob-bp-sub">Science-backed targets tuned to your goal.</div>
+      <div class="onb-info-list" id="ob-bp-list"></div>
+    </div>
+
+    <!-- 4: Experience -->
+    <div class="onb-step" id="os-4">
+      <div class="onb-h">What's your experience level?</div>
+      <div class="onb-sub">No judgement — this just calibrates the suggestions you get.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-exp-list">
+          <button type="button" class="opt-item" data-v="beginner" onclick="ob_pick('experience',this)"><span class="opt-ico">🌱</span><div class="opt-body"><div class="opt-title">Beginner</div><div class="opt-sub">New to strength training</div></div></button>
+          <button type="button" class="opt-item" data-v="intermediate" onclick="ob_pick('experience',this)"><span class="opt-ico">🔥</span><div class="opt-body"><div class="opt-title">Intermediate</div><div class="opt-sub">Comfortable with the basics</div></div></button>
+          <button type="button" class="opt-item" data-v="advanced" onclick="ob_pick('experience',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Advanced</div><div class="opt-sub">Years of consistent training</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Prior tracking -->
+    <div class="onb-step" id="os-5">
+      <div class="onb-h">How do you track today?</div>
+      <div class="onb-sub">Honest answers help us show you the right tools first.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-prior-list">
+          <button type="button" class="opt-item" data-v="memory" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">🧠</span><div class="opt-body"><div class="opt-title">Memory</div><div class="opt-sub">In my head</div></div></button>
+          <button type="button" class="opt-item" data-v="paper" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">📓</span><div class="opt-body"><div class="opt-title">Notebook / paper</div><div class="opt-sub">Pen &amp; pad at the gym</div></div></button>
+          <button type="button" class="opt-item" data-v="app" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">📱</span><div class="opt-body"><div class="opt-title">Another app</div><div class="opt-sub">Switching from something else</div></div></button>
+          <button type="button" class="opt-item" data-v="none" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">❌</span><div class="opt-body"><div class="opt-title">Not keeping track</div><div class="opt-sub">Time to change that</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Profile basics (gender / age / height / units) -->
+    <div class="onb-step" id="os-6">
+      <div class="onb-h">Tell us about you</div>
+      <div class="onb-sub">Used for protein targets, calorie needs, and weight projections.</div>
+      <div class="onb-body">
+        <div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="ob-g-male" onclick="ob_gender('male')">Male</button><button type="button" class="gpill" id="ob-g-female" onclick="ob_gender('female')">Female</button></div></div>
+        <div class="g2"><div class="f"><label>Age</label><input type="number" id="ob-age" placeholder="25" min="10" max="100" inputmode="numeric"></div><div class="f"><label>Height (cm)</label><input type="number" id="ob-ht" placeholder="175" min="50" max="280" inputmode="numeric"></div></div>
+        <div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="ob-u-metric" onclick="ob_units('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="ob-u-imperial" onclick="ob_units('imperial')">Imperial (lb/in)</button></div></div>
+      </div>
+    </div>
+
+    <!-- 7: Train style -->
+    <div class="onb-step" id="os-7">
+      <div class="onb-h">Do you train alone or with someone?</div>
+      <div class="onb-sub">Helpful for rest-time suggestions and session pacing.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-train-list">
+          <button type="button" class="opt-item" data-v="solo" onclick="ob_pick('train_style',this)"><span class="opt-ico">🧍</span><div class="opt-body"><div class="opt-title">Solo</div><div class="opt-sub">Just me &amp; the iron</div></div></button>
+          <button type="button" class="opt-item" data-v="partner" onclick="ob_pick('train_style',this)"><span class="opt-ico">🤝</span><div class="opt-body"><div class="opt-title">With a training partner</div><div class="opt-sub">Push each other</div></div></button>
+          <button type="button" class="opt-item" data-v="trainer" onclick="ob_pick('train_style',this)"><span class="opt-ico">👨‍🏫</span><div class="opt-body"><div class="opt-title">With a trainer / coach</div><div class="opt-sub">Following someone's program</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8: Follow a plan? -->
+    <div class="onb-step" id="os-8">
+      <div class="onb-h">Do you follow a set routine?</div>
+      <div class="onb-sub">No wrong answer. AthleteOS adapts to either style.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-plan-list">
+          <button type="button" class="opt-item" data-v="yes" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">📋</span><div class="opt-body"><div class="opt-title">Yes, I have a plan</div><div class="opt-sub">Same split every week</div></div></button>
+          <button type="button" class="opt-item" data-v="flexible" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">🔀</span><div class="opt-body"><div class="opt-title">Sort of, but flexible</div><div class="opt-sub">I shift things around</div></div></button>
+          <button type="button" class="opt-item" data-v="wing" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">🎲</span><div class="opt-body"><div class="opt-title">No, I wing it</div><div class="opt-sub">Decide on the day</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9: Logging style -->
+    <div class="onb-step" id="os-9">
+      <div class="onb-h">How much do you want to log?</div>
+      <div class="onb-sub">Pick a starting point. You can change anything later.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-log-list">
+          <button type="button" class="opt-item" data-v="minimal" onclick="ob_pick('logging_style',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Minimal</div><div class="opt-sub">Just my PRs and best sets</div></div></button>
+          <button type="button" class="opt-item" data-v="balanced" onclick="ob_pick('logging_style',this)"><span class="opt-ico">⚖️</span><div class="opt-body"><div class="opt-title">Balanced</div><div class="opt-sub">What matters, none of the clutter</div></div></button>
+          <button type="button" class="opt-item" data-v="detailed" onclick="ob_pick('logging_style',this)"><span class="opt-ico">🔍</span><div class="opt-body"><div class="opt-title">Detailed</div><div class="opt-sub">Every set, every rep</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10: Weekly goal -->
+    <div class="onb-step" id="os-10">
+      <div class="onb-h">Set a weekly goal</div>
+      <div class="onb-sub">How many days will you show up? We'll nudge you if you miss it.</div>
+      <div class="onb-body">
+        <div class="opt-group" id="ob-week-list">
+          <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">First Steps</span></div>
+          <div class="opt-row" data-v="2" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">2 Days</span><span class="opt-row-r">Double Pump</span></div>
+          <div class="opt-row on" data-v="3" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">3 Days</span><span class="opt-row-r">Triple Threat</span></div>
+          <div class="opt-row" data-v="4" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">4 Days</span><span class="opt-row-r">Lean Machine</span></div>
+          <div class="opt-row" data-v="5" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">5 Days</span><span class="opt-row-r">Iron Addict</span></div>
+          <div class="opt-row" data-v="6" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">6 Days</span><span class="opt-row-r">Gym Rat</span></div>
+          <div class="opt-row" data-v="7" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">Every Day</span><span class="opt-row-r">Legend</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11: Muscle map -->
+    <div class="onb-step" id="os-11">
+      <div class="onb-h">Target body areas</div>
+      <div class="onb-sub">Tap to mark muscles you want to <b>Grow</b>, <b>Define</b>, or <b>Exclude</b>. Skip if unsure.</div>
+      <div class="onb-body">
+        <div class="mm-mode">
+          <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Grow</button>
+          <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Define</button>
+          <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Exclude</button>
+        </div>
+        <div class="mm-wrap" id="ob-mm-wrap"></div>
+        <div class="mm-quick">
+          <button type="button" onclick="mm_quick('upper')">+ Upper body</button>
+          <button type="button" onclick="mm_quick('lower')">+ Lower body</button>
+          <button type="button" onclick="mm_quick('clear')">Clear all</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12: Weight unit choice -->
+    <div class="onb-step" id="os-12">
+      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
+      <div class="onb-h">Choose weight unit</div>
+      <div class="onb-sub">Used everywhere weight shows up. Change it anytime in Settings.</div>
+      <div class="onb-body">
+        <div class="opt-list" id="ob-unit-list">
+          <button type="button" class="opt-item" data-v="imperial" onclick="ob_pick('units',this)"><span class="opt-ico" style="font-weight:800;font-size:16px;color:var(--t)">lb</span><div class="opt-body"><div class="opt-title">Pounds</div><div class="opt-sub">Imperial</div></div></button>
+          <button type="button" class="opt-item on" data-v="metric" onclick="ob_pick('units',this)"><span class="opt-ico" style="font-weight:800;font-size:16px;color:var(--accent-d)">kg</span><div class="opt-body"><div class="opt-title">Kilograms</div><div class="opt-sub">Metric</div></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13: Current weight -->
+    <div class="onb-step" id="os-13">
+      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
+      <div class="onb-h">Current weight</div>
+      <div class="onb-sub">Just the starting point for your chart. You can update it any time.</div>
+      <div class="onb-body">
+        <div class="onb-num-wrap">
+          <input type="number" class="onb-num" id="ob-cw" placeholder="80" step="0.1" min="30" max="300" inputmode="decimal">
+          <span class="onb-num-u" id="ob-cw-u">kg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14: Goal weight + projection -->
+    <div class="onb-step" id="os-14">
+      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><path d="M6 9h12l1 11H5z"/></svg></div>
+      <div class="onb-h">Weight goal</div>
+      <div class="onb-sub">A realistic target you can reach with healthy habits.</div>
+      <div class="onb-body">
+        <div class="onb-num-wrap">
+          <input type="number" class="onb-num" id="ob-gw" placeholder="75" step="0.1" min="30" max="300" inputmode="decimal" oninput="ob_renderProjection()">
+          <span class="onb-num-u" id="ob-gw-u">kg</span>
+        </div>
+        <div class="wp-wrap" id="ob-wp">
+          <div class="wp-avg"><span class="wp-avg-l">Goal</span><span class="wp-avg-v" id="wp-goal-v">—</span><span class="wp-avg-u" id="wp-goal-u">kg</span></div>
+          <div class="wp-range" id="wp-range">Set a goal to see your projection.</div>
+          <div class="wp-canvas-wrap"><canvas id="wp-canvas"></canvas></div>
+          <div class="wp-foot">
+            <div><div class="wp-foot-l">Best case</div><div class="wp-foot-v" id="wp-best">—</div></div>
+            <div><div class="wp-foot-l">Realistic</div><div class="wp-foot-v dim" id="wp-real">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15: Daily targets -->
+    <div class="onb-step" id="os-15">
+      <div class="onb-h">Daily nutrition targets</div>
+      <div class="onb-sub">We picked sensible defaults based on your goal. Tweak any time.</div>
+      <div class="onb-body">
+        <div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="ob-p" placeholder="170" inputmode="numeric"></div><div class="f"><label>Calories</label><input type="number" id="ob-k" placeholder="2500" inputmode="numeric"></div></div>
+        <div class="f"><label>Water (cups)</label><input type="number" id="ob-wt" placeholder="8" inputmode="numeric"></div>
+      </div>
+    </div>
+
+    <!-- 16: Reminders -->
+    <div class="onb-step" id="os-16">
+      <div class="onb-h">Stay on track</div>
+      <div class="onb-sub">Optional daily nudges so a busy day never sinks your streak.</div>
+      <div class="onb-body">
+        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib" style="background:var(--adim)">💪</div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Workout reminder</div><div class="tm" style="font-size:12.5px">Daily at 5:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-wo" checked><span class="tog-track"></span></label></div></div>
+        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib" style="background:var(--bdim)">🥩</div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Protein nudge</div><div class="tm" style="font-size:12.5px">Daily at 8:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-pr" checked><span class="tog-track"></span></label></div></div>
+        <p class="tm" style="font-size:12.5px;text-align:center;margin-top:10px">We'll ask for notification permission once you turn one on.</p>
+      </div>
+    </div>
+  </div>
+  <div class="onb-cta">
+    <button type="button" class="btn-g" id="ob-back-btn" onclick="ob_back()">Back</button>
+    <button type="button" class="btn" id="ob-next-btn" style="flex:1" onclick="ob_next()">Continue</button>
+    <button type="button" class="btn-g hidden" id="ob-skip-btn" onclick="ob_next()">Skip</button>
+  </div>
+</div>
+
+<!-- BUILDING-YOUR-PLAN SPLASH -->
+<div id="onb-splash">
+  <div class="spl-sparkle">
+    <span class="sp">✦</span><span class="sp">✧</span><span class="sp">✧</span><span class="sp">✦</span><span class="sp">✦</span>
+  </div>
+  <div class="spl-h" id="spl-title">Building your plan</div>
+  <div class="spl-step" id="spl-step">Reading your answers…</div>
+  <div class="spl-prog"><div class="spl-prog-fill" id="spl-fill"></div></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // Pre-boot: if first launch (no session token and welcome unseen), swap auth → welcome
+  // before app.js runs, so the user sees the intro instead of the sign-in form on cold open.
+  (function(){
+    try{
+      var seen=localStorage.getItem('aos_welcome_seen')==='1';
+      // crude session check: any supabase auth key in localStorage means there's likely a session
+      var hasSession=false;
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i);
+        if(k&&k.indexOf('sb-')===0&&k.indexOf('-auth-token')>-1){hasSession=true;break;}
+      }
+      if(!seen&&!hasSession){
+        var w=document.getElementById('welcome');
+        var a=document.getElementById('auth');
+        if(w)w.classList.remove('hidden');
+        if(a)a.style.display='none';
+      }
+    }catch(e){}
+  })();
+</script>
+<script src="app.js"></script>
+</body>
+</html>

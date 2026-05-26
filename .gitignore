@@ -1,0 +1,36 @@
+# Claude Code local config / skills — not part of the app
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor scratch
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files from prior versions
+*.backup
+index.html.backup
+
+# Local env / secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# Node / npm (used for Playwright tests, not the app itself)
+node_modules/
+playwright-report/
+test-results/
+.playwright/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS-specific
+ehthumbs.db
