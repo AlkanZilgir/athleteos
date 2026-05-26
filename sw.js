@@ -1,4 +1,4 @@
-const CACHE='athleteos-v42';
+const CACHE='athleteos-v43';
 
 const BASE=self.registration.scope;
 const ASSETS=[
@@ -164,6 +164,10 @@ self.addEventListener('fetch',e=>{
     );
     return;
   }
+
+  // Cache API only stores GET responses; never try to cache POST/PUT/DELETE.
+  // Hitting cache.put with a non-GET throws and surfaces in DevTools.
+  if(e.request.method!=='GET')return;
 
   e.respondWith(
     caches.match(e.request).then(cached=>{
