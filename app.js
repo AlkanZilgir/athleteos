@@ -1,39 +1,22 @@
 const APP_VERSION='v1.0.1';
 
 /* ── ERROR TRACKING (Sentry) ──────────────────
-   To activate: create a free Sentry project (sentry.io) and paste the DSN
-   below. The lazy loader will pull in the CDN bundle and start capturing
-   errors. If SENTRY_DSN stays empty, the app runs normally without it. */
-var SENTRY_DSN=''; // <-- paste your DSN here
-function _initSentry(){
-  if(!SENTRY_DSN)return;
-  if(window.Sentry)return _setupSentry();
-  var s=document.createElement('script');
-  s.src='https://browser.sentry-cdn.com/7.119.0/bundle.min.js';
-  s.crossOrigin='anonymous';
-  s.onload=_setupSentry;
-  s.onerror=function(){console.warn('Sentry SDK failed to load');};
-  document.head.appendChild(s);
+   The Sentry Loader Script is in index.html <head>. It lazily injects the SDK
+   on first error and exposes window.Sentry as a queueing proxy until then —
+   meaning Sentry.captureException() / Sentry.setUser() calls below work even
+   before the SDK has finished downloading. Org/release/environment are set in
+   the Sentry dashboard (Loader Script Settings) and via onLoad below. */
+if(window.Sentry&&Sentry.onLoad){
+  Sentry.onLoad(function(){
+    try{
+      Sentry.init({
+        release:'athleteos@'+APP_VERSION,
+        environment:location.hostname==='localhost'?'dev':'prod',
+        ignoreErrors:['ResizeObserver loop','Non-Error promise rejection captured','top.GLOBALS','InvalidStateError']
+      });
+    }catch(e){console.warn('Sentry init',e);}
+  });
 }
-function _setupSentry(){
-  try{
-    Sentry.init({
-      dsn:SENTRY_DSN,
-      release:'athleteos@'+APP_VERSION,
-      environment:location.hostname==='localhost'?'dev':'prod',
-      tracesSampleRate:0.1,
-      // Don't ship third-party noise (browser extensions, ad blockers).
-      ignoreErrors:['ResizeObserver loop','Non-Error promise rejection captured','top.GLOBALS','InvalidStateError'],
-      beforeSend:function(ev){
-        // Strip user-identifying free-text from event values.
-        if(ev.extra&&ev.extra.email)delete ev.extra.email;
-        return ev;
-      }
-    });
-    if(CU)Sentry.setUser({id:CU.id});
-  }catch(e){console.warn('Sentry setup',e);}
-}
-_initSentry();
 window.addEventListener('error',function(ev){
   if(window.Sentry)Sentry.captureException(ev.error||ev.message);
 });
