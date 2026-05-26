@@ -44,17 +44,40 @@ window.addEventListener('unhandledrejection',function(ev){
 /* ── ANALYTICS (Plausible — privacy-friendly, no cookies) ──
    To activate: register a domain at plausible.io and replace PLAUSIBLE_DOMAIN
    with the value you used (e.g. "athleteos.app"). If left empty, no analytics
-   are sent. Use track('event_name', {prop:'val'}) for custom funnel events. */
+   are sent. Use track('event_name', {prop:'val'}) for custom funnel events.
+   Gated on cookie consent in EU regions — see _maybeShowConsent() below. */
 var PLAUSIBLE_DOMAIN=''; // <-- e.g. 'athleteos.app'
 function _initPlausible(){
   if(!PLAUSIBLE_DOMAIN)return;
+  if(localStorage.getItem('consent_analytics')==='no')return;
   var s=document.createElement('script');
   s.defer=true;s.dataset.domain=PLAUSIBLE_DOMAIN;
   s.src='https://plausible.io/js/script.outbound-links.js';
   document.head.appendChild(s);
   window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments);};
 }
-_initPlausible();
+// Consent banner — shows on first visit. Plausible is cookieless so technically
+// we don't strictly need this, but explicit consent is GDPR-best-practice and
+// reassures users. After choice it stays in localStorage and never re-asks.
+function _maybeShowConsent(){
+  if(localStorage.getItem('consent_analytics'))return _initPlausible();
+  // Only show in EU-ish timezones to avoid friction for the rest. Heuristic only.
+  var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+  var isEU=/Europe\//.test(tz);
+  if(!isEU){localStorage.setItem('consent_analytics','yes');_initPlausible();return;}
+  var b=document.createElement('div');b.id='consent-banner';
+  b.style.cssText='position:fixed;bottom:14px;left:14px;right:14px;max-width:560px;margin:0 auto;background:#0A0A0A;color:#fff;border-radius:18px;padding:16px 18px;z-index:1200;box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:Inter,sans-serif;font-size:13.5px;line-height:1.55;display:flex;flex-wrap:wrap;align-items:center;gap:12px;animation:fadeUp .3s ease both';
+  b.innerHTML='<div style="flex:1;min-width:220px">We use cookieless, privacy-friendly analytics (Plausible) to count visits — no personal data, no tracking across sites. <a href="#privacy" onclick="document.getElementById(\'consent-banner\').remove();openLegal(\'privacy\')" style="color:#22C55E;text-decoration:underline">Learn more</a></div>'+
+    '<div style="display:flex;gap:8px"><button type="button" onclick="_setConsent(\'no\')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit">Decline</button>'+
+    '<button type="button" onclick="_setConsent(\'yes\')" style="background:#22C55E;color:#fff;border:none;padding:8px 18px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Accept</button></div>';
+  document.body.appendChild(b);
+}
+function _setConsent(v){
+  try{localStorage.setItem('consent_analytics',v);}catch(e){}
+  var b=document.getElementById('consent-banner');if(b)b.remove();
+  if(v==='yes')_initPlausible();
+}
+_maybeShowConsent();
 function track(event,props){
   try{if(window.plausible)window.plausible(event,props?{props:props}:undefined);}catch(e){}
 }
@@ -2989,15 +3012,42 @@ async function sendMsg(){
     '- setRestTimer {seconds}\n'+
     'Example: "Logging that. [ACTION]{\"type\":\"addMeal\",\"args\":{\"name\":\"Chicken bowl\",\"protein\":40,\"carbs\":50,\"fat\":10,\"calories\":480}}[/ACTION]"\n'+
     'Only emit ACTION blocks when the user clearly asks for an action. For pure questions, just answer.';
-  var sys='You are AthleteOS AI Trainer — expert personal trainer and nutritionist. Direct, motivating, data-driven.\n\nUSER STATS:\n'+buildCtx()+'\n\n'+planInstr+'\n\n'+actInstr;
-  try{
-    var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'system',content:sys}].concat(chatH.slice(-12)),model:'openai',private:true,seed:Math.floor(Math.random()*9999)})});
-    tdiv.remove();
-    if(!res.ok)throw new Error('err');
-    var reply=await res.text();
-    if(!reply||!reply.trim())throw new Error('empty');
-    addMsg('a',reply.trim());chatH.push({role:'assistant',content:reply.trim()});
-  }catch(e){tdiv.remove();addMsg('a','⚠️ Could not reach AI. Check your connection.');}
+  var safetyInstr='SAFETY RULES (non-negotiable):\n'+
+    '- You are NOT a doctor, physiotherapist, dietitian, or licensed medical professional. Do not diagnose, prescribe, or claim to treat conditions.\n'+
+    '- If a user describes pain, injury symptoms, dizziness, chest discomfort, bleeding, mental-health crisis, eating disorder behaviour, or anything that sounds medically serious — refuse to give specific advice and direct them to a qualified professional (GP, A&E, or local mental-health line). Phrase it as care, not refusal: "This needs a real clinician, not me — please see your GP / call 999 / call 116 123 (UK Samaritans)."\n'+
+    '- For pregnancy, recovery from surgery, chronic conditions (heart, diabetes, thyroid, etc.), or anyone under 16: always recommend they check with their doctor first.\n'+
+    '- Do not give exact medication, supplement-stacking, or dosing advice. General nutrition info (e.g. "protein around 1.6g/kg") is fine; specific drug regimens are not.\n'+
+    '- Do not encourage extreme deficits, excessive cardio, or weight-loss rates exceeding 1% body weight per week. If the user asks for that, push back kindly.\n'+
+    '- Never confirm an action you did not actually take — if you emitted an [ACTION] block, the user still has to approve it.\n';
+  var sys='You are AthleteOS AI Trainer — expert personal trainer and nutritionist. Direct, motivating, data-driven.\n\n'+safetyInstr+'\nUSER STATS:\n'+buildCtx()+'\n\n'+planInstr+'\n\n'+actInstr;
+  // Retry with exponential backoff — Pollinations occasionally 502s under load.
+  // Two retries with jitter is the sweet spot: enough to ride out transient
+  // errors without hanging the UI for too long.
+  var body=JSON.stringify({messages:[{role:'system',content:sys}].concat(chatH.slice(-12)),model:'openai',private:true,seed:Math.floor(Math.random()*9999)});
+  var reply=null,lastErr=null;
+  for(var attempt=0;attempt<3;attempt++){
+    try{
+      var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:body});
+      if(!res.ok){lastErr='HTTP '+res.status;
+        if(res.status>=400&&res.status<500&&res.status!==429)break; // 4xx (other than rate-limit) won't get better
+      }else{
+        var txt=await res.text();
+        if(txt&&txt.trim()){reply=txt.trim();break;}
+        lastErr='empty';
+      }
+    }catch(e){lastErr=(e&&e.message)||'network';}
+    if(attempt<2)await new Promise(function(r){setTimeout(r,500*Math.pow(2,attempt)+Math.random()*250);});
+  }
+  tdiv.remove();
+  if(reply){
+    addMsg('a',reply);chatH.push({role:'assistant',content:reply});
+  }else{
+    var help=navigator.onLine
+      ? '⚠️ The AI service is having a hiccup. Try again in a moment — your stats and logs are unaffected.'
+      : '⚠️ You\'re offline. The AI needs a connection — everything else still works.';
+    addMsg('a',help);
+    if(window.Sentry)Sentry.captureMessage('AI chat failed: '+lastErr,{level:'warning'});
+  }
 }
 function buildCtx(){
   var t=meals.reduce(function(a,m){return{p:a.p+(m.protein||0),k:a.k+(m.calories||0)};},{p:0,k:0});
@@ -5400,13 +5450,13 @@ var LEGAL_HTML={
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">4. Sharing</h4>'+
 '<p style="margin-bottom:14px">We do not sell, rent, or share your personal data with third parties for marketing. We share data only with the processors above (Supabase, Stripe, Pollinations) strictly to deliver the service.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">5. Your rights (GDPR &amp; equivalents)</h4>'+
-'<ul style="padding-left:18px;margin-bottom:14px"><li><b>Access</b>: export your full data as CSV any time from Settings → Your Data.</li><li><b>Deletion</b>: Settings → Delete Account erases your account, all logged data, photos, PRs, and cancels any active subscription.</li><li><b>Correction</b>: edit any field directly in the app, or email <a href="mailto:support@athleteos.app">support@athleteos.app</a>.</li><li><b>Portability</b>: the CSV export is machine-readable and re-importable.</li><li><b>Objection / withdrawal of consent</b>: opt out of any notification toggle in Settings; cancel subscription in Stripe portal.</li></ul>'+
+'<ul style="padding-left:18px;margin-bottom:14px"><li><b>Access</b>: export your full data as CSV any time from Settings → Your Data.</li><li><b>Deletion</b>: Settings → Delete Account erases your account, all logged data, photos, PRs, and cancels any active subscription.</li><li><b>Correction</b>: edit any field directly in the app, or email <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a>.</li><li><b>Portability</b>: the CSV export is machine-readable and re-importable.</li><li><b>Objection / withdrawal of consent</b>: opt out of any notification toggle in Settings; cancel subscription in Stripe portal.</li></ul>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">6. Retention</h4>'+
 '<p style="margin-bottom:14px">We keep your data for as long as your account exists. After account deletion, all rows are removed from our active database within 7 days. Encrypted backups roll over within 30 days.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">7. Children</h4>'+
 '<p style="margin-bottom:14px">AthleteOS is not intended for users under 13 (or under 16 in the EU). We do not knowingly collect data from children. If you believe a child has signed up, email us and we will delete their account.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">8. Contact &amp; changes</h4>'+
-'<p>Email: <a href="mailto:support@athleteos.app">support@athleteos.app</a><br>Material changes to this policy will be announced in-app. Continued use after a change means you accept the updated policy.</p>',
+'<p>Email: <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a><br>Material changes to this policy will be announced in-app. Continued use after a change means you accept the updated policy.</p>',
 
   terms:
 '<p style="color:var(--t3);font-size:11.5px;margin-bottom:14px">Last updated: 2026-05-24 · Effective immediately</p>'+
@@ -5433,7 +5483,7 @@ var LEGAL_HTML={
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">10. Governing law</h4>'+
 '<p style="margin-bottom:14px">These terms are governed by the laws of the Netherlands. Disputes are resolved by Dutch courts unless local consumer law grants you stronger rights.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">11. Contact</h4>'+
-'<p>Email: <a href="mailto:support@athleteos.app">support@athleteos.app</a></p>'
+'<p>Email: <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a></p>'
 };
 function openLegal(which){
   document.getElementById('legal-title').textContent=which==='privacy'?'Privacy Policy':'Terms of Service';
