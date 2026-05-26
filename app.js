@@ -17,6 +17,14 @@ if(window.Sentry&&Sentry.onLoad){
     }catch(e){console.warn('Sentry init',e);}
   });
 }
+// Defer Sentry.setUser until the real SDK has actually loaded — the loader
+// stub exposes window.Sentry but only `captureException` and a few others. If
+// CU isn't set yet, this no-ops cleanly.
+function _sentrySetUser(id){
+  if(!id||!window.Sentry)return;
+  var apply=function(){try{if(typeof Sentry.setUser==='function')Sentry.setUser({id:id});}catch(e){}};
+  if(Sentry.onLoad)Sentry.onLoad(apply);else apply();
+}
 window.addEventListener('error',function(ev){
   if(window.Sentry)Sentry.captureException(ev.error||ev.message);
 });
@@ -565,7 +573,7 @@ async function init(){
   catch(e){console.error('Supabase failed to load',e);showAuth();return;}
   var session=null;
   try{var r=await sb.auth.getSession();session=r&&r.data&&r.data.session;}catch(e){console.warn('session check failed',e);}
-  if(session){CU=session.user;try{if(window.Sentry)Sentry.setUser({id:CU.id});await bootApp();}catch(e){console.warn('boot failed',e);_updateOfflineBadge();}}
+  if(session){CU=session.user;try{_sentrySetUser(CU.id);await bootApp();}catch(e){console.warn('boot failed',e);_updateOfflineBadge();}}
   else{showAuth();}
   sb.auth.onAuthStateChange(function(event,sess){
     if(event==='SIGNED_IN'&&!CU){CU=sess.user;bootApp();}
