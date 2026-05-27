@@ -48,7 +48,7 @@ window.addEventListener('unhandledrejection',function(ev){
    Gated on cookie consent in EU regions — see _maybeShowConsent() below.
    `person_profiles:'identified_only'` keeps anonymous users out of person counts
    so the free 1M-events/mo budget lasts. */
-var POSTHOG_KEY=''; // <-- e.g. 'phc_xxxxxxxxxxxxxxxxxxxx'
+var POSTHOG_KEY='phc_qSwMLSDtYz4HWuN8F9FQfJXNTNNyd9tKzuANUQPVY9iJ';
 var POSTHOG_HOST='https://eu.i.posthog.com'; // use 'https://us.i.posthog.com' if your PostHog project is in the US region
 function _initPostHog(){
   if(!POSTHOG_KEY)return;
