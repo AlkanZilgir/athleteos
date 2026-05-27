@@ -25,6 +25,15 @@ function _sentrySetUser(id){
   var apply=function(){try{if(typeof Sentry.setUser==='function')Sentry.setUser({id:id});}catch(e){}};
   if(Sentry.onLoad)Sentry.onLoad(apply);else apply();
 }
+// PostHog identify — moves anonymous events under the signed-in user. Guarded
+// because the snippet stub exists synchronously but `.identify` is only real
+// after the array.js bundle loads; the stub queues calls until then.
+function _phIdentify(id){
+  try{if(id&&window.posthog&&typeof window.posthog.identify==='function')window.posthog.identify(id);}catch(e){}
+}
+function _phReset(){
+  try{if(window.posthog&&typeof window.posthog.reset==='function')window.posthog.reset();}catch(e){}
+}
 window.addEventListener('error',function(ev){
   if(window.Sentry)Sentry.captureException(ev.error||ev.message);
 });
@@ -32,33 +41,34 @@ window.addEventListener('unhandledrejection',function(ev){
   if(window.Sentry)Sentry.captureException(ev.reason);
 });
 
-/* ── ANALYTICS (Plausible — privacy-friendly, no cookies) ──
-   To activate: register a domain at plausible.io and replace PLAUSIBLE_DOMAIN
-   with the value you used (e.g. "athleteos.app"). If left empty, no analytics
-   are sent. Use track('event_name', {prop:'val'}) for custom funnel events.
-   Gated on cookie consent in EU regions — see _maybeShowConsent() below. */
-var PLAUSIBLE_DOMAIN=''; // <-- e.g. 'athleteos.app'
-function _initPlausible(){
-  if(!PLAUSIBLE_DOMAIN)return;
+/* ── ANALYTICS (PostHog — free tier, no card) ──
+   To activate: sign up at posthog.com, create a project, copy the Project API
+   Key (starts with "phc_") into POSTHOG_KEY. If left empty, no analytics are
+   sent. Use track('event_name', {prop:'val'}) for custom funnel events.
+   Gated on cookie consent in EU regions — see _maybeShowConsent() below.
+   `person_profiles:'identified_only'` keeps anonymous users out of person counts
+   so the free 1M-events/mo budget lasts. */
+var POSTHOG_KEY=''; // <-- e.g. 'phc_xxxxxxxxxxxxxxxxxxxx'
+var POSTHOG_HOST='https://eu.i.posthog.com'; // use 'https://us.i.posthog.com' if your PostHog project is in the US region
+function _initPostHog(){
+  if(!POSTHOG_KEY)return;
   if(localStorage.getItem('consent_analytics')==='no')return;
-  var s=document.createElement('script');
-  s.defer=true;s.dataset.domain=PLAUSIBLE_DOMAIN;
-  s.src='https://plausible.io/js/script.outbound-links.js';
-  document.head.appendChild(s);
-  window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments);};
+  if(window.posthog&&window.posthog.__loaded)return;
+  // PostHog official snippet, inlined and minified by hand.
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  window.posthog.init(POSTHOG_KEY,{api_host:POSTHOG_HOST,person_profiles:'identified_only',capture_pageview:true,disable_session_recording:true});
 }
-// Consent banner — shows on first visit. Plausible is cookieless so technically
-// we don't strictly need this, but explicit consent is GDPR-best-practice and
-// reassures users. After choice it stays in localStorage and never re-asks.
+// Consent banner — shows on first visit in EU-ish timezones. PostHog uses
+// cookies by default; consent is required under GDPR before any tracking fires.
+// After choice it stays in localStorage and never re-asks.
 function _maybeShowConsent(){
-  if(localStorage.getItem('consent_analytics'))return _initPlausible();
-  // Only show in EU-ish timezones to avoid friction for the rest. Heuristic only.
+  if(localStorage.getItem('consent_analytics'))return _initPostHog();
   var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
   var isEU=/Europe\//.test(tz);
-  if(!isEU){localStorage.setItem('consent_analytics','yes');_initPlausible();return;}
+  if(!isEU){localStorage.setItem('consent_analytics','yes');_initPostHog();return;}
   var b=document.createElement('div');b.id='consent-banner';
   b.style.cssText='position:fixed;bottom:14px;left:14px;right:14px;max-width:560px;margin:0 auto;background:#0A0A0A;color:#fff;border-radius:18px;padding:16px 18px;z-index:1200;box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:Inter,sans-serif;font-size:13.5px;line-height:1.55;display:flex;flex-wrap:wrap;align-items:center;gap:12px;animation:fadeUp .3s ease both';
-  b.innerHTML='<div style="flex:1;min-width:220px">We use cookieless, privacy-friendly analytics (Plausible) to count visits — no personal data, no tracking across sites. <a href="#privacy" onclick="document.getElementById(\'consent-banner\').remove();openLegal(\'privacy\')" style="color:#22C55E;text-decoration:underline">Learn more</a></div>'+
+  b.innerHTML='<div style="flex:1;min-width:220px">We use privacy-respecting product analytics (PostHog) to understand how the app is used — anonymous unless you sign in. <a href="#privacy" onclick="document.getElementById(\'consent-banner\').remove();openLegal(\'privacy\')" style="color:#22C55E;text-decoration:underline">Learn more</a></div>'+
     '<div style="display:flex;gap:8px"><button type="button" onclick="_setConsent(\'no\')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit">Decline</button>'+
     '<button type="button" onclick="_setConsent(\'yes\')" style="background:#22C55E;color:#fff;border:none;padding:8px 18px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Accept</button></div>';
   document.body.appendChild(b);
@@ -66,11 +76,11 @@ function _maybeShowConsent(){
 function _setConsent(v){
   try{localStorage.setItem('consent_analytics',v);}catch(e){}
   var b=document.getElementById('consent-banner');if(b)b.remove();
-  if(v==='yes')_initPlausible();
+  if(v==='yes')_initPostHog();
 }
 _maybeShowConsent();
 function track(event,props){
-  try{if(window.plausible)window.plausible(event,props?{props:props}:undefined);}catch(e){}
+  try{if(window.posthog&&window.posthog.capture)window.posthog.capture(event,props||{});}catch(e){}
 }
 
 const SUPA_URL='https://apnxpcehjapfhcybciqd.supabase.co';
@@ -573,11 +583,11 @@ async function init(){
   catch(e){console.error('Supabase failed to load',e);showAuth();return;}
   var session=null;
   try{var r=await sb.auth.getSession();session=r&&r.data&&r.data.session;}catch(e){console.warn('session check failed',e);}
-  if(session){CU=session.user;try{_sentrySetUser(CU.id);await bootApp();}catch(e){console.warn('boot failed',e);_updateOfflineBadge();}}
+  if(session){CU=session.user;try{_sentrySetUser(CU.id);_phIdentify(CU.id);await bootApp();}catch(e){console.warn('boot failed',e);_updateOfflineBadge();}}
   else{showAuth();}
   sb.auth.onAuthStateChange(function(event,sess){
-    if(event==='SIGNED_IN'&&!CU){CU=sess.user;bootApp();}
-    if(event==='SIGNED_OUT'){CU=null;showAuth();}
+    if(event==='SIGNED_IN'&&!CU){CU=sess.user;_sentrySetUser(CU.id);_phIdentify(CU.id);bootApp();}
+    if(event==='SIGNED_OUT'){CU=null;_phReset();showAuth();}
     // Supabase fires this when the user lands back via a password-reset email link.
     // Prompt for a new password immediately so they don't stay in this special session.
     if(event==='PASSWORD_RECOVERY'){promptNewPassword();}
@@ -5437,7 +5447,7 @@ var LEGAL_HTML={
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">2. How we use it</h4>'+
 '<ul style="padding-left:18px;margin-bottom:14px"><li>Show your data back to you and calculate trends, streaks, PRs.</li><li>Provide AI coaching — your stats are sent as context to a third-party LLM (Pollinations) to generate replies.</li><li>Send opt-in notifications you turned on (workout reminders, protein nudges).</li><li>Process subscriptions via Stripe (managed payments).</li><li>Debug crashes and improve the app.</li></ul>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">3. Where data lives</h4>'+
-'<ul style="padding-left:18px;margin-bottom:14px"><li>Stored encrypted at rest on <b>Supabase</b> (EU-West-1, Ireland).</li><li>Progress photos in a <b>private Supabase Storage bucket</b> — only your authenticated requests can read yours.</li><li>Payment data on <b>Stripe</b> (US/EU). Stripe is PCI-DSS Level 1 certified.</li><li>AI conversations are sent to <b>Pollinations.ai</b> as transient requests. We mark them <code>private:true</code> and we do not retain training rights to them.</li></ul>'+
+'<ul style="padding-left:18px;margin-bottom:14px"><li>Stored encrypted at rest on <b>Supabase</b> (EU-West-1, Ireland).</li><li>Progress photos in a <b>private Supabase Storage bucket</b> — only your authenticated requests can read yours.</li><li>Payment data on <b>Stripe</b> (US/EU). Stripe is PCI-DSS Level 1 certified.</li><li>AI conversations are sent to <b>Pollinations.ai</b> as transient requests. We mark them <code>private:true</code> and we do not retain training rights to them.</li><li>If you accept the cookie banner, anonymous product-usage events (page views, button clicks) are sent to <b>PostHog</b> (EU region) to help us understand how the app is used. Decline the banner and no events are sent.</li></ul>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">4. Sharing</h4>'+
 '<p style="margin-bottom:14px">We do not sell, rent, or share your personal data with third parties for marketing. We share data only with the processors above (Supabase, Stripe, Pollinations) strictly to deliver the service.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">5. Your rights (GDPR &amp; equivalents)</h4>'+

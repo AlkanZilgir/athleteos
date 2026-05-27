@@ -64,7 +64,7 @@ Code-level — already wired:
 - [x] Google OAuth button (calls supabase.auth.signInWithOAuth)
 - [x] Stripe Checkout + Customer Portal (edge functions live)
 - [x] Sentry bootstrap (lazy-loaded)
-- [x] Plausible bootstrap (cookie-consent gated)
+- [x] PostHog bootstrap (cookie-consent gated)
 - [x] Service Worker w/ Background Sync, scheduled reminders, weekly digest
 
 Needs your config (free):
@@ -72,7 +72,7 @@ Needs your config (free):
 | Step | Where | Time |
 |------|-------|------|
 | Paste Sentry DSN | `app.js` → `SENTRY_DSN` | 5 min — create project at [sentry.io](https://sentry.io) |
-| Paste Plausible domain | `app.js` → `PLAUSIBLE_DOMAIN` | 5 min — register domain at [plausible.io](https://plausible.io) |
+| Paste PostHog project key | `app.js` → `POSTHOG_KEY` | 5 min — sign up at [posthog.com](https://posthog.com) (free 1M events/mo), create a project, copy the Project API Key (starts with `phc_`). If you picked the US region, also set `POSTHOG_HOST` to `https://us.i.posthog.com`. |
 | Enable Google OAuth | Supabase Dashboard → Authentication → Providers → Google | 10 min — needs a Google Cloud OAuth client (free) |
 | Add Stripe keys | Supabase Dashboard → Functions → Secrets | 5 min — `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, price IDs |
 | Add real screenshots | drop `screen-home.png`, `screen-workout.png`, `screen-ai.png` into the folder | 5 min |
