@@ -1,4 +1,4 @@
-const CACHE='athleteos-v46';
+const CACHE='athleteos-v47';
 
 const BASE=self.registration.scope;
 const ASSETS=[

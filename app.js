@@ -3021,14 +3021,18 @@ async function sendMsg(){
     '- Do not encourage extreme deficits, excessive cardio, or weight-loss rates exceeding 1% body weight per week. If the user asks for that, push back kindly.\n'+
     '- Never confirm an action you did not actually take — if you emitted an [ACTION] block, the user still has to approve it.\n';
   var sys='You are AthleteOS AI Trainer — expert personal trainer and nutritionist. Direct, motivating, data-driven.\n\n'+safetyInstr+'\nUSER STATS:\n'+buildCtx()+'\n\n'+planInstr+'\n\n'+actInstr;
-  // Retry with exponential backoff — Pollinations occasionally 502s under load.
-  // Two retries with jitter is the sweet spot: enough to ride out transient
-  // errors without hanging the UI for too long.
+  // Retry with exponential backoff + per-attempt timeout.
+  // Pollinations cold-starts can take 10-15s; warm calls are <1s. We give each
+  // attempt 25s to finish before aborting, and retry up to 4 times. Total worst-
+  // case budget is ~110s but the typing indicator stays visible the whole time.
   var body=JSON.stringify({messages:[{role:'system',content:sys}].concat(chatH.slice(-12)),model:'openai',private:true,seed:Math.floor(Math.random()*9999)});
   var reply=null,lastErr=null;
-  for(var attempt=0;attempt<3;attempt++){
+  for(var attempt=0;attempt<4;attempt++){
+    var ctrl=null,timer=null;
     try{
-      var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:body});
+      ctrl=new AbortController();
+      timer=setTimeout(function(){try{ctrl.abort();}catch(e){}},25000);
+      var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:body,signal:ctrl.signal});
       if(!res.ok){lastErr='HTTP '+res.status;
         if(res.status>=400&&res.status<500&&res.status!==429)break; // 4xx (other than rate-limit) won't get better
       }else{
@@ -3036,8 +3040,9 @@ async function sendMsg(){
         if(txt&&txt.trim()){reply=txt.trim();break;}
         lastErr='empty';
       }
-    }catch(e){lastErr=(e&&e.message)||'network';}
-    if(attempt<2)await new Promise(function(r){setTimeout(r,500*Math.pow(2,attempt)+Math.random()*250);});
+    }catch(e){lastErr=(e&&e.name==='AbortError')?'timeout':((e&&e.message)||'network');}
+    finally{if(timer)clearTimeout(timer);}
+    if(attempt<3)await new Promise(function(r){setTimeout(r,500*Math.pow(2,attempt)+Math.random()*250);});
   }
   tdiv.remove();
   if(reply){
