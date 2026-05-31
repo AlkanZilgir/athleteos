@@ -189,14 +189,15 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 
 /* ── PRICING ───────────────────────────────── */
 .pricing-section{padding:var(--sp-6) 0}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:980px;margin:0 auto}
-.price-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:var(--r-lg);padding:32px 28px 28px;display:flex;flex-direction:column;position:relative;transition:transform .3s var(--ease),border-color .3s var(--ease)}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1120px;margin:0 auto;align-items:stretch}
+@media(max-width:980px){.pricing-grid{grid-template-columns:repeat(2,1fr);max-width:720px}}
+.price-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:var(--r-lg);padding:28px 24px 24px;display:flex;flex-direction:column;position:relative;transition:transform .3s var(--ease),border-color .3s var(--ease)}
 .price-card:hover{transform:translateY(-2px)}
 .price-card.featured{border-color:transparent;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 9%,var(--card)) 0%,var(--card) 80%);box-shadow:0 24px 48px -20px var(--accent-glow),inset 0 0 0 1.5px color-mix(in srgb,var(--accent) 40%,transparent)}
 .price-card.featured::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;background:linear-gradient(180deg,var(--accent),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .price-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:6px 14px;border-radius:999px;font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;box-shadow:0 8px 20px -6px rgba(10,11,15,.4)}
 .price-name{font-size:13px;font-weight:700;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin:0 0 12px}
-.price-value{font-size:48px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.price-value{font-size:40px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--ink)}
 .price-value .u{font-size:15px;color:var(--t2);font-weight:600;margin-left:6px;letter-spacing:-.01em}
 .price-sub{color:var(--t3);font-size:13px;margin:10px 0 24px;min-height:18px;line-height:1.5}
 .price-feats{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-direction:column;gap:11px;flex:1}
@@ -416,35 +417,50 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
           <a class="price-cta" href="index.html">Start free</a>
         </div>
 
-        <div class="price-card featured reveal d2">
+        <div class="price-card reveal d2">
+          <div class="price-name">Monthly</div>
+          <div class="price-value">€4.99<span class="u">/mo</span></div>
+          <div class="price-sub">Flexible &mdash; pause anytime.</div>
+          <ul class="price-feats">
+            <li><b>Unlimited</b> AI coach messages</li>
+            <li><b>Unlimited</b> templates and saved plans</li>
+            <li><b>Unlimited</b> exercise demos</li>
+            <li>Up to 100 progress photos</li>
+            <li>Cancel any time</li>
+          </ul>
+          <a class="price-cta" href="index.html">Choose monthly</a>
+        </div>
+
+        <div class="price-card featured reveal d3">
           <div class="price-badge">Best value</div>
-          <div class="price-name">Pro · Yearly</div>
+          <div class="price-name">Yearly</div>
           <div class="price-value">€1.33<span class="u">/mo</span></div>
-          <div class="price-sub">€15.99 billed yearly · 7-day free trial · saves €43.89</div>
+          <div class="price-sub">€15.99 billed yearly · 7 days free · saves €43.89/yr</div>
           <ul class="price-feats">
             <li><b>Unlimited</b> AI coach messages</li>
             <li><b>Unlimited</b> templates and saved plans</li>
             <li><b>Unlimited</b> exercise demos</li>
             <li>Up to 100 progress photos</li>
             <li>Priority email support</li>
-            <li>Cancel anytime in one tap</li>
+            <li>7-day free trial · cancel before then for €0</li>
           </ul>
           <a class="price-cta primary" href="index.html">Start 7-day free trial</a>
         </div>
 
-        <div class="price-card reveal d3">
-          <div class="price-name">Pro · Monthly</div>
-          <div class="price-value">€4.99<span class="u">/mo</span></div>
-          <div class="price-sub">Flexible. Switch to yearly any time and save.</div>
+        <div class="price-card reveal d4">
+          <div class="price-name">Lifetime</div>
+          <div class="price-value">€49.99<span class="u">/once</span></div>
+          <div class="price-sub">Pay once, use forever.</div>
           <ul class="price-feats">
-            <li>Same unlimited everything</li>
-            <li>No yearly commitment</li>
-            <li>Cancel any time</li>
+            <li>One-time payment, never billed again</li>
+            <li>Every Pro feature, permanently</li>
+            <li>All future updates included</li>
+            <li>Best for long-term lifters</li>
           </ul>
-          <a class="price-cta" href="index.html">Choose monthly</a>
+          <a class="price-cta" href="index.html">Get lifetime access</a>
         </div>
       </div>
-      <p class="price-foot">Also available: <b>Lifetime €49.99</b>. One-time, never billed again. Pick it inside the app.</p>
+      <p class="price-foot">All Pro plans unlock the same features. Pick the billing rhythm that fits.</p>
     </div>
   </section>
 
