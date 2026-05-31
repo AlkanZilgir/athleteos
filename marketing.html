@@ -230,7 +230,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .faq-item p{color:var(--t2);margin:0 0 22px;font-size:15.5px;line-height:1.65;max-width:62ch}
 
 /* ── FINAL CTA (inverted, confident — no purple/green gradient) ──── */
-.final-cta{background:var(--ink);color:#fff;border-radius:var(--r-xl);padding:80px 40px;text-align:center;margin:var(--sp-5) 0 var(--sp-6);position:relative;overflow:hidden;isolation:isolate}
+.final-cta{background:#0A0B0F;color:#fff;border-radius:var(--r-xl);padding:80px 40px;text-align:center;margin:var(--sp-5) 0 var(--sp-6);position:relative;overflow:hidden;isolation:isolate}
+@media (prefers-color-scheme:dark){.final-cta{background:#15171D;border:1px solid var(--bdr)}}
 .final-cta::before{content:"";position:absolute;left:50%;top:-30%;width:120%;height:160%;background:radial-gradient(50% 50% at 50% 50%,var(--accent-glow),transparent 60%);transform:translateX(-50%);z-index:-1;opacity:.6;pointer-events:none}
 .final-cta h2{color:#fff;font-size:clamp(30px,4vw,52px);font-weight:900;letter-spacing:-.035em;margin:0 0 14px;line-height:1.05;text-wrap:balance}
 .final-cta h2 em{font-style:normal;color:var(--accent)}
