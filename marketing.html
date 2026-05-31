@@ -92,6 +92,22 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:24px 0
 .faq-item summary::after{content:"+";position:absolute;right:0;top:0;font-size:22px;font-weight:400;color:var(--t3);transition:transform .2s}
 .faq-item[open] summary::after{transform:rotate(45deg)}
 .faq-item p{color:var(--t2);margin:10px 0 0;font-size:15px;line-height:1.6}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:920px;margin:0 auto}
+.price-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:24px;padding:32px 26px;display:flex;flex-direction:column;position:relative}
+.price-card.featured{border-color:var(--accent);box-shadow:0 16px 40px -16px rgba(34,197,94,.32)}
+.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.3px}
+.price-name{font-size:14px;font-weight:700;color:var(--t2);letter-spacing:.4px;text-transform:uppercase;margin:0 0 10px}
+.price-value{font-size:44px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+.price-value .u{font-size:15px;color:var(--t2);font-weight:600;margin-left:4px;letter-spacing:-.2px}
+.price-sub{color:var(--t3);font-size:13px;margin:8px 0 22px;min-height:18px}
+.price-feats{list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.price-feats li{display:flex;gap:10px;font-size:14.5px;color:var(--t2);align-items:flex-start;line-height:1.4}
+.price-feats svg{flex-shrink:0;color:var(--accent);margin-top:2px}
+.price-cta{text-align:center;padding:14px 18px;border-radius:999px;font-weight:700;font-size:14.5px;text-decoration:none;background:var(--surface);color:var(--t);border:1.5px solid var(--bdr);transition:all .15s}
+.price-cta:hover{border-color:var(--t)}
+.price-cta.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.price-cta.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+@media(max-width:780px){.pricing-grid{grid-template-columns:1fr}}
 .final-cta{background:linear-gradient(135deg,var(--accent) 0%,#A855F7 100%);color:#fff;border-radius:32px;padding:80px 40px;text-align:center;margin:40px 0 80px}
 .final-cta h2{color:#fff;font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;margin:0 0 14px}
 .final-cta p{color:rgba(255,255,255,.92);font-size:17px;margin:0 0 32px}
@@ -110,7 +126,10 @@ footer a:hover{color:var(--t)}
 <div class="wrap">
   <nav>
     <div class="brand">Athlete<span>OS</span></div>
-    <a class="cta" href="index.html">Open the app →</a>
+    <div style="display:flex;align-items:center;gap:18px">
+      <a href="#pricing" style="color:var(--t2);font-weight:600;font-size:14px;text-decoration:none">Pricing</a>
+      <a class="cta" href="index.html">Open the app →</a>
+    </div>
   </nav>
 
   <header class="hero">
@@ -207,6 +226,55 @@ footer a:hover{color:var(--t)}
     </div>
   </section>
 
+  <section class="section" id="pricing">
+    <h2>Simple pricing. Cancel anytime.</h2>
+    <p class="lead">Start free — upgrade only when you hit the AI or template limit. No credit card to sign up.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-value">€0<span class="u">/forever</span></div>
+        <div class="price-sub">Everything you need to start training and tracking.</div>
+        <ul class="price-feats">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited workouts, cardio, meals, sleep</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Body composition + 3 progress photos</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>7 AI coach messages / day</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>10 exercise demos / day</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Works offline · PWA install</li>
+        </ul>
+        <a class="price-cta" href="index.html">Start free</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-badge">BEST VALUE</div>
+        <div class="price-name">Pro · Yearly</div>
+        <div class="price-value">€1.33<span class="u">/mo</span></div>
+        <div class="price-sub">€15.99 billed yearly · 7-day free trial · saves €43.89</div>
+        <ul class="price-feats">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><b>Unlimited</b> AI coach messages</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><b>Unlimited</b> templates &amp; saved plans</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><b>Unlimited</b> exercise demos</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 100 progress photos</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Priority email support</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Cancel anytime in one tap</li>
+        </ul>
+        <a class="price-cta primary" href="index.html">Start 7-day free trial</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">Pro · Monthly</div>
+        <div class="price-value">€4.99<span class="u">/mo</span></div>
+        <div class="price-sub">Flexible — switch to yearly any time and save.</div>
+        <ul class="price-feats">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Same unlimited everything</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>No yearly commitment</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Cancel any time</li>
+        </ul>
+        <a class="price-cta" href="index.html">Choose monthly</a>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--t3);font-size:13px;margin-top:28px">Also available: <b>Lifetime €49.99</b> — one-time, never billed again. Pick it inside the app.</p>
+  </section>
+
   <section class="quotes">
     <div class="quote">
       <p class="quote-body">"Finally an app that doesn't make me pick between training, nutrition, and sleep — they all sit on one home screen."</p>
@@ -251,8 +319,9 @@ footer a:hover{color:var(--t)}
     <div>© AthleteOS. Made for athletes who measure.</div>
     <div style="margin-top:8px">
       <a href="index.html">App</a>
-      <a href="index.html#privacy">Privacy</a>
-      <a href="index.html#terms">Terms</a>
+      <a href="#pricing">Pricing</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
       <a href="mailto:alkanzilgir@gmail.com">Contact</a>
     </div>
   </footer>

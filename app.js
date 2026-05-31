@@ -594,12 +594,17 @@ async function init(){
   });
 }
 function promptNewPassword(){
-  var p=prompt('Set your new password (min 6 characters):');
-  if(!p)return;
-  if(p.length<6){alert('Password must be at least 6 characters');return promptNewPassword();}
+  // Reuse the in-app change-password modal so we don't rely on the browser's prompt()
+  // (which on iOS is ugly and on PWA standalone often shows the URL bar).
+  if(typeof openChangePasswordM==='function'){
+    try{openChangePasswordM();return;}catch(e){console.warn('open chpw failed',e);}
+  }
+  // Fallback: only if the modal isn't loaded yet (edge case during boot).
+  var p=window.prompt('Set your new password (min 8 characters):');
+  if(!p||p.length<8)return;
   sb.auth.updateUser({password:p}).then(function(r){
-    if(r.error){alert('Could not update password: '+r.error.message);}
-    else{toast('✓ Password updated');}
+    if(r.error)toast('Could not update password: '+r.error.message);
+    else toast('✓ Password updated');
   });
 }
 
@@ -933,11 +938,14 @@ async function _lookupBarcode(code){
 }
 async function saveMeal(){
   var m={name:document.getElementById('mn').value||'Meal',protein:parseFloat(document.getElementById('m-p').value)||0,carbs:parseFloat(document.getElementById('m-c').value)||0,fat:parseFloat(document.getElementById('m-f').value)||0,calories:parseFloat(document.getElementById('m-k').value)||0};
-  var id=_genId();m.id=id;
-  meals.push(m);_rememberLastMeal(m);refresh();cModal('m-meal');
-  ['mn','m-p','m-c','m-f','m-k'].forEach(function(id){document.getElementById(id).value='';});
+  var mealId=_genId();m.id=mealId;
+  // Close modal + show toast FIRST so the UI always responds even if a downstream refresh throws.
+  cModal('m-meal');
+  ['mn','m-p','m-c','m-f','m-k'].forEach(function(fid){var el=document.getElementById(fid);if(el)el.value='';});
   toast('🥗 Meal logged!');
-  await sbQueueInsert('meals',{id:id,user_id:CU.id,logged_date:today(),name:m.name,protein_g:m.protein,carbs_g:m.carbs,fat_g:m.fat,calories:m.calories});
+  meals.push(m);_rememberLastMeal(m);
+  try{refresh();}catch(e){console.warn('saveMeal refresh failed',e);}
+  await sbQueueInsert('meals',{id:mealId,user_id:CU.id,logged_date:today(),name:m.name,protein_g:m.protein,carbs_g:m.carbs,fat_g:m.fat,calories:m.calories});
 }
 function _rememberLastMeal(m){try{localStorage.setItem('lm_'+CU.id,JSON.stringify({name:m.name,protein:+m.protein||0,carbs:+m.carbs||0,fat:+m.fat||0,calories:+m.calories||0}));}catch(e){}}
 function _getLastMeal(){if(meals.length>0){var x=meals[meals.length-1];var lm={name:x.name,protein:+x.protein||0,carbs:+x.carbs||0,fat:+x.fat||0,calories:+x.calories||0};_rememberLastMeal(lm);return lm;}try{var raw=localStorage.getItem('lm_'+CU.id);if(raw)return JSON.parse(raw);}catch(e){}return null;}
@@ -1245,6 +1253,8 @@ async function finishW(){
     persistPRs(wo?wo.id:null,summary.exs,newPRs);
   }
   loadRecentPRs();
+  // First gentle Pro nudge after finishing a workout — only fires once ever.
+  setTimeout(function(){softProNudge('first_workout','Loved the session? Try Pro free for 7 days — unlimited AI plans &amp; templates.');},2400);
 }
 var _lastSummary=null;
 async function shareWorkout(){
@@ -2237,7 +2247,7 @@ var sleepChart=null;
 async function loadSleepHist(){
   var{data}=await sb.from('sleep_logs').select('*').eq('user_id',CU.id).order('logged_date',{ascending:false}).limit(30);
   var el=document.getElementById('s-hist');
-  if(!data||!data.length){el.innerHTML='<div class="empty-state"><div class="empty-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M44 36c-12 0-20-8-20-20 0-2 .3-4 .8-6C16 12 10 20 10 30c0 13 11 24 24 24 8 0 15-4 19-11-3 1-6 2-9 2z"/><circle cx="48" cy="14" r="2"/><circle cx="40" cy="20" r="1.5"/></svg></div><div class="empty-h">No sleep logged yet</div><div class="empty-sub">Trends appear after 2+ nights. Or pull yours in automatically from Apple Health / Google Fit.</div><button type="button" class="empty-cta ghost" onclick="openImport()">↓ Import from Health app</button></div>';if(sleepChart){sleepChart.destroy();sleepChart=null;}return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty-state"><div class="empty-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M44 36c-12 0-20-8-20-20 0-2 .3-4 .8-6C16 12 10 20 10 30c0 13 11 24 24 24 8 0 15-4 19-11-3 1-6 2-9 2z"/><circle cx="48" cy="14" r="2"/><circle cx="40" cy="20" r="1.5"/></svg></div><div class="empty-h">No sleep logged yet</div><div class="empty-sub">Tap the bed icon to log how long you slept. Trends appear after 2+ nights.</div><button type="button" class="empty-cta" onclick="goTab(\'sleep\');setTimeout(function(){var f=document.getElementById(\'s-bed\');if(f)f.focus();},120)">+ Log last night</button></div>';if(sleepChart){sleepChart.destroy();sleepChart=null;}return;}
   var em={great:'😊',good:'🙂',ok:'😐',poor:'😴'};
   var chartHtml=data.length>=2?'<div class="chart-wrap" style="height:160px;margin-bottom:14px"><canvas id="s-chart"></canvas></div>':'';
   el.innerHTML=chartHtml+data.slice(0,7).map(function(s){var h=parseFloat(s.duration_hours);var col=h>=7?'var(--accent-d)':h>=5.5?'var(--yel)':'var(--red)';return '<div class="fb" style="padding:11px 0;border-bottom:1px solid var(--bdr)"><div><div style="font-weight:600;letter-spacing:-.2px">'+fdate(s.logged_date)+'</div><div style="font-size:12.5px;color:var(--t2);margin-top:2px">'+s.bedtime+' → '+s.wake_time+' '+(em[s.quality]||'🙂')+'</div></div><span style="color:'+col+';font-family:Inter,sans-serif;font-weight:800;font-size:22px;letter-spacing:-.8px">'+h.toFixed(1)+'h</span></div>';}).join('');
@@ -3432,10 +3442,11 @@ async function saveAutoRest(){
 }
 function pickRestDefault(){
   var cur=P._defaultRest||90;
-  var v=prompt('Default rest seconds (30–300):',cur);
-  v=parseInt(v);if(!v||v<30||v>300){toast('Pick 30–300');return;}
-  P._defaultRest=v;loadAutoRestUI();
-  sb.from('profiles').update({default_rest_seconds:v,updated_at:new Date().toISOString()}).eq('id',CU.id);
+  inputModal({title:'Default rest',sub:'How many seconds between sets (30–300)?',type:'number',value:cur,min:30,max:300,placeholder:'90'},function(raw){
+    var v=parseInt(raw);if(!v||v<30||v>300){toast('Pick 30–300');return;}
+    P._defaultRest=v;loadAutoRestUI();
+    sb.from('profiles').update({default_rest_seconds:v,updated_at:new Date().toISOString()}).eq('id',CU.id);
+  });
 }
 
 /* ── FORGOT PASSWORD / RESEND ─────────────── */
@@ -3829,6 +3840,26 @@ async function openCustomerPortal(){
   }catch(err){console.warn(err);toast('Network error');}
 }
 function isPremium(){return !!(P&&P._isPremium);}
+// Show a one-time, gentle "Try Pro" nudge at a chosen moment. Stored per-user so it never repeats.
+// Tap = open paywall. Auto-dismisses after ~7s. Free users only; no-op for Pro.
+function softProNudge(key,msg){
+  if(isPremium())return;
+  try{
+    var k='aopn_'+(CU&&CU.id?CU.id:'anon')+'_'+key;
+    if(localStorage.getItem(k))return;
+    localStorage.setItem(k,'1');
+  }catch(e){}
+  var el=document.getElementById('pro-nudge');
+  if(!el){
+    el=document.createElement('div');el.id='pro-nudge';
+    el.style.cssText='position:fixed;left:50%;bottom:calc(var(--navH,60px) + env(safe-area-inset-bottom,0px) + 14px);transform:translateX(-50%);max-width:min(360px,calc(100vw - 28px));background:linear-gradient(135deg,#22C55E 0%,#A855F7 100%);color:#fff;border-radius:18px;padding:14px 16px;font-family:Inter,sans-serif;font-size:14px;font-weight:600;line-height:1.4;box-shadow:0 12px 32px -8px rgba(0,0,0,.35);z-index:900;display:flex;gap:10px;align-items:center;cursor:pointer;opacity:0;transition:opacity .25s,transform .25s';
+    el.onclick=function(){el.remove();try{openPaywall();}catch(e){}};
+    document.body.appendChild(el);
+  }
+  el.innerHTML='<span style="font-size:18px">✨</span><span style="flex:1">'+msg+'</span><span style="font-size:11px;opacity:.85;font-weight:800;letter-spacing:.5px">TAP</span>';
+  requestAnimationFrame(function(){el.style.opacity='1';});
+  clearTimeout(el._t);el._t=setTimeout(function(){if(el)el.style.opacity='0';setTimeout(function(){if(el)el.remove();},300);},7000);
+}
 function requirePremium(featureLabel){
   if(isPremium())return true;
   openPaywall();
@@ -4377,6 +4408,8 @@ async function savePhoto(){
   cModal('m-photo');_phFile=null;document.getElementById('ph-file').value='';document.getElementById('ph-prev-wrap').classList.add('hidden');
   btn.disabled=false;btn.textContent='Upload';
   toast('📸 Photo saved');
+  // Nudge when approaching the free 5-photo limit.
+  if((photoList||[]).length>=3)softProNudge('photos_3','You\'re close to the 5-photo free limit. Pro gets you 100.');
 }
 async function loadPhotos(){
   var{data}=await sb.from('progress_photos').select('*').eq('user_id',CU.id).order('taken_at',{ascending:false}).limit(24);
@@ -4809,7 +4842,7 @@ function openTemplates(){
 function _tplSetCount(e){return Array.isArray(e.sets)?e.sets.length:(+e.sets||0);}
 function renderTemplates(){
   var el=document.getElementById('tpl-list');
-  if(!templates.length){el.innerHTML='<p class="tm tc" style="padding:18px 0">No templates yet. Save your current session with the Save button.</p>';return;}
+  if(!templates.length){el.innerHTML='<div class="empty-state"><div class="empty-ico" style="background:var(--adim);color:var(--accent-d)"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="10" width="40" height="44" rx="4"/><path d="M20 22h24M20 32h24M20 42h16"/></svg></div><div class="empty-h">No templates yet</div><div class="empty-sub">Save a workout to reuse it any time — or import one of our pre-built plans.</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px"><button type="button" class="empty-cta" onclick="cModal(\'m-templates\');openPlanLibrary()">Browse plan library</button><button type="button" class="empty-cta ghost" onclick="cModal(\'m-templates\');goTab(\'workout\')">Build your own →</button></div></div>';return;}
   el.innerHTML=templates.map(function(t){
     var exs=t.exercises||[];
     var exNames=exs.map(function(e){return e.name;}).slice(0,4).join(' · ');
@@ -4823,6 +4856,131 @@ function saveTemplateOpen(){
   document.getElementById('tpl-n').value='';
   oModal('m-tplsave');
 }
+/* ── PLAN LIBRARY (pre-built templates) ───── */
+// Each plan is a multi-day split. "templates" inside become individual workout_templates rows.
+var PLAN_LIBRARY=[
+  {id:'ppl',name:'Push / Pull / Legs',days:3,goal:'Hypertrophy · 4–6 days/wk',desc:'Classic bodybuilder split. Train each muscle 2× per week if you go 6 days.',templates:[
+    {name:'PPL — Push',exercises:[
+      {name:'Bench Press',muscle:'chest',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:6},{weight:0,reps:6}]},
+      {name:'Overhead Press',muscle:'shoulders',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Incline Dumbbell Press',muscle:'chest',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Lateral Raise',muscle:'shoulders',sets:[{weight:0,reps:15},{weight:0,reps:15},{weight:0,reps:15}]},
+      {name:'Tricep Pushdown',muscle:'arms',sets:[{weight:0,reps:12},{weight:0,reps:12},{weight:0,reps:12}]}
+    ]},
+    {name:'PPL — Pull',exercises:[
+      {name:'Deadlift',muscle:'back',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:3}]},
+      {name:'Pull-Up',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Barbell Row',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Face Pull',muscle:'shoulders',sets:[{weight:0,reps:15},{weight:0,reps:15},{weight:0,reps:15}]},
+      {name:'Barbell Curl',muscle:'arms',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]}
+    ]},
+    {name:'PPL — Legs',exercises:[
+      {name:'Back Squat',muscle:'legs',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:6},{weight:0,reps:6}]},
+      {name:'Romanian Deadlift',muscle:'legs',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Leg Press',muscle:'legs',sets:[{weight:0,reps:12},{weight:0,reps:12},{weight:0,reps:12}]},
+      {name:'Standing Calf Raise',muscle:'legs',sets:[{weight:0,reps:15},{weight:0,reps:15},{weight:0,reps:15}]},
+      {name:'Hanging Leg Raise',muscle:'core',sets:[{weight:0,reps:12},{weight:0,reps:12},{weight:0,reps:12}]}
+    ]}
+  ]},
+  {id:'ul',name:'Upper / Lower',days:4,goal:'Strength + size · 4 days/wk',desc:'Two upper and two lower days per week. Great middle ground.',templates:[
+    {name:'U/L — Upper A',exercises:[
+      {name:'Bench Press',muscle:'chest',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Barbell Row',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Overhead Press',muscle:'shoulders',sets:[{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Pull-Up',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Tricep Pushdown',muscle:'arms',sets:[{weight:0,reps:12},{weight:0,reps:12}]}
+    ]},
+    {name:'U/L — Lower A',exercises:[
+      {name:'Back Squat',muscle:'legs',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Romanian Deadlift',muscle:'legs',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Leg Press',muscle:'legs',sets:[{weight:0,reps:12},{weight:0,reps:12}]},
+      {name:'Standing Calf Raise',muscle:'legs',sets:[{weight:0,reps:15},{weight:0,reps:15}]}
+    ]},
+    {name:'U/L — Upper B',exercises:[
+      {name:'Overhead Press',muscle:'shoulders',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Incline Dumbbell Press',muscle:'chest',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Seated Cable Row',muscle:'back',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Lateral Raise',muscle:'shoulders',sets:[{weight:0,reps:15},{weight:0,reps:15}]},
+      {name:'Barbell Curl',muscle:'arms',sets:[{weight:0,reps:10},{weight:0,reps:10}]}
+    ]},
+    {name:'U/L — Lower B',exercises:[
+      {name:'Deadlift',muscle:'back',sets:[{weight:0,reps:5},{weight:0,reps:3},{weight:0,reps:3}]},
+      {name:'Front Squat',muscle:'legs',sets:[{weight:0,reps:6},{weight:0,reps:6},{weight:0,reps:6}]},
+      {name:'Bulgarian Split Squat',muscle:'legs',sets:[{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Hanging Leg Raise',muscle:'core',sets:[{weight:0,reps:12},{weight:0,reps:12}]}
+    ]}
+  ]},
+  {id:'531',name:'5/3/1 — Wendler',days:4,goal:'Pure strength · 4 days/wk',desc:'Wave-loaded barbell strength. Slow, sustainable PR progress.',templates:[
+    {name:'5/3/1 — Squat day',exercises:[
+      {name:'Back Squat',muscle:'legs',sets:[{weight:0,reps:5},{weight:0,reps:3},{weight:0,reps:1}]},
+      {name:'Leg Press',muscle:'legs',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Hanging Leg Raise',muscle:'core',sets:[{weight:0,reps:15},{weight:0,reps:15},{weight:0,reps:15}]}
+    ]},
+    {name:'5/3/1 — Bench day',exercises:[
+      {name:'Bench Press',muscle:'chest',sets:[{weight:0,reps:5},{weight:0,reps:3},{weight:0,reps:1}]},
+      {name:'Dumbbell Bench Press',muscle:'chest',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Barbell Row',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]}
+    ]},
+    {name:'5/3/1 — Deadlift day',exercises:[
+      {name:'Deadlift',muscle:'back',sets:[{weight:0,reps:5},{weight:0,reps:3},{weight:0,reps:1}]},
+      {name:'Romanian Deadlift',muscle:'legs',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Pull-Up',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]}
+    ]},
+    {name:'5/3/1 — Press day',exercises:[
+      {name:'Overhead Press',muscle:'shoulders',sets:[{weight:0,reps:5},{weight:0,reps:3},{weight:0,reps:1}]},
+      {name:'Incline Dumbbell Press',muscle:'chest',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]},
+      {name:'Barbell Curl',muscle:'arms',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]}
+    ]}
+  ]},
+  {id:'fullbody',name:'Full Body 3×',days:3,goal:'Time-efficient · 3 days/wk',desc:'Big compound lifts every session. Ideal if you can only train 3 days.',templates:[
+    {name:'Full Body A',exercises:[
+      {name:'Back Squat',muscle:'legs',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Bench Press',muscle:'chest',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Barbell Row',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]}
+    ]},
+    {name:'Full Body B',exercises:[
+      {name:'Deadlift',muscle:'back',sets:[{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Overhead Press',muscle:'shoulders',sets:[{weight:0,reps:5},{weight:0,reps:5},{weight:0,reps:5}]},
+      {name:'Pull-Up',muscle:'back',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]}
+    ]},
+    {name:'Full Body C',exercises:[
+      {name:'Front Squat',muscle:'legs',sets:[{weight:0,reps:6},{weight:0,reps:6},{weight:0,reps:6}]},
+      {name:'Incline Dumbbell Press',muscle:'chest',sets:[{weight:0,reps:8},{weight:0,reps:8},{weight:0,reps:8}]},
+      {name:'Seated Cable Row',muscle:'back',sets:[{weight:0,reps:10},{weight:0,reps:10},{weight:0,reps:10}]}
+    ]}
+  ]}
+];
+function openPlanLibrary(){
+  var el=document.getElementById('planlib-list');
+  el.innerHTML=PLAN_LIBRARY.map(function(p){
+    return '<div style="border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:12px">'+
+      '<div class="fb" style="margin-bottom:6px"><div><div style="font-weight:800;font-size:16px;letter-spacing:-.2px">'+p.name+'</div><div class="tm" style="font-size:12px;margin-top:2px">'+p.goal+'</div></div><span class="badge bg">'+p.days+' days</span></div>'+
+      '<div class="tm" style="font-size:13px;line-height:1.5;margin:6px 0 12px">'+p.desc+'</div>'+
+      '<div class="tm" style="font-size:11.5px;margin-bottom:12px;color:var(--t3)">Includes: '+p.templates.map(function(t){return t.name.replace(/^.*— /,'');}).join(' · ')+'</div>'+
+      '<button type="button" class="btn" style="padding:11px 16px" onclick="importPlan(\''+p.id+'\')">Import '+p.templates.length+' templates</button>'+
+      '</div>';
+  }).join('');
+  oModal('m-planlib');
+}
+async function importPlan(planId){
+  var plan=PLAN_LIBRARY.find(function(p){return p.id===planId;});
+  if(!plan)return;
+  // Free tier check — imports count toward the 2-template cap.
+  if(!isPremium()){
+    var capacity=PREM_LIMITS.templates-((templates||[]).length);
+    if(capacity<plan.templates.length){toast('Free tier holds '+PREM_LIMITS.templates+' templates. Upgrade to import full plans.');openPaywall();return;}
+  }
+  toast('Importing '+plan.name+'…');
+  for(var i=0;i<plan.templates.length;i++){
+    var t=plan.templates[i];
+    var{error}=await sb.from('workout_templates').insert({user_id:CU.id,name:t.name,exercises:t.exercises});
+    if(error){toast('Import failed at '+t.name);return;}
+  }
+  await loadTemplates();
+  cModal('m-planlib');
+  toast('✅ Imported '+plan.templates.length+' templates');
+}
+
 async function saveTemplate(){
   var name=document.getElementById('tpl-n').value.trim();
   if(!name){toast('Enter a name');return;}
@@ -4835,6 +4993,8 @@ async function saveTemplate(){
   var{error}=await sb.from('workout_templates').insert({user_id:CU.id,name:name,exercises:exs});
   if(error){toast('Save failed');return;}
   cModal('m-tplsave');toast('Template saved');await loadTemplates();
+  // Nudge once after first template — they're already saving plans, so Pro is the natural upsell.
+  if((templates||[]).length>=1)softProNudge('first_template','Saving plans? Pro removes the 2-template cap and adds the full plan library.');
 }
 async function _lastLoggedSets(name){
   // Fetch the user's most recent logged copy of this exercise (by workout start).
@@ -4963,13 +5123,14 @@ async function saveReminders(){
 }
 function pickReminderTime(which){
   var cur=which==='workout'?REM.wt:REM.pt;
-  var v=prompt('Time in 24-hour format (e.g. 18:30)',cur);
-  if(!v||!/^\d{1,2}:\d{2}$/.test(v))return;
-  var pad=v.split(':');var h=parseInt(pad[0]);var m=parseInt(pad[1]);
-  if(h<0||h>23||m<0||m>59){toast('Invalid time');return;}
-  v=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  if(which==='workout')REM.wt=v;else REM.pt=v;
-  loadReminderUI();saveReminders();
+  inputModal({title:'Reminder time',sub:'Pick the time you want to be nudged.',type:'time',value:cur,placeholder:'18:30'},function(raw){
+    var v=raw||'';if(!/^\d{1,2}:\d{2}$/.test(v)){toast('Invalid time');return;}
+    var pad=v.split(':');var h=parseInt(pad[0]);var m=parseInt(pad[1]);
+    if(h<0||h>23||m<0||m>59){toast('Invalid time');return;}
+    v=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+    if(which==='workout')REM.wt=v;else REM.pt=v;
+    loadReminderUI();saveReminders();
+  });
 }
 function _nextOccurrence(hhmm){
   var p=hhmm.split(':'),h=+p[0],m=+p[1];
@@ -5528,6 +5689,19 @@ function weekStr(){var n=new Date();return n.getFullYear()+'-W'+Math.ceil(n.getD
 function fdate(s){if(!s)return'–';var d=new Date(s+'T12:00:00');return d.toLocaleDateString('en',{month:'short',day:'numeric'});}
 function pct(v,max){return Math.min(100,Math.round((v/max)*100));}
 function autoH(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+// In-app prompt() replacement — opens m-input modal with a title/sub/value and resolves the callback on OK.
+var _inputCb=null;
+function inputModal(opts,cb){
+  opts=opts||{};_inputCb=cb||null;
+  document.getElementById('inp-title').textContent=opts.title||'Enter value';
+  document.getElementById('inp-sub').textContent=opts.sub||'';
+  var v=document.getElementById('inp-val');
+  v.type=opts.type||'text';v.value=opts.value==null?'':String(opts.value);v.placeholder=opts.placeholder||'';
+  if(opts.min!=null)v.min=opts.min;else v.removeAttribute('min');
+  if(opts.max!=null)v.max=opts.max;else v.removeAttribute('max');
+  oModal('m-input');setTimeout(function(){v.focus();v.select&&v.select();},120);
+}
+function _inputOk(){var v=document.getElementById('inp-val').value;var cb=_inputCb;_inputCb=null;cModal('m-input');if(cb)cb(v);}
 function oModal(id){document.getElementById(id).classList.add('on');}
 function cModal(id){document.getElementById(id).classList.remove('on');if(id==='m-bc')stopBc();if(id==='m-exi'&&typeof _stopExGif==='function')_stopExGif();}
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},3000);}

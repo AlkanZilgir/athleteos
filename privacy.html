@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Privacy Policy — AthleteOS</title>
+<meta name="description" content="What AthleteOS collects, why, and the control you have over your data.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{--bg:#FFFFFF;--surface:#F7F7F9;--card:#FFFFFF;--bdr:rgba(0,0,0,.06);--t:#0A0A0A;--t2:#525B70;--t3:#8896B3;--accent:#22C55E;--accent-d:#16A34A}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--t);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--bdr)}
+.brand{font-weight:900;font-size:22px;letter-spacing:-.5px;text-decoration:none;color:var(--t)}
+.brand span{color:var(--accent)}
+.back{color:var(--t2);font-size:14px;font-weight:600;text-decoration:none}
+.back:hover{color:var(--t)}
+h1{font-size:38px;font-weight:900;letter-spacing:-1.2px;margin:40px 0 8px}
+.meta{color:var(--t3);font-size:13px;margin-bottom:32px}
+h2{font-size:18px;font-weight:800;letter-spacing:-.3px;margin:32px 0 10px;color:var(--t)}
+p,ul{color:var(--t2);font-size:15.5px}
+ul{padding-left:22px}
+li{margin-bottom:6px}
+b{color:var(--t)}
+a{color:var(--accent-d)}
+code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:13.5px}
+footer{padding:40px 0;text-align:center;color:var(--t3);font-size:13px;border-top:1px solid var(--bdr);margin-top:60px}
+footer a{color:var(--t3);margin:0 10px;text-decoration:none}
+footer a:hover{color:var(--t)}
+@media(prefers-color-scheme:dark){:root{--bg:#0B0D10;--surface:#13161B;--card:#13161B;--bdr:rgba(255,255,255,.08);--t:#F5F7FA;--t2:#A0AEC0;--t3:#6B7280}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="marketing.html">Athlete<span>OS</span></a>
+    <a class="back" href="marketing.html">← Back</a>
+  </nav>
+
+  <h1>Privacy Policy</h1>
+  <div class="meta">Last updated: 2026-05-24 · Effective immediately</div>
+
+  <p>AthleteOS ("we", "us") provides a fitness tracking app and AI coaching service. This policy explains what we collect, why, and what control you have. We aim to collect the minimum needed to run the service well.</p>
+
+  <h2>1. Data we collect</h2>
+  <ul>
+    <li><b>Account</b>: email, display name, password hash (via Supabase Auth).</li>
+    <li><b>Fitness data you log</b>: workouts, sets, exercises, meals, water, sleep, weight, body measurements, progress photos, daily check-ins.</li>
+    <li><b>Profile preferences</b>: goal, experience, training style, weekly target, muscle map preferences, accent &amp; theme.</li>
+    <li><b>Subscription</b>: Stripe customer ID and subscription status. Card details are handled by Stripe — we never see them.</li>
+    <li><b>Device/usage</b>: browser type, OS, screen size, error logs (for debugging only).</li>
+  </ul>
+
+  <h2>2. How we use it</h2>
+  <ul>
+    <li>Show your data back to you and calculate trends, streaks, PRs.</li>
+    <li>Provide AI coaching — your stats are sent as context to a third-party LLM (Pollinations) to generate replies.</li>
+    <li>Send opt-in notifications you turned on (workout reminders, protein nudges).</li>
+    <li>Process subscriptions via Stripe (managed payments).</li>
+    <li>Debug crashes and improve the app.</li>
+  </ul>
+
+  <h2>3. Where data lives</h2>
+  <ul>
+    <li>Stored encrypted at rest on <b>Supabase</b> (EU-West-1, Ireland).</li>
+    <li>Progress photos in a <b>private Supabase Storage bucket</b> — only your authenticated requests can read yours.</li>
+    <li>Payment data on <b>Stripe</b> (US/EU). Stripe is PCI-DSS Level 1 certified.</li>
+    <li>AI conversations are sent to <b>Pollinations.ai</b> as transient requests. We mark them <code>private:true</code> and we do not retain training rights to them.</li>
+    <li>If you accept the cookie banner, anonymous product-usage events (page views, button clicks) are sent to <b>PostHog</b> (EU region) to help us understand how the app is used. Decline the banner and no events are sent.</li>
+  </ul>
+
+  <h2>4. Sharing</h2>
+  <p>We do not sell, rent, or share your personal data with third parties for marketing. We share data only with the processors above (Supabase, Stripe, Pollinations) strictly to deliver the service.</p>
+
+  <h2>5. Your rights (GDPR &amp; equivalents)</h2>
+  <ul>
+    <li><b>Access</b>: export your full data as CSV any time from Settings → Your Data.</li>
+    <li><b>Deletion</b>: Settings → Delete Account erases your account, all logged data, photos, PRs, and cancels any active subscription.</li>
+    <li><b>Correction</b>: edit any field directly in the app, or email <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a>.</li>
+    <li><b>Portability</b>: the CSV export is machine-readable and re-importable.</li>
+    <li><b>Objection / withdrawal of consent</b>: opt out of any notification toggle in Settings; cancel subscription in Stripe portal.</li>
+  </ul>
+
+  <h2>6. Retention</h2>
+  <p>We keep your data for as long as your account exists. After account deletion, all rows are removed from our active database within 7 days. Encrypted backups roll over within 30 days.</p>
+
+  <h2>7. Children</h2>
+  <p>AthleteOS is not intended for users under 13 (or under 16 in the EU). We do not knowingly collect data from children. If you believe a child has signed up, email us and we will delete their account.</p>
+
+  <h2>8. Contact &amp; changes</h2>
+  <p>Email: <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a><br>Material changes to this policy will be announced in-app. Continued use after a change means you accept the updated policy.</p>
+
+  <footer>
+    <div>© AthleteOS</div>
+    <div style="margin-top:8px">
+      <a href="marketing.html">Home</a>
+      <a href="index.html">App</a>
+      <a href="terms.html">Terms</a>
+      <a href="mailto:alkanzilgir@gmail.com">Contact</a>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

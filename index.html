@@ -1393,6 +1393,25 @@
   </form>
 </div></div>
 
+<!-- PLAN LIBRARY -->
+<div class="modal" id="m-planlib"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
+  <div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Plan library</div><button type="button" class="btn-g" onclick="cModal('m-planlib')">Done</button></div>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">Battle-tested splits. One tap imports them as templates you can edit.</p>
+  <div id="planlib-list"></div>
+</div></div>
+
+<!-- GENERIC INPUT MODAL (replaces window.prompt) -->
+<div class="modal" id="m-input"><div class="msheet"><div class="mhandle"></div>
+  <form onsubmit="event.preventDefault();_inputOk();">
+  <div class="ctitle" id="inp-title">Enter value</div>
+  <p class="tm" id="inp-sub" style="font-size:12.5px;margin-bottom:14px"></p>
+  <div class="f"><input type="text" id="inp-val" autocomplete="off"></div>
+  <div class="g2" style="margin-top:6px">
+    <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-input')">Cancel</button>
+    <button type="submit" class="btn">OK</button>
+  </div></form>
+</div></div>
+
 <!-- FEEDBACK FORM -->
 <div class="modal" id="m-feedback"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="ctitle">Send feedback</div>
@@ -1415,7 +1434,7 @@
 <div class="modal" id="m-exchart"><div class="msheet" style="max-height:90vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="exc-name">Exercise</div><button type="button" class="btn-g" onclick="cModal('m-exchart')">Done</button></div><div class="tm" style="font-size:12px;margin-bottom:10px" id="exc-meta">–</div><div class="chart-wrap" style="height:200px;margin-bottom:6px"><canvas id="exc-chart"></canvas></div><div id="exc-hist" style="max-height:200px;overflow-y:auto"></div></div></div>
 
 <!-- WORKOUT TEMPLATES -->
-<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
+<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()">📚 Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
 
 <!-- SAVE TEMPLATE -->
 <div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template Name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
