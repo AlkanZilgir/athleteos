@@ -1510,6 +1510,11 @@ function celebratePRs(names){
 // Renders the named PR onto a 1080×1080 canvas, brands it, and opens the
 // native share sheet. Falls back to a download link when Web Share isn't
 // available (e.g. desktop Safari).
+function sharePRRecord(name,weight,reps,prev){
+  // Temporarily populate allPRs entry so sharePRImage can render from cache.
+  allPRs[name]={name:name,weight:+weight||0,reps:+reps||0,prevWeight:+prev||0,oneRm:_epley1rm(+weight||0,+reps||0)};
+  sharePRImage(name);
+}
 async function sharePRImage(name){
   var p=allPRs[name]||{};
   var w=Number(p.weight||0),r=Number(p.reps||0),prev=Number(p.prevWeight||0);
@@ -1581,6 +1586,7 @@ function renderRecentPRs(){
       var diff=parseFloat(pr.weight_kg)-parseFloat(pr.prev_value);
       if(diff>0)delta='<span class="prd dup" style="margin-left:auto;flex-shrink:0">+'+diff.toFixed(1)+'kg</span>';
     }
+    var prevVal=parseFloat(pr.prev_value||0)||0;
     return '<div class="act-row" onclick="openExChart(\''+safe+'\')" style="cursor:pointer">'+
       '<div class="act-ico" style="background:rgba(245,158,11,.16);color:#F59E0B">🏆</div>'+
       '<div class="act-body">'+
@@ -1588,6 +1594,9 @@ function renderRecentPRs(){
         '<div class="act-meta">'+parseFloat(pr.weight_kg||0).toFixed(1)+' kg × '+(pr.reps||0)+' reps · '+when+'</div>'+
       '</div>'+
       delta+
+      '<button type="button" class="pr-share-btn" aria-label="Share PR" onclick="event.stopPropagation();sharePRRecord(\''+safe+'\','+parseFloat(pr.weight_kg||0)+','+(pr.reps||0)+','+prevVal+')">'+
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>'+
+      '</button>'+
     '</div>';
   }).join('');
 }
@@ -2380,6 +2389,9 @@ async function generateCoachInsight(){
       sb.from('weight_logs').select('logged_date,weight_kg').eq('user_id',CU.id).order('logged_date',{ascending:false}).limit(8)
     ]);
     var insights=[];
+    // First-3-days new-user nudges (highest weight — override generic tips during onboarding window).
+    var fd=_firstDaysInsight(wos.data,sleep.data);
+    if(fd)insights.push(fd);
     // Insight 1: neglected muscle group (no work in 7+ days)
     var byMuscle={};(wos.data||[]).forEach(function(w){var ts=new Date(w.started_at).getTime();(w.exercises||[]).forEach(function(ex){var m=ex.muscle_group;if(!m||m==='other')return;if(!byMuscle[m]||byMuscle[m]<ts)byMuscle[m]=ts;});});
     var nowT=Date.now(),MUSCLES=['chest','back','legs','shoulders','arms','core'];
@@ -2401,6 +2413,22 @@ async function generateCoachInsight(){
     try{localStorage.setItem(cacheKey,JSON.stringify(pick));}catch(e){}
     _applyCoachInsight(pick);
   }catch(e){console.warn('coach insight',e);}
+}
+function _firstDaysInsight(workouts,sleeps){
+  if(!CU||!CU.created_at)return null;
+  var ageDays=(Date.now()-new Date(CU.created_at).getTime())/86400000;
+  if(ageDays>3)return null;
+  var hasWorkout=Array.isArray(workouts)&&workouts.length>0;
+  var hasSleep=Array.isArray(sleeps)&&sleeps.length>0;
+  if(ageDays<1&&!hasWorkout)
+    return{t:'Welcome — start with one set',b:"Don't aim for a perfect first session. Open Train, pick any exercise, log a single set. That's all day one needs.",w:99};
+  if(ageDays<2&&!hasWorkout)
+    return{t:'Day two — try one quick session',b:'Even a 15-minute workout locks in the habit. Strength gains live in showing up, not in the volume of any one day.',w:99};
+  if(hasWorkout&&!hasSleep)
+    return{t:'Log last night to unlock recovery insights',b:'Sleep + lifting data together is where the real coaching kicks in. Two taps on the Sleep tab now.',w:98};
+  if(hasWorkout&&hasSleep&&ageDays<3)
+    return{t:'You\'re ahead of 80% of new users',b:'Most apps see drop-off after day one. You\'ve logged a workout and tracked sleep — keep this rhythm and weekly trends start surfacing in 4 days.',w:90};
+  return null;
 }
 function _applyCoachInsight(ins){
   var tEl=document.getElementById('coach-title'),bEl=document.getElementById('coach-body');
