@@ -297,6 +297,10 @@ body.dark .btn-oauth{background:#1A1D24;color:var(--t);border-color:var(--bdr2)}
 .chat-mic.on{background:var(--red);border-color:var(--red);color:#fff;animation:micPulse 1.2s ease-in-out infinite}
 @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
 
+/* ── INVITE CARD ──────────────────────────── */
+.invite-card{background:linear-gradient(135deg,var(--adim) 0%,rgba(34,197,94,.04) 100%);border-color:var(--accent);transition:transform .12s,opacity .15s}
+.invite-card:active{transform:scale(.985);opacity:.8}
+
 /* ── GETTING STARTED CARD ─────────────────── */
 .gs-card{background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.05) 100%);border-color:var(--accent)}
 .gs-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--bdr);cursor:pointer;transition:opacity .15s}

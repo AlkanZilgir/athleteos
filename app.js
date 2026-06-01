@@ -5083,6 +5083,22 @@ function _b64UrlDecode(s){
   s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';
   return decodeURIComponent(escape(atob(s)));
 }
+async function inviteFriend(){
+  var ref=(CU&&CU.id)?CU.id.slice(0,8):'';
+  var url='https://athleteos.app'+(ref?'/?ref='+ref:'');
+  var data={
+    title:'AthleteOS',
+    text:"I've been using AthleteOS to track lifts, food and sleep. Try it — it's free.",
+    url:url
+  };
+  if(navigator.share){
+    try{await navigator.share(data);if(typeof posthog!=='undefined')posthog.capture&&posthog.capture('invite_shared',{method:'native'});return;}
+    catch(e){if(e&&e.name==='AbortError')return;}
+  }
+  try{await navigator.clipboard.writeText(url);toast('Invite link copied 🎁');if(typeof posthog!=='undefined')posthog.capture&&posthog.capture('invite_shared',{method:'clipboard'});}
+  catch(e){prompt('Copy this link:',url);}
+}
+
 async function shareTemplate(id){
   var t=templates.find(function(x){return x.id===id;});if(!t)return;
   var payload={n:t.name,e:(t.exercises||[]).map(function(e){
