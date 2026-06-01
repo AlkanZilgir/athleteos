@@ -282,6 +282,32 @@
           </div>
         </div>
 
+        <!-- First-run getting started -->
+        <div class="card gs-card hidden" id="gs-card">
+          <div class="fb" style="margin-bottom:10px;align-items:flex-start">
+            <div>
+              <div class="ctitle" style="margin:0">Getting started</div>
+              <div class="tm" style="font-size:12.5px;margin-top:3px"><span id="gs-progress">0 of 3</span> · take a minute to log your first day</div>
+            </div>
+            <button type="button" class="btn-g" style="padding:5px 10px;font-size:12px" onclick="dismissGettingStarted()">Hide</button>
+          </div>
+          <div class="gs-row" id="gs-row-workout" onclick="goTab('workout')">
+            <div class="gs-check" id="gs-check-workout">1</div>
+            <div class="gs-body"><div class="gs-t">Log your first workout</div><div class="gs-s">Even one set counts. Train → New Workout.</div></div>
+            <div class="gs-arrow">→</div>
+          </div>
+          <div class="gs-row" id="gs-row-meal" onclick="goTab('nutrition')">
+            <div class="gs-check" id="gs-check-meal">2</div>
+            <div class="gs-body"><div class="gs-t">Log a meal</div><div class="gs-s">Quick-add or scan. We'll track your protein for you.</div></div>
+            <div class="gs-arrow">→</div>
+          </div>
+          <div class="gs-row" id="gs-row-sleep" onclick="goTab('sleep')">
+            <div class="gs-check" id="gs-check-sleep">3</div>
+            <div class="gs-body"><div class="gs-t">Log last night's sleep</div><div class="gs-s">Hours in bed is enough. Powers recovery insights.</div></div>
+            <div class="gs-arrow">→</div>
+          </div>
+        </div>
+
         <!-- Tile grid -->
         <div class="sg">
           <div class="sc tile-mini"><div class="tile-ico" style="background:var(--adim);color:var(--accent-d)">💪</div><div class="sv" id="h-w">–</div><div class="sl">Workout</div></div>

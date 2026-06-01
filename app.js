@@ -723,7 +723,7 @@ async function bootApp(){
   await Promise.all([calcStreak(),loadCheckin()]);
   rotateCoachTip();
   // Fire-and-forget: render Home cards (each queries supabase directly).
-  renderHero();renderActivityFeed();renderDailySummary();
+  renderHero();renderActivityFeed();renderDailySummary();renderGettingStarted();
   loadReminderUI();
   goTab('home');
   _consumeShareHash();
@@ -785,7 +785,7 @@ function goTab(t){
   }
   var nav=document.getElementById('n-'+t);if(nav)nav.classList.add('on');
   var sb2=document.getElementById('s-'+t);if(sb2)sb2.classList.add('on');
-  if(t==='home')setTimeout(function(){renderHero();renderActivityFeed();loadRecentPRs();updateProProfileUI();maybeShowIosInstall();},60);
+  if(t==='home')setTimeout(function(){renderHero();renderActivityFeed();loadRecentPRs();updateProProfileUI();maybeShowIosInstall();renderGettingStarted();},60);
   if(t==='ai')setTimeout(updateProProfileUI,60);
   if(t==='body'){setTimeout(function(){
     // initChart is normally called by the background loader chain after boot,
@@ -2531,6 +2531,39 @@ async function renderHero(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' kg';}}}},scales:{x:{grid:{display:false},ticks:{color:'#9CA3AF',font:{size:10,weight:'500'}}},y:{display:false,beginAtZero:true}}}
   });
 }
+async function renderGettingStarted(){
+  if(!CU||!sb)return;
+  var card=document.getElementById('gs-card');if(!card)return;
+  try{if(localStorage.getItem('aos_gs_dismissed_'+CU.id)==='1'){card.classList.add('hidden');return;}}catch(e){}
+  try{
+    var r=await Promise.all([
+      sb.from('workouts').select('id',{count:'exact',head:true}).eq('user_id',CU.id),
+      sb.from('meals').select('id',{count:'exact',head:true}).eq('user_id',CU.id),
+      sb.from('sleep_logs').select('id',{count:'exact',head:true}).eq('user_id',CU.id)
+    ]);
+    var wd=(r[0].count||0)>0,md=(r[1].count||0)>0,sd=(r[2].count||0)>0;
+    document.getElementById('gs-row-workout').classList.toggle('done',wd);
+    document.getElementById('gs-row-meal').classList.toggle('done',md);
+    document.getElementById('gs-row-sleep').classList.toggle('done',sd);
+    if(wd)document.getElementById('gs-check-workout').textContent='✓';
+    if(md)document.getElementById('gs-check-meal').textContent='✓';
+    if(sd)document.getElementById('gs-check-sleep').textContent='✓';
+    var done=(wd?1:0)+(md?1:0)+(sd?1:0);
+    var prog=document.getElementById('gs-progress');if(prog)prog.textContent=done+' of 3';
+    if(done>=3){
+      try{localStorage.setItem('aos_gs_dismissed_'+CU.id,'1');}catch(e){}
+      card.classList.add('hidden');
+      if(typeof toast==='function')toast('Setup complete 🎉');
+      return;
+    }
+    card.classList.remove('hidden');
+  }catch(e){card.classList.add('hidden');}
+}
+function dismissGettingStarted(){
+  try{if(CU)localStorage.setItem('aos_gs_dismissed_'+CU.id,'1');}catch(e){}
+  var card=document.getElementById('gs-card');if(card)card.classList.add('hidden');
+}
+
 async function renderActivityFeed(){
   var el=document.getElementById('activity-feed');if(!el)return;
   el.innerHTML='<div class="skel" style="height:44px;margin-bottom:8px"></div><div class="skel" style="height:44px;margin-bottom:8px"></div><div class="skel" style="height:44px"></div>';

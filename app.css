@@ -297,6 +297,20 @@ body.dark .btn-oauth{background:#1A1D24;color:var(--t);border-color:var(--bdr2)}
 .chat-mic.on{background:var(--red);border-color:var(--red);color:#fff;animation:micPulse 1.2s ease-in-out infinite}
 @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
 
+/* ── GETTING STARTED CARD ─────────────────── */
+.gs-card{background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.05) 100%);border-color:var(--accent)}
+.gs-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--bdr);cursor:pointer;transition:opacity .15s}
+.gs-row:active{opacity:.6}
+.gs-row.done{opacity:.55}
+.gs-row.done .gs-t{text-decoration:line-through}
+.gs-check{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--bdr);color:var(--t2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.gs-row.done .gs-check{background:var(--accent);border-color:var(--accent);color:#fff}
+.gs-body{flex:1;min-width:0}
+.gs-t{font-weight:700;font-size:14px;color:var(--t);letter-spacing:-.2px}
+.gs-s{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
+.gs-arrow{color:var(--t3);font-weight:600;font-size:18px}
+.gs-row.done .gs-arrow{display:none}
+
 /* ── BOTTOM NAV (mobile) ──────────────────── */
 .navbar{
   flex-shrink:0;
