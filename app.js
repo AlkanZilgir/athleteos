@@ -700,6 +700,12 @@ async function bootApp(){
   _updateOfflineBadge();flushWriteQueue();
   if(!_voiceSupported()){var mb=document.getElementById('chat-mic-btn');if(mb)mb.style.display='none';}
   await loadGoals();
+  // Fire-and-forget: keep server-side timezone fresh so push-cron fires at the
+  // user's local reminder time. Cheap, runs at most once per session change.
+  try{
+    var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if(tz&&tz!==P._timezone){sb.from('profiles').update({timezone:tz}).eq('id',CU.id).then(function(){P._timezone=tz;});}
+  }catch(e){}
   // First-run? Show onboarding wizard instead of app.
   if(!P._onboardingDone){
     document.getElementById('app').style.display='none';
@@ -759,6 +765,7 @@ async function loadGoals(){
     P._muscle_grow=data.muscle_grow||[];P._muscle_define=data.muscle_define||[];P._muscle_exclude=data.muscle_exclude||[];
     P._onbV2Done=!!data.onb_v2_done;P._mainGoal=data.onb_main_goal||null;P._experience=data.onb_experience||null;P._weeklyDays=data.onb_weekly_days||null;
     P._freezesUsedMonth=data.freezes_used_month||null;P._freezesUsedDates=data.freezes_used_dates||[];
+    P._timezone=data.timezone||null;
     REM={
       workout:!!data.notif_workout,
       protein:!!data.notif_protein,
