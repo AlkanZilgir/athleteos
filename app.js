@@ -5238,6 +5238,7 @@ async function pushSubscribe(){
     };
     await sb.from('push_subscriptions').upsert(row,{onConflict:'user_id,endpoint'});
     toast('Push notifications on');
+    try{track('push_subscribed',{ua:navigator.userAgent.slice(0,60)});}catch(e){}
     return true;
   }catch(e){
     console.warn('pushSubscribe',e);
@@ -5256,6 +5257,7 @@ async function pushUnsubscribe(){
       await sb.from('push_subscriptions').delete().eq('user_id',CU.id).eq('endpoint',endpoint);
     }
     toast('Push notifications off');
+    try{track('push_unsubscribed',{});}catch(e){}
   }catch(e){console.warn('pushUnsubscribe',e);}
 }
 async function togglePush(checked){
