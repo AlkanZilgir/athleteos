@@ -5186,7 +5186,84 @@ function loadReminderUI(){
   document.getElementById('rm-wt').checked=!!REM.water;
   document.getElementById('rt-wo-time').textContent=fmt12(REM.wt);
   document.getElementById('rt-pr-time').textContent=fmt12(REM.pt);
+  if(typeof refreshPushToggleUI==='function')refreshPushToggleUI();
 }
+/* ── WEB PUSH (live, cross-device) ────────── */
+var VAPID_PUBLIC_KEY='BKKcha3TRIxUDHlmOnfvUtWQZUgD1woqn-eE2C9HG1Mx_CwIazYznZFETyKya_HB3dErk0QSDC9_lyB-6-RCy_4';
+function _b64UrlToU8(s){
+  var pad='='.repeat((4-s.length%4)%4);
+  var b64=(s+pad).replace(/-/g,'+').replace(/_/g,'/');
+  var raw=atob(b64),out=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);
+  return out;
+}
+async function pushIsSubscribed(){
+  try{
+    if(!('serviceWorker' in navigator)||!('PushManager' in window))return false;
+    var reg=await navigator.serviceWorker.ready;
+    var sub=await reg.pushManager.getSubscription();
+    return !!sub;
+  }catch(e){return false;}
+}
+async function pushSubscribe(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){
+    toast('Push not supported on this device');return false;
+  }
+  try{
+    var perm=await Notification.requestPermission();
+    if(perm!=='granted'){toast('Notifications denied');return false;}
+    var reg=await navigator.serviceWorker.ready;
+    var sub=await reg.pushManager.getSubscription();
+    if(!sub){
+      sub=await reg.pushManager.subscribe({
+        userVisibleOnly:true,
+        applicationServerKey:_b64UrlToU8(VAPID_PUBLIC_KEY)
+      });
+    }
+    var raw=sub.toJSON();
+    var row={
+      user_id:CU.id,
+      endpoint:raw.endpoint,
+      p256dh:raw.keys.p256dh,
+      auth:raw.keys.auth,
+      user_agent:navigator.userAgent.slice(0,300),
+      last_seen_at:new Date().toISOString()
+    };
+    await sb.from('push_subscriptions').upsert(row,{onConflict:'user_id,endpoint'});
+    toast('Push notifications on');
+    return true;
+  }catch(e){
+    console.warn('pushSubscribe',e);
+    toast('Could not enable push — '+(e.message||'unknown'));
+    return false;
+  }
+}
+async function pushUnsubscribe(){
+  try{
+    if(!('serviceWorker' in navigator))return;
+    var reg=await navigator.serviceWorker.ready;
+    var sub=await reg.pushManager.getSubscription();
+    if(sub){
+      var endpoint=sub.endpoint;
+      try{await sub.unsubscribe();}catch(e){}
+      await sb.from('push_subscriptions').delete().eq('user_id',CU.id).eq('endpoint',endpoint);
+    }
+    toast('Push notifications off');
+  }catch(e){console.warn('pushUnsubscribe',e);}
+}
+async function togglePush(checked){
+  if(checked){
+    var ok=await pushSubscribe();
+    var t=document.getElementById('rm-push');if(t)t.checked=ok;
+  }else{
+    await pushUnsubscribe();
+  }
+}
+async function refreshPushToggleUI(){
+  var t=document.getElementById('rm-push');if(!t)return;
+  t.checked=await pushIsSubscribed();
+}
+
 async function saveReminders(){
   REM.workout=document.getElementById('rm-wo').checked;
   REM.protein=document.getElementById('rm-pr').checked;

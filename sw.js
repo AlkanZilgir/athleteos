@@ -1,4 +1,4 @@
-const CACHE='athleteos-v51';
+const CACHE='athleteos-v52';
 
 const BASE=self.registration.scope;
 const ASSETS=[
@@ -114,6 +114,22 @@ self.addEventListener('message',function(e){
     }
   }
   if(e.data.type==='REST_CANCEL'){_clearScheduled();}
+});
+
+/* ── WEB PUSH ─────────────────────────────── */
+self.addEventListener('push',function(e){
+  var data={};
+  try{data=e.data?e.data.json():{};}catch(err){data={body:e.data?e.data.text():''};}
+  var title=data.title||'AthleteOS';
+  var opts={
+    body:data.body||'',
+    icon:'icon-192.png',
+    badge:'icon-192.png',
+    tag:data.tag||'aos',
+    renotify:true,
+    data:{url:data.url||'/'}
+  };
+  e.waitUntil(self.registration.showNotification(title,opts));
 });
 
 self.addEventListener('notificationclick',function(e){
