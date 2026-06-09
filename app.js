@@ -1104,7 +1104,47 @@ function saveEx(){
     toast('⏱ Rest started — '+s+'s');
   }
 }
+/* ── SESSION MUSCLE MAP ────────────────────── */
+// Highlights the muscle groups hit by the exercises in the active session.
+// Front + back stylised figures; app muscle groups map onto these regions:
+//   chest→ch, back→ba, shoulders→sh, arms→ar, legs→le, core→co.
+function renderBodyMap(){
+  var el=document.getElementById('sess-bodymap');if(!el)return;
+  var worked={};(wExs||[]).forEach(function(e){var m=(e.muscle||'').toLowerCase();if(m&&m!=='cardio')worked[m]=true;});
+  var groups=Object.keys(worked);
+  if(!groups.length){el.style.display='none';el.innerHTML='';return;}
+  el.style.display='block';
+  function grpFor(short){return{ch:'chest',ba:'back',sh:'shoulders',ar:'arms',le:'legs',co:'core'}[short];}
+  function on(short){return worked[grpFor(short)]?' on':'';}
+  var front='<svg viewBox="0 0 100 220" class="bm-fig" aria-label="Front muscles">'+
+    '<circle class="sil" cx="50" cy="16" r="11"/><rect class="sil" x="45" y="25" width="10" height="8" rx="3"/>'+
+    '<ellipse class="m sh'+on('sh')+'" cx="27" cy="45" rx="11" ry="9"/><ellipse class="m sh'+on('sh')+'" cx="73" cy="45" rx="11" ry="9"/>'+
+    '<path class="m ch'+on('ch')+'" d="M38 43 Q49 39 49 39 L49 65 Q48 67 40 66 Q34 60 35 50 Z"/>'+
+    '<path class="m ch'+on('ch')+'" d="M62 43 Q51 39 51 39 L51 65 Q52 67 60 66 Q66 60 65 50 Z"/>'+
+    '<ellipse class="m ar'+on('ar')+'" cx="21" cy="64" rx="7" ry="13"/><ellipse class="m ar'+on('ar')+'" cx="79" cy="64" rx="7" ry="13"/>'+
+    '<ellipse class="m ar'+on('ar')+'" cx="17" cy="92" rx="6" ry="13"/><ellipse class="m ar'+on('ar')+'" cx="83" cy="92" rx="6" ry="13"/>'+
+    '<rect class="m co'+on('co')+'" x="41" y="69" width="18" height="33" rx="6"/>'+
+    '<rect class="m le'+on('le')+'" x="36" y="108" width="12" height="46" rx="6"/><rect class="m le'+on('le')+'" x="52" y="108" width="12" height="46" rx="6"/>'+
+    '<rect class="m le'+on('le')+'" x="37" y="158" width="10" height="40" rx="5"/><rect class="m le'+on('le')+'" x="53" y="158" width="10" height="40" rx="5"/>'+
+  '</svg>';
+  var back='<svg viewBox="0 0 100 220" class="bm-fig" aria-label="Back muscles">'+
+    '<circle class="sil" cx="50" cy="16" r="11"/><rect class="sil" x="45" y="25" width="10" height="8" rx="3"/>'+
+    '<ellipse class="m sh'+on('sh')+'" cx="27" cy="45" rx="11" ry="9"/><ellipse class="m sh'+on('sh')+'" cx="73" cy="45" rx="11" ry="9"/>'+
+    '<path class="m ba'+on('ba')+'" d="M39 40 Q50 36 61 40 L63 72 Q50 80 37 72 Z"/>'+
+    '<ellipse class="m ar'+on('ar')+'" cx="21" cy="64" rx="7" ry="13"/><ellipse class="m ar'+on('ar')+'" cx="79" cy="64" rx="7" ry="13"/>'+
+    '<ellipse class="m ar'+on('ar')+'" cx="17" cy="92" rx="6" ry="13"/><ellipse class="m ar'+on('ar')+'" cx="83" cy="92" rx="6" ry="13"/>'+
+    '<rect class="m le'+on('le')+'" x="37" y="100" width="12" height="16" rx="6"/><rect class="m le'+on('le')+'" x="51" y="100" width="12" height="16" rx="6"/>'+
+    '<rect class="m le'+on('le')+'" x="36" y="118" width="12" height="40" rx="6"/><rect class="m le'+on('le')+'" x="52" y="118" width="12" height="40" rx="6"/>'+
+    '<ellipse class="m le'+on('le')+'" cx="42" cy="178" rx="6" ry="16"/><ellipse class="m le'+on('le')+'" cx="58" cy="178" rx="6" ry="16"/>'+
+  '</svg>';
+  var legend=groups.map(function(g){return '<span class="bm-chip">'+g+'</span>';}).join('');
+  el.innerHTML='<div class="ctitle" style="margin:0 0 10px">Muscles worked</div>'+
+    '<div class="bm-wrap"><div class="bm-col">'+front+'<div class="bm-side">Front</div></div>'+
+    '<div class="bm-col">'+back+'<div class="bm-side">Back</div></div></div>'+
+    '<div class="bm-legend">'+legend+'</div>';
+}
 function renderExList(){
+  renderBodyMap();
   var el=document.getElementById('ex-list');
   if(!wExs.length){el.innerHTML='<div class="empty-state"><div class="empty-ico"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="26" width="6" height="12" rx="2"/><rect x="52" y="26" width="6" height="12" rx="2"/><rect x="14" y="22" width="6" height="20" rx="2"/><rect x="44" y="22" width="6" height="20" rx="2"/><path d="M20 32h24"/></svg></div><div class="empty-h">No exercises yet</div><div class="empty-sub">Pick a lift and start logging sets. We’ll track every PR for you.</div><button type="button" class="empty-cta" onclick="openExM()">+ Add exercise</button></div>';return;}
   el.innerHTML=wExs.map(function(ex,idx){
@@ -1124,12 +1164,32 @@ function renderExList(){
     var lastLine=lastTargets?'<div style="font-size:11.5px;color:var(--t3);margin-top:4px;font-weight:600;letter-spacing:.2px">↻ Last: <span style="color:var(--t2);font-weight:700">'+lastTargets+'</span></div>':'';
     var targetLine=(target&&firstSetEmpty)?'<div style="font-size:11.5px;color:var(--accent-d);margin-top:4px;font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>🎯 Target: '+(target.w>0?target.w+' kg × '+target.r:target.r+' reps')+'</span><span style="font-size:10.5px;color:var(--t3);font-weight:600">'+target.label+'</span><button type="button" onclick="applyProgressionTarget('+idx+')" style="background:var(--adim);border:1px solid var(--accent);color:var(--accent-d);font-family:inherit;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px;cursor:pointer;-webkit-appearance:none">Apply</button></div>':'';
     var topW=(ex.sets&&ex.sets.length)?ex.sets.reduce(function(a,s){return(parseFloat(s.weight)||0)>a?parseFloat(s.weight)||0:a;},0):0;
+    var setGrid;
+    if(ex.sets&&ex.sets.length){
+      setGrid='<div class="setgrid"><div class="setrow sethead"><div>#</div><div>Weight</div><div>Reps</div><div>RIR</div><div></div></div>'+
+        ex.sets.map(function(s,si){
+          var done=!!s.done;
+          var rv=(s.rir===0||s.rir)?s.rir:'';
+          return '<div class="setrow'+(done?' done':'')+'">'+
+            '<div class="setn">'+(si+1)+'</div>'+
+            '<input type="number" inputmode="decimal" step="0.5" min="0" class="setin" value="'+(s.weight!==''&&s.weight!=null?s.weight:'')+'" placeholder="0" aria-label="Weight kg" oninput="setField('+idx+','+si+',\'weight\',this.value)">'+
+            '<input type="number" inputmode="numeric" step="1" min="0" class="setin" value="'+(s.reps!==''&&s.reps!=null?s.reps:'')+'" placeholder="0" aria-label="Reps" oninput="setField('+idx+','+si+',\'reps\',this.value)">'+
+            '<div class="setrir"><span class="rir-dot" style="background:'+rirColor(rv)+'"></span><input type="number" inputmode="numeric" step="1" min="0" max="10" class="setin rir-in" value="'+rv+'" placeholder="–" aria-label="Reps in reserve" oninput="setField('+idx+','+si+',\'rir\',this.value)"></div>'+
+            '<button type="button" class="setdone'+(done?' on':'')+'" aria-label="Complete set" aria-pressed="'+done+'" onclick="toggleSetDone('+idx+','+si+',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>'+
+            '<button type="button" class="setdel" aria-label="Remove set" onclick="removeSet('+idx+','+si+')">✕</button>'+
+          '</div>';
+        }).join('')+'</div>';
+    }else{
+      setGrid='<div style="font-size:12.5px;color:var(--t3);margin-top:6px">No sets yet — tap + Set</div>';
+    }
     return '<div class="exi">'+
       '<div class="fb"><div class="exn" onclick="openExInfo(\''+sn+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+ex.muscle+'</span>'+moveBtns+'</div>'+
       lastLine+targetLine+
-      '<div style="font-size:12.5px;color:var(--t2);margin-top:5px">'+(ex.sets.length?ex.sets.map(function(s,i){return 'Set '+(i+1)+': '+fmtSet(s.weight,s.reps);}).join('  ·  '):'<span style="color:var(--t3)">No sets yet — tap +Set</span>')+'</div>'+
+      setGrid+
+      '<div data-ex-demo="'+idx+'" class="exdemo" style="display:none"></div>'+
       '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">'+
-        '<button type="button" class="btn" style="padding:5px 12px;font-size:12px" onclick="openQuickSet('+idx+')">+ Set</button>'+
+        '<button type="button" class="btn" style="padding:5px 12px;font-size:12px" onclick="addInlineSet('+idx+')">+ Set</button>'+
+        '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExDemo('+idx+',\''+sn+'\',this)">▶ Demo</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExNote('+idx+',this)">📝 '+(ex.note?'Edit note':'Add note')+'</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="openPlate('+topW+')" title="Plate calculator">🧮 Plates</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px;border-color:var(--accent);color:var(--accent-d)" onclick="restForEx('+idx+')">⏱ Rest '+_fmtRestPref(getRestPref(ex.name))+'</button>'+
@@ -1159,6 +1219,90 @@ function applyProgressionTarget(i){
   }
   renderExList();
   toast('Target set: '+(t.w>0?t.w+' kg × '+t.r:t.r+' reps'));
+}
+
+/* ── INLINE SET GRID ───────────────────────── */
+// Colour for the RIR effort dot: low RIR (near failure) = red, high = green.
+function rirColor(v){
+  if(v===''||v==null)return 'var(--t4)';
+  var n=parseInt(v);if(isNaN(n))return 'var(--t4)';
+  if(n<=1)return '#EF4444';
+  if(n<=3)return '#F59E0B';
+  return '#22C55E';
+}
+// Write an edited cell straight back to the in-memory session model.
+function setField(idx,si,field,val){
+  var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
+  if(field==='weight'){ex.sets[si].weight=val===''?'':(parseFloat(val)||0);}
+  else if(field==='reps'){ex.sets[si].reps=val===''?'':(parseInt(val)||0);}
+  else if(field==='rir'){
+    ex.sets[si].rir=val===''?null:Math.max(0,Math.min(10,parseInt(val)||0));
+    // Recolour the effort dot live without a full re-render (keeps focus in the input).
+    var row=document.querySelectorAll('#ex-list .exi')[idx];
+    if(row){var dots=row.querySelectorAll('.rir-dot');if(dots[si])dots[si].style.background=rirColor(ex.sets[si].rir==null?'':ex.sets[si].rir);}
+  }
+}
+// Tick a set complete — fires haptics and (if auto-rest is on) starts the rest timer.
+function toggleSetDone(idx,si,btn){
+  var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
+  var nowDone=!ex.sets[si].done;
+  ex.sets[si].done=nowDone;
+  if(btn){btn.classList.toggle('on',nowDone);btn.setAttribute('aria-pressed',nowDone);}
+  var row=btn&&btn.closest('.setrow');if(row)row.classList.toggle('done',nowDone);
+  if(nowDone){
+    if(navigator.vibrate)try{navigator.vibrate(35);}catch(e){}
+    if(P._autoRest)restForEx(idx);
+  }
+}
+// Add a blank set row, pre-filling weight/reps from this session's last set,
+// falling back to the matching set from the previous session.
+function addInlineSet(idx){
+  var ex=wExs[idx];if(!ex)return;
+  ex.sets=ex.sets||[];
+  var seed={weight:'',reps:'',rir:null,done:false};
+  var last=ex.sets.length?ex.sets[ex.sets.length-1]:null;
+  if(last){seed.weight=last.weight;seed.reps=last.reps;}
+  else{
+    var ls=_lastSessByEx[(ex.name||'').toLowerCase()];
+    if(ls&&ls.sets&&ls.sets.length){var ms=ls.sets[0];if(ms){seed.weight=ms.w||'';seed.reps=ms.r||'';}}
+  }
+  ex.sets.push(seed);
+  renderExList();
+  // Focus the weight cell of the new row for fast keyboard entry.
+  var rows=document.querySelectorAll('#ex-list .exi');
+  var card=rows[idx];if(card){var ins=card.querySelectorAll('.setrow:not(.sethead) .setin');var t=ins[(ex.sets.length-1)*3];if(t){t.focus();t.select&&t.select();}}
+}
+function removeSet(idx,si){
+  var ex=wExs[idx];if(!ex||!ex.sets)return;
+  ex.sets.splice(si,1);
+  renderExList();
+}
+
+/* ── INLINE EXERCISE DEMO ──────────────────── */
+var _inlineDemoTimers={};
+function _stopInlineDemo(el){if(el&&el._demoTimer){clearInterval(el._demoTimer);el._demoTimer=null;}}
+function toggleExDemo(idx,name,btn){
+  var el=document.querySelector('.exi [data-ex-demo="'+idx+'"]')||document.querySelectorAll('[data-ex-demo="'+idx+'"]')[0];
+  if(!el)return;
+  if(el.style.display!=='none'){el.style.display='none';_stopInlineDemo(el);el.innerHTML='';if(btn)btn.classList.remove('on');return;}
+  if(btn)btn.classList.add('on');
+  el.style.display='block';
+  el.innerHTML='<div class="exdemo-skel"></div>';
+  _mountInlineDemo(el,name);
+}
+async function _mountInlineDemo(el,name){
+  var id=_findExGif(name);
+  if(!id){await _loadExDb();id=_findExGif(name);}
+  if(!id){el.innerHTML='<div class="exdemo-fb">Demo not available</div>';return;}
+  var base='https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/'+encodeURIComponent(id).replace(/%2F/g,'/')+'/';
+  el.innerHTML='<div class="exdemo-stage"><img class="exdemo-img" data-f="0" alt="'+name+' demo"><img class="exdemo-img" data-f="1" alt="" style="opacity:0"></div>';
+  var img0=el.querySelector('[data-f="0"]'),img1=el.querySelector('[data-f="1"]');
+  var l0=false,l1=false,frame=0;
+  function startCycle(){_stopInlineDemo(el);el._demoTimer=setInterval(function(){frame=frame?0:1;img0.style.opacity=frame?'0':'1';img1.style.opacity=frame?'1':'0';},520);}
+  img0.onload=function(){l0=true;if(l1)startCycle();};
+  img1.onload=function(){l1=true;if(l0)startCycle();};
+  img0.onerror=function(){el.innerHTML='<div class="exdemo-fb">Demo not available</div>';};
+  img0.src=base+'0.jpg';img1.src=base+'1.jpg';
 }
 
 /* ── QUICK SET LOG ─────────────────────────── */
@@ -1230,7 +1374,7 @@ async function finishW(){
     if(ex.note&&ex.note.trim())exPayload.notes=ex.note.trim();
     await sbQueueInsert('exercises',exPayload);
     if(ex.sets.length){
-      var setRows=ex.sets.map(function(s,si){return{id:_genId(),exercise_id:exId,user_id:CU.id,set_number:si+1,weight_kg:s.weight,reps:s.reps};});
+      var setRows=ex.sets.map(function(s,si){return{id:_genId(),exercise_id:exId,user_id:CU.id,set_number:si+1,weight_kg:s.weight,reps:s.reps,rir:(s.rir===0||s.rir)?s.rir:null};});
       await sbQueueInsert('sets',setRows);
     }
   }
@@ -2081,8 +2225,44 @@ async function renderBfChart(){
 }
 
 /* ── REST TIMER (wall-clock, drift-free) ─── */
-var _rSecs=90,_rTotal=90,_rEnd=0,_rInterval=null,_rDone=false;
+var _rSecs=90,_rTotal=90,_rEnd=0,_rInterval=null,_rDone=false,_rLastNotifSec=-1;
 function _rLeft(){return _rEnd?Math.max(0,Math.ceil((_rEnd-Date.now())/1000)):_rSecs;}
+// Post to the active SW. Prefer .controller, fall back to the ready registration's
+// active worker (controller can be null right after first registration).
+function _swPost(msg){
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage(msg);return;}
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(function(reg){if(reg&&reg.active)reg.active.postMessage(msg);}).catch(function(){});}
+  }catch(e){}
+}
+// Durable server-side backstop. The page/SW timers both die when the OS reaps
+// the app with the screen off, so we also park a row in scheduled_pushes that
+// rest-push-cron delivers (~60s granularity) if nothing else fired. On normal
+// completion (and cancel) we delete the row, so it only ever reaches users
+// whose device was actually asleep. All best-effort — never blocks the timer.
+async function _schedRestPush(endAt){
+  try{
+    if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+    if(typeof sb==='undefined'||!sb||typeof CU==='undefined'||!CU||!CU.id)return;
+    if(!(await pushIsSubscribed()))return;
+    // One pending rest push per user — clear any stale one before parking this.
+    await sb.from('scheduled_pushes').delete().eq('user_id',CU.id).eq('tag','rest');
+    await sb.from('scheduled_pushes').insert({
+      user_id:CU.id,
+      fire_at:new Date(endAt).toISOString(),
+      title:'Rest complete!',
+      body:'Time to hit your next set 💪',
+      tag:'rest',
+      url:'/'
+    });
+  }catch(e){}
+}
+async function _cancelRestPush(){
+  try{
+    if(typeof sb==='undefined'||!sb||typeof CU==='undefined'||!CU||!CU.id)return;
+    await sb.from('scheduled_pushes').delete().eq('user_id',CU.id).eq('tag','rest');
+  }catch(e){}
+}
 function openRestGeneric(){_restForExName=null;openRest();}
 function openRest(){
   oModal('m-rest');
@@ -2106,25 +2286,32 @@ function restForEx(idx){
   openRest();setRest(s);
 }
 function setRest(s){
-  clearInterval(_rInterval);_rInterval=null;_rDone=false;_rLastTick=-1;
+  clearInterval(_rInterval);_rInterval=null;_rDone=false;_rLastTick=-1;_rLastNotifSec=-1;
   _rSecs=s;_rTotal=s;_rEnd=Date.now()+s*1000;
   if(_restForExName)setRestPref(_restForExName,s);
   document.querySelectorAll('.rest-preset').forEach(function(p){p.classList.toggle('on',+p.dataset.s===s);});
   updateRestUI();
+  // Request permission, then kick off the SW countdown notification once granted.
   if(typeof Notification!=='undefined'&&Notification.permission==='default'){
     Notification.requestPermission().then(function(p){
       var b=document.getElementById('notif-btn');
-      if(p==='granted'&&b){b.textContent='Notifications On';b.disabled=true;b.style.opacity='.5';}
+      if(p==='granted'){if(b){b.textContent='Notifications On';b.disabled=true;b.style.opacity='.5';}_swPost({type:'REST_START',duration:s,endAt:_rEnd});_schedRestPush(_rEnd);}
     });
-  }
-  if(navigator.serviceWorker&&navigator.serviceWorker.controller){
-    navigator.serviceWorker.controller.postMessage({type:'REST_START',duration:s,endAt:_rEnd});
+  }else if(typeof Notification!=='undefined'&&Notification.permission==='granted'){
+    _swPost({type:'REST_START',duration:s,endAt:_rEnd});
+    _schedRestPush(_rEnd);
   }
   _rInterval=setInterval(_rTick,250);
 }
 function _rTick(){
   updateRestUI();
   var left=_rLeft();
+  // Refresh the live countdown notification once per whole second. This also
+  // wakes the SW, keeping its completion timer alive while the page is running.
+  if(left>0&&left!==_rLastNotifSec&&_rEnd&&!_rDone&&typeof Notification!=='undefined'&&Notification.permission==='granted'){
+    _rLastNotifSec=left;
+    _swPost({type:'REST_TICK',endAt:_rEnd});
+  }
   // Soft tick at last 3 seconds (haptics + tiny WebAudio beep).
   if(left>0&&left<=3&&left!==_rLastTick&&!_rMuted()){
     _rLastTick=left;
@@ -2134,6 +2321,10 @@ function _rTick(){
   if(left<=0&&!_rDone){
     _rDone=true;
     clearInterval(_rInterval);_rInterval=null;
+    // Replace the ongoing notification with the loud "complete" alert, and drop
+    // the server backstop row — the page is alive, so the cron must not re-fire.
+    if(typeof Notification!=='undefined'&&Notification.permission==='granted')_swPost({type:'REST_DONE'});
+    _cancelRestPush();
     if(!_rMuted()){
       try{navigator.vibrate&&navigator.vibrate([300,100,300,100,300]);}catch(e){}
       _restBeep(880,180);
@@ -2207,8 +2398,9 @@ function updateRestUI(){
   ring.style.stroke=left<=10?'var(--red)':left<=30?'var(--yel)':'var(--accent)';
 }
 function cancelRest(){
-  clearInterval(_rInterval);_rInterval=null;_rEnd=0;_rDone=false;
-  if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'REST_CANCEL'});
+  clearInterval(_rInterval);_rInterval=null;_rEnd=0;_rDone=false;_rLastNotifSec=-1;
+  _swPost({type:'REST_CANCEL'});
+  _cancelRestPush();
   cModal('m-rest');
 }
 document.addEventListener('visibilitychange',function(){

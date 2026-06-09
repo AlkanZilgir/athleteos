@@ -6,7 +6,7 @@
   --red:#EF4444;--yel:#F59E0B;--pur:#A855F7;--pink:#EC4899;
   --t:#0A0A0A;--t2:#6B7280;--t3:#9CA3AF;--t4:#D1D5DB;
   --bdr:rgba(0,0,0,.06);--bdr2:rgba(0,0,0,.10);--bdr3:rgba(0,0,0,.16);
-  --surface:#F7F7F9;--surface-2:#EEEEF1;
+  --surface:#F7F7F9;--surface-2:#EEEEF1;--bm-rest:#DCDEE5;
   --sb:240px;--topH:56px;--navH:50px;--r:18px;--r-sm:12px;--r-lg:24px;
   --shadow-sm:0 1px 2px rgba(15,23,42,.04);
   --shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
@@ -393,6 +393,45 @@ body.dark .btn-oauth{background:#1A1D24;color:var(--t);border-color:var(--bdr2)}
 .si{background:var(--surface);border:1.5px solid transparent;border-radius:12px;padding:11px;color:var(--t);font-size:16px;font-family:inherit;outline:none;width:100%;text-align:center;-webkit-appearance:none;transition:all .15s;font-weight:600}
 .si:focus{border-color:var(--accent);background:#FFFFFF;box-shadow:0 0 0 3px var(--adim)}
 
+/* ── INLINE SET GRID ──────────────────────── */
+.setgrid{margin-top:9px}
+.setrow{display:grid;grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 28px 16px;gap:6px;align-items:center;margin-bottom:6px}
+.setrow.sethead{margin-bottom:5px;padding:0 2px}
+.setrow.sethead>div{font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.2px;text-transform:uppercase;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.setn{font-size:13px;font-weight:700;color:var(--t2);text-align:center}
+.setin{min-width:0;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:9px 2px;color:var(--t);font-size:15px;font-family:inherit;outline:none;width:100%;text-align:center;-webkit-appearance:none;-moz-appearance:textfield;font-weight:600;transition:border-color .12s,background .12s}
+.setin::-webkit-outer-spin-button,.setin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.setin:focus{border-color:var(--accent);background:#FFFFFF;box-shadow:0 0 0 3px var(--adim)}
+.setrir{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;background:var(--surface);border-radius:10px;padding:0 4px;overflow:hidden}
+.setrir .rir-in{min-width:0;width:auto;background:none;border:none;padding:9px 0;box-shadow:none;flex:1 1 auto;text-align:left}
+.setrir:focus-within{box-shadow:0 0 0 3px var(--adim)}
+.rir-dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;transition:background .15s}
+.setdone{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;border:1.5px solid var(--bdr2);background:var(--surface);color:transparent;cursor:pointer;padding:0;transition:all .14s;-webkit-appearance:none}
+.setdone.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.setdel{background:none;border:none;color:var(--t4);font-size:13px;cursor:pointer;padding:0;line-height:1;justify-self:center}
+.setdel:hover{color:var(--red)}
+.setrow.done .setin{opacity:.62}
+.setrow.done .setn{color:var(--accent-d)}
+
+/* ── SESSION MUSCLE MAP ───────────────────── */
+.bm-card{margin-bottom:13px}
+.bm-wrap{display:flex;gap:18px;justify-content:center;align-items:flex-start}
+.bm-col{display:flex;flex-direction:column;align-items:center;flex:0 0 auto}
+.bm-fig{width:96px;height:auto;display:block}
+.bm-fig .sil,.bm-fig .m{fill:var(--bm-rest);transition:fill .25s}
+.bm-fig .m.on{fill:var(--accent)}
+.bm-side{font-size:10px;text-align:center;color:var(--t3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-top:6px}
+.bm-legend{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:11px}
+.bm-chip{font-size:11px;font-weight:700;color:var(--accent-d);background:var(--adim);border-radius:999px;padding:3px 10px;text-transform:capitalize}
+
+/* ── INLINE EXERCISE DEMO ─────────────────── */
+.exdemo{margin-top:10px}
+.exdemo-stage{position:relative;width:100%;max-width:240px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;overflow:hidden;background:var(--surface)}
+.exdemo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s}
+.exdemo-skel{width:100%;max-width:240px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;background:linear-gradient(90deg,var(--surface) 25%,var(--bdr) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.3s infinite}
+.exdemo-fb{padding:18px;text-align:center;color:var(--t3);font-size:12.5px;font-weight:500;background:var(--surface);border-radius:14px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
 /* ── EX / MEAL ────────────────────────────── */
 .exi{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:14px 16px;margin-bottom:10px;transition:border-color .15s}
 .exi:hover{border-color:var(--bdr2)}
@@ -573,7 +612,7 @@ body.dark .musc-tag.s{background:rgba(255,255,255,.06)}
 html.dark{background:#0B0B0F}
 body.dark{
   --bg:#0B0B0F;--bg2:#15151B;--card:#14141A;--card2:#1B1B22;
-  --surface:#16161C;--surface-2:#1F1F26;
+  --surface:#16161C;--surface-2:#1F1F26;--bm-rest:#2A2E37;
   --t:#F4F4F5;--t2:#9CA3AF;--t3:#6B7280;--t4:#3F3F46;
   --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.11);--bdr3:rgba(255,255,255,.18);
   --adim:rgba(34,197,94,.16);--bdim:rgba(59,130,246,.14);

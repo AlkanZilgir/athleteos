@@ -1,4 +1,4 @@
-const CACHE='athleteos-v52';
+const CACHE='athleteos-v56';
 
 const BASE=self.registration.scope;
 const ASSETS=[
@@ -28,18 +28,49 @@ self.addEventListener('activate',e=>{
 });
 
 /* ── REST TIMER NOTIFICATIONS ─────────────── */
+// Notes on background firing: the only fully-reliable client-side scheduled
+// notification (Notification Triggers / TimestampTrigger) was removed from
+// Chrome, and a plain SW setTimeout dies when the browser kills the idle SW
+// (~30s after the page backgrounds with the screen off). So we do three things:
+//   1. Show an ongoing (silent, sticky) notification the moment rest starts, so
+//      something is always in the tray even if the SW is later killed.
+//   2. Let the foreground page drive the live countdown (REST_TICK) — each tick
+//      also wakes the SW, keeping its completion setTimeout alive longer.
+//   3. Fire the "complete" alert from whichever survives: the page (REST_DONE)
+//      or the SW setTimeout. Both share tag 'rest' so it collapses to one.
 var _rTmr=null;
 
-function _clearScheduled(){
-  if(_rTmr){clearTimeout(_rTmr);_rTmr=null;}
+function _closeTag(tag){
   if(self.registration.getNotifications){
-    self.registration.getNotifications({tag:'rest',includeTriggered:true}).then(function(ns){
+    return self.registration.getNotifications({tag:tag,includeTriggered:true}).then(function(ns){
       ns.forEach(function(n){n.close();});
     }).catch(function(){});
   }
 }
+function _clearScheduled(){
+  if(_rTmr){clearTimeout(_rTmr);_rTmr=null;}
+  _closeTag('rest');
+}
+
+// Sticky, silent countdown notification — visible in the bar / on the lock screen.
+function _showRestOngoing(endAt){
+  var left=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+  var mm=Math.floor(left/60),ss=left%60;
+  var label=left<=0?'Rest done':mm+':'+(ss<10?'0':'')+ss+' left';
+  return self.registration.showNotification('Resting · '+label,{
+    body:'Get ready for your next set 💪',
+    icon:'icon-192.png',
+    badge:'icon-192.png',
+    tag:'rest',
+    renotify:false,
+    silent:true,
+    requireInteraction:true,
+    data:{ongoing:true}
+  }).catch(function(){});
+}
 
 function _fireRestDone(){
+  if(_rTmr){clearTimeout(_rTmr);_rTmr=null;}
   return self.registration.showNotification('Rest complete!',{
     body:'Time to hit your next set 💪',
     icon:'icon-192.png',
@@ -47,7 +78,8 @@ function _fireRestDone(){
     tag:'rest',
     renotify:true,
     requireInteraction:true,
-    vibrate:[300,100,300,100,300]
+    vibrate:[300,100,300,100,300],
+    data:{ongoing:false}
   });
 }
 
@@ -93,26 +125,13 @@ self.addEventListener('message',function(e){
     _clearScheduled();
     var endAt=e.data.endAt||(Date.now()+e.data.duration*1000);
     var delay=Math.max(0,endAt-Date.now());
-    // Prefer Notification Triggers API (fires even if SW is asleep, Chrome Android).
-    if('showTrigger' in Notification.prototype && self.TimestampTrigger){
-      try{
-        self.registration.showNotification('Rest complete!',{
-          body:'Time to hit your next set 💪',
-          icon:'icon-192.png',
-          badge:'icon-192.png',
-          tag:'rest',
-          renotify:true,
-          requireInteraction:true,
-          vibrate:[300,100,300,100,300],
-          showTrigger:new TimestampTrigger(endAt)
-        });
-      }catch(err){
-        _rTmr=setTimeout(function(){_fireRestDone();_rTmr=null;},delay);
-      }
-    }else{
-      _rTmr=setTimeout(function(){_fireRestDone();_rTmr=null;},delay);
-    }
+    e.waitUntil(_showRestOngoing(endAt));
+    _rTmr=setTimeout(function(){_fireRestDone();},delay);
   }
+  if(e.data.type==='REST_TICK'){
+    if(e.data.endAt&&e.data.endAt>Date.now())e.waitUntil(_showRestOngoing(e.data.endAt));
+  }
+  if(e.data.type==='REST_DONE'){e.waitUntil(_fireRestDone());}
   if(e.data.type==='REST_CANCEL'){_clearScheduled();}
 });
 
@@ -126,7 +145,7 @@ self.addEventListener('push',function(e){
     icon:'icon-192.png',
     badge:'icon-192.png',
     tag:data.tag||'aos',
-    renotify:true,
+    renotify:data.renotify!==false,
     data:{url:data.url||'/'}
   };
   e.waitUntil(self.registration.showNotification(title,opts));
