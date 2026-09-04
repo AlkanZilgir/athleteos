@@ -2,12 +2,13 @@
   "name": "athleteos",
   "version": "1.0.1",
   "private": true,
-  "description": "AthleteOS fitness PWA — workouts, nutrition, sleep, body, AI coach",
+  "description": "AthleteOS fitness PWA \u2014 workouts, nutrition, sleep, body, AI coach",
   "scripts": {
     "dev": "npx http-server -p 5173 -o",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "test:ui": "npx playwright test --ui"
+    "test:ui": "npx playwright test --ui",
+    "screens": "node tools/marketing-screenshots.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

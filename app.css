@@ -11,6 +11,28 @@
   --shadow-sm:0 1px 2px rgba(15,23,42,.04);
   --shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
   --shadow-lg:0 10px 30px rgba(15,23,42,.10);
+
+  /* ── ATHLETIC TYPE SYSTEM ──────────────────
+     Oswald carries every display voice (condensed, scoreboard lineage).
+     Inter stays on body copy, form fields and small numerals. The pairing
+     contrasts on width, not on two near-identical grotesques. */
+  --font-display:'Oswald','Inter',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+
+  /* ── SIGNAL PALETTE ────────────────────────
+     Four data roles. Light theme uses saturated ink that clears 4.5:1 on
+     white; dark theme swaps to the neon end and turns the glow on. */
+  --sig-train:#15803D;--sig-train-pure:#22C55E;
+  --sig-fuel:#C2410C;--sig-fuel-pure:#F97316;
+  --sig-water:#1D4ED8;--sig-water-pure:#3B82F6;
+  --sig-sleep:#6D28D9;--sig-sleep-pure:#8B5CF6;
+  --sig-track:rgba(10,10,15,.07);
+  --glow-train:0 0 0 rgba(0,0,0,0);--glow-fuel:0 0 0 rgba(0,0,0,0);
+  --glow-water:0 0 0 rgba(0,0,0,0);--glow-sleep:0 0 0 rgba(0,0,0,0);
+  --glow-strength:0;
+
+  /* z-index scale — semantic, no magic 9999s */
+  --z-sticky:20;--z-overlay:900;--z-modal:1000;--z-toast:1200;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html{height:100%;height:100dvh;overflow:hidden;background:var(--bg)}
@@ -616,6 +638,18 @@ body.dark{
   --t:#F4F4F5;--t2:#9CA3AF;--t3:#6B7280;--t4:#3F3F46;
   --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.11);--bdr3:rgba(255,255,255,.18);
   --adim:rgba(34,197,94,.16);--bdim:rgba(59,130,246,.14);
+
+  /* Neon signal set — only the dark surface can carry real glow. */
+  --sig-train:#4ADE80;--sig-train-pure:#4ADE80;
+  --sig-fuel:#FB923C;--sig-fuel-pure:#FB923C;
+  --sig-water:#38BDF8;--sig-water-pure:#38BDF8;
+  --sig-sleep:#A78BFA;--sig-sleep-pure:#A78BFA;
+  --sig-track:rgba(255,255,255,.08);
+  --glow-train:0 0 14px rgba(74,222,128,.45);
+  --glow-fuel:0 0 14px rgba(251,146,60,.45);
+  --glow-water:0 0 14px rgba(56,189,248,.45);
+  --glow-sleep:0 0 14px rgba(167,139,250,.42);
+  --glow-strength:1;
 }
 /* topbar + navbar now use var(--bg) which already follows dark mode */
 body.dark .modal{background:rgba(0,0,0,.65)}
@@ -1056,3 +1090,317 @@ body.dark .hero-card{background:linear-gradient(180deg,var(--card) 0%,var(--surf
 .qa-btn:active{transform:scale(.98)}
 .qa-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .qa-lbl{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.2px;text-align:left}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATHLETIC LAYER
+   Display typography, the signal-coloured data visuals, and the
+   asymmetric home composition. Everything below deliberately
+   overrides the earlier generic-card styling.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── ICONS ─────────────────────────────────
+   One 24×24 stroke set, referenced from a hidden sprite. Sized by
+   font-size on the parent so an icon always matches its label. */
+.ic{width:1em;height:1em;flex-shrink:0;stroke:currentColor;fill:none;
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
+.ic-b{stroke-width:2.2}
+.icb{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── DISPLAY TYPOGRAPHY ────────────────────
+   Oswald is condensed, so the negative tracking Inter needed is wrong
+   here: reset to ~0 and let the width do the work. */
+.ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand{
+  font-family:var(--font-display);font-weight:600;letter-spacing:0;
+  text-transform:uppercase;text-wrap:balance;
+}
+.ptitle{font-size:clamp(30px,7vw,38px);line-height:.95;margin-bottom:18px}
+.hero-title{font-size:clamp(30px,7.5vw,40px);line-height:.95;letter-spacing:.2px;margin-bottom:8px}
+.wc-brand{font-size:clamp(42px,12vw,54px);line-height:.9;font-weight:700;letter-spacing:.5px}
+.onb-hero,.onb-h{font-weight:600;line-height:1}
+.obp-title,.pw-hero-title{font-weight:700;line-height:.94;letter-spacing:.3px}
+.ctitle{font-family:var(--font-display);font-weight:600;font-size:14px;
+  letter-spacing:.9px;text-transform:uppercase;color:var(--t);margin-bottom:14px}
+.sb-logo,.tlogo{font-family:var(--font-display);font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+
+/* Numerals stay legible: Oswald for anything display-scale, Inter below 20px. */
+.stat-num{font-family:var(--font-display);font-weight:600;letter-spacing:0;
+  line-height:.9;font-variant-numeric:tabular-nums;color:var(--t)}
+
+/* ── HOME HEADER ───────────────────────────
+   Replaces the eyebrow + generic subtitle with a date rule and a
+   display greeting. */
+.home-head{padding:2px 0 20px}
+.home-date{display:flex;align-items:center;gap:9px;font-family:var(--font-body);
+  font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--t3)}
+.home-date::after{content:"";flex:1;height:1px;background:var(--bdr2)}
+.home-head .hero-title{margin:10px 0 6px}
+.home-sub{color:var(--t2);font-size:14.5px;line-height:1.5;font-weight:500;max-width:44ch}
+.home-sub b{color:var(--t);font-weight:700}
+
+/* ── BAND: the full-width primary metric ───
+   Not a card. No uniform padding box repeated four times — each band
+   composes differently inside a shared frame. */
+.band{position:relative;background:var(--card);border:1px solid var(--bdr);
+  border-radius:var(--r-lg);padding:22px;margin-bottom:12px;overflow:hidden}
+.band::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,var(--band-hue,var(--sig-train)) 0%,transparent 72%);
+  opacity:.9}
+.band-train{--band-hue:var(--sig-train-pure)}
+.band-fuel{--band-hue:var(--sig-fuel-pure)}
+body.dark .band{background:linear-gradient(168deg,var(--card2) 0%,var(--card) 58%)}
+
+.band-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.band-kicker{font-family:var(--font-display);font-size:14px;font-weight:600;
+  letter-spacing:1.6px;text-transform:uppercase;color:var(--t);line-height:1}
+.band-note{font-size:12px;font-weight:600;color:var(--t2);letter-spacing:-.1px}
+
+/* Status chip — replaces the ✓/– glyph tile */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px 5px 9px;
+  border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.3px;
+  text-transform:uppercase;font-family:var(--font-body);
+  background:var(--surface);color:var(--t2);border:1px solid var(--bdr2);white-space:nowrap}
+.chip .ic{font-size:13px}
+.chip.live{color:var(--sig-train);border-color:color-mix(in srgb,var(--sig-train) 34%,transparent);
+  background:color-mix(in srgb,var(--sig-train) 11%,transparent)}
+body.dark .chip.live{box-shadow:var(--glow-train)}
+
+/* ── TRAINING BAND ─────────────────────────
+   Volume headline + 7-day bars + a four-slot readout. */
+.tr-vol{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.tr-vol .stat-num{font-size:clamp(46px,13vw,62px)}
+.tr-vol-unit{font-family:var(--font-display);font-size:20px;font-weight:500;
+  letter-spacing:1px;text-transform:uppercase;color:var(--sig-train);line-height:1}
+body.dark .tr-vol-unit{text-shadow:var(--glow-train)}
+.tr-caption{font-size:12.5px;color:var(--t2);font-weight:500;margin-bottom:4px}
+.hero-spark{height:62px;margin:12px -2px 4px;position:relative}
+
+.readout{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  margin-top:14px;padding-top:15px;border-top:1px solid var(--bdr)}
+.readout-i{text-align:left;padding-right:8px;position:relative}
+.readout-i+.readout-i{padding-left:12px}
+.readout-i+.readout-i::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;background:var(--bdr)}
+.readout-v{font-family:var(--font-display);font-weight:600;font-size:22px;
+  letter-spacing:.2px;line-height:1;color:var(--t);font-variant-numeric:tabular-nums}
+.readout-l{font-size:10.5px;color:var(--t3);font-weight:700;margin-top:5px;
+  letter-spacing:.9px;text-transform:uppercase}
+
+/* ── RINGS ─────────────────────────────────
+   Progress ring with a signal-coloured arc. The glow only fires on the
+   dark surface, where it reads as light rather than mud. */
+.ring{position:relative;flex-shrink:0;display:grid;place-items:center}
+.ring svg{transform:rotate(-90deg);display:block;overflow:visible;width:100%;height:100%}
+.ring-track{stroke:var(--sig-track);fill:none}
+.ring-arc{fill:none;stroke-linecap:round;stroke:var(--ring-hue,var(--sig-train));
+  transition:stroke-dashoffset .85s cubic-bezier(.16,1,.3,1)}
+body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))}
+.ring-in{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;line-height:1}
+.ring-v{font-family:var(--font-display);font-weight:600;letter-spacing:0;
+  color:var(--t);line-height:.9;font-variant-numeric:tabular-nums}
+.ring-u{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1.1px;
+  text-transform:uppercase;margin-top:4px}
+.ring-lg .ring-v{font-size:30px}
+.ring-sm .ring-v{font-size:23px}
+
+/* ── FUEL BAND ─────────────────────────────
+   Big calorie ring, then two accent bars. Asymmetric on purpose. */
+.fuel-grid{display:flex;align-items:center;gap:20px}
+.fuel-bars{flex:1;min-width:0;display:flex;flex-direction:column;gap:15px}
+
+/* ── ACCENT BARS ───────────────────────────
+   Replaces the flat grey progress bars. */
+.meter-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px}
+.meter-l{font-size:11px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--t2)}
+.meter-v{font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:.4px;
+  color:var(--t);font-variant-numeric:tabular-nums;white-space:nowrap}
+.meter-v small{font-size:11.5px;color:var(--t3);font-weight:400;font-family:var(--font-body);letter-spacing:0}
+.meter{height:7px;border-radius:999px;background:var(--sig-track);overflow:hidden;position:relative}
+.meter-fill{height:100%;border-radius:999px;background:var(--meter-hue,var(--sig-train));
+  transition:width .8s cubic-bezier(.16,1,.3,1);position:relative}
+body.dark .meter-fill{box-shadow:0 0 10px var(--meter-hue,var(--sig-train)),0 0 3px var(--meter-hue,var(--sig-train))}
+.m-fuel{--meter-hue:var(--sig-fuel-pure)}
+.m-train{--meter-hue:var(--sig-train-pure)}
+.m-water{--meter-hue:var(--sig-water-pure)}
+.m-sleep{--meter-hue:var(--sig-sleep-pure)}
+.meter-note{font-size:11.5px;font-weight:600;color:var(--t2);margin-top:6px}
+
+/* Retrofit the legacy .pbar/.pfill used on the nutrition tab so the whole
+   app speaks the same bar language. */
+.pbar{height:7px;background:var(--sig-track)}
+
+/* ── SECONDARY PAIR ────────────────────────
+   Water + sleep: deliberately smaller, side by side, ring-led. */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.pair-cell{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:15px 14px;display:flex;align-items:center;gap:13px;min-width:0;
+  cursor:pointer;transition:border-color .18s,background .18s;-webkit-appearance:none;
+  font-family:inherit;text-align:left;width:100%}
+.pair-cell:hover{border-color:var(--bdr3);background:var(--card2)}
+.pair-cell:active{transform:scale(.985)}
+.pair-body{min-width:0;flex:1}
+.pair-l{font-size:10.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--t3)}
+.pair-v{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.2px;
+  line-height:1;color:var(--t);margin-top:5px;font-variant-numeric:tabular-nums}
+.pair-v .su{font-family:var(--font-display);font-size:14px;font-weight:500;
+  color:var(--t2);letter-spacing:.6px;margin-left:1px}
+.pair-s{font-size:11.5px;color:var(--t2);font-weight:600;margin-top:4px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:340px){.pair{grid-template-columns:1fr}}
+
+/* ── COACH ─────────────────────────────────
+   Was the ✨ "AI Trainer". Now a chat-bubble mark and a flat name. */
+.coach-card{cursor:pointer;background:var(--card);
+  border:1px solid color-mix(in srgb,var(--sig-train) 26%,var(--bdr));position:relative;overflow:hidden}
+.coach-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  font-size:18px;color:var(--sig-train);
+  background:color-mix(in srgb,var(--sig-train) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--sig-train) 22%,transparent)}
+body.dark .coach-mark{box-shadow:var(--glow-train)}
+.coach-title{font-family:var(--font-display);font-size:19px;font-weight:600;
+  letter-spacing:.3px;text-transform:uppercase;color:var(--t);margin:12px 0 6px;line-height:1.05}
+.coach-body{font-size:13.5px;color:var(--t2);line-height:1.6;font-weight:500;max-width:62ch}
+
+/* ── QUICK ACTIONS ─────────────────────────*/
+.qa-ico{width:32px;height:32px;border-radius:9px;font-size:16px;
+  background:var(--surface);color:var(--t2);border:1px solid var(--bdr)}
+.qa-btn{gap:12px;padding:13px 14px;border:1px solid var(--bdr);background:var(--card)}
+.qa-btn:hover{background:var(--card2);border-color:var(--bdr3)}
+.qa-btn:hover .qa-ico{color:var(--t)}
+.qa-lbl{font-size:13.5px;font-weight:650;letter-spacing:-.1px}
+
+/* ── OPTION / CHIP ICON SLOTS ──────────────
+   Onboarding lists lose their emoji tiles for stroke icons. */
+.opt-ico,.onb-multi-chip-ico,.rp-ico{font-size:19px;color:var(--t2)}
+.opt-item.on .opt-ico,.onb-multi-chip.on .onb-multi-chip-ico{color:var(--sig-train)}
+.onb-info-ico,.obp-tile,.pw-feat-ico{font-size:19px}
+
+/* ── SEGMENTED SCALE (check-in) ────────────
+   Replaces the mood/energy/soreness emoji rows. */
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.scale-b{all:unset;cursor:pointer;text-align:center;padding:11px 2px 9px;border-radius:12px;
+  border:1.5px solid var(--bdr2);background:var(--card);font-family:inherit;
+  transition:border-color .15s,background .15s,color .15s;box-sizing:border-box}
+.scale-b:hover{border-color:var(--bdr3)}
+.scale-n{font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--t2);line-height:1}
+.scale-t{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--t3);margin-top:5px;line-height:1.2}
+.scale-b.on{border-color:var(--sig-train);background:color-mix(in srgb,var(--sig-train) 10%,transparent)}
+.scale-b.on .scale-n{color:var(--sig-train)}
+.scale-b.on .scale-t{color:var(--t2)}
+
+/* ── PRO / BADGES ──────────────────────────*/
+.sb-pro-ico{font-size:17px;color:var(--sig-fuel);display:grid;place-items:center}
+.badge{font-family:var(--font-body);letter-spacing:.3px}
+.tb-pro-pill{display:inline-flex;align-items:center;gap:5px}
+.streak-pill{display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums}
+.streak-pill .ic{font-size:12px}
+
+/* ── MOTION ────────────────────────────────*/
+@keyframes bandIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.band,.pair-cell{animation:bandIn .5s cubic-bezier(.16,1,.3,1) both}
+.band+.band{animation-delay:.06s}
+.pair-cell:nth-child(2){animation-delay:.05s}
+@media (prefers-reduced-motion:reduce){
+  .band,.pair-cell{animation:none}
+  .ring-arc,.meter-fill{transition:none}
+}
+
+/* ── ICONS INSIDE CONTROLS ─────────────────
+   .ic is display:block, so any button that now carries an icon has to
+   become a flex row or the glyph drops to its own line. */
+.btn,.btn-o,.btn-g,.chat-chip,.empty-cta,.wc-cta,.obp-cta,.pw-cta,.opt-item,.musc-pill{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px}
+/* .btn already declares width:100%; .btnsm must stay auto, so do not re-set it here. */
+.btn-g{gap:6px}
+.chat-chip{gap:6px}
+.opt-item{justify-content:flex-start}
+.musc-pill{flex-direction:column;gap:7px}
+.pw-trust span,.obp-trust > span{display:inline-flex;align-items:center;gap:5px}
+.sb-pro-ico{color:#FFFFFF}
+.sib>.ic{font-size:inherit}
+
+/* ── CHECK-IN SCALE ────────────────────────
+   The pill stays a single element (the delegated click handler reads
+   e.target), so the word rides in on a pseudo-element. */
+.cki-row{flex-direction:column;align-items:stretch;gap:8px;margin-bottom:18px}
+.cki-label{flex:none;font-family:var(--font-display);font-size:12px;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)}
+.cki-pills{gap:6px}
+.cki-pill{font-family:var(--font-display);font-size:17px;font-weight:600;
+  color:var(--t2);padding:10px 0 9px;border-color:var(--bdr2);background:var(--card);
+  line-height:1;transition:border-color .15s,background .15s,color .15s}
+.cki-pill::after{content:attr(data-t);display:block;font-family:var(--font-body);
+  font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--t3);margin-top:5px}
+.cki-pill.on{transform:none;border-color:var(--sig-train);color:var(--sig-train);
+  background:color-mix(in srgb,var(--sig-train) 10%,transparent)}
+.cki-pill.on::after{color:var(--t2)}
+
+/* ── SPLASH ────────────────────────────────
+   The twinkling sparkle cluster becomes one rotating arc. */
+.spl-sparkle svg{display:block;animation:splSpin 1.5s linear infinite}
+.spl-ring-t{stroke:var(--sig-track)}
+.spl-ring-a{stroke:var(--sig-train)}
+body.dark .spl-ring-a{filter:drop-shadow(0 0 7px var(--sig-train))}
+@keyframes splSpin{to{transform:rotate(360deg)}}
+.spl-h{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,8vw,36px);
+  letter-spacing:.3px;text-transform:uppercase;line-height:1}
+@media (prefers-reduced-motion:reduce){.spl-sparkle svg{animation-duration:4s}}
+
+/* ── MEASURE ───────────────────────────────
+   On desktop the panel used the full column, which stretched meters and
+   body copy well past a readable line. Cap it and let the bands breathe. */
+@media(min-width:820px){
+  .panel{max-width:940px;margin:0 auto;padding:30px 26px 60px;width:100%}
+  .band{padding:26px 28px}
+  .fuel-bars{max-width:620px}
+  .home-sub{font-size:15.5px}
+}
+@media(min-width:1240px){.panel{max-width:1020px}}
+
+/* ── PRO SURFACES ──────────────────────────
+   The green-to-violet gradient read as stock SaaS. Pro is now the one
+   place the app goes to ink-black with a single hot accent. */
+.sb-pro{background:#0F0F14;border:1px solid rgba(255,255,255,.10);color:#FFFFFF}
+.sb-pro::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;
+  background:linear-gradient(90deg,var(--sig-fuel-pure),transparent 78%)}
+.sb-pro-ico{background:rgba(251,146,60,.16);color:var(--sig-fuel-pure)}
+.sb-pro-t{font-family:var(--font-display);font-weight:600;letter-spacing:.8px;text-transform:uppercase}
+
+.pw-hero{background:#0B0B10;color:#FFFFFF}
+.pw-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--sig-fuel-pure),transparent)}
+.pw-hero-badge{background:rgba(251,146,60,.18);color:var(--sig-fuel-pure);
+  font-family:var(--font-display);font-weight:600;letter-spacing:2px}
+.pw-hero-sub{color:rgba(255,255,255,.74)}
+.obp-title span,.pw-hero-title span{color:var(--sig-fuel-pure)}
+
+/* ── OPTION TILES ──────────────────────────
+   Without an emoji filling it, the icon slot needed its own edge in dark. */
+.opt-ico{font-size:22px;border:1px solid var(--bdr)}
+body.dark .opt-ico{background:var(--card2)}
+.opt-item.on .opt-ico{border-color:color-mix(in srgb,var(--sig-train) 40%,transparent);
+  background:color-mix(in srgb,var(--sig-train) 12%,transparent)}
+.opt-title{font-family:var(--font-display);font-weight:600;font-size:17px;
+  letter-spacing:.3px;text-transform:uppercase;line-height:1.1}
+.onb-info-ico{border:1px solid var(--bdr)}
+
+/* ── BADGES ────────────────────────────────
+   The amber streak badge was mud on the dark surface. */
+body.dark .badge.by{background:rgba(251,146,60,.14);color:var(--sig-fuel-pure);
+  border:1px solid rgba(251,146,60,.26)}
+body.dark .badge.bb{background:rgba(56,189,248,.14);color:var(--sig-water-pure);
+  border:1px solid rgba(56,189,248,.26)}
+
+/* The four-slot readout has to survive "3h 12m" at 360px: keep each value on
+   one line and let the type shrink instead of wrapping under its label. */
+.readout-v{white-space:nowrap;font-size:clamp(17px,4.6vw,22px)}
+.readout-i{padding-right:6px}
+.readout-i+.readout-i{padding-left:9px}
+@media(min-width:820px){.readout-v{font-size:22px}.readout-i+.readout-i{padding-left:14px}}
+@media(max-width:360px){
+  .fuel-grid{gap:14px}
+  .ring-lg{width:94px!important;height:94px!important}
+  .ring-lg .ring-v{font-size:25px}
+  .band{padding:18px}
+}

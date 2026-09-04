@@ -4,24 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>AthleteOS — Train smart. Track everything.</title>
-<meta name="description" content="Personal fitness OS. Workouts, nutrition, sleep, body composition, and an AI coach that knows your full history. PWA. Installs to your home screen, works offline.">
+<meta name="description" content="Personal fitness OS. Workouts, nutrition, sleep, body composition, and a coach that has read every session you logged. PWA. Installs to your home screen, works offline.">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="AthleteOS — Train smart. Track everything.">
-<meta property="og:description" content="Workouts, nutrition, sleep, body composition, and an AI coach in one PWA.">
+<meta property="og:description" content="Workouts, nutrition, sleep, body composition, and a coach that reads your log, in one PWA.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://athleteos.app/">
 <meta property="og:image" content="https://athleteos.app/icon-512.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AthleteOS — Train smart. Track everything.">
-<meta name="twitter:description" content="Workouts, nutrition, sleep, body composition, and an AI coach in one PWA.">
+<meta name="twitter:description" content="Workouts, nutrition, sleep, body composition, and a coach that reads your log, in one PWA.">
 <meta name="twitter:image" content="https://athleteos.app/icon-512.png?v=2">
 <link rel="canonical" href="https://athleteos.app/">
 <link rel="icon" href="icon-192.png?v=2">
 <link rel="apple-touch-icon" href="icon-192.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -266,6 +266,13 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
   .reveal{opacity:1;transform:none}
   .screens img:nth-child(1),.screens img:nth-child(3){transform:none}
 }
+
+/* Athletic display type — same pairing as the app: Oswald for display,
+   Inter for everything you actually read at body size. */
+:root{--font-display:'Oswald','Inter',system-ui,sans-serif}
+h1,h2,h3,.h1,.h2,.logo,.price-v{font-family:var(--font-display);font-weight:600;
+  letter-spacing:.2px;text-transform:uppercase;text-wrap:balance}
+h1,.h1{line-height:.95}
 </style>
 </head>
 <body>
@@ -289,9 +296,9 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow-chip reveal"><span class="pill">NEW</span> AI plans now reads your last 6 weeks</div>
+    <div class="eyebrow-chip reveal"><span class="pill">NEW</span> Plans now build off your last 6 weeks</div>
     <h1 class="reveal d1">Your personal <span class="mark">fitness OS</span>. Built around your life.</h1>
-    <p class="sub reveal d2">Workouts, nutrition, sleep, body composition, and an AI coach that knows your full history. Installs to your home screen. Works offline.</p>
+    <p class="sub reveal d2">Workouts, nutrition, sleep, body composition, and a coach that has read every session you logged. Installs to your home screen. Works offline.</p>
     <div class="hero-actions reveal d3">
       <a class="cta lg" href="index.html">Start free
         <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -306,18 +313,18 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
     <div class="screens reveal d5" aria-label="App screenshots">
       <picture><source srcset="screen-home.webp" type="image/webp"><img src="screen-home.png" alt="AthleteOS Home dashboard with weekly volume and stats" onerror="this.style.display='none'" loading="eager"></picture>
       <picture><source srcset="screen-workout.webp" type="image/webp"><img src="screen-workout.png" alt="AthleteOS Workout tab with active session and exercise list" onerror="this.style.display='none'" loading="eager"></picture>
-      <picture><source srcset="screen-ai.webp" type="image/webp"><img src="screen-ai.png" alt="AthleteOS AI Trainer chat conversation" onerror="this.style.display='none'" loading="eager"></picture>
+      <picture><source srcset="screen-ai.webp" type="image/webp"><img src="screen-ai.png" alt="AthleteOS Coach chat conversation" onerror="this.style.display='none'" loading="eager"></picture>
     </div>
   </header>
 
   <section class="section" id="features">
     <h2 class="reveal">Everything you track. <em>One screen.</em></h2>
-    <p class="lead reveal d1">Most fitness apps make you choose: training, or nutrition, or sleep. AthleteOS holds the whole picture so the AI coach can give advice that actually fits your week.</p>
+    <p class="lead reveal d1">Most fitness apps make you choose: training, or nutrition, or sleep. AthleteOS holds the whole picture, so the coaching you get actually fits your week.</p>
     <div class="features">
       <div class="feat featured x4 reveal">
         <div class="feat-tag">FLAGSHIP</div>
         <div class="feat-ico orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3>AI coach with your full history</h3>
+        <h3>A coach that has read your log</h3>
         <p>Knows every set, meal, and sleep night. Generates plans, parses voice input, suggests deloads, answers form questions in plain language.</p>
       </div>
       <div class="feat x2 reveal d1">
@@ -415,7 +422,7 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
           <ul class="price-feats">
             <li>Unlimited workouts, cardio, meals, sleep</li>
             <li>Body composition + 3 progress photos</li>
-            <li>7 AI coach messages / day</li>
+            <li>7 coach messages / day</li>
             <li>10 exercise demos / day</li>
             <li>Works offline · PWA install</li>
           </ul>
@@ -427,7 +434,7 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
           <div class="price-value">€4.99<span class="u">/mo</span></div>
           <div class="price-sub">Flexible &mdash; pause anytime.</div>
           <ul class="price-feats">
-            <li><b>Unlimited</b> AI coach messages</li>
+            <li><b>Unlimited</b> coach messages</li>
             <li><b>Unlimited</b> templates and saved plans</li>
             <li><b>Unlimited</b> exercise demos</li>
             <li>Up to 100 progress photos</li>
@@ -442,7 +449,7 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
           <div class="price-value">€1.33<span class="u">/mo</span></div>
           <div class="price-sub">€15.99 billed yearly · 7 days free · saves €43.89/yr</div>
           <ul class="price-feats">
-            <li><b>Unlimited</b> AI coach messages</li>
+            <li><b>Unlimited</b> coach messages</li>
             <li><b>Unlimited</b> templates and saved plans</li>
             <li><b>Unlimited</b> exercise demos</li>
             <li>Up to 100 progress photos</li>
@@ -481,12 +488,12 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
     <div class="wrap" style="padding:0;max-width:760px;margin:0 auto">
       <div style="text-align:center">
         <h2 class="reveal">Questions</h2>
-        <p class="lead reveal d1" style="margin-left:auto;margin-right:auto">If you've got more, just ask the AI coach.</p>
+        <p class="lead reveal d1" style="margin-left:auto;margin-right:auto">Anything else, ask the coach.</p>
       </div>
       <div class="faq-list reveal d2">
         <details class="faq-item">
           <summary>Is it really free?</summary>
-          <p>The free tier never expires and doesn't need a credit card. You get workouts, cardio, nutrition tracking, sleep, body metrics, and up to <b>7 AI coach messages a day</b> plus 10 exercise demos a day. Pro removes those limits: unlimited AI, unlimited templates, unlimited exercise demos, and more progress photos, for a small monthly or yearly subscription.</p>
+          <p>The free tier never expires and doesn't need a credit card. You get workouts, cardio, nutrition tracking, sleep, body metrics, and up to <b>7 coach messages a day</b> plus 10 exercise demos a day. Pro removes those limits: unlimited coaching, unlimited templates, unlimited exercise demos, and more progress photos, for a small monthly or yearly subscription.</p>
         </details>
         <details class="faq-item">
           <summary>Where does my data live?</summary>
@@ -510,7 +517,7 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
 
   <section class="final-cta reveal">
     <h2>Ready to <em>train smarter?</em></h2>
-    <p>Free to start. No credit card to sign up. Pro unlocks unlimited AI and templates when you're ready.</p>
+    <p>Free to start. No credit card to sign up. Pro removes the limits when you're ready.</p>
     <a class="cta lg" href="index.html">Start free
       <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>

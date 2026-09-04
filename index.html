@@ -12,12 +12,75 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>AthleteOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <script src="https://js-de.sentry-cdn.com/1a3054a66d6e176bbe70397d5fe7d1bb.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
+
+<!-- ICON SPRITE — one 24×24 stroke set for the whole app.
+     Reference with <svg class="ic"><use href="#i-name"/></svg>; the icon
+     inherits currentColor and sizes from the parent's font-size. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-barbell" viewBox="0 0 24 24"><path d="M6.5 6.5v11M3.5 9v5M17.5 6.5v11M20.5 9v5M6.5 12h11"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></symbol>
+<symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></symbol>
+<symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h1a2 2 0 0 0 2-2V2M6 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></symbol>
+<symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3ZM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17M16 7h6v6"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M8 21h8M7 7l-4 8h8L7 7ZM17 7l-4 8h8l-4-8Z"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/></symbol>
+<symbol id="i-plan" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10M12 20c0-5 1-7 4-9M12 20c0-4-1-6-4-8M9.5 8.4c-1.2-.8-2.8-1.3-5.5-.8.7 2.3 1.8 3.6 3 4.2 1.3.7 2.8.7 4.8.3-.5-1.5-1.2-2.9-2.3-3.7ZM14.6 5.4c1-1 2.3-1.9 5-2-.1 2.3-.7 3.6-1.7 4.6-1 .8-2.4 1.3-4.3 1.4a7 7 0 0 1 1-4Z"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.8.8 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
+<symbol id="i-notebook" viewBox="0 0 24 24"><path d="M4 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4zM8 2v20M12 7h4M12 11h4M12 15h3"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></symbol>
+<symbol id="i-slash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-whistle" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3ZM11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+<symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.5 8.5h.01M15.5 8.5h.01M8.5 15.5h.01M15.5 15.5h.01M12 12h.01"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4M12 14l3.5-3.5"/><circle cx="12" cy="14" r="8"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.9 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.1.6 2 2 2 3.8M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.2"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2.5"/><path d="M7 3v18M17 3v18M2 12h20M2 7.5h5M2 16.5h5M17 16.5h5M17 7.5h5"/></symbol>
+<symbol id="i-infinity" viewBox="0 0 24 24"><path d="M12 12c-2-2.7-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.3 5.5-4Zm0 0c2 2.7 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.3-5.5 4Z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="3.5" y="11" width="17" height="10.5" rx="2.5"/><path d="M7.5 11V7a4.5 4.5 0 0 1 9 0v4"/></symbol>
+<symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3.5" y="11" width="17" height="10.5" rx="2.5"/><path d="M7.5 11V7a4.5 4.5 0 0 1 8.9-.9"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8l-6.2 3.3L7 14.2l-5-4.9 6.9-1L12 2Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.5 2"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-snowflake" viewBox="0 0 24 24"><path d="M2 12h20M12 2v20m5.6-15.6-11.2 11.2m0-11.2 11.2 11.2"/></symbol>
+<symbol id="i-run" viewBox="0 0 24 24"><circle cx="15" cy="4" r="2"/><path d="m11 21 2.5-5.5-3.5-3 1-5.5 3.5 3.5 3.5 1M6.5 12 9 9.5M9.5 21 12 16.5"/></symbol>
+<symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4.5" rx="1"/><path d="M12 8v13M20 12.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6.5M7.5 8a2.5 2.5 0 0 1 0-5C10.5 3 12 8 12 8s1.5-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+<symbol id="i-calculator" viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 6.5h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18.5h8"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4.5" width="20" height="15" rx="2.5"/><path d="m22 7-10 5.5L2 7"/></symbol>
+<symbol id="i-ruler" viewBox="0 0 24 24"><path d="M2.5 15.5 15.5 2.5l6 6-13 13z"/><path d="M6 12l2 2M9 9l2 2M12 6l2 2"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v14"/></symbol>
+<symbol id="i-m-chest" viewBox="0 0 24 24"><path d="M11.2 8.5C11.2 6.3 9.3 5 6.9 5S2.5 6.5 2.5 8.8c0 2.3 1.9 4 4.4 4s4.3-1.4 4.3-3.2zM12.8 8.5c0-2.2 1.9-3.5 4.3-3.5s4.4 1.5 4.4 3.8c0 2.3-1.9 4-4.4 4s-4.3-1.4-4.3-3.2zM12 5.6v8.4M5.5 17.5h13"/></symbol>
+<symbol id="i-m-back" viewBox="0 0 24 24"><path d="M12 3v18M7.5 6.5h9M6 11h12M7.5 15.5h9"/></symbol>
+<symbol id="i-m-shoulder" viewBox="0 0 24 24"><path d="M3.5 20a8.5 8.5 0 0 1 17 0M9 20v-9a3 3 0 0 1 6 0v9"/></symbol>
+<symbol id="i-m-arm" viewBox="0 0 24 24"><path d="M5.5 20v-4a5 5 0 0 1 5-5H13a3.5 3.5 0 0 0 3.5-3.5V4M12.5 11a6 6 0 0 1 6 6v3"/></symbol>
+<symbol id="i-m-leg" viewBox="0 0 24 24"><path d="M9 3v6l-2 6 2.5 6M15 3v6l2 6-2.5 6M9 3h6"/></symbol>
+<symbol id="i-m-core" viewBox="0 0 24 24"><rect x="6.5" y="4" width="11" height="16" rx="3.5"/><path d="M12 4v16M6.5 9.5h11M6.5 14.5h11"/></symbol>
+</defs></svg>
+
 
 <!-- WELCOME (first-launch intro) -->
 <div id="welcome" class="hidden">
@@ -36,17 +99,17 @@
         <circle cx="245" cy="50" r="20" fill="#22C55E" opacity="0.18"/>
         <circle cx="245" cy="50" r="12" fill="#22C55E"/>
         <g transform="translate(28 70)">
-          <rect class="wc-chip" width="74" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
-          <text x="14" y="21" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0A0A0A">🔥 5d</text>
+          <rect class="wc-chip" width="86" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
+          <text x="15" y="21" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0A0A0A">5 DAY RUN</text>
         </g>
         <g transform="translate(180 175)">
-          <rect class="wc-chip" width="84" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
-          <text x="12" y="21" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0A0A0A">💪 +12%</text>
+          <rect class="wc-chip" width="98" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
+          <text x="13" y="21" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0A0A0A">+12% VOLUME</text>
         </g>
       </svg>
     </div>
     <div class="wc-brand">Athlete<span>OS</span></div>
-    <div class="wc-tag">Train smart. Track everything.</div>
+    <div class="wc-tag">Every rep counted. Every week compared.</div>
   </div>
   <div class="wc-actions">
     <button type="button" class="wc-cta" onclick="welcomeContinue('r')">
@@ -63,37 +126,37 @@
 <div id="ob-paywall" class="hidden">
   <div class="obp-inner">
     <div class="obp-title-block">
-      <div class="obp-eyebrow"><span class="obp-eyedot"></span>FINAL STEP · PRO</div>
-      <h2 class="obp-title">Unlock your <span>full plan</span></h2>
+      <div class="obp-eyebrow"><span class="obp-eyedot"></span>LAST STEP</div>
+      <h2 class="obp-title">Train with <span>the full room</span></h2>
     </div>
 
     <div class="obp-feats">
       <div class="obp-feat">
-        <div class="obp-tile" style="background:#E8F8EE">💪</div>
+        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">Personalized training plans</div>
-          <div class="obp-feat-b">Built around your goal, schedule, equipment &amp; experience.</div>
+          <div class="obp-feat-t">A plan written for you</div>
+          <div class="obp-feat-b">Your goal, your days, the kit you actually have.</div>
         </div>
       </div>
       <div class="obp-feat">
-        <div class="obp-tile" style="background:#EDE9FE">🎬</div>
+        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">Exercise demos &amp; cues</div>
-          <div class="obp-feat-b">Looping demos for every lift with key technique tips.</div>
+          <div class="obp-feat-t">Demos and cues</div>
+          <div class="obp-feat-b">See the lift, then the two cues that fix it.</div>
         </div>
       </div>
       <div class="obp-feat">
-        <div class="obp-tile" style="background:#FFEDD5">📈</div>
+        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">Advanced analytics</div>
-          <div class="obp-feat-b">Volume per muscle, 1RM trends, weight projections.</div>
+          <div class="obp-feat-t">The numbers behind it</div>
+          <div class="obp-feat-b">Volume per muscle, 1RM curves, weight projections.</div>
         </div>
       </div>
       <div class="obp-feat">
-        <div class="obp-tile" style="background:#DBEAFE">📷</div>
+        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">Unlimited photos &amp; templates</div>
-          <div class="obp-feat-b">Track progress visually, save every workout split.</div>
+          <div class="obp-feat-t">Unlimited photos and splits</div>
+          <div class="obp-feat-b">Proof in the mirror, plus every session saved to reuse.</div>
         </div>
       </div>
     </div>
@@ -173,7 +236,7 @@
       <div class="f"><label>Email</label><input type="email" id="l-u" placeholder="you@email.com" autocomplete="email"></div>
       <div class="f" style="margin-bottom:6px"><label>Password</label><input type="password" id="l-p" placeholder="••••••••" autocomplete="current-password"></div>
       <div style="text-align:right;margin-bottom:14px"><button type="button" class="lnk" onclick="openForgot()">Forgot password?</button></div>
-      <button type="submit" class="btn" id="login-btn">Sign In →</button>
+      <button type="submit" class="btn" id="login-btn">Sign in<svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
       <div class="oauth-divider"><span>or</span></div>
       <button type="button" class="btn btn-oauth" onclick="oauthGoogle()">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
@@ -189,7 +252,7 @@
         <div class="f"><label>Weight goal (kg)</label><input type="number" id="r-wg" placeholder="85"></div>
         <div class="f"><label>Protein goal (g)</label><input type="number" id="r-pg" placeholder="170"></div>
       </div>
-      <button type="submit" class="btn" id="reg-btn">Create Account →</button>
+      <button type="submit" class="btn" id="reg-btn">Create account<svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
       <div class="oauth-divider"><span>or</span></div>
       <button type="button" class="btn btn-oauth" onclick="oauthGoogle()">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
@@ -207,7 +270,7 @@
   <aside class="sidebar">
     <div class="sb-head" onclick="goTab('home')">
       <div class="sb-logo">Athlete<span>OS</span></div>
-      <div class="sb-sub">Train smart.</div>
+      <div class="sb-sub">Log it. Beat it.</div>
     </div>
     <nav class="sb-nav">
       <div class="sb-item on" id="s-home" onclick="goTab('home')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
@@ -216,23 +279,23 @@
       <div class="sb-item" id="s-body" onclick="goTab('body')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Body Stats</div>
       <div class="sb-item" id="s-sleep" onclick="goTab('sleep')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Sleep</div>
       <div class="sb-div"></div>
-      <div class="sb-item" id="s-ai" onclick="goTab('ai')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI Trainer</div>
+      <div class="sb-item" id="s-ai" onclick="goTab('ai')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Coach</div>
       <div class="sb-item" id="s-settings" onclick="goTab('settings')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
     </nav>
     <div class="sb-foot">
       <!-- Pro upsell (free users) or status badge (paying users) -->
       <div class="sb-pro" id="sb-pro" onclick="openPaywall()">
-        <div class="sb-pro-ico" id="sb-pro-ico">✨</div>
+        <div class="sb-pro-ico icb" id="sb-pro-ico"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></div>
         <div class="sb-pro-body">
-          <div class="sb-pro-t" id="sb-pro-t">Try AthleteOS Pro</div>
-          <div class="sb-pro-b" id="sb-pro-b">7 days free</div>
+          <div class="sb-pro-t" id="sb-pro-t">Go Pro</div>
+          <div class="sb-pro-b" id="sb-pro-b">7 days on the house</div>
         </div>
       </div>
       <div class="sb-user" onclick="goTab('settings')">
         <div class="sb-avatar" id="sb-ava">?</div>
         <div>
           <div class="sb-uname" id="sb-name">—</div>
-          <div class="sb-ustreak" id="sb-streak">🔥 0 day streak</div>
+          <div class="sb-ustreak streak-pill" id="sb-streak"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>0 day run</div>
         </div>
       </div>
     </div>
@@ -245,9 +308,9 @@
     <header class="topbar">
       <div class="tlogo" onclick="goTab('home')">Athlete<span>OS</span></div>
       <div class="tright">
-        <button type="button" class="tb-pro-pill" id="tb-pro" onclick="openPaywall()" style="display:none">✨ Pro</button>
-        <span class="badge by" id="streak">🔥 0d</span>
-        <button type="button" class="badge bb" id="freeze-pill" onclick="useStreakFreeze()" style="display:none;border:none;cursor:pointer;font-family:inherit" title="Use your monthly streak freeze">🧊 Freeze</button>
+        <button type="button" class="tb-pro-pill" id="tb-pro" onclick="openPaywall()" style="display:none"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-star"/></svg>Pro</button>
+        <span class="badge by streak-pill" id="streak"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>0d</span>
+        <button type="button" class="badge bb" id="freeze-pill" onclick="useStreakFreeze()" style="display:none;border:none;cursor:pointer;font-family:inherit" title="Use your monthly streak freeze" class="badge bb streak-pill"><svg class="ic" aria-hidden="true"><use href="#i-snowflake"/></svg>Freeze</button>
         <div class="avatar" id="ava" onclick="goTab('settings')">?</div>
       </div>
     </header>
@@ -257,95 +320,150 @@
 
       <!-- HOME -->
       <div class="panel on" id="p-home">
-        <div class="seclabel"><span class="seclabel-dot"></span><span id="hero-label">DAILY OVERVIEW</span></div>
-        <div class="hero-title" id="hero-greet">Today</div>
-        <p class="tm" id="hero-sub" style="margin-bottom:18px;font-size:14px">Welcome back. Here's how today is shaping up.</p>
 
-        <!-- Hero stat: weekly volume with sparkline -->
-        <div class="card hero-card">
-          <div class="fb" style="margin-bottom:6px">
-            <div>
-              <div class="ctitle" style="margin:0;font-size:12px;color:var(--t2);font-weight:600">This week</div>
-              <div class="hero-stat" id="hero-stat">0<span class="hero-stat-unit">kg total volume</span></div>
-            </div>
-            <span class="badge bg" id="hero-badge">● LIVE</span>
+        <!-- Header: date rule, display greeting, one line of state -->
+        <header class="home-head">
+          <div class="home-date" id="home-date"></div>
+          <h1 class="hero-title" id="hero-greet">Today</h1>
+          <p class="home-sub" id="hero-sub">Show up, log it, beat it. That's the whole job today.</p>
+        </header>
+
+        <!-- ── PRIMARY 1 · TRAINING ──────────────────────────────
+             Full-width band. Volume headline, 7-day bars, four-slot readout. -->
+        <section class="band band-train" aria-labelledby="band-train-t">
+          <div class="band-head">
+            <div class="band-kicker" id="band-train-t">Training</div>
+            <span class="chip" id="h-w"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg>Not logged</span>
+          </div>
+          <div class="tr-caption">Volume moved, last 7 days</div>
+          <div class="tr-vol">
+            <span class="stat-num" id="hero-stat">0</span>
+            <span class="tr-vol-unit" id="hero-stat-unit">kg</span>
           </div>
           <div class="hero-spark"><canvas id="hero-spark"></canvas></div>
-          <div class="hero-foot">
-            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-sessions">0</div><div class="hero-foot-l">Sessions</div></div>
-            <div class="hero-foot-divider"></div>
-            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-duration">0m</div><div class="hero-foot-l">Time</div></div>
-            <div class="hero-foot-divider"></div>
-            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-sets">0</div><div class="hero-foot-l">Sets</div></div>
-            <div class="hero-foot-divider"></div>
-            <div class="hero-foot-item"><div class="hero-foot-v" id="hero-streak">0d</div><div class="hero-foot-l">Streak</div></div>
+          <div class="readout">
+            <div class="readout-i"><div class="readout-v" id="hero-sessions">0</div><div class="readout-l">Sessions</div></div>
+            <div class="readout-i"><div class="readout-v" id="hero-duration">0m</div><div class="readout-l">Time</div></div>
+            <div class="readout-i"><div class="readout-v" id="hero-sets">0</div><div class="readout-l">Sets</div></div>
+            <div class="readout-i"><div class="readout-v" id="hero-streak">0d</div><div class="readout-l">Streak</div></div>
           </div>
+        </section>
+
+        <!-- ── PRIMARY 2 · FUEL ──────────────────────────────────
+             Full-width band. Calorie ring carries the headline; protein and
+             calorie accent bars sit beside it. -->
+        <section class="band band-fuel" aria-labelledby="band-fuel-t">
+          <div class="band-head">
+            <div class="band-kicker" id="band-fuel-t">Fuel</div>
+            <span class="band-note" id="k-lbl">0 kcal today</span>
+          </div>
+          <div class="fuel-grid">
+            <div class="ring ring-lg" style="width:112px;height:112px" role="img" aria-label="Calories against goal">
+              <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true">
+                <circle class="ring-track" cx="56" cy="56" r="47" stroke-width="9"/>
+                <circle class="ring-arc" id="ring-kcal" cx="56" cy="56" r="47" stroke-width="9"
+                  stroke-dasharray="295.3" stroke-dashoffset="295.3" style="--ring-hue:var(--sig-fuel-pure)"/>
+              </svg>
+              <div class="ring-in"><div class="ring-v" id="ring-kcal-v">0</div><div class="ring-u">kcal</div></div>
+            </div>
+            <div class="fuel-bars">
+              <div>
+                <div class="meter-head"><span class="meter-l">Protein</span><span class="meter-v" id="p-lbl">0/170g</span></div>
+                <div class="meter"><div class="meter-fill m-train" id="p-bar" style="width:0%"></div></div>
+                <div class="meter-note" id="p-rem"></div>
+              </div>
+              <div>
+                <div class="meter-head"><span class="meter-l">Calories</span><span class="meter-v" id="k-goal-lbl">0 <small>/ 2500</small></span></div>
+                <div class="meter"><div class="meter-fill m-fuel" id="k-bar" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECONDARY · WATER + SLEEP ─────────────────────────
+             Deliberately half the weight of the bands above. -->
+        <div class="pair">
+          <button type="button" class="pair-cell" onclick="qWater()" aria-label="Add a cup of water">
+            <div class="ring ring-sm" style="width:54px;height:54px">
+              <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
+                <circle class="ring-track" cx="27" cy="27" r="22" stroke-width="5.5"/>
+                <circle class="ring-arc" id="ring-water" cx="27" cy="27" r="22" stroke-width="5.5"
+                  stroke-dasharray="138.2" stroke-dashoffset="138.2" style="--ring-hue:var(--sig-water-pure)"/>
+              </svg>
+              <div class="ring-in"><svg class="ic" style="font-size:17px;color:var(--sig-water)" aria-hidden="true"><use href="#i-droplet"/></svg></div>
+            </div>
+            <div class="pair-body">
+              <div class="pair-l">Water</div>
+              <div class="pair-v" id="h-wa">0<span class="su">L</span></div>
+              <div class="pair-s" id="w-lbl">0/8 cups</div>
+            </div>
+          </button>
+          <button type="button" class="pair-cell" onclick="goTab('sleep')" aria-label="Open sleep">
+            <div class="ring ring-sm" style="width:54px;height:54px">
+              <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
+                <circle class="ring-track" cx="27" cy="27" r="22" stroke-width="5.5"/>
+                <circle class="ring-arc" id="ring-sleep" cx="27" cy="27" r="22" stroke-width="5.5"
+                  stroke-dasharray="138.2" stroke-dashoffset="138.2" style="--ring-hue:var(--sig-sleep-pure)"/>
+              </svg>
+              <div class="ring-in"><svg class="ic" style="font-size:17px;color:var(--sig-sleep)" aria-hidden="true"><use href="#i-moon"/></svg></div>
+            </div>
+            <div class="pair-body">
+              <div class="pair-l">Sleep</div>
+              <div class="pair-v" id="h-s">–<span class="su">h</span></div>
+              <div class="pair-s" id="s-sub">Not logged</div>
+            </div>
+          </button>
         </div>
 
         <!-- First-run getting started -->
         <div class="card gs-card hidden" id="gs-card">
           <div class="fb" style="margin-bottom:10px;align-items:flex-start">
             <div>
-              <div class="ctitle" style="margin:0">Getting started</div>
-              <div class="tm" style="font-size:12.5px;margin-top:3px"><span id="gs-progress">0 of 3</span> · take a minute to log your first day</div>
+              <div class="ctitle" style="margin:0">First three</div>
+              <div class="tm" style="font-size:12.5px;margin-top:5px"><span id="gs-progress">0 of 3</span> done</div>
             </div>
             <button type="button" class="btn-g" style="padding:5px 10px;font-size:12px" onclick="dismissGettingStarted()">Hide</button>
           </div>
           <div class="gs-row" id="gs-row-workout" onclick="goTab('workout')">
             <div class="gs-check" id="gs-check-workout">1</div>
-            <div class="gs-body"><div class="gs-t">Log your first workout</div><div class="gs-s">Even one set counts. Train → New Workout.</div></div>
-            <div class="gs-arrow">→</div>
+            <div class="gs-body"><div class="gs-t">Log a workout</div><div class="gs-s">One set counts. Train, then New Workout.</div></div>
+            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
           </div>
           <div class="gs-row" id="gs-row-meal" onclick="goTab('nutrition')">
             <div class="gs-check" id="gs-check-meal">2</div>
-            <div class="gs-body"><div class="gs-t">Log a meal</div><div class="gs-s">Quick-add or scan. We'll track your protein for you.</div></div>
-            <div class="gs-arrow">→</div>
+            <div class="gs-body"><div class="gs-t">Log a meal</div><div class="gs-s">Quick-add or scan the barcode. Protein counts itself.</div></div>
+            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
           </div>
           <div class="gs-row" id="gs-row-sleep" onclick="goTab('sleep')">
             <div class="gs-check" id="gs-check-sleep">3</div>
-            <div class="gs-body"><div class="gs-t">Log last night's sleep</div><div class="gs-s">Hours in bed is enough. Powers recovery insights.</div></div>
-            <div class="gs-arrow">→</div>
-          </div>
-        </div>
-
-        <!-- Tile grid -->
-        <div class="sg">
-          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--adim);color:var(--accent-d)">💪</div><div class="sv" id="h-w">–</div><div class="sl">Workout</div></div>
-          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--adim);color:var(--accent-d)">🥩</div><div class="sv" id="h-p">0<span class="su">g</span></div><div class="sl">Protein</div></div>
-          <div class="sc tile-mini"><div class="tile-ico" style="background:var(--bdim);color:var(--blue)">💧</div><div class="sv" id="h-wa">0<span class="su">L</span></div><div class="sl">Water</div></div>
-          <div class="sc tile-mini"><div class="tile-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">🌙</div><div class="sv" id="h-s">–<span class="su">h</span></div><div class="sl">Sleep</div></div>
-        </div>
-
-        <!-- Daily progress bars -->
-        <div class="card">
-          <div class="ctitle">Daily Targets</div>
-          <div style="margin-bottom:14px">
-            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Protein</span><div style="display:flex;align-items:center;gap:10px"><span id="p-rem" style="font-size:12px;color:var(--accent-d);font-weight:600"></span><b id="p-lbl" style="font-size:13.5px;letter-spacing:-.2px">0/170g</b></div></div>
-            <div class="pbar"><div class="pfill" id="p-bar" style="width:0%"></div></div>
-          </div>
-          <div style="margin-bottom:14px">
-            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Water</span><b id="w-lbl" style="font-size:13.5px;letter-spacing:-.2px">0/8 cups</b></div>
-            <div class="pbar"><div class="pfill" id="w-bar" style="width:0%;background:var(--blue)"></div></div>
-          </div>
-          <div>
-            <div class="fb" style="margin-bottom:6px"><span class="tm" style="font-weight:600;color:var(--t)">Calories</span><b id="k-lbl" style="font-size:13.5px;letter-spacing:-.2px">0 kcal</b></div>
-            <div class="pbar"><div class="pfill" id="k-bar" style="width:0%;background:var(--yel)"></div></div>
+            <div class="gs-body"><div class="gs-t">Log last night</div><div class="gs-s">Hours in bed is enough to start.</div></div>
+            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
           </div>
         </div>
 
         <!-- Adaptive plan refinement banner -->
-        <div class="card" id="plan-tweak-banner" style="display:none;background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.06) 100%);border-color:var(--accent)">
-          <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="font-size:24px;line-height:1">📋</div>
+        <div class="card" id="plan-tweak-banner" style="display:none;border-color:color-mix(in srgb,var(--sig-train) 32%,var(--bdr))">
+          <div style="display:flex;align-items:flex-start;gap:13px">
+            <div class="coach-mark"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div>
             <div style="flex:1;min-width:0">
-              <div style="font-weight:800;font-size:15px;color:var(--t);letter-spacing:-.2px">Time to refine your plan</div>
-              <div style="font-size:13px;color:var(--t2);margin-top:3px;line-height:1.4" id="plan-tweak-sub">You've been crushing it — let's tune the next 4 weeks to your latest progress.</div>
-              <div style="display:flex;gap:8px;margin-top:10px">
-                <button type="button" class="btn" style="padding:8px 16px;font-size:13px;width:auto" onclick="refinePlanWithAI()">Refine now</button>
-                <button type="button" class="btn-g" style="padding:8px 14px;font-size:13px" onclick="dismissPlanTweak()">Later</button>
+              <div style="font-family:var(--font-display);font-weight:600;font-size:18px;letter-spacing:.3px;text-transform:uppercase;color:var(--t)">Your plan is due a rewrite</div>
+              <div style="font-size:13px;color:var(--t2);margin-top:4px;line-height:1.5" id="plan-tweak-sub">Four weeks of data in. Let's set the next block off what you actually lifted.</div>
+              <div style="display:flex;gap:8px;margin-top:12px">
+                <button type="button" class="btn" style="padding:9px 18px;font-size:13px;width:auto" onclick="refinePlanWithAI()">Rebuild it</button>
+                <button type="button" class="btn-g" style="padding:9px 14px;font-size:13px" onclick="dismissPlanTweak()">Not now</button>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Coach -->
+        <div class="card coach-card" onclick="rotateCoachTip()">
+          <div class="fb" style="align-items:flex-start">
+            <div class="coach-mark"><svg class="ic" aria-hidden="true"><use href="#i-message"/></svg></div>
+            <span class="badge bg" style="font-size:10.5px;padding:3px 9px">Coach</span>
+          </div>
+          <div class="coach-title" id="coach-title">Loading…</div>
+          <div class="coach-body" id="coach-body"></div>
         </div>
 
         <!-- Daily summary (today's activity + vs-last-session comparison) -->
@@ -357,54 +475,44 @@
           <div id="daily-sum-body"></div>
         </div>
 
-        <!-- Coach tip -->
-        <div class="card coach-card" onclick="rotateCoachTip()">
-          <div class="fb" style="margin-bottom:6px;align-items:flex-start">
-            <div class="coach-ico">💡</div>
-            <span class="badge bg" style="font-size:10.5px;padding:3px 8px">Tip</span>
-          </div>
-          <div class="coach-title" id="coach-title">Loading…</div>
-          <div class="coach-body" id="coach-body"></div>
-        </div>
-
         <!-- Recent activity feed -->
         <div class="card">
           <div class="fb" style="margin-bottom:12px">
-            <div class="ctitle" style="margin:0">Recent Activity</div>
-            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px" onclick="goTab('workout')">All →</button>
+            <div class="ctitle" style="margin:0">Recent activity</div>
+            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px;display:inline-flex;align-items:center;gap:5px" onclick="goTab('workout')">All<svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
           </div>
           <div id="activity-feed"></div>
-        </div>
-
-        <!-- Check-in -->
-        <div class="card" id="ckin-card">
-          <div class="fb" style="margin-bottom:10px">
-            <div class="ctitle" style="margin:0">Daily Check-In</div>
-            <button type="button" class="btn-g" onclick="openCheckin()" id="ckin-btn">+ Log</button>
-          </div>
-          <div id="ckin-disp" class="tm" style="font-size:13.5px;line-height:1.65">Take 5 seconds to log how you feel — mood, energy, soreness. It feeds into your AI advice.</div>
-          <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;background:none;border:none;color:var(--accent-d);font-family:inherit;font-size:13px;font-weight:600;padding:8px 0 0;cursor:pointer;letter-spacing:-.1px">😌 I'm resting today — keep my streak →</button>
         </div>
 
         <!-- Recent PRs -->
         <div class="card" id="pr-feed-card">
           <div class="fb" style="margin-bottom:8px">
-            <div class="ctitle" style="margin:0">Recent PRs 🏆</div>
-            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px" onclick="goTab('workout')">All →</button>
+            <div class="ctitle" style="margin:0;display:inline-flex;align-items:center;gap:8px"><svg class="ic" style="font-size:16px;color:var(--sig-fuel)" aria-hidden="true"><use href="#i-trophy"/></svg>Personal records</div>
+            <button type="button" class="btn-g" style="font-size:12px;padding:5px 10px;display:inline-flex;align-items:center;gap:5px" onclick="goTab('workout')">All<svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
           </div>
           <div id="pr-feed"></div>
         </div>
 
+        <!-- Check-in -->
+        <div class="card" id="ckin-card">
+          <div class="fb" style="margin-bottom:10px">
+            <div class="ctitle" style="margin:0">Check in</div>
+            <button type="button" class="btn-g" onclick="openCheckin()" id="ckin-btn">Log</button>
+          </div>
+          <div id="ckin-disp" class="tm" style="font-size:13.5px;line-height:1.65">Mood, energy, soreness. Ten seconds, and your coach stops guessing how you feel.</div>
+          <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;align-items:center;gap:7px;background:none;border:none;color:var(--sig-train);font-family:inherit;font-size:13px;font-weight:700;padding:10px 0 0;cursor:pointer;letter-spacing:-.1px"><svg class="ic" style="font-size:15px" aria-hidden="true"><use href="#i-moon"/></svg>Resting today, keep my streak</button>
+        </div>
+
         <!-- Quick add -->
         <div class="card">
-          <div class="ctitle">Quick Actions</div>
+          <div class="ctitle">Quick actions</div>
           <div class="g2">
-            <button type="button" class="qa-btn" onclick="goTab('workout')"><span class="qa-ico" style="background:var(--adim);color:var(--accent-d)">🏋️</span><span class="qa-lbl">New Workout</span></button>
-            <button type="button" class="qa-btn" onclick="qWater()"><span class="qa-ico" style="background:var(--bdim);color:var(--blue)">💧</span><span class="qa-lbl">+1 Water</span></button>
-            <button type="button" class="qa-btn" onclick="openMealM()"><span class="qa-ico" style="background:rgba(245,158,11,.12);color:var(--yel)">🥗</span><span class="qa-lbl">Log Meal</span></button>
-            <button type="button" class="qa-btn" onclick="goTab('ai')"><span class="qa-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">✨</span><span class="qa-lbl">Ask AI</span></button>
-            <button type="button" class="qa-btn hidden" id="qa-repeat-meal" style="grid-column:1/-1" onclick="repeatLastMeal()"><span class="qa-ico" style="background:rgba(34,197,94,.12);color:var(--accent-d)">↻</span><span class="qa-lbl" id="qa-repeat-meal-lbl">Re-log last meal</span></button>
-            <button type="button" class="qa-btn" style="grid-column:1/-1" onclick="openWtM()"><span class="qa-ico" style="background:rgba(168,85,247,.10);color:var(--pur)">⚖️</span><span class="qa-lbl">Log weight</span></button>
+            <button type="button" class="qa-btn" onclick="goTab('workout')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><span class="qa-lbl">New workout</span></button>
+            <button type="button" class="qa-btn" onclick="qWater()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-droplet"/></svg></span><span class="qa-lbl">Add water</span></button>
+            <button type="button" class="qa-btn" onclick="openMealM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></span><span class="qa-lbl">Log meal</span></button>
+            <button type="button" class="qa-btn" onclick="goTab('ai')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-message"/></svg></span><span class="qa-lbl">Ask Coach</span></button>
+            <button type="button" class="qa-btn hidden" id="qa-repeat-meal" style="grid-column:1/-1" onclick="repeatLastMeal()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg></span><span class="qa-lbl" id="qa-repeat-meal-lbl">Re-log last meal</span></button>
+            <button type="button" class="qa-btn" style="grid-column:1/-1" onclick="openWtM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><span class="qa-lbl">Log weight</span></button>
           </div>
         </div>
       </div>
@@ -435,7 +543,7 @@
               <span id="voice-log-lbl">Voice log a set</span>
             </button>
             <div style="margin-top:12px">
-              <button type="button" class="btn-g" style="font-size:12px;padding:6px 10px" id="wn-toggle" onclick="toggleSessNote(this)">📝 Add session note</button>
+              <button type="button" class="btn-g" style="font-size:12px;padding:6px 10px" id="wn-toggle" onclick="toggleSessNote(this)"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-notebook"/></svg>Add session note</button>
               <textarea id="wn-text" placeholder="How did this session feel? Anything to remember for next time…" style="display:none;width:100%;margin-top:8px;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:10px 12px;color:var(--t);font-family:inherit;font-size:13.5px;font-weight:500;resize:vertical;min-height:56px;outline:none" oninput="wNote=this.value"></textarea>
             </div>
           </div>
@@ -478,12 +586,12 @@
           <div class="ctitle">Exercise Library</div>
           <p class="tm" style="font-size:13px;margin-bottom:14px">Pick a muscle group to see all exercises with demos and tips, top picks first.</p>
           <div class="musc-grid">
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:rgba(239,68,68,.12);color:#EF4444">🫀</span><span>Chest</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:rgba(59,130,246,.12);color:#3B82F6">🦅</span><span>Back</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:rgba(245,158,11,.12);color:#F59E0B">🪶</span><span>Shoulders</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:rgba(34,197,94,.12);color:#22C55E">💪</span><span>Arms</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:rgba(168,85,247,.12);color:#A855F7">🦵</span><span>Legs</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:rgba(236,72,153,.12);color:#EC4899">🧱</span><span>Core</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:rgba(239,68,68,.12);color:#EF4444" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-chest"/></svg></span><span>Chest</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:rgba(59,130,246,.12);color:#3B82F6" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-back"/></svg></span><span>Back</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:rgba(245,158,11,.12);color:#F59E0B" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-shoulder"/></svg></span><span>Shoulders</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:rgba(34,197,94,.12);color:#22C55E" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-arm"/></svg></span><span>Arms</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:rgba(168,85,247,.12);color:#A855F7" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-leg"/></svg></span><span>Legs</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:rgba(236,72,153,.12);color:#EC4899" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-core"/></svg></span><span>Core</span></button>
           </div>
         </div>
 
@@ -491,10 +599,10 @@
         <div class="card">
           <div class="ctitle">Tools &amp; Templates</div>
           <div class="g2">
-            <button type="button" class="btn-o" onclick="openTemplates()">📋 Templates</button>
-            <button type="button" class="btn-o" onclick="open1RM()">📈 1RM Calc</button>
-            <button type="button" class="btn-o" onclick="openPlate()">🏋 Plate Calc</button>
-            <button type="button" class="btn-o" onclick="saveTemplateOpen()">💾 Save Session</button>
+            <button type="button" class="btn-o" onclick="openTemplates()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Templates</button>
+            <button type="button" class="btn-o" onclick="open1RM()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-trend"/></svg>1RM Calc</button>
+            <button type="button" class="btn-o" onclick="openPlate()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-barbell"/></svg>Plate Calc</button>
+            <button type="button" class="btn-o" onclick="saveTemplateOpen()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-share"/></svg>Save Session</button>
           </div>
         </div>
 
@@ -530,7 +638,7 @@
           <div class="fb" style="margin-bottom:13px">
             <div class="ctitle" style="margin:0">Macros</div>
             <div style="display:flex;gap:7px">
-              <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openBcM()">📷 Scan</button>
+              <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openBcM()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-camera"/></svg>Scan</button>
               <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
             </div>
           </div>
@@ -756,22 +864,22 @@
         <div class="card">
           <div class="ctitle">Reminders</div>
           <div class="tog-row">
-            <div class="sib" style="background:var(--adim);font-size:18px">💪</div>
+            <div class="sib icb" style="background:var(--adim);font-size:18px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></div>
             <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Workout reminder</div><div class="tm" style="font-size:12px"><span id="rt-wo-time">5:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('workout')">change</span></div></div>
             <label class="tog-sw"><input type="checkbox" id="rm-wo" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib" style="background:rgba(56,189,248,.1);font-size:18px">🥩</div>
+            <div class="sib icb" style="background:rgba(56,189,248,.1);font-size:18px;color:var(--sig-water)"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></div>
             <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Protein nudge</div><div class="tm" style="font-size:12px"><span id="rt-pr-time">8:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('protein')">change</span></div></div>
             <label class="tog-sw"><input type="checkbox" id="rm-pr" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib" style="background:rgba(251,191,36,.12);font-size:18px">💧</div>
+            <div class="sib icb" style="background:rgba(251,191,36,.12);font-size:18px;color:var(--sig-fuel)"><svg class="ic" aria-hidden="true"><use href="#i-droplet"/></svg></div>
             <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Hydration check</div><div class="tm" style="font-size:12px">Every 3 hours, 9 AM – 9 PM</div></div>
             <label class="tog-sw"><input type="checkbox" id="rm-wt" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib" style="background:rgba(34,197,94,.12);font-size:18px">📲</div>
+            <div class="sib icb" style="background:rgba(34,197,94,.12);font-size:18px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></div>
             <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Push notifications</div><div class="tm" style="font-size:12px">Live nudges across devices — even when the app is closed</div></div>
             <label class="tog-sw"><input type="checkbox" id="rm-push" onchange="togglePush(this.checked)"><span class="tog-track"></span></label>
           </div>
@@ -780,7 +888,7 @@
         <!-- Subscription -->
         <div class="card" id="set-pro-card" style="background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.06) 100%);border:1px solid rgba(34,197,94,.22);cursor:pointer" onclick="openPaywall()">
           <div style="display:flex;align-items:center;gap:14px">
-            <div style="width:46px;height:46px;border-radius:14px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✨</div>
+            <div style="width:46px;height:46px;border-radius:14px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></div>
             <div style="flex:1">
               <div style="font-size:15.5px;font-weight:800;color:var(--t);letter-spacing:-.2px" id="set-pro-title">Try AthleteOS Pro</div>
               <div class="tm" style="font-size:12.5px;margin-top:2px" id="set-pro-sub">7 days free — unlock plans, demos &amp; analytics</div>
@@ -812,7 +920,7 @@
         <!-- Invite -->
         <div class="card invite-card" onclick="inviteFriend()" style="cursor:pointer">
           <div style="display:flex;align-items:center;gap:14px">
-            <div class="sib" style="background:rgba(34,197,94,.14);width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎁</div>
+            <div class="sib" style="background:rgba(34,197,94,.14);width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-gift"/></svg></div>
             <div style="flex:1;min-width:0">
               <div style="font-size:14.5px;font-weight:700;color:var(--t);letter-spacing:-.2px">Invite a friend</div>
               <div class="tm" style="font-size:12.5px;margin-top:2px;line-height:1.4">Lifting together hits harder. Share AthleteOS.</div>
@@ -936,21 +1044,21 @@
     <div id="p-ai">
       <div class="ai-header">
         <div>
-          <div class="ptitle" style="margin:0;line-height:1.05">AI Trainer</div>
+          <div class="ptitle" style="margin:0;line-height:1.05">Coach</div>
           <div id="ai-page-sub" class="tm" style="font-size:12px;margin-top:4px"></div>
         </div>
         <button type="button" class="btn-g" onclick="clearChat()">Clear</button>
       </div>
       <div class="chat-msgs" id="chat-msgs">
-        <div class="msg a">Hey! I'm your AI trainer. Ask me anything about workouts, nutrition, recovery, or your goals — I have your stats.</div>
+        <div class="msg a">I've got your numbers in front of me. What do you want to work on?</div>
       </div>
       <div id="chat-suggest" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 8px;flex-shrink:0">
-        <button type="button" class="chat-chip" onclick="askAI('Build me a 4-week training plan based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')">📋 Plan my next 4 weeks</button>
-        <button type="button" class="chat-chip" onclick="askAI('What should I eat today to hit my protein goal? Give me 3 quick meal ideas.')">🥗 Meal ideas</button>
-        <button type="button" class="chat-chip" onclick="askAI('Look at my recent lifts and tell me which muscle group I am neglecting this week.')">🔍 What am I missing?</button>
+        <button type="button" class="chat-chip" onclick="askAI('Build me a 4-week training plan based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Next 4 weeks</button>
+        <button type="button" class="chat-chip" onclick="askAI('What should I eat today to hit my protein goal? Give me 3 quick meal ideas.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-utensils"/></svg>Meal ideas</button>
+        <button type="button" class="chat-chip" onclick="askAI('Look at my recent lifts and tell me which muscle group I am neglecting this week.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-search"/></svg>What am I skipping?</button>
       </div>
       <div class="chat-row">
-        <textarea class="chat-in" id="chat-in" placeholder="Ask your trainer..." rows="1"
+        <textarea class="chat-in" id="chat-in" placeholder="Message your coach" rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
           oninput="autoH(this)"></textarea>
         <button type="button" class="chat-mic" id="chat-mic-btn" onclick="toggleVoice('chat-in',this)" title="Voice input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
@@ -965,7 +1073,7 @@
       <div class="nv" id="n-nutrition" onclick="goTab('nutrition')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.3.78-4.42 2.08-6.12"/><path d="M12 6v6l4 2"/></svg><span>Nutrition</span></div>
       <div class="nv" id="n-sleep" onclick="goTab('sleep')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Sleep</span></div>
       <div class="nv" id="n-body" onclick="goTab('body')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Body</span></div>
-      <div class="nv" id="n-ai" onclick="goTab('ai')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>AI</span></div>
+      <div class="nv" id="n-ai" onclick="goTab('ai')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Coach</span></div>
     </nav>
 
   </div><!-- /app-main -->
@@ -1010,7 +1118,7 @@
   </div>
 </div>
 
-<div class="modal" id="m-ex"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Add Exercise</div><button type="button" class="btn-g" style="font-size:12px" onclick="openExPicker()">📋 Browse</button></div><div class="f"><label>Exercise Name</label><input type="text" id="ex-n" placeholder="e.g. Bench Press" list="ex-dl" autocomplete="off" oninput="_onExNameInput(this.value)"><div id="ex-last-hint" style="font-size:12px;color:var(--accent-d);font-weight:600;margin-top:6px;display:none"></div><datalist id="ex-dl"><option value="Bench Press"><option value="Incline Press"><option value="Decline Press"><option value="Close-Grip Bench"><option value="Dumbbell Fly"><option value="Cable Fly"><option value="Dips"><option value="Push-up"><option value="Squat"><option value="Romanian Deadlift"><option value="Leg Press"><option value="Hip Thrust"><option value="Deadlift"><option value="Bulgarian Split Squat"><option value="Lunge"><option value="Leg Extension"><option value="Leg Curl"><option value="Calf Raise"><option value="Barbell Row"><option value="Dumbbell Row"><option value="Cable Row"><option value="Pull-up"><option value="Lat Pulldown"><option value="Face Pull"><option value="Overhead Press"><option value="Arnold Press"><option value="Lateral Raise"><option value="Front Raise"><option value="Rear Delt Fly"><option value="Barbell Curl"><option value="Dumbbell Curl"><option value="Hammer Curl"><option value="Tricep Pushdown"><option value="Skull Crusher"><option value="Plank"><option value="Crunches"><option value="Russian Twist"><option value="Hanging Leg Raise"><option value="Ab Wheel"></datalist></div><div class="f"><label>Muscle Group</label><select id="ex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option></select></div><div class="shrow" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div><div id="sets-list"></div><button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button><div class="g2" style="margin-top:12px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button><button type="button" class="btn" onclick="saveEx()">Add Exercise</button></div></div></div>
+<div class="modal" id="m-ex"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Add Exercise</div><button type="button" class="btn-g" style="font-size:12px" onclick="openExPicker()"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-plan"/></svg>Browse</button></div><div class="f"><label>Exercise Name</label><input type="text" id="ex-n" placeholder="e.g. Bench Press" list="ex-dl" autocomplete="off" oninput="_onExNameInput(this.value)"><div id="ex-last-hint" style="font-size:12px;color:var(--accent-d);font-weight:600;margin-top:6px;display:none"></div><datalist id="ex-dl"><option value="Bench Press"><option value="Incline Press"><option value="Decline Press"><option value="Close-Grip Bench"><option value="Dumbbell Fly"><option value="Cable Fly"><option value="Dips"><option value="Push-up"><option value="Squat"><option value="Romanian Deadlift"><option value="Leg Press"><option value="Hip Thrust"><option value="Deadlift"><option value="Bulgarian Split Squat"><option value="Lunge"><option value="Leg Extension"><option value="Leg Curl"><option value="Calf Raise"><option value="Barbell Row"><option value="Dumbbell Row"><option value="Cable Row"><option value="Pull-up"><option value="Lat Pulldown"><option value="Face Pull"><option value="Overhead Press"><option value="Arnold Press"><option value="Lateral Raise"><option value="Front Raise"><option value="Rear Delt Fly"><option value="Barbell Curl"><option value="Dumbbell Curl"><option value="Hammer Curl"><option value="Tricep Pushdown"><option value="Skull Crusher"><option value="Plank"><option value="Crunches"><option value="Russian Twist"><option value="Hanging Leg Raise"><option value="Ab Wheel"></datalist></div><div class="f"><label>Muscle Group</label><select id="ex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option></select></div><div class="shrow" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div><div id="sets-list"></div><button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button><div class="g2" style="margin-top:12px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button><button type="button" class="btn" onclick="saveEx()">Add Exercise</button></div></div></div>
 
 <div class="modal" id="m-meal"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Log Meal</div><button type="button" class="btn-g" style="font-size:12px;padding:7px 12px;display:flex;align-items:center;gap:6px" onclick="openBarcodeScan()" aria-label="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="6" x2="6" y2="18"/><line x1="10" y1="6" x2="10" y2="18"/><line x1="14" y1="6" x2="14" y2="18"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scan</button></div><div class="f"><label>Meal Name</label><input type="text" id="mn" placeholder="e.g. Chicken & Rice"></div><div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="m-p" placeholder="0" min="0"></div><div class="f"><label>Carbs (g)</label><input type="number" id="m-c" placeholder="0" min="0"></div><div class="f"><label>Fat (g)</label><input type="number" id="m-f" placeholder="0" min="0"></div><div class="f"><label>Calories</label><input type="number" id="m-k" placeholder="0" min="0"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button><button type="button" class="btn" onclick="saveMeal()">Log Meal</button></div></div></div>
 
@@ -1028,9 +1136,9 @@
       <button type="button" id="notif-btn" class="btn-g" onclick="reqNotifPerm()" style="font-size:11px;padding:5px 10px">Allow Notifications</button>
     </div>
     <div class="rest-presets" id="rest-presets">
-      <button type="button" class="rest-preset" data-s="60" onclick="setRest(60)"><span class="rp-ico">🔥</span><div class="rp-body"><div class="rp-time">1 min</div><div class="rp-tip">More sets, less joint stress</div><div class="rp-emph">Time Efficient</div></div></button>
-      <button type="button" class="rest-preset on" data-s="120" onclick="setRest(120)"><span class="rp-ico">🛠️</span><div class="rp-body"><div class="rp-time">2 min</div><div class="rp-tip">Get toned / bigger</div><div class="rp-emph">Build Muscle</div></div></button>
-      <button type="button" class="rest-preset" data-s="300" onclick="setRest(300)"><span class="rp-ico">⚡</span><div class="rp-body"><div class="rp-time">5 min</div><div class="rp-tip">Maximize muscular power</div><div class="rp-emph">Increase Strength</div></div></button>
+      <button type="button" class="rest-preset" data-s="60" onclick="setRest(60)"><span class="rp-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></span><div class="rp-body"><div class="rp-time">1 min</div><div class="rp-tip">More sets, less joint stress</div><div class="rp-emph">Time Efficient</div></div></button>
+      <button type="button" class="rest-preset on" data-s="120" onclick="setRest(120)"><span class="rp-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><div class="rp-body"><div class="rp-time">2 min</div><div class="rp-tip">Get toned / bigger</div><div class="rp-emph">Build Muscle</div></div></button>
+      <button type="button" class="rest-preset" data-s="300" onclick="setRest(300)"><span class="rp-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="rp-body"><div class="rp-time">5 min</div><div class="rp-tip">Maximize muscular power</div><div class="rp-emph">Increase Strength</div></div></button>
     </div>
     <div class="rring-wrap">
       <svg width="180" height="180" viewBox="0 0 180 180" style="display:block">
@@ -1045,7 +1153,7 @@
       </div>
     </div>
     <div class="g2" style="margin-top:8px">
-      <button type="button" class="btn-g" id="rest-mute-btn" style="font-size:12.5px;padding:10px" onclick="toggleRestMute(this)" aria-label="Toggle rest sound">🔔 Sound on</button>
+      <button type="button" class="btn-g" id="rest-mute-btn" style="font-size:12.5px;padding:10px" onclick="toggleRestMute(this)" aria-label="Toggle rest sound"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-bell"/></svg>Sound on</button>
       <button type="button" class="btn-o" style="border-color:var(--red);color:var(--red)" onclick="cancelRest()">Cancel</button>
     </div>
   </div>
@@ -1069,7 +1177,7 @@
   </div>
 </div>
 
-<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()">📐 Calculate from my body & goal</button><div class="g2"><div class="f"><label>Daily Protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target Weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water Goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie Goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save Goals</button></div></div></div>
+<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-calculator"/></svg>Work it out from my stats</button><div class="g2"><div class="f"><label>Daily Protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target Weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water Goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie Goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save Goals</button></div></div></div>
 
 <!-- MACRO CALCULATOR -->
 <div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv" id="mc-f" style="color:var(--yel)">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
@@ -1118,22 +1226,22 @@
 
 <!-- PAYWALL -->
 <div class="modal" id="m-paywall"><div class="msheet pw-sheet">
-  <button type="button" class="pw-close" onclick="cModal('m-paywall')" aria-label="Close">✕</button>
+  <button type="button" class="pw-close" onclick="cModal('m-paywall')" aria-label="Close"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-x"/></svg></button>
   <div class="pw-scroll">
     <!-- Hero with gradient -->
     <div class="pw-hero">
       <div class="pw-hero-badge">ATHLETEOS PRO</div>
-      <h2 class="pw-hero-title">Train like<br>you mean it.</h2>
-      <p class="pw-hero-sub">Get the full toolkit — AI coaching, plan generator, demos &amp; analytics. 7 days free.</p>
+      <h2 class="pw-hero-title">You've earned<br>the key.</h2>
+      <p class="pw-hero-sub">Pro is the whole gym: your coach on call, a plan written round your week, and every number that proves it worked. First 7 days are on us.</p>
     </div>
 
     <!-- Feature list -->
     <div class="pw-feats">
-      <div class="pw-feat"><div class="pw-feat-ico">∞</div><div><div class="pw-feat-t">Unlimited AI trainer</div><div class="pw-feat-b">Form coaching, meal ideas, plan tweaks — chat all you want.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7">🎯</div><div><div class="pw-feat-t">Personalized training plans</div><div class="pw-feat-b">Built around your goal, schedule, equipment &amp; experience.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(59,130,246,.12);color:#3B82F6">🎬</div><div><div class="pw-feat-t">Exercise demos &amp; cues</div><div class="pw-feat-b">Looping demos for every lift with key technique tips.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(245,158,11,.12);color:#F59E0B">📈</div><div><div class="pw-feat-t">Advanced analytics</div><div class="pw-feat-b">Volume per muscle, 1RM trends, weight projections.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(236,72,153,.12);color:#EC4899">📷</div><div><div class="pw-feat-t">Unlimited photos &amp; templates</div><div class="pw-feat-b">Track progress visually, save every workout split.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-infinity"/></svg></div><div><div class="pw-feat-t">Your coach, no cap</div><div class="pw-feat-b">Form, food, deloads. Ask as often as you'd ask a real one.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div><div><div class="pw-feat-t">A plan written for you</div><div class="pw-feat-b">Your goal, your days, the kit you actually have.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(59,130,246,.12);color:#3B82F6" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div><div><div class="pw-feat-t">Demos and cues</div><div class="pw-feat-b">See the lift, then the two cues that fix it.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(245,158,11,.12);color:#F59E0B" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div><div><div class="pw-feat-t">The numbers behind it</div><div class="pw-feat-b">Volume per muscle, 1RM curves, weight projections.</div></div></div>
+      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(236,72,153,.12);color:#EC4899" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg></div><div><div class="pw-feat-t">Unlimited photos and splits</div><div class="pw-feat-b">Proof in the mirror, plus every session saved to reuse.</div></div></div>
     </div>
 
     <!-- Plans -->
@@ -1159,7 +1267,7 @@
     <button type="button" class="btn pw-cta" id="pw-cta" onclick="pw_checkout()">Start 7-day free trial</button>
 
     <div class="pw-trust">
-      <span>🔒 Secure checkout</span>
+      <span class="icb" style="gap:5px"><svg class="ic" style="font-size:12px" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout</span>
       <span class="pw-trust-sep">·</span>
       <span>Cancel anytime</span>
       <span class="pw-trust-sep">·</span>
@@ -1171,16 +1279,16 @@
       <summary>How your free trial works</summary>
       <div class="pw-tl-body">
         <div class="pw-tl-rail">
-          <div class="pw-tl-dot now">🔓</div>
+          <div class="pw-tl-dot now icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-unlock"/></svg></div>
           <div class="pw-tl-line a"></div>
-          <div class="pw-tl-dot warn">🔔</div>
+          <div class="pw-tl-dot warn icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-bell"/></svg></div>
           <div class="pw-tl-line b"></div>
-          <div class="pw-tl-dot charge">⭐</div>
+          <div class="pw-tl-dot charge icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-star"/></svg></div>
         </div>
         <div style="flex:1">
-          <div class="pw-tl-step"><div class="pw-tl-step-t">Today</div><div class="pw-tl-step-b">Full access to AthleteOS Pro — every feature unlocked.</div></div>
-          <div class="pw-tl-step"><div class="pw-tl-step-t">In 5 days</div><div class="pw-tl-step-b">We remind you the trial ends in 2 days.</div></div>
-          <div class="pw-tl-step"><div class="pw-tl-step-t">In 7 days</div><div class="pw-tl-step-b">Subscription starts. Cancel before then for €0.</div></div>
+          <div class="pw-tl-step"><div class="pw-tl-step-t">Today</div><div class="pw-tl-step-b">Everything opens. No half-features.</div></div>
+          <div class="pw-tl-step"><div class="pw-tl-step-t">In 5 days</div><div class="pw-tl-step-b">We tell you the trial ends in two days. No ambush.</div></div>
+          <div class="pw-tl-step"><div class="pw-tl-step-t">In 7 days</div><div class="pw-tl-step-b">Billing starts. Walk before then and you pay nothing.</div></div>
         </div>
       </div>
     </details>
@@ -1215,7 +1323,7 @@
 <div class="modal" id="m-photo"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Add Progress Photo</div><div class="f"><label>Pose</label><select id="ph-pose"><option value="front">Front</option><option value="side">Side</option><option value="back">Back</option><option value="flex">Flex</option></select></div><div class="f"><label>Pick a photo</label><input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" style="font-size:14px;padding:10px"></div><div id="ph-prev-wrap" class="hidden" style="margin-bottom:10px;text-align:center"><img id="ph-prev" style="max-width:100%;max-height:240px;border-radius:10px"></div><div id="ph-msg" class="tm" style="font-size:12px;margin-bottom:6px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-photo')">Cancel</button><button type="button" class="btn" id="ph-btn" onclick="savePhoto()">Upload</button></div></div></div>
 
 <!-- VIEW PHOTO -->
-<div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()">⇆ Compare</button><button type="button" class="btn-o" style="width:100%;border-color:var(--red);color:var(--red)" onclick="deletePhoto()">Delete</button></div></div></div>
+<div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-shuffle"/></svg>Compare</button><button type="button" class="btn-o" style="width:100%;border-color:var(--red);color:var(--red)" onclick="deletePhoto()">Delete</button></div></div></div>
 
 <!-- PHOTO COMPARE -->
 <div class="modal" id="m-photocomp">
@@ -1232,7 +1340,7 @@
         <img id="pc-new" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:block">
       </div>
       <div id="pc-handle" style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:#FFFFFF;transform:translateX(-50%);box-shadow:0 0 18px rgba(0,0,0,.6);cursor:ew-resize">
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:18px;color:#0A0A0A;font-weight:700">⇆</div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;color:#0A0A0A;font-weight:700" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-shuffle"/></svg></div>
       </div>
     </div>
     <div class="fb" style="margin-top:8px;font-size:12px;color:var(--t2);font-weight:600"><span id="pc-old-lbl">Before</span><span id="pc-new-lbl">After</span></div>
@@ -1240,7 +1348,7 @@
 </div>
 
 <!-- DAILY CHECK-IN -->
-<div class="modal" id="m-checkin"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Daily Check-In</div><div class="cki-row"><div class="cki-label">Mood</div><div class="cki-pills" id="cki-mood" data-key="mood"><div class="cki-pill" data-v="1">😖</div><div class="cki-pill" data-v="2">😕</div><div class="cki-pill" data-v="3">😐</div><div class="cki-pill" data-v="4">🙂</div><div class="cki-pill" data-v="5">😄</div></div></div><div class="cki-row"><div class="cki-label">Energy</div><div class="cki-pills" id="cki-energy" data-key="energy"><div class="cki-pill" data-v="1">🪫</div><div class="cki-pill" data-v="2">🔅</div><div class="cki-pill" data-v="3">⚡</div><div class="cki-pill" data-v="4">🔥</div><div class="cki-pill" data-v="5">🚀</div></div></div><div class="cki-row"><div class="cki-label">Soreness</div><div class="cki-pills" id="cki-soreness" data-key="soreness"><div class="cki-pill" data-v="1">😎</div><div class="cki-pill" data-v="2">🙂</div><div class="cki-pill" data-v="3">😬</div><div class="cki-pill" data-v="4">😣</div><div class="cki-pill" data-v="5">🥵</div></div></div><div class="g2" style="margin-top:18px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-checkin')">Cancel</button><button type="button" class="btn" onclick="saveCheckin()">Save</button></div></div></div>
+<div class="modal" id="m-checkin"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Daily Check-In</div><div class="cki-row"><div class="cki-label">Mood</div><div class="cki-pills" id="cki-mood" data-key="mood"><div class="cki-pill" data-v="1" data-t="Rough">1</div><div class="cki-pill" data-v="2" data-t="Off">2</div><div class="cki-pill" data-v="3" data-t="Fine">3</div><div class="cki-pill" data-v="4" data-t="Good">4</div><div class="cki-pill" data-v="5" data-t="Great">5</div></div></div><div class="cki-row"><div class="cki-label">Energy</div><div class="cki-pills" id="cki-energy" data-key="energy"><div class="cki-pill" data-v="1" data-t="Empty">1</div><div class="cki-pill" data-v="2" data-t="Low">2</div><div class="cki-pill" data-v="3" data-t="OK">3</div><div class="cki-pill" data-v="4" data-t="Charged">4</div><div class="cki-pill" data-v="5" data-t="Wired">5</div></div></div><div class="cki-row"><div class="cki-label">Soreness</div><div class="cki-pills" id="cki-soreness" data-key="soreness"><div class="cki-pill" data-v="1" data-t="Fresh">1</div><div class="cki-pill" data-v="2" data-t="Light">2</div><div class="cki-pill" data-v="3" data-t="Achy">3</div><div class="cki-pill" data-v="4" data-t="Sore">4</div><div class="cki-pill" data-v="5" data-t="Wrecked">5</div></div></div><div class="g2" style="margin-top:18px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-checkin')">Cancel</button><button type="button" class="btn" onclick="saveCheckin()">Save</button></div></div></div>
 
 <!-- 1RM CALCULATOR -->
 <div class="modal" id="m-1rm"><div class="msheet"><div class="mhandle"></div><div class="ctitle">1-Rep Max Calculator</div><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="rm-w" step="0.5" placeholder="100" oninput="calc1RM()"></div><div class="f"><label>Reps</label><input type="number" id="rm-r" placeholder="5" min="1" max="20" oninput="calc1RM()"></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);text-align:center;padding:18px;margin:6px 0 14px"><div class="sl" style="margin-bottom:6px">Estimated 1RM</div><div id="rm-out" style="font-family:'Inter',sans-serif;font-weight:700;font-size:42px;color:var(--accent);line-height:1">–</div></div><div id="rm-pct" style="font-size:12.5px;color:var(--t2);line-height:1.8"></div><button type="button" class="btn-o" style="width:100%;margin-top:12px" onclick="cModal('m-1rm')">Close</button></div></div>
@@ -1273,7 +1381,7 @@
   <div class="msheet" style="overflow-y:auto;max-height:90vh">
     <div class="mhandle"></div>
     <div style="text-align:center;padding:8px 0 18px">
-      <div style="font-size:42px;line-height:1;margin-bottom:8px">🎉</div>
+      <div class="icb" style="font-size:40px;line-height:1;margin-bottom:8px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></div>
       <div style="font-family:'Inter',sans-serif;font-weight:800;font-size:24px;letter-spacing:-1px;color:var(--t)">Session Complete</div>
       <div class="tm" id="sum-sub" style="font-size:13.5px;margin-top:4px">Great work.</div>
     </div>
@@ -1288,7 +1396,7 @@
       <div id="sum-vs-rows" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
     </div>
     <div id="sum-prs" style="display:none">
-      <div class="ctitle" style="margin:14px 0 8px;color:var(--accent-d)">🏆 New Personal Records</div>
+      <div class="ctitle" style="margin:14px 0 8px;color:var(--accent-d);display:inline-flex;align-items:center;gap:8px"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-trophy"/></svg>New personal records</div>
       <div id="sum-prs-list" style="margin-bottom:14px"></div>
     </div>
     <div id="sum-exs" style="margin-bottom:14px"></div>
@@ -1297,7 +1405,7 @@
       <div id="sum-note" style="background:var(--surface);padding:10px 12px;border-radius:10px;font-size:13.5px;line-height:1.5;font-style:italic;color:var(--t2)"></div>
     </div>
     <div class="g2">
-      <button type="button" class="btn-o" style="width:100%" onclick="shareWorkout()">↗ Share</button>
+      <button type="button" class="btn-o" style="width:100%" onclick="shareWorkout()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-share"/></svg>Share</button>
       <button type="button" class="btn" onclick="cModal('m-summary')">Done</button>
     </div>
   </div>
@@ -1377,7 +1485,7 @@
         <div style="height:8px;border-radius:999px;background:var(--surface);overflow:hidden;margin-bottom:14px"><div id="impt-prog-bar" style="height:100%;width:0%;background:var(--accent);transition:width .25s ease"></div></div>
       </div>
       <div id="impt-done" style="display:none;text-align:center;padding:18px 0">
-        <div style="font-size:48px;margin-bottom:8px">✅</div>
+        <div class="icb" style="font-size:44px;margin-bottom:8px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></div>
         <div style="font-weight:900;font-size:20px;margin-bottom:6px">Import complete</div>
         <div class="tm" id="impt-done-sub" style="font-size:13px;line-height:1.55;margin-bottom:16px"></div>
         <button type="button" class="btn" onclick="cModal('m-impt');impt_reset()">Done</button>
@@ -1407,7 +1515,7 @@
       <button type="button" class="pill" data-mg="core" onclick="filterMusc('core')">Core</button>
     </div>
     <div id="musc-best-section">
-      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent-d);font-weight:700;margin-bottom:8px">★ Top Picks</div>
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent-d);font-weight:700;margin-bottom:8px">Top picks</div>
       <div id="musc-best-list" style="margin-bottom:18px"></div>
     </div>
     <div id="musc-rest-section">
@@ -1467,9 +1575,9 @@
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">We read every one. Tell us what's broken, missing, or great.</p>
   <div class="f"><label>Category</label>
     <div class="gpills" style="margin-top:8px">
-      <button type="button" class="gpill on" id="fb-cat-bug" onclick="fb_cat('bug')">🐛 Bug</button>
-      <button type="button" class="gpill" id="fb-cat-idea" onclick="fb_cat('idea')">💡 Idea</button>
-      <button type="button" class="gpill" id="fb-cat-love" onclick="fb_cat('love')">❤️ Love</button>
+      <button type="button" class="gpill on" id="fb-cat-bug" onclick="fb_cat('bug')">Bug</button>
+      <button type="button" class="gpill" id="fb-cat-idea" onclick="fb_cat('idea')">Idea</button>
+      <button type="button" class="gpill" id="fb-cat-love" onclick="fb_cat('love')">Praise</button>
       <button type="button" class="gpill" id="fb-cat-other" onclick="fb_cat('other')">Other</button>
     </div>
   </div>
@@ -1483,7 +1591,7 @@
 <div class="modal" id="m-exchart"><div class="msheet" style="max-height:90vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="exc-name">Exercise</div><button type="button" class="btn-g" onclick="cModal('m-exchart')">Done</button></div><div class="tm" style="font-size:12px;margin-bottom:10px" id="exc-meta">–</div><div class="chart-wrap" style="height:200px;margin-bottom:6px"><canvas id="exc-chart"></canvas></div><div id="exc-hist" style="max-height:200px;overflow-y:auto"></div></div></div>
 
 <!-- WORKOUT TEMPLATES -->
-<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()">📚 Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
+<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
 
 <!-- SAVE TEMPLATE -->
 <div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template Name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
@@ -1501,7 +1609,7 @@
 <div class="modal" id="m-cuex"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Exercise</div><div class="f"><label>Name</label><input type="text" id="cuex-n" placeholder="e.g. Cable Crossover Variant" autocomplete="off"></div><div class="f"><label>Primary Muscle</label><select id="cuex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option><option value="other">Other</option></select></div><div class="f"><label>Demo video URL (optional)</label><input type="url" id="cuex-demo" placeholder="https://youtube.com/..." autocomplete="off"></div><div class="f"><label>Tips (one per line, optional)</label><textarea id="cuex-tips" rows="4" placeholder="e.g.&#10;Pause at the contraction&#10;Slow eccentric on the way down" style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px;color:var(--t);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px"></textarea></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuex')">Cancel</button><button type="button" class="btn" onclick="saveCustomEx()">Save</button></div></div></div>
 
 <!-- CREATE CUSTOM ACHIEVEMENT -->
-<div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="🏆" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
+<div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="PR" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
 
 <!-- DELETE ACCOUNT -->
 <div class="modal" id="m-delacc"><div class="msheet"><div class="mhandle"></div><div class="ctitle" style="color:var(--red)">Delete Account</div><p class="tm" style="line-height:1.65;margin-bottom:10px">This is permanent. We'll erase your profile, all workouts, meals, sleep, weight, photos, measurements, and chat history. There is no undo.</p><div class="f"><label>Type <b style="color:var(--red)">DELETE</b> to confirm</label><input type="text" id="del-confirm" placeholder="DELETE" autocomplete="off" autocapitalize="characters"></div><div id="del-msg" style="font-size:12.5px;margin:4px 0 8px;display:none;color:var(--red)"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-delacc')">Cancel</button><button type="button" class="btn" id="del-btn" style="background:var(--red);color:#fff" onclick="deleteMyAccount()">Erase forever</button></div></div></div>
@@ -1520,41 +1628,41 @@
     <!-- 0: Welcome -->
     <div class="onb-step on" id="os-0">
       <div class="onb-hero">Welcome to <span>AthleteOS</span></div>
-      <div class="onb-sub">Train smart. Eat well. Sleep deep. Built around the way you actually live.</div>
+      <div class="onb-sub">Lift, eat, sleep, repeat. We keep the receipts so you can see it working.</div>
       <div class="onb-feat-list">
         <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--adim);color:var(--accent-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Beat last session</div><div class="onb-feat-b">See exactly what you did last time and what to aim for now.</div></div></div>
         <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--bdim);color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Log in seconds</div><div class="onb-feat-b">Your last set is pre-filled. Tap, save, get back to training.</div></div></div>
-        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">AI coach in your pocket</div><div class="onb-feat-b">Ask anything — meals, form, recovery. It knows your full history.</div></div></div>
+        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">A coach who reads your log</div><div class="onb-feat-b">Meals, form, when to back off. It has seen every session you logged.</div></div></div>
       </div>
     </div>
 
     <!-- 1: Motivations (multi) -->
     <div class="onb-step" id="os-1">
       <div class="onb-h">What brings you here?</div>
-      <div class="onb-sub">Pick all that apply. We'll prioritize features around your goals.</div>
+      <div class="onb-sub">Pick everything that fits. It shapes what you see first.</div>
       <div class="onb-multi" id="ob-mot">
-        <button type="button" class="onb-multi-chip" data-v="progress" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">📈</span>Track progress</button>
-        <button type="button" class="onb-multi-chip" data-v="muscle" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">💪</span>Build muscle</button>
-        <button type="button" class="onb-multi-chip" data-v="lose" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">⚖️</span>Lose weight</button>
-        <button type="button" class="onb-multi-chip" data-v="eat" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🥗</span>Eat better</button>
-        <button type="button" class="onb-multi-chip" data-v="sleep" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🌙</span>Sleep deeper</button>
-        <button type="button" class="onb-multi-chip" data-v="rest" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">⏱</span>Rest timer</button>
-        <button type="button" class="onb-multi-chip" data-v="plan" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">📋</span>Personal plan</button>
-        <button type="button" class="onb-multi-chip" data-v="streak" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico">🔥</span>Stay consistent</button>
+        <button type="button" class="onb-multi-chip" data-v="progress" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></span>Track progress</button>
+        <button type="button" class="onb-multi-chip" data-v="muscle" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span>Build muscle</button>
+        <button type="button" class="onb-multi-chip" data-v="lose" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span>Lose weight</button>
+        <button type="button" class="onb-multi-chip" data-v="eat" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></span>Eat better</button>
+        <button type="button" class="onb-multi-chip" data-v="sleep" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg></span>Sleep deeper</button>
+        <button type="button" class="onb-multi-chip" data-v="rest" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></span>Rest timer</button>
+        <button type="button" class="onb-multi-chip" data-v="plan" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></span>Personal plan</button>
+        <button type="button" class="onb-multi-chip" data-v="streak" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg></span>Stay consistent</button>
       </div>
     </div>
 
     <!-- 2: Main goal -->
     <div class="onb-step" id="os-2">
       <div class="onb-h">What's your main training goal?</div>
-      <div class="onb-sub">Your AI trainer will tailor every suggestion to this.</div>
+      <div class="onb-sub">Everything your coach says gets pointed at this.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-goal-list">
-          <button type="button" class="opt-item" data-v="strength" onclick="ob_pick('main_goal',this)"><span class="opt-ico">🏋️</span><div class="opt-body"><div class="opt-title">Get stronger, lift heavier</div><div class="opt-sub">Powerlifting / barbell focus</div></div></button>
-          <button type="button" class="opt-item" data-v="muscle" onclick="ob_pick('main_goal',this)"><span class="opt-ico">💪</span><div class="opt-body"><div class="opt-title">Build muscle</div><div class="opt-sub">Hypertrophy &amp; size</div></div></button>
-          <button type="button" class="opt-item" data-v="lean" onclick="ob_pick('main_goal',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Get lean and defined</div><div class="opt-sub">Recomposition</div></div></button>
-          <button type="button" class="opt-item" data-v="lose" onclick="ob_pick('main_goal',this)"><span class="opt-ico">⚖️</span><div class="opt-body"><div class="opt-title">Lose weight</div><div class="opt-sub">Sustainable fat loss</div></div></button>
-          <button type="button" class="opt-item" data-v="general" onclick="ob_pick('main_goal',this)"><span class="opt-ico">🌱</span><div class="opt-body"><div class="opt-title">General fitness &amp; health</div><div class="opt-sub">Feel good, move well, live longer</div></div></button>
+          <button type="button" class="opt-item" data-v="strength" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><div class="opt-body"><div class="opt-title">Get strong</div><div class="opt-sub">Heavy bar, low reps, numbers that go up</div></div></button>
+          <button type="button" class="opt-item" data-v="muscle" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span><div class="opt-body"><div class="opt-title">Add size</div><div class="opt-sub">More muscle on the frame, one block at a time</div></div></button>
+          <button type="button" class="opt-item" data-v="lean" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="opt-body"><div class="opt-title">Get lean</div><div class="opt-sub">Keep the muscle, lose the rest</div></div></button>
+          <button type="button" class="opt-item" data-v="lose" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><div class="opt-body"><div class="opt-title">Drop weight</div><div class="opt-sub">A deficit you can actually live with</div></div></button>
+          <button type="button" class="opt-item" data-v="general" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-sprout"/></svg></span><div class="opt-body"><div class="opt-title">Stay in shape</div><div class="opt-sub">Move well, feel good, still lifting at 60</div></div></button>
         </div>
       </div>
     </div>
@@ -1563,19 +1671,19 @@
     <div class="onb-step" id="os-3">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
       <div class="onb-h" id="ob-bp-title">Your Muscle Blueprint</div>
-      <div class="onb-sub" id="ob-bp-sub">Science-backed targets tuned to your goal.</div>
+      <div class="onb-sub" id="ob-bp-sub">How this goal actually gets built.</div>
       <div class="onb-info-list" id="ob-bp-list"></div>
     </div>
 
     <!-- 4: Experience -->
     <div class="onb-step" id="os-4">
       <div class="onb-h">What's your experience level?</div>
-      <div class="onb-sub">No judgement — this just calibrates the suggestions you get.</div>
+      <div class="onb-sub">No judgement. It just sets the starting weights.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-exp-list">
-          <button type="button" class="opt-item" data-v="beginner" onclick="ob_pick('experience',this)"><span class="opt-ico">🌱</span><div class="opt-body"><div class="opt-title">Beginner</div><div class="opt-sub">New to strength training</div></div></button>
-          <button type="button" class="opt-item" data-v="intermediate" onclick="ob_pick('experience',this)"><span class="opt-ico">🔥</span><div class="opt-body"><div class="opt-title">Intermediate</div><div class="opt-sub">Comfortable with the basics</div></div></button>
-          <button type="button" class="opt-item" data-v="advanced" onclick="ob_pick('experience',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Advanced</div><div class="opt-sub">Years of consistent training</div></div></button>
+          <button type="button" class="opt-item" data-v="beginner" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-sprout"/></svg></span><div class="opt-body"><div class="opt-title">Beginner</div><div class="opt-sub">New to strength training</div></div></button>
+          <button type="button" class="opt-item" data-v="intermediate" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg></span><div class="opt-body"><div class="opt-title">Intermediate</div><div class="opt-sub">Comfortable with the basics</div></div></button>
+          <button type="button" class="opt-item" data-v="advanced" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="opt-body"><div class="opt-title">Advanced</div><div class="opt-sub">Years of consistent training</div></div></button>
         </div>
       </div>
     </div>
@@ -1586,10 +1694,10 @@
       <div class="onb-sub">Honest answers help us show you the right tools first.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-prior-list">
-          <button type="button" class="opt-item" data-v="memory" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">🧠</span><div class="opt-body"><div class="opt-title">Memory</div><div class="opt-sub">In my head</div></div></button>
-          <button type="button" class="opt-item" data-v="paper" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">📓</span><div class="opt-body"><div class="opt-title">Notebook / paper</div><div class="opt-sub">Pen &amp; pad at the gym</div></div></button>
-          <button type="button" class="opt-item" data-v="app" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">📱</span><div class="opt-body"><div class="opt-title">Another app</div><div class="opt-sub">Switching from something else</div></div></button>
-          <button type="button" class="opt-item" data-v="none" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico">❌</span><div class="opt-body"><div class="opt-title">Not keeping track</div><div class="opt-sub">Time to change that</div></div></button>
+          <button type="button" class="opt-item" data-v="memory" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg></span><div class="opt-body"><div class="opt-title">Memory</div><div class="opt-sub">In my head</div></div></button>
+          <button type="button" class="opt-item" data-v="paper" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-notebook"/></svg></span><div class="opt-body"><div class="opt-title">Notebook / paper</div><div class="opt-sub">Pen &amp; pad at the gym</div></div></button>
+          <button type="button" class="opt-item" data-v="app" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg></span><div class="opt-body"><div class="opt-title">Another app</div><div class="opt-sub">Switching from something else</div></div></button>
+          <button type="button" class="opt-item" data-v="none" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-slash"/></svg></span><div class="opt-body"><div class="opt-title">Not keeping track</div><div class="opt-sub">Starts today</div></div></button>
         </div>
       </div>
     </div>
@@ -1611,9 +1719,9 @@
       <div class="onb-sub">Helpful for rest-time suggestions and session pacing.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-train-list">
-          <button type="button" class="opt-item" data-v="solo" onclick="ob_pick('train_style',this)"><span class="opt-ico">🧍</span><div class="opt-body"><div class="opt-title">Solo</div><div class="opt-sub">Just me &amp; the iron</div></div></button>
-          <button type="button" class="opt-item" data-v="partner" onclick="ob_pick('train_style',this)"><span class="opt-ico">🤝</span><div class="opt-body"><div class="opt-title">With a training partner</div><div class="opt-sub">Push each other</div></div></button>
-          <button type="button" class="opt-item" data-v="trainer" onclick="ob_pick('train_style',this)"><span class="opt-ico">👨‍🏫</span><div class="opt-body"><div class="opt-title">With a trainer / coach</div><div class="opt-sub">Following someone's program</div></div></button>
+          <button type="button" class="opt-item" data-v="solo" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span><div class="opt-body"><div class="opt-title">Solo</div><div class="opt-sub">Me and the bar</div></div></button>
+          <button type="button" class="opt-item" data-v="partner" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></span><div class="opt-body"><div class="opt-title">With a training partner</div><div class="opt-sub">Push each other</div></div></button>
+          <button type="button" class="opt-item" data-v="trainer" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-whistle"/></svg></span><div class="opt-body"><div class="opt-title">With a trainer / coach</div><div class="opt-sub">Following someone's program</div></div></button>
         </div>
       </div>
     </div>
@@ -1621,12 +1729,12 @@
     <!-- 8: Follow a plan? -->
     <div class="onb-step" id="os-8">
       <div class="onb-h">Do you follow a set routine?</div>
-      <div class="onb-sub">No wrong answer. AthleteOS adapts to either style.</div>
+      <div class="onb-sub">No wrong answer. The app bends either way.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-plan-list">
-          <button type="button" class="opt-item" data-v="yes" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">📋</span><div class="opt-body"><div class="opt-title">Yes, I have a plan</div><div class="opt-sub">Same split every week</div></div></button>
-          <button type="button" class="opt-item" data-v="flexible" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">🔀</span><div class="opt-body"><div class="opt-title">Sort of, but flexible</div><div class="opt-sub">I shift things around</div></div></button>
-          <button type="button" class="opt-item" data-v="wing" onclick="ob_pick('follow_plan',this)"><span class="opt-ico">🎲</span><div class="opt-body"><div class="opt-title">No, I wing it</div><div class="opt-sub">Decide on the day</div></div></button>
+          <button type="button" class="opt-item" data-v="yes" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></span><div class="opt-body"><div class="opt-title">Yes, I have a plan</div><div class="opt-sub">Same split every week</div></div></button>
+          <button type="button" class="opt-item" data-v="flexible" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-shuffle"/></svg></span><div class="opt-body"><div class="opt-title">Sort of, but flexible</div><div class="opt-sub">I shift things around</div></div></button>
+          <button type="button" class="opt-item" data-v="wing" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-dice"/></svg></span><div class="opt-body"><div class="opt-title">No, I wing it</div><div class="opt-sub">Decide on the day</div></div></button>
         </div>
       </div>
     </div>
@@ -1637,9 +1745,9 @@
       <div class="onb-sub">Pick a starting point. You can change anything later.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-log-list">
-          <button type="button" class="opt-item" data-v="minimal" onclick="ob_pick('logging_style',this)"><span class="opt-ico">⚡</span><div class="opt-body"><div class="opt-title">Minimal</div><div class="opt-sub">Just my PRs and best sets</div></div></button>
-          <button type="button" class="opt-item" data-v="balanced" onclick="ob_pick('logging_style',this)"><span class="opt-ico">⚖️</span><div class="opt-body"><div class="opt-title">Balanced</div><div class="opt-sub">What matters, none of the clutter</div></div></button>
-          <button type="button" class="opt-item" data-v="detailed" onclick="ob_pick('logging_style',this)"><span class="opt-ico">🔍</span><div class="opt-body"><div class="opt-title">Detailed</div><div class="opt-sub">Every set, every rep</div></div></button>
+          <button type="button" class="opt-item" data-v="minimal" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="opt-body"><div class="opt-title">Minimal</div><div class="opt-sub">PRs and top sets, nothing else</div></div></button>
+          <button type="button" class="opt-item" data-v="balanced" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><div class="opt-body"><div class="opt-title">Balanced</div><div class="opt-sub">The sets that matter</div></div></button>
+          <button type="button" class="opt-item" data-v="detailed" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></span><div class="opt-body"><div class="opt-title">Detailed</div><div class="opt-sub">Every set, every rep</div></div></button>
         </div>
       </div>
     </div>
@@ -1647,7 +1755,7 @@
     <!-- 10: Weekly goal -->
     <div class="onb-step" id="os-10">
       <div class="onb-h">Set a weekly goal</div>
-      <div class="onb-sub">How many days will you show up? We'll nudge you if you miss it.</div>
+      <div class="onb-sub">How many days are you actually showing up? We'll hold you to it.</div>
       <div class="onb-body">
         <div class="opt-group" id="ob-week-list">
           <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">First Steps</span></div>
@@ -1743,8 +1851,8 @@
       <div class="onb-h">Stay on track</div>
       <div class="onb-sub">Optional daily nudges so a busy day never sinks your streak.</div>
       <div class="onb-body">
-        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib" style="background:var(--adim)">💪</div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Workout reminder</div><div class="tm" style="font-size:12.5px">Daily at 5:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-wo" checked><span class="tog-track"></span></label></div></div>
-        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib" style="background:var(--bdim)">🥩</div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Protein nudge</div><div class="tm" style="font-size:12.5px">Daily at 8:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-pr" checked><span class="tog-track"></span></label></div></div>
+        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib icb" style="background:var(--adim);color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Workout reminder</div><div class="tm" style="font-size:12.5px">Daily at 5:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-wo" checked><span class="tog-track"></span></label></div></div>
+        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib icb" style="background:var(--bdim);color:var(--sig-water)"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Protein nudge</div><div class="tm" style="font-size:12.5px">Daily at 8:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-pr" checked><span class="tog-track"></span></label></div></div>
         <p class="tm" style="font-size:12.5px;text-align:center;margin-top:10px">We'll ask for notification permission once you turn one on.</p>
       </div>
     </div>
@@ -1758,8 +1866,11 @@
 
 <!-- BUILDING-YOUR-PLAN SPLASH -->
 <div id="onb-splash">
-  <div class="spl-sparkle">
-    <span class="sp">✦</span><span class="sp">✧</span><span class="sp">✧</span><span class="sp">✦</span><span class="sp">✦</span>
+  <div class="spl-sparkle" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120">
+      <circle class="spl-ring-t" cx="60" cy="60" r="48" fill="none" stroke-width="6"/>
+      <circle class="spl-ring-a" cx="60" cy="60" r="48" fill="none" stroke-width="6" stroke-linecap="round" stroke-dasharray="75 226"/>
+    </svg>
   </div>
   <div class="spl-h" id="spl-title">Building your plan</div>
   <div class="spl-step" id="spl-step">Reading your answers…</div>
