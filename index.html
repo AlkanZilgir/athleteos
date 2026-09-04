@@ -13,7 +13,7 @@
 <title>AthleteOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <script src="https://js-de.sentry-cdn.com/1a3054a66d6e176bbe70397d5fe7d1bb.min.js" crossorigin="anonymous"></script>
 <script>
@@ -407,38 +407,29 @@
           </div>
         </section>
 
-        <!-- ── SECONDARY · WATER + SLEEP ─────────────────────────
-             Deliberately half the weight of the bands above. -->
-        <div class="pair">
-          <button type="button" class="pair-cell" onclick="qWater()" aria-label="Add a cup of water">
-            <div class="ring ring-sm" style="width:54px;height:54px">
-              <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
-                <circle class="ring-track" cx="27" cy="27" r="22" stroke-width="5.5"/>
-                <circle class="ring-arc" id="ring-water" cx="27" cy="27" r="22" stroke-width="5.5"
-                  stroke-dasharray="138.2" stroke-dashoffset="138.2" style="--ring-hue:var(--sig-water-pure)"/>
-              </svg>
-              <div class="ring-in"><svg class="ic" style="font-size:17px;color:var(--sig-water)" aria-hidden="true"><use href="#i-droplet"/></svg></div>
-            </div>
-            <div class="pair-body">
-              <div class="pair-l">Water</div>
-              <div class="pair-v" id="h-wa">0<span class="su">L</span></div>
-              <div class="pair-s" id="w-lbl">0/8 cups</div>
-            </div>
+        <!-- ── UTILITY STRIP · WATER + SLEEP ─────────────────────
+             Deliberately minor next to the two bands above: a value, a
+             thin fill line, and one tap that does the thing. -->
+        <div class="util">
+          <button type="button" class="util-cell" onclick="qWater()" aria-label="Add a cup of water">
+            <span class="util-top">
+              <svg class="ic" style="font-size:14px;color:var(--sig-water)" aria-hidden="true"><use href="#i-droplet"/></svg>
+              <span class="util-l">Water</span>
+              <span class="util-add" aria-hidden="true">+</span>
+            </span>
+            <span class="util-v" id="h-wa">0<span class="su">L</span></span>
+            <span class="util-bar"><i id="util-water" style="width:0%"></i></span>
+            <span class="util-s" id="w-lbl">0 of 8 cups</span>
           </button>
-          <button type="button" class="pair-cell" onclick="goTab('sleep')" aria-label="Open sleep">
-            <div class="ring ring-sm" style="width:54px;height:54px">
-              <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
-                <circle class="ring-track" cx="27" cy="27" r="22" stroke-width="5.5"/>
-                <circle class="ring-arc" id="ring-sleep" cx="27" cy="27" r="22" stroke-width="5.5"
-                  stroke-dasharray="138.2" stroke-dashoffset="138.2" style="--ring-hue:var(--sig-sleep-pure)"/>
-              </svg>
-              <div class="ring-in"><svg class="ic" style="font-size:17px;color:var(--sig-sleep)" aria-hidden="true"><use href="#i-moon"/></svg></div>
-            </div>
-            <div class="pair-body">
-              <div class="pair-l">Sleep</div>
-              <div class="pair-v" id="h-s">–<span class="su">h</span></div>
-              <div class="pair-s" id="s-sub">Not logged</div>
-            </div>
+          <button type="button" class="util-cell" onclick="goTab('sleep')" aria-label="Open sleep">
+            <span class="util-top">
+              <svg class="ic" style="font-size:14px;color:var(--sig-sleep)" aria-hidden="true"><use href="#i-moon"/></svg>
+              <span class="util-l">Sleep</span>
+              <span class="util-add" aria-hidden="true"><svg class="ic" style="font-size:12px"><use href="#i-chevron-right"/></svg></span>
+            </span>
+            <span class="util-v" id="h-s"><span class="nodata">no data</span></span>
+            <span class="util-bar sleep"><i id="util-sleep" style="width:0%"></i></span>
+            <span class="util-s" id="s-sub">Not logged</span>
           </button>
         </div>
 
@@ -552,17 +543,38 @@
         </div>
         <div id="active-sess" class="hidden">
           <div class="card" style="border-color:var(--accent)">
-            <div class="stopwatch">
-              <div class="sw-meta">
-                <span class="sw-live" aria-hidden="true"></span>Session running
+            <!-- Live HUD: clock and completed volume, both updating as you tick sets. -->
+            <div class="hud">
+              <div class="hud-meta"><span class="sw-live" aria-hidden="true"></span>Session running</div>
+              <div class="hud-main">
+                <div class="hud-cell">
+                  <div class="hud-v" id="wtimer">0:00</div>
+                  <div class="hud-l">Elapsed</div>
+                </div>
+                <div class="hud-cell hud-vol">
+                  <div class="hud-v"><span id="hud-vol">0</span><small id="hud-vol-u">kg</small></div>
+                  <div class="hud-l"><span id="hud-sets">0</span> sets logged</div>
+                </div>
               </div>
-              <div class="sw-time" id="wtimer">0:00</div>
-              <button type="button" class="btn btnsm btn-danger sw-finish" onclick="finishW()">Finish</button>
+              <button type="button" class="btn btnsm btn-danger hud-end" onclick="finishW()">End workout</button>
             </div>
             <div id="sess-bodymap" class="bm-card" style="display:none"></div>
             <div id="ex-list"></div>
+            <!-- Quick-add: type, tap, the card lands in place. No modal. -->
+            <div class="qa" id="qa-wrap">
+              <div class="qa-bar">
+                <svg class="ic" style="font-size:15px;color:var(--t3)" aria-hidden="true"><use href="#i-search"/></svg>
+                <input type="text" id="qa-q" autocomplete="off" spellcheck="false"
+                  placeholder="Add a lift" aria-label="Search exercises to add"
+                  oninput="qaFilter()" onfocus="qaFilter()" onkeydown="qaKey(event)">
+                <button type="button" class="qa-clear" id="qa-clear" onclick="qaClose()" aria-label="Clear" hidden>
+                  <svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-x"/></svg>
+                </button>
+              </div>
+              <div class="qa-results" id="qa-results" role="listbox" hidden></div>
+            </div>
             <div class="g2" style="margin-top:9px">
-              <button type="button" class="btn-o" onclick="openExM()">+ Add Exercise</button>
+              <button type="button" class="btn-o" onclick="openExPicker()">Browse all</button>
               <button type="button" class="btn-o" style="border-color:var(--accent);color:var(--accent)" onclick="openRestGeneric()">Rest Timer</button>
             </div>
             <button type="button" class="btn-o" id="voice-log-btn" style="width:100%;margin-top:8px;font-size:13px;padding:11px 12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="voiceLogSet(this)" aria-label="Voice log a set">
@@ -706,8 +718,8 @@
       <div class="panel hidden" id="p-body">
         <div class="ptitle">Body Stats</div>
         <div class="sg" style="margin-bottom:12px">
-          <div class="sc" style="--sc:var(--accent)"><div class="sv" id="b-cw">–<span class="su">kg</span></div><div class="sl">Current</div></div>
-          <div class="sc" style="--sc:var(--blue)"><div class="sv" id="b-gw">–<span class="su">kg</span></div><div class="sl">Goal</div></div>
+          <div class="sc" style="--sc:var(--accent)"><div class="sv" id="b-cw"><span class="nodata">no data</span></div><div class="sl">Current</div></div>
+          <div class="sc" style="--sc:var(--blue)"><div class="sv" id="b-gw"><span class="nodata">not set</span></div><div class="sl">Goal</div></div>
         </div>
         <div class="card">
           <div class="fb" style="margin-bottom:14px">
@@ -987,10 +999,10 @@
 
         <!-- Advanced -->
         <details class="card" style="padding:0">
-          <summary style="cursor:pointer;list-style:none;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:var(--t)"><span>Advanced</span><span style="color:var(--t3);transition:transform .2s">▾</span></summary>
+          <summary style="cursor:pointer;list-style:none;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:var(--t)"><span>Advanced</span><span class="icb" style="color:var(--t3);transition:transform .2s;font-size:13px"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></span></summary>
           <div style="padding:0 20px 16px">
             <div class="tog-row">
-              <div class="sib" style="background:var(--adim);font-size:18px">⏱</div>
+              <div class="sib icb" style="background:var(--adim);font-size:18px;color:var(--accent)"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></div>
               <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Auto rest timer</div><div class="tm" style="font-size:12px">Starts <span id="ar-time">90s</span> after saving an exercise · <span class="lnk" style="font-size:12px;padding:0" onclick="pickRestDefault()">change</span></div></div>
               <label class="tog-sw"><input type="checkbox" id="ar-tog" onchange="saveAutoRest()"><span class="tog-track"></span></label>
             </div>
@@ -1260,70 +1272,81 @@
 <div class="modal" id="m-paywall"><div class="msheet pw-sheet">
   <button type="button" class="pw-close" onclick="cModal('m-paywall')" aria-label="Close"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-x"/></svg></button>
   <div class="pw-scroll">
-    <!-- Hero with gradient -->
+
     <div class="pw-hero">
-      <div class="pw-hero-badge">ATHLETEOS PRO</div>
+      <div class="pw-hero-badge">AthleteOS Pro</div>
       <h2 class="pw-hero-title">You've earned<br>the key.</h2>
-      <p class="pw-hero-sub">Pro is the whole gym: your coach on call, a plan written round your week, and every number that proves it worked. First 7 days are on us.</p>
+      <p class="pw-hero-sub">The whole gym: your coach on call, a plan written round your week, and every number that proves it worked.</p>
     </div>
 
-    <!-- Feature list -->
-    <div class="pw-feats">
-      <div class="pw-feat"><div class="pw-feat-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-infinity"/></svg></div><div><div class="pw-feat-t">Your coach, no cap</div><div class="pw-feat-b">Form, food, deloads. Ask as often as you'd ask a real one.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div><div><div class="pw-feat-t">A plan written for you</div><div class="pw-feat-b">Your goal, your days, the kit you actually have.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(59,130,246,.12);color:#3B82F6" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div><div><div class="pw-feat-t">Demos and cues</div><div class="pw-feat-b">See the lift, then the two cues that fix it.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(245,158,11,.12);color:#F59E0B" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div><div><div class="pw-feat-t">The numbers behind it</div><div class="pw-feat-b">Volume per muscle, 1RM curves, weight projections.</div></div></div>
-      <div class="pw-feat"><div class="pw-feat-ico" style="background:rgba(236,72,153,.12);color:#EC4899" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg></div><div><div class="pw-feat-t">Unlimited photos and splits</div><div class="pw-feat-b">Proof in the mirror, plus every session saved to reuse.</div></div></div>
-    </div>
+    <!-- Feature ledger. Numbered, not ticked; the coach line leads. -->
+    <ol class="pw-ledger">
+      <li class="pw-led pw-led-lead">
+        <span class="pw-led-n">01</span>
+        <span class="pw-led-b"><b>Coach, no cap</b><em>Form, food, deloads. Ask as often as you'd ask a real one.</em></span>
+      </li>
+      <li class="pw-led"><span class="pw-led-n">02</span><span class="pw-led-b"><b>A plan built round your week</b><em>Your goal, your days, the kit you actually have.</em></span></li>
+      <li class="pw-led"><span class="pw-led-n">03</span><span class="pw-led-b"><b>Demos and cues</b><em>See the lift, then the two cues that fix it.</em></span></li>
+      <li class="pw-led"><span class="pw-led-n">04</span><span class="pw-led-b"><b>The numbers behind it</b><em>Volume per muscle, 1RM curves, weight projections.</em></span></li>
+      <li class="pw-led"><span class="pw-led-n">05</span><span class="pw-led-b"><b>Unlimited photos and splits</b><em>Proof in the mirror, every session saved to reuse.</em></span></li>
+    </ol>
 
-    <!-- Plans -->
-    <div class="pw-plans">
-      <button type="button" class="pw-plan" data-plan="monthly" onclick="pw_pick('monthly')">
-        <span class="pw-plan-radio"></span>
-        <div class="pw-plan-body"><div class="pw-plan-t">Monthly</div><div class="pw-plan-b">Flexible — pause anytime</div></div>
-        <div class="pw-plan-price"><div class="pw-plan-price-v">€4.99</div><div class="pw-plan-price-u">per month</div></div>
+    <!-- One stream. Every tier shares a structure; the selected one expands. -->
+    <div class="pw-plans" role="radiogroup" aria-label="Billing">
+      <button type="button" class="pw-plan" data-plan="monthly" role="radio" aria-checked="false" onclick="pw_pick('monthly')">
+        <span class="pw-mark" aria-hidden="true"></span>
+        <span class="pw-p-t">Monthly</span>
+        <span class="pw-p-price"><b>&euro;4.99</b><small>per month</small></span>
+        <span class="pw-p-extra">Rolling. Pause or leave whenever you want.</span>
       </button>
-      <button type="button" class="pw-plan on" data-plan="yearly" onclick="pw_pick('yearly')">
-        <span class="pw-plan-badge">Best value</span>
-        <span class="pw-plan-radio"></span>
-        <div class="pw-plan-body"><div class="pw-plan-t">Yearly</div><div class="pw-plan-b">7 days free · saves €43.89/yr</div></div>
-        <div class="pw-plan-price"><div class="pw-plan-price-v">€1.33</div><div class="pw-plan-price-u">per month, billed yearly</div></div>
+
+      <button type="button" class="pw-plan on" data-plan="yearly" role="radio" aria-checked="true" onclick="pw_pick('yearly')">
+        <span class="pw-p-tag">Best value</span>
+        <span class="pw-mark" aria-hidden="true"></span>
+        <span class="pw-p-t">Yearly</span>
+        <span class="pw-p-price"><b>&euro;1.33</b><small>per month, billed yearly</small></span>
+        <span class="pw-p-extra">7 days free <i>//</i> saves &euro;43.89 a year <i>//</i> &euro;0 today</span>
       </button>
-      <button type="button" class="pw-plan" data-plan="lifetime" onclick="pw_pick('lifetime')">
-        <span class="pw-plan-radio"></span>
-        <div class="pw-plan-body"><div class="pw-plan-t">Lifetime</div><div class="pw-plan-b">Pay once, use forever</div></div>
-        <div class="pw-plan-price"><div class="pw-plan-price-v">€49.99</div><div class="pw-plan-price-u">one-time</div></div>
+
+      <button type="button" class="pw-plan" data-plan="lifetime" role="radio" aria-checked="false" onclick="pw_pick('lifetime')">
+        <span class="pw-mark" aria-hidden="true"></span>
+        <span class="pw-p-t">Lifetime</span>
+        <span class="pw-p-price"><b>&euro;49.99</b><small>one payment</small></span>
+        <span class="pw-p-extra">Pay once. No renewal, no expiry, no second invoice.</span>
       </button>
     </div>
 
     <button type="button" class="btn pw-cta" id="pw-cta" onclick="pw_checkout()">Start 7-day free trial</button>
 
-    <div class="pw-trust">
-      <span class="icb" style="gap:5px"><svg class="ic" style="font-size:12px" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout</span>
-      <span class="pw-trust-sep">·</span>
-      <span>Cancel anytime</span>
-      <span class="pw-trust-sep">·</span>
-      <span>€0 today</span>
+    <!-- Receipt -->
+    <div class="pw-receipt">
+      <div class="pw-r-line"><span>Due today</span><b id="pw-r-today">&euro;0.00</b></div>
+      <div class="pw-r-line"><span>Then</span><b id="pw-r-then">&euro;15.99 / yr</b></div>
+      <div class="pw-r-rule" aria-hidden="true"></div>
+      <div class="pw-r-line pw-r-meta"><span>Checkout</span><b>Secure &middot; Stripe</b></div>
+      <div class="pw-r-line pw-r-meta"><span>Cancel</span><b>Anytime, in Settings</b></div>
+      <div class="pw-r-rule" aria-hidden="true"></div>
+      <div class="pw-r-fine">Renews automatically until cancelled. By continuing you agree to our Terms &amp; Privacy.</div>
     </div>
-    <div class="pw-fineprint">By continuing you agree to our Terms &amp; Privacy.<br>Renews automatically. Manage in Settings.</div>
 
+    <!-- Trial tracker -->
     <details class="pw-timeline">
-      <summary>How your free trial works</summary>
-      <div class="pw-tl-body">
-        <div class="pw-tl-rail">
-          <div class="pw-tl-dot now icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-unlock"/></svg></div>
-          <div class="pw-tl-line a"></div>
-          <div class="pw-tl-dot warn icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-bell"/></svg></div>
-          <div class="pw-tl-line b"></div>
-          <div class="pw-tl-dot charge icb"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-star"/></svg></div>
+      <summary>How the free trial runs</summary>
+      <div class="pw-track">
+        <div class="pw-track-bar" aria-hidden="true">
+          <span class="pw-track-fill"></span>
+          <span class="pw-track-node n0"></span>
+          <span class="pw-track-node n1"></span>
+          <span class="pw-track-node n2"></span>
         </div>
-        <div style="flex:1">
-          <div class="pw-tl-step"><div class="pw-tl-step-t">Today</div><div class="pw-tl-step-b">Everything opens. No half-features.</div></div>
-          <div class="pw-tl-step"><div class="pw-tl-step-t">In 5 days</div><div class="pw-tl-step-b">We tell you the trial ends in two days. No ambush.</div></div>
-          <div class="pw-tl-step"><div class="pw-tl-step-t">In 7 days</div><div class="pw-tl-step-b">Billing starts. Walk before then and you pay nothing.</div></div>
-        </div>
+        <ol class="pw-track-steps">
+          <li><span class="pw-track-d">Day 00</span><span class="pw-track-t">Everything opens. No half-features.</span></li>
+          <li><span class="pw-track-d">Day 05</span><span class="pw-track-t">We tell you it ends in two days. No ambush.</span></li>
+          <li><span class="pw-track-d">Day 07</span><span class="pw-track-t">Billing starts. Walk before then and you pay nothing.</span></li>
+        </ol>
       </div>
     </details>
+
   </div>
 </div></div>
 
@@ -1408,35 +1431,48 @@
   </div>
 </div>
 
-<!-- POST-WORKOUT SUMMARY -->
+<!-- POST-WORKOUT REPORT CARD -->
 <div class="modal" id="m-summary">
-  <div class="msheet" style="overflow-y:auto;max-height:90vh">
+  <div class="msheet rc" style="overflow-y:auto;max-height:92vh">
     <div class="mhandle"></div>
-    <div style="text-align:center;padding:8px 0 18px">
-      <div class="icb" style="font-size:40px;line-height:1;margin-bottom:8px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></div>
-      <div style="font-family:'Inter',sans-serif;font-weight:800;font-size:24px;letter-spacing:-1px;color:var(--t)">Session Complete</div>
-      <div class="tm" id="sum-sub" style="font-size:13.5px;margin-top:4px">Great work.</div>
+
+    <header class="rc-head">
+      <div class="rc-kicker">Session report</div>
+      <div class="rc-date" id="sum-date">—</div>
+    </header>
+
+    <!-- Headline metrics -->
+    <div class="rc-grid">
+      <div class="rc-cell"><div class="rc-v" id="sum-dur">0<small>min</small></div><div class="rc-l">Elapsed</div></div>
+      <div class="rc-cell rc-hero"><div class="rc-v" id="sum-vol">0<small>kg</small></div><div class="rc-l">Volume</div></div>
+      <div class="rc-cell"><div class="rc-v" id="sum-sets">0</div><div class="rc-l">Sets</div></div>
+      <div class="rc-cell"><div class="rc-v" id="sum-kcal">0<small>kcal</small></div><div class="rc-l">Burn</div></div>
     </div>
-    <div class="sg" style="margin-bottom:14px">
-      <div class="sc"><div class="sv" id="sum-dur">0<span class="su">min</span></div><div class="sl">Duration</div></div>
-      <div class="sc"><div class="sv" id="sum-vol">0<span class="su">kg</span></div><div class="sl">Volume</div></div>
-      <div class="sc"><div class="sv" id="sum-sets">0</div><div class="sl">Sets</div></div>
-      <div class="sc"><div class="sv" id="sum-kcal">0<span class="su">kcal</span></div><div class="sl">Burned</div></div>
-    </div>
-    <div id="sum-vs" style="display:none;margin-bottom:14px;padding:12px 14px;background:var(--surface);border-radius:14px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);font-weight:700;margin-bottom:8px">vs last session</div>
-      <div id="sum-vs-rows" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
-    </div>
-    <div id="sum-prs" style="display:none">
-      <div class="ctitle" style="margin:14px 0 8px;color:var(--accent-d);display:inline-flex;align-items:center;gap:8px"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-trophy"/></svg>New personal records</div>
-      <div id="sum-prs-list" style="margin-bottom:14px"></div>
-    </div>
-    <div id="sum-exs" style="margin-bottom:14px"></div>
-    <div id="sum-note-wrap" style="display:none;margin-bottom:14px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);font-weight:700;margin-bottom:6px">Session note</div>
-      <div id="sum-note" style="background:var(--surface);padding:10px 12px;border-radius:10px;font-size:13.5px;line-height:1.5;font-style:italic;color:var(--t2)"></div>
-    </div>
-    <div class="g2">
+
+    <!-- Deltas against the previous session -->
+    <section id="sum-vs" style="display:none">
+      <div class="rc-sec">Against last session</div>
+      <div id="sum-vs-rows"></div>
+    </section>
+
+    <!-- PR badges -->
+    <section id="sum-prs" style="display:none">
+      <div class="rc-sec">Records broken</div>
+      <div id="sum-prs-list"></div>
+    </section>
+
+    <!-- Exercise ledger -->
+    <section>
+      <div class="rc-sec">Ledger</div>
+      <div id="sum-exs"></div>
+    </section>
+
+    <section id="sum-note-wrap" style="display:none">
+      <div class="rc-sec">Note</div>
+      <div id="sum-note" class="rc-note"></div>
+    </section>
+
+    <div class="g2" style="margin-top:18px">
       <button type="button" class="btn-o" style="width:100%" onclick="shareWorkout()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-share"/></svg>Share</button>
       <button type="button" class="btn" onclick="cModal('m-summary')">Done</button>
     </div>
@@ -1656,7 +1692,7 @@
 <div id="onb">
   <div class="onb-body-wrap">
     <div class="onb-rail">
-      <div class="onb-idx" aria-hidden="true"><b id="ob-idx-n">01</b><i>//</i><span id="ob-idx-t">14</span></div>
+      <div class="onb-idx" aria-hidden="true"><span class="onb-idx-k">Profile step</span><i>//</i><b id="ob-idx-n">01</b><i>//</i><span id="ob-idx-t">14</span></div>
       <div class="onb-ticks" id="ob-ticks"></div>
       <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
     </div>
@@ -1744,7 +1780,10 @@
       <div class="onb-sub">Used for protein targets, calorie needs, and weight projections.</div>
       <div class="onb-body">
         <div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="ob-g-male" onclick="ob_gender('male')">Male</button><button type="button" class="gpill" id="ob-g-female" onclick="ob_gender('female')">Female</button></div></div>
-        <div class="g2"><div class="f"><label>Age</label><input type="number" id="ob-age" placeholder="25" min="10" max="100" inputmode="numeric"></div><div class="f"><label>Height (cm)</label><input type="number" id="ob-ht" placeholder="175" min="50" max="280" inputmode="numeric"></div></div>
+        <div class="g2">
+          <div class="f fdata"><label>Age</label><div class="fd"><input type="number" id="ob-age" placeholder="25" min="10" max="100" inputmode="numeric"><span class="fd-u">yrs</span></div></div>
+          <div class="f fdata"><label>Height</label><div class="fd"><input type="number" id="ob-ht" placeholder="175" min="50" max="280" inputmode="numeric"><span class="fd-u">cm</span></div></div>
+        </div>
         <div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="ob-u-metric" onclick="ob_units('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="ob-u-imperial" onclick="ob_units('imperial')">Imperial (lb/in)</button></div></div>
       </div>
     </div>

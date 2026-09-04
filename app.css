@@ -18,6 +18,9 @@
      contrasts on width, not on two near-identical grotesques. */
   --font-display:'Oswald','Inter',system-ui,sans-serif;
   --font-body:'Inter',system-ui,-apple-system,sans-serif;
+  /* Mono carries the technical registers: sequence indices, unit markers,
+     receipt lines, HUD labels. Never body copy. */
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 
   /* ── SIGNAL PALETTE ────────────────────────
      Four data roles. Light theme uses saturated ink that clears 4.5:1 on
@@ -117,7 +120,7 @@ button:not([disabled]):active{transform:scale(.97)}
 .obp-plan{all:unset;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid var(--bdr2);border-radius:18px;background:var(--card);font-family:inherit;position:relative;transition:border-color .15s,background .15s}
 .obp-plan:hover{border-color:var(--bdr3)}
 .obp-plan.on{border:2px solid var(--accent);background:#FBFEFC;padding:15.5px 17.5px}
-body.dark .obp-plan.on{background:rgba(34,197,94,.08)}
+body.dark .obp-plan.on{background:var(--adim)}
 .obp-radio{width:22px;height:22px;border-radius:11px;border:2px solid var(--bdr3);background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
 body.dark .obp-radio{background:var(--card2)}
 .obp-plan.on .obp-radio{border-color:var(--accent)}
@@ -496,7 +499,7 @@ body.dark .btn-oauth{background:#1A1D24;color:var(--t);border-color:var(--bdr2)}
 .rest-preset{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--bdr2);border-radius:16px;background:#FFFFFF;cursor:pointer;font-family:inherit;-webkit-appearance:none;text-align:left;transition:all .15s;width:100%}
 .rest-preset:hover{border-color:var(--bdr3)}
 .rest-preset.on{border-color:var(--accent);background:var(--adim)}
-body.dark .rest-preset{background:var(--surface)}
+body.dark .rest-preset:not(.on){background:var(--surface)}
 .rp-ico{font-size:22px;line-height:1;flex-shrink:0;width:28px;text-align:center}
 .rp-body{flex:1;min-width:0}
 .rp-time{font-size:16px;font-weight:800;color:var(--t);letter-spacing:-.3px;line-height:1.15}
@@ -654,7 +657,7 @@ body.dark{
 body.dark .modal{background:rgba(0,0,0,.65)}
 body.dark .atab.on{background:var(--card);color:var(--t)}
 body.dark .acard{box-shadow:0 4px 24px rgba(0,0,0,.4)}
-body.dark .wc{background:var(--surface);border-color:var(--bdr2)}
+body.dark .wc:not(.on){background:transparent;border-color:var(--bdr2)}
 /* Inputs: keep focused field readable in dark mode (don't switch to hardcoded white). */
 body.dark .f input:focus,
 body.dark .f select:focus,
@@ -685,7 +688,7 @@ input[type="time"]{min-width:0}
 .gpills{display:flex;gap:6px}
 .gpill{flex:1;padding:13px 8px;border:1.5px solid var(--bdr2);border-radius:14px;background:#FFFFFF;color:var(--t2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;-webkit-appearance:none;letter-spacing:-.1px}
 .gpill.on{border-color:var(--accent);color:var(--accent-d);background:var(--adim)}
-body.dark .gpill{background:var(--surface)}
+body.dark .gpill:not(.on){background:var(--surface)}
 
 /* ── TRAINING PLAN ────────────────────────── */
 .plan-days{display:flex;gap:8px;overflow-x:auto;padding:0 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -782,9 +785,9 @@ body.dark .gpill{background:var(--surface)}
 .mm-chip.grow .mm-chip-dot{background:#8B5CF6}
 .mm-chip.def .mm-chip-dot{background:#F59E0B}
 .mm-chip.exc .mm-chip-dot{background:#EC4899}
-body.dark .mm-chip.grow{background:rgba(139,92,246,.18);color:#A78BFA}
-body.dark .mm-chip.def{background:rgba(245,158,11,.18);color:#FBBF24}
-body.dark .mm-chip.exc{background:rgba(236,72,153,.18);color:#F472B6}
+body.dark .mm-chip.grow{background:var(--accent);color:var(--accent-ink)}
+body.dark .mm-chip.def{background:var(--sig-water);color:var(--bg)}
+body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .mm-chip-readonly{cursor:default}
 .mm-chip-readonly:hover{border-color:var(--bdr2)}
 .mm-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;justify-content:center}
@@ -1039,8 +1042,8 @@ body.dark .store-btn{background:#FAFAFA;color:#0A0A0B;border-color:#FAFAFA}
 .opt-item:hover{border-color:var(--bdr3)}
 .opt-item:active{transform:scale(.99)}
 .opt-item.on{border:2px solid var(--accent);background:#FBFEFC;padding:13px 15px}
-body.dark .opt-item{background:var(--surface)}
-body.dark .opt-item.on{background:rgba(34,197,94,.08)}
+body.dark .opt-item:not(.on){background:var(--surface)}
+body.dark .opt-item.on{background:#17171C}
 .opt-ico{font-size:22px;line-height:1;flex-shrink:0;width:48px;height:48px;border-radius:13px;background:var(--surface);display:flex;align-items:center;justify-content:center;text-align:center;transition:background .15s}
 .opt-item.on .opt-ico{background:var(--adim)}
 .opt-body{flex:1;min-width:0}
@@ -1460,7 +1463,7 @@ body.dark .btn:disabled{background:var(--surface-2);color:var(--t3)}
 body.dark .nv{color:var(--t3)}
 body.dark .nv:not(.on) .ico{color:var(--t4)}
 body.dark .nv.on{color:var(--accent)}
-body.dark .sb-item{color:var(--t2)}
+body.dark .sb-item:not(.on){color:var(--t2)}
 body.dark .pill:not(.on){border-color:var(--bdr2);color:var(--t2)}
 body.dark .hm-cell{background:var(--sig-track)}
 body.dark .badge.by{background:rgba(255,107,53,.13);color:var(--sig-fuel);border:1px solid rgba(255,107,53,.26)}
@@ -1930,3 +1933,391 @@ body.dark{--t3:#8C8C96}
 body:not(.dark) .badge.by{background:rgba(234,88,12,.10);color:#9A3412}
 body:not(.dark) .badge.bb{background:rgba(37,99,235,.10);color:#1D4ED8}
 body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}
+
+/* ═══════════════════════════════════════════════════════════════
+   RAPID-FIRE LOGGER
+   Steppers instead of keyboards, one tap to complete, a running HUD,
+   and an inline add that never leaves the page.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── LIVE HUD ──────────────────────────────*/
+.hud{display:grid;grid-template-columns:1fr auto;gap:12px 14px;
+  align-items:end;margin-bottom:18px}
+.hud-meta{grid-column:1/-1;display:flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3)}
+.hud-main{display:flex;align-items:flex-end;gap:0;min-width:0}
+.hud-cell{min-width:0;padding-right:18px}
+.hud-cell+.hud-cell{padding-left:18px;border-left:1px solid var(--bdr2)}
+.hud-v{font-family:var(--font-display);font-weight:600;
+  font-size:clamp(38px,11.5vw,54px);line-height:.86;letter-spacing:.5px;
+  color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hud-v small{font-family:var(--font-display);font-size:.42em;font-weight:500;
+  letter-spacing:.1em;margin-left:.18em;color:var(--t2)}
+.hud-vol .hud-v{color:var(--t)}
+.hud-l{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3);margin-top:8px;white-space:nowrap}
+.hud-end{align-self:end;--press:3px}
+#wtimer{text-shadow:var(--glow-train)}
+
+/* ── SET ROW ───────────────────────────────
+   One horizontal strip per set: number, two steppers, effort, tick, kill. */
+.setrow{grid-template-columns:20px 1fr 1fr 34px 34px 18px;gap:6px;
+  padding:4px 0;align-items:center}
+.setrow.sethead{grid-template-columns:20px 1fr 1fr 34px 34px 18px}
+.setn{font-size:13px;text-align:center}
+
+/* Stepper: minus, value, plus. The buttons are tall so the touch target is
+   the full row height even though the control reads as small. */
+.step{display:grid;grid-template-columns:26px minmax(0,1fr) 26px;
+  align-items:stretch;border:1px solid var(--bdr2);background:transparent;
+  transition:border-color .14s}
+.step:focus-within{border-color:var(--accent)}
+.step .setin{border:none;padding:8px 0;min-width:0;font-size:16px;
+  border-bottom:none}
+.step .setin:focus{border-bottom:none;box-shadow:none}
+.step-b{all:unset;display:grid;place-items:center;cursor:pointer;
+  font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1;
+  color:var(--t3);background:transparent;user-select:none;-webkit-user-select:none;
+  transition:background .1s,color .1s;min-height:38px}
+.step-b:hover{background:var(--surface-2);color:var(--t)}
+.step-b:active{background:var(--accent);color:var(--accent-ink)}
+.step.ghost .setin::placeholder{color:var(--t4);opacity:1}
+.step.ghost .setin{color:var(--t4)}
+
+/* ── ONE-TAP COMPLETION ────────────────────
+   Hollow technical outline, then a solid volt block. No fade. */
+.setdone{all:unset;box-sizing:border-box;width:34px;height:34px;cursor:pointer;
+  display:grid;place-items:center;border:1.5px solid var(--t4);
+  border-radius:var(--r-chip);color:transparent;background:transparent;
+  transition:none}
+.setdone svg{width:16px;height:16px}
+.setdone:hover{border-color:var(--t2)}
+.setdone.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+body.dark .setdone.on{box-shadow:var(--glow-train)}
+.setrow.done .setn{color:var(--accent)}
+.setrow.done .step{border-color:var(--bdr)}
+.setdel{all:unset;cursor:pointer;color:var(--t4);display:grid;place-items:center;
+  padding:4px 0}
+.setdel:hover{color:var(--red)}
+
+/* RIR is a power feature: it is the first thing to go when space is short. */
+.setrir{display:flex;align-items:center;gap:4px;min-width:0}
+.rir-in{font-size:13px;padding:8px 0}
+@media(max-width:379px){
+  .setrow,.setrow.sethead{grid-template-columns:18px 1fr 1fr 32px 16px}
+  .setrir,.setrow.sethead>div:nth-child(4){display:none}
+  .step{grid-template-columns:23px minmax(0,1fr) 23px}
+}
+
+/* ── INLINE QUICK-ADD ──────────────────────*/
+.qa{margin-top:14px;position:relative}
+.qa-bar{display:flex;align-items:center;gap:10px;padding:11px 12px;
+  border:1.5px solid var(--bdr2);background:var(--bg2);
+  transition:border-color .14s}
+.qa-bar:focus-within{border-color:var(--accent)}
+.qa-bar input{flex:1;min-width:0;background:transparent;border:none;outline:none;
+  color:var(--t);font-family:var(--font-body);font-size:15px;font-weight:500}
+.qa-bar input::placeholder{color:var(--t3)}
+.qa-clear{all:unset;cursor:pointer;color:var(--t3);display:grid;place-items:center;padding:3px}
+.qa-clear:hover{color:var(--t)}
+.qa-results{margin-top:-1px;border:1.5px solid var(--bdr2);border-top:none;
+  background:var(--card2);max-height:264px;overflow-y:auto}
+.qa-row{all:unset;box-sizing:border-box;display:flex;align-items:baseline;
+  justify-content:space-between;gap:10px;width:100%;padding:12px 13px;
+  cursor:pointer;border-bottom:1px solid var(--bdr)}
+.qa-row:last-child{border-bottom:none}
+.qa-row.on,.qa-row:hover{background:var(--adim)}
+.qa-row.on .qa-n,.qa-row:hover .qa-n{color:var(--accent)}
+.qa-n{font-family:var(--font-display);font-weight:600;font-size:15px;
+  letter-spacing:.4px;text-transform:uppercase;color:var(--t)}
+.qa-m{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--t3);white-space:nowrap}
+.qa-new .qa-n{color:var(--accent)}
+
+/* Session muscle chips: sharp, volt, technical — they were the last soft
+   pills left inside the logger. */
+.mm-chip.on,.musc-tag,.musc-tag.s{border-radius:var(--r-chip)}
+.musc-tag{font-family:var(--font-display);font-weight:600;font-size:11.5px;
+  letter-spacing:.12em;text-transform:uppercase;border-radius:var(--r-chip);
+  background:var(--adim);color:var(--accent);border:1px solid rgba(204,255,0,.28);padding:5px 10px}
+body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:var(--bdr2)}
+
+/* ═══════════════════════════════════════════════════════════════
+   SESSION REPORT CARD
+   Volume leads, the deltas say whether anything moved, and records
+   get a badge instead of a congratulation.
+   ═══════════════════════════════════════════════════════════════ */
+.rc{padding-bottom:24px}
+.rc-head{display:flex;align-items:baseline;justify-content:space-between;
+  gap:12px;padding-bottom:12px;border-bottom:2px solid var(--accent);margin-bottom:18px}
+.rc-kicker{font-family:var(--font-display);font-weight:600;font-size:17px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t)}
+.rc-date{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--t3)}
+
+/* Headline metrics — volume gets the whole top row. */
+.rc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--bdr);border:1px solid var(--bdr);margin-bottom:22px}
+.rc-cell{background:var(--card);padding:14px 12px}
+.rc-hero{grid-column:1/-1;order:-1;padding:18px 14px}
+.rc-v{font-family:var(--font-display);font-weight:600;font-size:26px;
+  line-height:.9;letter-spacing:.4px;color:var(--t);font-variant-numeric:tabular-nums}
+.rc-hero .rc-v{font-size:clamp(46px,14vw,64px);color:var(--accent);
+  text-shadow:var(--glow-train)}
+.rc-v small{font-family:var(--font-display);font-size:.44em;font-weight:500;
+  letter-spacing:.1em;margin-left:.16em;color:var(--t3)}
+.rc-hero .rc-v small{color:var(--t2)}
+.rc-l{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3);margin-top:9px}
+
+.rc-sec{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--t3);margin:0 0 10px;
+  display:flex;align-items:center;gap:10px}
+.rc-sec::after{content:"";flex:1;height:1px;background:var(--bdr)}
+.rc section{margin-bottom:20px}
+
+/* Deltas. A spike in volume earns a volt rule down the left. */
+.rc-delta{display:grid;grid-template-columns:1fr auto auto;gap:12px;
+  align-items:baseline;padding:11px 0 11px 12px;border-bottom:1px solid var(--bdr);
+  border-left:2px solid transparent}
+.rc-delta:last-child{border-bottom:none}
+.rc-delta.spike{border-left-color:var(--accent);background:var(--adim)}
+.rc-d-l{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3)}
+.rc-d-now{font-family:var(--font-display);font-weight:600;font-size:19px;
+  letter-spacing:.3px;color:var(--t);font-variant-numeric:tabular-nums}
+.rc-d-now small{font-size:.6em;font-weight:500;color:var(--t3);margin-left:.15em}
+.rc-d-v{font-family:var(--font-mono);font-size:12px;font-weight:700;
+  min-width:66px;text-align:right;font-variant-numeric:tabular-nums}
+.rc-d-v.up{color:var(--accent)}
+.rc-d-v.down{color:var(--sig-fuel)}
+.rc-d-v.flat{color:var(--t4)}
+
+/* PR badges */
+.rc-pr{display:flex;align-items:center;gap:12px;padding:12px 13px;
+  border:1px solid var(--accent);background:var(--adim);margin-bottom:7px}
+.rc-pr-tag{font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.18em;background:var(--accent);color:var(--accent-ink);
+  padding:4px 7px;flex-shrink:0}
+.rc-pr-t{font-family:var(--font-display);font-weight:600;font-size:15px;
+  letter-spacing:.4px;text-transform:uppercase;color:var(--t);line-height:1.15}
+
+/* Ledger */
+.rc-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;
+  align-items:baseline;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.rc-row:last-child{border-bottom:none}
+.rc-n{font-family:var(--font-mono);font-size:11px;color:var(--t4);letter-spacing:.08em}
+.rc-name{font-family:var(--font-display);font-weight:600;font-size:15px;
+  letter-spacing:.35px;text-transform:uppercase;color:var(--t);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-muscle{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--t3)}
+.rc-sets{font-family:var(--font-display);font-weight:600;font-size:15px;
+  color:var(--accent);font-variant-numeric:tabular-nums;min-width:26px;text-align:right}
+.rc-note{font-size:13.5px;line-height:1.6;color:var(--t2);
+  padding:12px 13px;border-left:2px solid var(--bdr3);background:var(--bg2)}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAYWALL
+   One stream, not three columns. A numbered ledger instead of five
+   identical ticks. A receipt where the fine print used to be.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── FEATURE LEDGER ────────────────────────*/
+.pw-ledger{list-style:none;margin:0 0 24px;padding:0}
+.pw-led{display:grid;grid-template-columns:auto 1fr;gap:14px;
+  padding:14px 0;border-bottom:1px solid var(--bdr)}
+.pw-led:last-child{border-bottom:none}
+.pw-led-n{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
+  color:var(--t4);padding-top:3px}
+.pw-led-b b{display:block;font-family:var(--font-display);font-weight:600;
+  font-size:16px;letter-spacing:.4px;text-transform:uppercase;color:var(--t);line-height:1.1}
+.pw-led-b em{display:block;font-style:normal;font-size:13px;color:var(--t2);
+  line-height:1.5;margin-top:5px}
+.pw-led-lead{border-left:2px solid var(--accent);padding-left:13px;
+  background:var(--adim);margin-bottom:4px}
+.pw-led-lead .pw-led-n{color:var(--accent)}
+.pw-led-lead .pw-led-b b{font-size:19px;color:var(--accent)}
+
+/* ── TIER STREAM ───────────────────────────
+   Same structure in every row; the selected one opens. */
+.pw-plans{display:flex;flex-direction:column;gap:0;margin-bottom:16px;
+  border:1px solid var(--bdr2)}
+.pw-plan{all:unset;box-sizing:border-box;position:relative;cursor:pointer;
+  display:grid;grid-template-columns:18px 1fr auto;gap:6px 13px;align-items:baseline;
+  width:100%;padding:15px 16px;border-bottom:1px solid var(--bdr2);
+  font-family:inherit;transition:background .16s,padding .18s}
+.pw-plan:last-child{border-bottom:none}
+.pw-plan:hover{background:var(--card2)}
+.pw-mark{width:14px;height:14px;border:1.5px solid var(--t4);align-self:center;
+  transition:background .14s,border-color .14s}
+.pw-p-t{font-family:var(--font-display);font-weight:600;font-size:17px;
+  letter-spacing:.4px;text-transform:uppercase;color:var(--t)}
+.pw-p-price{text-align:right;white-space:nowrap}
+.pw-p-price b{font-family:var(--font-display);font-weight:600;font-size:19px;
+  letter-spacing:.3px;color:var(--t);display:block}
+.pw-p-price small{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--t3);display:block;margin-top:4px}
+.pw-p-extra{display:none;grid-column:2/-1;font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.04em;color:var(--t2);line-height:1.7}
+.pw-p-extra i{font-style:normal;color:var(--t4);margin:0 6px}
+.pw-p-tag{position:absolute;top:0;right:0;font-family:var(--font-mono);
+  font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--accent);color:var(--accent-ink);padding:4px 8px}
+
+.pw-plan.on{background:var(--adim);padding:20px 16px 18px;
+  box-shadow:inset 2px 0 0 var(--accent)}
+.pw-plan.on .pw-mark{background:var(--accent);border-color:var(--accent)}
+.pw-plan.on .pw-p-t{color:var(--accent)}
+.pw-plan.on .pw-p-price b{font-size:30px;color:var(--t)}
+.pw-plan.on .pw-p-extra{display:block;margin-top:8px}
+
+/* ── RECEIPT ───────────────────────────────
+   Dashed rules and monospace figures: a gym transaction slip. */
+.pw-receipt{border:1px dashed var(--bdr3);padding:15px 16px;margin:16px 0 8px;
+  font-family:var(--font-mono)}
+.pw-r-line{display:flex;align-items:baseline;justify-content:space-between;
+  gap:12px;padding:5px 0;font-size:11.5px;letter-spacing:.04em}
+.pw-r-line span{color:var(--t3);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+.pw-r-line b{color:var(--t);font-weight:700;font-variant-numeric:tabular-nums}
+.pw-r-line:first-child b{color:var(--accent);font-size:15px}
+.pw-r-meta b{font-weight:400;color:var(--t2);font-size:11px}
+.pw-r-rule{border-top:1px dashed var(--bdr3);margin:9px 0}
+.pw-r-fine{font-size:9.5px;line-height:1.7;color:var(--t4);letter-spacing:.02em}
+.pw-trust,.pw-fineprint{display:none}
+
+/* ── TRIAL TRACKER ─────────────────────────
+   A loading graph with three named milestones, not a decorated list. */
+.pw-timeline summary{font-family:var(--font-display);font-weight:600;font-size:12.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t2);
+  cursor:pointer;padding:13px 0;border-top:1px solid var(--bdr);list-style:none}
+.pw-timeline summary::-webkit-details-marker{display:none}
+.pw-timeline[open] summary{color:var(--accent)}
+.pw-track{padding:6px 0 16px}
+.pw-track-bar{position:relative;height:3px;background:var(--sig-track);margin:16px 6px 20px}
+.pw-track-fill{position:absolute;inset:0 28% 0 0;background:var(--accent)}
+.pw-track-node{position:absolute;top:50%;width:11px;height:11px;margin-top:-5.5px;
+  margin-left:-5.5px;background:var(--bg);border:2px solid var(--t4)}
+.pw-track-node.n0{left:0;background:var(--accent);border-color:var(--accent)}
+.pw-track-node.n1{left:72%;background:var(--accent);border-color:var(--accent)}
+.pw-track-node.n2{left:100%}
+.pw-track-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.pw-track-steps li{display:grid;grid-template-columns:64px 1fr;gap:14px;
+  padding:10px 0;border-bottom:1px solid var(--bdr)}
+.pw-track-steps li:last-child{border-bottom:none}
+.pw-track-d{font-family:var(--font-mono);font-size:11px;font-weight:700;
+  letter-spacing:.1em;color:var(--accent)}
+.pw-track-steps li:last-child .pw-track-d{color:var(--t3)}
+.pw-track-t{font-size:12.5px;color:var(--t2);line-height:1.5}
+
+/* Onboarding paywall inherits the ledger + receipt language. */
+.obp-trust{display:none}
+.obp-fine{font-family:var(--font-mono);font-size:9.5px;line-height:1.7;color:var(--t4)}
+
+/* ── UTILITY STRIP ─────────────────────────
+   Water and sleep sit under two full-width bands, so they read as
+   instruments, not cards: a value, a fill line, one tap. */
+.util{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bdr);
+  border:1px solid var(--bdr);margin-bottom:14px}
+.util-cell{all:unset;box-sizing:border-box;cursor:pointer;display:block;
+  padding:13px 14px 14px;background:var(--card);transition:background .15s}
+.util-cell:hover{background:var(--card2)}
+.util-cell:active{background:var(--adim)}
+.util-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.util-l{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3)}
+.util-add{margin-left:auto;color:var(--t4);font-family:var(--font-display);
+  font-size:16px;line-height:1;display:flex}
+.util-cell:hover .util-add{color:var(--accent)}
+.util-v{display:block;font-family:var(--font-display);font-weight:600;
+  font-size:27px;line-height:1;letter-spacing:.3px;color:var(--t);
+  font-variant-numeric:tabular-nums}
+.util-v .su{font-family:var(--font-display);font-size:13px;font-weight:500;
+  color:var(--t3);letter-spacing:.5px;margin-left:1px}
+.util-bar{display:block;height:3px;background:var(--sig-track);margin:10px 0 8px}
+.util-bar i{display:block;height:100%;background:var(--sig-water);
+  transition:width .7s cubic-bezier(.16,1,.3,1)}
+.util-bar.sleep i{background:var(--sig-sleep)}
+.util-s{display:block;font-size:11px;color:var(--t3);font-weight:500;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Training keeps the weight it earned as the hero. */
+.band-train .tr-vol .stat-num{font-size:clamp(52px,15vw,72px)}
+.band-train .hero-spark{height:76px}
+
+/* ── CHARTS BLEED ──────────────────────────
+   Canvases run to the container edge; the card padding was doubling up
+   with Chart.js's own inset. */
+.card>[style*="position:relative"]>canvas,#hm-grid{display:block}
+.chartwrap{margin:0 -20px -6px;padding:0}
+
+/* ── WATER GRID ────────────────────────────
+   Hollow technical cell, solid volt on tap. No fade. */
+.wc{border-radius:var(--r-chip);background:transparent;border:1.5px solid var(--bdr2);
+  color:var(--t4);transition:none}
+.wc:hover{border-color:var(--bdr3)}
+.wc.on{background:var(--sig-water);border-color:var(--sig-water);color:var(--bg)}
+body.dark .wc.on{box-shadow:var(--glow-water)}
+
+/* ── ONBOARDING: technical sequence index ──*/
+.onb-idx{font-family:var(--font-mono);font-weight:700;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase}
+.onb-idx-k{color:var(--t4)}
+.onb-idx b{color:var(--accent);font-weight:700}
+.onb-idx i{color:var(--t4);margin:0 1px}
+
+/* ── UTILITARIAN DATA FIELDS ───────────────
+   Underlined strips with the unit set hard right. No boxes. */
+.fdata label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3)}
+.fd{display:flex;align-items:baseline;gap:8px;border-bottom:1.5px solid var(--bdr3);
+  padding:4px 0 6px;transition:border-color .15s}
+.fd:focus-within{border-bottom-color:var(--accent)}
+.fd input{flex:1;min-width:0;background:transparent!important;border:none!important;
+  border-radius:0;padding:4px 0;outline:none;box-shadow:none!important;
+  font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.4px;
+  color:var(--t);font-variant-numeric:tabular-nums}
+.fd input::placeholder{color:var(--t4)}
+.fd-u{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3);flex-shrink:0}
+
+/* Receipt fine print was below AA at --t4. */
+.pw-r-fine{color:var(--t3);font-size:10px}
+
+/* Onboarding field labels all speak the same technical register. */
+#onb .f>label,#onb .fdata label{font-family:var(--font-mono);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t3);font-weight:700}
+
+/* Selected states own their fill regardless of theme-scoped base rules. */
+.sb-item.on{color:var(--accent);background:var(--adim);box-shadow:inset 2px 0 0 var(--accent)}
+.rest-preset.on{border-color:var(--accent);background:var(--adim)}
+.rest-preset.on .rp-ico,.rest-preset.on .rp-time{color:var(--accent)}
+
+/* "No data yet" reads as a label, not as a stray dash in the accent colour. */
+.nodata{font-family:var(--font-mono);font-size:11px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--t4)}
+
+/* ── CHARTS BLEED ──────────────────────────
+   Gridlines and axis borders are gone; the last thing holding the plot in
+   was the card's own padding. Let the ink run to the edge. */
+.chart-wrap{margin-left:-20px;margin-right:-20px;padding:0}
+.card>.chart-wrap:last-child{margin-bottom:-20px}
+@media(min-width:820px){.band .chart-wrap,.card .chart-wrap{margin-left:-28px;margin-right:-28px}}
+/* Heatmap loses its inner gutter for the same reason. */
+#hm-grid{margin:0 -2px}
+
+/* ── MUSCLE MAP: diagnostic blueprint ──────
+   A marked zone is a solid contrast block with the survey grid showing
+   through it, so the map reads as an instrument rather than a checklist. */
+.mm-chip{position:relative;overflow:hidden}
+.mm-chip.grow::before,.mm-chip.def::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.26;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M7 5.2v3.6M5.2 7h3.6' stroke='%230A0A0C' stroke-width='.8'/%3E%3C/svg%3E");
+  background-position:center}
+.mm-chip.grow>*,.mm-chip.def>*,.mm-chip.exc>*{position:relative;z-index:1}
+.mm-chip.grow{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.mm-chip.def{background:var(--sig-water);color:var(--bg);border-color:var(--sig-water)}
+.mm-chip.exc{background:transparent;color:var(--t4);border-color:var(--bdr3);
+  text-decoration:line-through;text-decoration-thickness:1px}
+.mm-chip.grow .mm-chip-dot,.mm-chip.def .mm-chip-dot{background:currentColor;opacity:.5}
+.mm-wrap{border:1px dashed var(--bdr3);padding:14px 12px}
