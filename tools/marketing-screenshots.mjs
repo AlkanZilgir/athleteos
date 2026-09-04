@@ -42,10 +42,20 @@ const fillHome = () => {
   w('p-bar', 75); w('k-bar', 87);
   const r = (id, p, c) => { const e = document.getElementById(id); if (e) e.style.strokeDashoffset = (c * (1 - p / 100)).toFixed(1); };
   r('ring-kcal', 87, 295.31); r('ring-water', 75, 138.23); r('ring-sleep', 90, 138.23);
-  const gs = document.getElementById('gs-card'); if (gs) gs.classList.add('hidden');
+  const gs = document.getElementById('gs-card');
+  if (gs) {
+    gs.classList.remove('hidden');
+    const st = { workout: true, meal: false, sleep: false };
+    Object.entries(st).forEach(([k, v]) => {
+      const row = document.getElementById('gs-row-' + k); if (row) row.classList.toggle('done', v);
+      const box = document.getElementById('gs-check-' + k);
+      if (box) box.innerHTML = v ? '<svg class="ic" style="font-size:13px"><use href="#i-check"/></svg>' : '';
+    });
+    const pg = document.getElementById('gs-progress'); if (pg) pg.textContent = '1/3';
+  }
   const sp = document.getElementById('hero-spark');
   if (sp) sp.parentElement.innerHTML = '<div style="display:flex;align-items:flex-end;gap:6px;height:62px">' +
-    [30, 0, 68, 45, 0, 92, 55].map(h => `<div style="flex:1;height:${Math.max(h, 4)}%;border-radius:4px;background:${h ? 'var(--sig-train-pure)' : 'var(--sig-track)'}"></div>`).join('') + '</div>';
+    [30, 0, 68, 45, 0, 92, 55].map(h => `<div style="flex:1;height:${Math.max(h, 4)}%;background:${h ? 'var(--sig-train-pure)' : 'var(--sig-track)'}"></div>`).join('') + '</div>';
 };
 
 const showWorkout = () => {
@@ -90,7 +100,7 @@ async function grab(name, { dark, prep }) {
   console.log(name, 'png', png.length, 'webp', Buffer.from(webp, 'base64').length);
 }
 
-await grab('screen-home', { dark: false, prep: fillHome });
+await grab('screen-home', { dark: true, prep: fillHome });
 await grab('screen-workout', { dark: true, prep: showWorkout });
 await grab('screen-ai', { dark: true, prep: showCoach });
 

@@ -91,8 +91,7 @@ button:not([disabled]):active{transform:scale(.97)}
 .wc-foot{text-align:center;font-size:15px;color:var(--t2);font-weight:500}
 .wc-link{background:none;border:none;color:var(--accent);font-weight:700;font-family:inherit;font-size:15px;cursor:pointer;padding:6px 4px;-webkit-appearance:none}
 .wc-link:hover{color:var(--accent-d)}
-body.dark .wc-chip{fill:#1B1B22;stroke:rgba(255,255,255,.11)}
-body.dark .wc-hero text{fill:#F4F4F5}
+/* welcome hero now paints from tokens directly */
 
 /* ── ONBOARDING PAYWALL (second-to-last step) ── */
 #ob-paywall{
@@ -1404,3 +1403,530 @@ body.dark .badge.bb{background:rgba(56,189,248,.14);color:var(--sig-water-pure);
   .ring-lg .ring-v{font-size:25px}
   .band{padding:18px}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   OBSIDIAN — the dark identity
+   Five colours do all the work: obsidian ground, graphite layer,
+   one high-voltage accent, muted slate for everything secondary,
+   and a two-step type ramp. Nothing else earns a hue.
+   ═══════════════════════════════════════════════════════════════ */
+html.dark{background:#0A0A0C}
+body.dark{
+  /* Ground and layers — graphite sits above obsidian, never the reverse. */
+  --bg:#0A0A0C;--bg2:#0F0F12;
+  --card:#141417;--card2:#1A1A1F;
+  --surface:#141417;--surface-2:#1E1E23;--bm-rest:#27272B;
+
+  /* Type: pure white is reserved for titles; body copy never gets it. */
+  --t:#FFFFFF;--t2:#A1A1AA;--t3:#71717A;--t4:#3F3F46;
+
+  /* Borders climb toward the muted slate as they get more deliberate. */
+  --bdr:#1C1C20;--bdr2:#27272C;--bdr3:#3F3F46;
+
+  /* High-voltage accent. Ink is what sits ON it — never white. */
+  --accent-ink:#0A0A0C;
+  --btn-block:#3F3F46;
+
+  /* Signal set. Volt is the only colour allowed to be loud; the other
+     three are held back so the hierarchy is unmistakable. */
+  --sig-train:#CCFF00;--sig-train-pure:#CCFF00;
+  --sig-fuel:#FF6B35;--sig-fuel-pure:#FF6B35;
+  --sig-water:#22D3EE;--sig-water-pure:#22D3EE;
+  --sig-sleep:#A78BFA;--sig-sleep-pure:#A78BFA;
+  --sig-track:#1F1F24;
+
+  --glow-train:0 0 12px rgba(204,255,0,.34);
+  --glow-fuel:0 0 12px rgba(255,107,53,.30);
+  --glow-water:0 0 12px rgba(34,211,238,.30);
+  --glow-sleep:0 0 12px rgba(167,139,250,.28);
+}
+:root{--accent-ink:#FFFFFF;--btn-block:#0A0A0C}
+
+/* Layering: on obsidian, cards read by their own value, not by a shadow. */
+body.dark .card,body.dark .band,body.dark .pair-cell,body.dark .exi,body.dark .mc{
+  background:var(--card);box-shadow:none}
+body.dark .band{background:var(--card)}
+body.dark .acard,body.dark .msheet{box-shadow:0 -20px 60px rgba(0,0,0,.7)}
+
+/* Anything filled with the accent takes ink, not white. */
+.btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.obp-badge,
+.msg.u,.chat-send,.pill.on,.setdone.on,.gs-row.done .gs-check,
+.wkday-dot.today.done,.cal-cell.tr-3,.sb-avatar,.avatar,.pw-tl-dot.now{
+  color:var(--accent-ink)}
+body.dark .btn:disabled{background:var(--surface-2);color:var(--t3)}
+.acc-pick.on::after{color:var(--accent-ink);text-shadow:none}
+
+/* Secondary state uses the muted slate, so volt never competes with itself. */
+body.dark .nv{color:var(--t3)}
+body.dark .nv:not(.on) .ico{color:var(--t4)}
+body.dark .nv.on{color:var(--accent)}
+body.dark .sb-item{color:var(--t2)}
+body.dark .pill:not(.on){border-color:var(--bdr2);color:var(--t2)}
+body.dark .hm-cell{background:var(--sig-track)}
+body.dark .badge.by{background:rgba(255,107,53,.13);color:var(--sig-fuel);border:1px solid rgba(255,107,53,.26)}
+body.dark .badge.bb{background:rgba(34,211,238,.13);color:var(--sig-water);border:1px solid rgba(34,211,238,.26)}
+body.dark .badge.bg{background:var(--adim);color:var(--accent);border:1px solid rgba(204,255,0,.24)}
+body.dark .tog-track{background:var(--t4)}
+body.dark .tog-sw input:checked~.tog-track::after{background:var(--accent-ink)}
+
+/* Volt is bright enough that the old wide glow reads as haze. Keep it tight. */
+body.dark .tr-vol-unit{text-shadow:none;color:var(--accent)}
+body.dark .chip.live{box-shadow:none;border-color:rgba(204,255,0,.38)}
+body.dark .coach-mark{box-shadow:none}
+body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
+
+/* ═══════════════════════════════════════════════════════════════
+   GEOMETRY + CONTROLS
+   Corners go sharp everywhere, primary actions get a solid offset
+   block that the button snaps into on press, and every action label
+   is set in the display face.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --r:8px;--r-sm:5px;--r-lg:10px;   /* was 18 / 12 / 24 */
+  --r-btn:3px;--r-chip:2px;
+  --press:3px;                       /* how far a primary button travels */
+}
+
+/* Kill the global scale-on-press: primary buttons now translate into their
+   own shadow block instead, and scaling on top of that reads as jelly. */
+button:not([disabled]){transition:background .14s,border-color .14s,color .14s,box-shadow .1s,transform .1s}
+button:not([disabled]):active{transform:none}
+
+/* ── ACTION LABEL ──────────────────────────
+   Caps, tracked, in the display face. Applied to the action buttons only;
+   inputs and body text keep Inter. */
+.btn,.btnsm,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.btn-o,.qa-btn .qa-lbl,
+.onb-cta .btn,.onb-cta .btn-o,.mm-mode-btn,.pill,.gpill{
+  font-family:var(--font-display);font-weight:600;text-transform:uppercase;
+  letter-spacing:.13em;
+}
+.btn,.wc-cta,.obp-cta,.pw-cta{letter-spacing:.15em;font-weight:700}
+
+/* ── PRIMARY ───────────────────────────────
+   Volt fill, obsidian ink, and a hard slate block behind it. The block is
+   the affordance: press and the button lands on it. */
+.btn,.wc-cta,.obp-cta,.pw-cta{
+  border-radius:var(--r-btn);
+  background:var(--accent);color:var(--accent-ink);
+  border:none;font-size:15px;padding:17px 22px;
+  box-shadow:var(--press) var(--press) 0 var(--btn-block);
+  text-shadow:none;
+}
+.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover{
+  background:var(--accent-d);box-shadow:var(--press) var(--press) 0 var(--btn-block)}
+.btn:active,.wc-cta:active,.obp-cta:active,.pw-cta:active{
+  transform:translate(var(--press),var(--press));box-shadow:none}
+.btn:disabled{box-shadow:none;transform:none;opacity:1}
+.btnsm{border-radius:var(--r-btn);padding:11px 16px;font-size:13px;--press:2px}
+.empty-cta{
+  border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);
+  box-shadow:2px 2px 0 var(--btn-block);font-size:12px;padding:10px 16px;--press:2px}
+.empty-cta:hover{background:var(--accent-d)}
+.empty-cta:active{transform:translate(2px,2px);box-shadow:none}
+.empty-cta.ghost{background:transparent;color:var(--accent);box-shadow:none;
+  border:1.5px solid var(--bdr3)}
+.empty-cta.ghost:hover{border-color:var(--accent);background:var(--adim)}
+
+/* ── SECONDARY ─────────────────────────────
+   Outline only. Border carries the contrast; the fill arrives on hover. */
+.btn-o{
+  border-radius:var(--r-btn);background:transparent;color:var(--t);
+  border:1.5px solid var(--bdr3);font-size:13px;padding:12px 18px}
+.btn-o:hover{background:var(--surface-2);border-color:var(--t);color:var(--t)}
+.btn-o:active{transform:translate(1px,1px)}
+.btn-g{border-radius:var(--r-btn);letter-spacing:.02em}
+.btn-oauth{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr3);
+  box-shadow:none;text-transform:none;letter-spacing:0;font-family:var(--font-body)}
+.btn-oauth:hover{background:var(--surface-2);border-color:var(--t)}
+
+/* ── QUICK ACTIONS ─────────────────────────
+   The brief's "+1 Water" case: transparent, sharp border, and the whole tile
+   floods with volt the moment you touch it. */
+.qa-btn{
+  border-radius:var(--r-btn);background:transparent;
+  border:1.5px solid var(--bdr2);padding:13px 14px}
+.qa-btn:hover{background:var(--accent);border-color:var(--accent)}
+.qa-btn:hover .qa-lbl{color:var(--accent-ink)}
+.qa-btn:hover .qa-ico{background:transparent;border-color:transparent;color:var(--accent-ink)}
+.qa-btn:active{transform:translate(1px,1px)}
+.qa-ico{border-radius:var(--r-chip);background:transparent;border:1px solid var(--bdr2)}
+
+/* ── CHIPS, PILLS, BADGES ──────────────────*/
+.pill,.gpill,.chat-chip,.badge,.chip,.tag,.mm-mode-btn,.mm-chip,.onb-multi-chip,
+.obp-badge,.pw-plan-badge,.pw-hero-badge,.hm-c0,.hm-c1,.hm-c2,.hm-c3,.hm-cell,
+.rest-preset,.scale-b,.obp-plan,.pw-plan,.opt-item,.tip-card,.tip-card .tip-ok{
+  border-radius:var(--r-chip)}
+.pill,.gpill,.mm-mode-btn{font-size:12px}
+.pill.on,.gpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chat-chip{font-family:var(--font-body);text-transform:none;letter-spacing:0}
+.chat-chip:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* ── CHAT CONTROLS ─────────────────────────*/
+.chat-send{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);
+  box-shadow:2px 2px 0 var(--btn-block)}
+.chat-send:hover{background:var(--accent-d)}
+.chat-send:active{transform:translate(2px,2px);box-shadow:none}
+.chat-mic{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr2)}
+.chat-mic:hover{background:var(--surface-2);border-color:var(--t)}
+.chat-in{border-radius:var(--r-btn)}
+.msg{border-radius:var(--r-sm)}
+.msg.u{border-bottom-right-radius:var(--r-chip)}
+
+/* ── CONTAINERS ────────────────────────────
+   Cards follow the buttons down; circles that must stay circles are exempt. */
+.card,.card2,.band,.pair-cell,.exi,.mc,.msheet,.acard,.onb-info,.wc,
+.sib,.act-ico,.qa-ico,.coach-mark,.empty-ico,.opt-ico,.onb-feat-ico,
+.obp-tile,.pw-feat-ico,.f input,.f select,.f textarea,.si{border-radius:var(--r-sm)}
+.card,.band{border-radius:var(--r)}
+.msheet{border-radius:var(--r-lg) var(--r-lg) 0 0}
+.avatar,.sb-avatar,.acc-pick,.tog-track,.tog-track::after,.seclabel-dot,
+.mm-leg-dot,.obp-radio,.pw-plan-radio,.ring,.ring svg{border-radius:50%}
+
+/* Bars go square-ended: an instrument readout, not a lozenge. */
+.pbar,.pfill,.meter,.meter-fill,.onb-prog,.onb-prog-fill,.spl-prog,.spl-prog-fill,
+.nb-seg,.hm-cell{border-radius:1px}
+.ring-arc,.ring-track{stroke-linecap:butt}
+
+/* ── FORM FIELDS ───────────────────────────*/
+.f input,.f select,.f textarea,.si,input[type="text"],input[type="number"],
+input[type="email"],input[type="password"],textarea{
+  border-radius:var(--r-btn)}
+.f input:focus,.f select:focus,.si:focus,.chat-in:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px var(--adim)}
+body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{
+  background:var(--bg2);border:1.5px solid var(--bdr2);color:var(--t)}
+
+/* ── FOCUS ─────────────────────────────────*/
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:0}
+button:focus-visible,a:focus-visible,[role="button"]:focus-visible{box-shadow:0 0 0 3px var(--adim)}
+
+@media (prefers-reduced-motion:reduce){
+  .btn:active,.wc-cta:active,.obp-cta:active,.pw-cta:active,
+  .empty-cta:active,.chat-send:active,.btn-o:active,.qa-btn:active{transform:none}
+}
+
+/* Destructive actions: same geometry, different signal. Red owns the block so
+   the press still reads, and the ink stays white because red is dark enough. */
+.btn-danger{background:var(--red);color:#FFFFFF;box-shadow:var(--press) var(--press) 0 rgba(239,68,68,.32)}
+.btn-danger:hover{background:#DC2626;box-shadow:var(--press) var(--press) 0 rgba(239,68,68,.32)}
+.btn-danger:active{transform:translate(var(--press),var(--press));box-shadow:none}
+.btn-o-danger{border-color:var(--red);color:var(--red)}
+.btn-o-danger:hover{background:var(--red);border-color:var(--red);color:#FFFFFF}
+
+/* ═══════════════════════════════════════════════════════════════
+   ONBOARDING — setup sequence, not a wizard
+   Each question owns the whole screen. Progress is a raw fraction
+   and a tick rail, not a candy-bar. Answers are blocks you hit.
+   ═══════════════════════════════════════════════════════════════ */
+#onb{background:var(--bg)}
+.onb-body-wrap{
+  padding:calc(20px + env(safe-area-inset-top,0px)) 20px 28px;
+  display:flex;flex-direction:column}
+.onb-step.on{flex:1;justify-content:flex-start}
+
+/* ── PROGRESS: 03 // 14 plus a tick rail ───*/
+.onb-prog{display:none}
+.onb-rail{display:flex;align-items:center;gap:14px;margin:0 0 34px;flex-shrink:0}
+.onb-idx{
+  font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.16em;
+  color:var(--t3);white-space:nowrap;font-variant-numeric:tabular-nums;display:flex;gap:6px;align-items:baseline}
+.onb-idx b{color:var(--accent);font-weight:600}
+.onb-idx i{font-style:normal;color:var(--t4)}
+.onb-ticks{display:flex;gap:3px;flex:1;min-width:0}
+.onb-tick{flex:1;height:2px;background:var(--bdr2);transition:background .3s}
+.onb-tick.done{background:var(--t4)}
+.onb-tick.now{background:var(--accent);box-shadow:var(--glow-train)}
+
+/* ── QUESTION ──────────────────────────────
+   Full-bleed type. The question is the whole design at the top of
+   the screen; nothing frames it. */
+.onb-h{
+  font-family:var(--font-display);font-weight:600;text-transform:uppercase;
+  font-size:clamp(30px,9vw,44px);line-height:.94;letter-spacing:.5px;
+  color:var(--t);margin:0 0 14px;text-wrap:balance}
+.onb-hero{
+  font-family:var(--font-display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(36px,11vw,52px);line-height:.92;letter-spacing:.5px;margin-bottom:14px}
+.onb-hero span{color:var(--accent)}
+.onb-sub{
+  color:var(--t2);font-size:15px;line-height:1.5;margin-bottom:30px;
+  font-weight:500;max-width:40ch}
+.onb-eyebrow{display:none}
+.onb-step-n{display:none}
+
+/* ── SELECTION BLOCKS ──────────────────────
+   Oversized, dark-tinted, and they change depth when you take one.
+   The volt outline is the whole selected state; no ticks, no fills. */
+.opt-list{display:flex;flex-direction:column;gap:8px}
+.opt-item{
+  display:flex;align-items:center;gap:16px;width:100%;
+  padding:19px 18px;background:#111114;border:1.5px solid var(--bdr2);
+  border-radius:var(--r-chip);cursor:pointer;font-family:inherit;text-align:left;
+  transition:background .16s,border-color .16s,transform .1s;
+  position:relative;-webkit-appearance:none}
+body:not(.dark) .opt-item{background:var(--card)}
+.opt-item:hover{border-color:var(--bdr3);background:#141418}
+body:not(.dark) .opt-item:hover{background:var(--surface)}
+.opt-item.on{
+  border-color:var(--accent);border-width:2px;padding:18px 17px;
+  background:#17171C}
+body:not(.dark) .opt-item.on{background:var(--adim)}
+.opt-item.on .opt-title{color:var(--accent)}
+.opt-item.on::after{
+  content:"";position:absolute;right:16px;top:50%;width:7px;height:7px;
+  margin-top:-3.5px;background:var(--accent);box-shadow:var(--glow-train)}
+.opt-ico{
+  width:44px;height:44px;font-size:21px;background:transparent;
+  border:1px solid var(--bdr2);color:var(--t3);border-radius:var(--r-chip)}
+.opt-item.on .opt-ico{border-color:var(--accent);color:var(--accent);background:var(--adim)}
+.opt-title{
+  font-family:var(--font-display);font-weight:600;font-size:19px;
+  letter-spacing:.4px;text-transform:uppercase;line-height:1.05;color:var(--t)}
+.opt-sub{font-size:13px;color:var(--t2);margin-top:5px;line-height:1.4;font-weight:500}
+
+/* ── MULTI-SELECT GRID ─────────────────────
+   Same block language, two up. */
+.onb-multi{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.onb-multi-chip{
+  flex-direction:column;align-items:flex-start;gap:14px;
+  padding:18px 16px;min-height:104px;justify-content:space-between;
+  background:#111114;border:1.5px solid var(--bdr2);border-radius:var(--r-chip);
+  color:var(--t);font-family:var(--font-display);font-weight:600;font-size:15px;
+  letter-spacing:.4px;text-transform:uppercase;line-height:1.1;text-align:left;
+  transition:background .16s,border-color .16s}
+body:not(.dark) .onb-multi-chip{background:var(--card)}
+.onb-multi-chip.on{
+  border-color:var(--accent);border-width:2px;padding:17px 15px;
+  background:#17171C;color:var(--accent)}
+body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
+.onb-multi-chip-ico{font-size:22px;color:var(--t3)}
+.onb-multi-chip.on .onb-multi-chip-ico{color:var(--accent)}
+
+/* ── ROW GROUP (weekly days) ───────────────*/
+.opt-group{border:1px solid var(--bdr2);border-radius:var(--r-chip);overflow:hidden}
+.opt-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;border-bottom:1px solid var(--bdr);cursor:pointer;
+  transition:background .16s}
+.opt-row:last-child{border-bottom:none}
+.opt-row-l{font-family:var(--font-display);font-weight:600;font-size:17px;
+  letter-spacing:.4px;text-transform:uppercase;color:var(--t)}
+.opt-row-r{font-size:12px;color:var(--t3);font-weight:600;letter-spacing:.6px;text-transform:uppercase}
+.opt-row.on{background:var(--adim);box-shadow:inset 2px 0 0 var(--accent)}
+.opt-row.on .opt-row-l{color:var(--accent)}
+
+/* ── BLUEPRINT ROWS (goal explainer) ───────*/
+.onb-info{background:transparent;border:none;border-top:1px solid var(--bdr);
+  border-radius:0;padding:16px 2px}
+.onb-info-list{gap:0}
+.onb-info-ico{background:transparent;border:1px solid var(--bdr2);color:var(--accent);
+  border-radius:var(--r-chip)}
+.onb-info-t{font-family:var(--font-display);font-weight:600;font-size:16px;
+  letter-spacing:.4px;text-transform:uppercase}
+.onb-iconcard{border-radius:var(--r-chip)}
+
+/* ── FEATURE LIST (welcome step) ───────────*/
+.onb-feat-ico{background:transparent;border:1px solid var(--bdr2);color:var(--accent);
+  border-radius:var(--r-chip)}
+.onb-feat-t{font-family:var(--font-display);font-weight:600;font-size:17px;
+  letter-spacing:.4px;text-transform:uppercase}
+
+/* ── FOOTER ────────────────────────────────*/
+.onb-cta{background:var(--bg);border-top:1px solid var(--bdr);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px))}
+
+/* ── MUSCLE MAP: blueprint, not a sticker sheet ──
+   Three states read as three line weights and three cool hues; the
+   labels stay monospaced-technical and the map keeps its grid. */
+.mm-mode{gap:0;border:1px solid var(--bdr2);border-radius:var(--r-chip);overflow:hidden;margin-bottom:18px}
+.mm-mode-btn{
+  flex:1;justify-content:center;border:none;border-right:1px solid var(--bdr2);
+  border-radius:0;background:transparent;padding:12px 8px;
+  font-family:var(--font-display);font-weight:600;font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.mm-mode-btn:last-child{border-right:none}
+.mm-mode-btn.on.grow{background:rgba(204,255,0,.10);color:var(--accent);border-color:var(--bdr2)}
+.mm-mode-btn.on.def{background:rgba(34,211,238,.10);color:var(--sig-water);border-color:var(--bdr2)}
+.mm-mode-btn.on.exc{background:rgba(255,107,53,.10);color:var(--sig-fuel);border-color:var(--bdr2)}
+.mm-leg-dot{border-radius:0;width:9px;height:9px}
+.mm-leg-dot.grow{background:var(--accent)}
+.mm-leg-dot.def{background:var(--sig-water)}
+.mm-leg-dot.exc{background:var(--sig-fuel)}
+
+.mm-group{margin-bottom:20px}
+.mm-group-h{
+  font-family:var(--font-display);font-size:11px;font-weight:600;
+  letter-spacing:.18em;color:var(--t3);display:flex;align-items:center;gap:10px}
+.mm-group-h::after{content:"";flex:1;height:1px;background:var(--bdr)}
+.mm-chips{gap:5px}
+.mm-chip{
+  border-radius:var(--r-chip);background:transparent;border:1px solid var(--bdr2);
+  color:var(--t2);font-family:var(--font-display);font-weight:500;font-size:12.5px;
+  letter-spacing:.1em;text-transform:uppercase;padding:10px 13px}
+.mm-chip:hover{border-color:var(--bdr3);background:var(--card)}
+.mm-chip:active{transform:translate(1px,1px)}
+.mm-chip-dot{border-radius:0;width:7px;height:7px}
+.mm-chip.grow{border-color:var(--accent);color:var(--accent);background:rgba(204,255,0,.09)}
+.mm-chip.def{border-color:var(--sig-water);color:var(--sig-water);background:rgba(34,211,238,.09)}
+.mm-chip.exc{border-color:var(--sig-fuel);color:var(--sig-fuel);background:rgba(255,107,53,.09);
+  text-decoration:line-through;text-decoration-thickness:1px}
+.mm-chip.grow .mm-chip-dot{background:var(--accent)}
+.mm-chip.def .mm-chip-dot{background:var(--sig-water)}
+.mm-chip.exc .mm-chip-dot{background:var(--sig-fuel)}
+.mm-quick button{
+  font-family:var(--font-display);font-weight:600;font-size:11.5px;
+  letter-spacing:.13em;text-transform:uppercase;border-radius:var(--r-chip)}
+
+@media(min-width:560px){
+  .onb-body-wrap{max-width:600px;margin:0 auto;width:100%;padding-left:28px;padding-right:28px}
+  .onb-cta{max-width:600px;margin:0 auto;width:100%}
+}
+
+/* The offset block is the whole point of the press, so let it read. Slate is
+   the brief's secondary colour and the only value with enough separation from
+   obsidian to register at a 4px offset. */
+:root{--press:4px}
+body.dark{--btn-block:#3F3F46}
+
+/* ═══════════════════════════════════════════════════════════════
+   STRUCTURE SWEEP
+   Daily targets, the session stopwatch, the notebook log, the macro
+   split, and the blueprint plots that replace empty-text states.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── DAILY TARGETS ─────────────────────────
+   Three lines of type and three tick boxes. No card, no numbering,
+   no instructional sentence per row. */
+.targets{margin:0 0 14px;padding:0}
+.targets.hidden{display:none}
+.targets-head{display:flex;align-items:center;gap:12px;padding-bottom:10px;
+  border-bottom:1px solid var(--bdr)}
+.targets-t{font-family:var(--font-display);font-weight:600;font-size:13px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t2)}
+.targets-n{font-family:var(--font-display);font-weight:600;font-size:13px;
+  letter-spacing:.1em;color:var(--accent);font-variant-numeric:tabular-nums;margin-left:auto}
+.targets-x{all:unset;cursor:pointer;color:var(--t4);display:flex;padding:2px}
+.targets-x:hover{color:var(--t2)}
+
+.tgt{all:unset;display:flex;align-items:center;gap:14px;width:100%;box-sizing:border-box;
+  padding:15px 2px;border-bottom:1px solid var(--bdr);cursor:pointer;
+  transition:padding-left .18s}
+.tgt:last-child{border-bottom:none}
+.tgt:hover{padding-left:8px}
+.tgt-box{width:18px;height:18px;flex-shrink:0;border:1.5px solid var(--t4);
+  display:grid;place-items:center;color:var(--accent-ink);transition:background .2s,border-color .2s}
+.tgt-l{font-family:var(--font-display);font-weight:600;font-size:22px;
+  letter-spacing:.4px;text-transform:uppercase;color:var(--t);line-height:1}
+.tgt-m{font-size:12px;color:var(--t3);font-weight:500;margin-left:auto;
+  letter-spacing:.2px;white-space:nowrap}
+.tgt.done .tgt-box{background:var(--accent);border-color:var(--accent)}
+.tgt.done .tgt-l{color:var(--t3);text-decoration:line-through;
+  text-decoration-color:var(--t4);text-decoration-thickness:1.5px}
+.tgt.done .tgt-m{color:var(--t4)}
+
+/* ── SESSION STOPWATCH ─────────────────────
+   The running clock is the loudest thing on the screen while a
+   session is open. Tabular figures so it never jitters. */
+.stopwatch{display:grid;grid-template-columns:1fr auto;align-items:end;
+  gap:10px 14px;margin-bottom:16px}
+.sw-meta{grid-column:1/-1;display:flex;align-items:center;gap:8px;
+  font-family:var(--font-display);font-weight:600;font-size:11.5px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--t3)}
+.sw-live{width:7px;height:7px;background:var(--accent);flex-shrink:0;
+  animation:swPulse 1.6s ease-in-out infinite}
+@keyframes swPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.sw-time{font-family:var(--font-display);font-weight:600;
+  font-size:clamp(46px,15vw,66px);line-height:.85;letter-spacing:.5px;
+  color:var(--accent);font-variant-numeric:tabular-nums;
+  text-shadow:var(--glow-train)}
+.sw-finish{align-self:end;--press:3px}
+@media (prefers-reduced-motion:reduce){.sw-live{animation:none}}
+
+/* ── NOTEBOOK LOG ──────────────────────────
+   Exercise rows lose their card edges. What is left is a ruled
+   training log: one hairline per row, numbers doing the work. */
+.exi{background:transparent;border:none;border-top:1px solid var(--bdr);
+  border-radius:0;padding:16px 2px;margin-bottom:0}
+.exi:hover{border-color:var(--bdr2);background:transparent}
+.exi:first-child{border-top:none}
+.setrow{gap:5px;margin-bottom:2px;padding:5px 0;border-bottom:1px solid var(--bdr)}
+.setrow:last-child{border-bottom:none}
+.setrow.sethead{border-bottom:1px solid var(--bdr2);padding-bottom:6px;margin-bottom:4px}
+.setrow.sethead>div{font-family:var(--font-display);font-weight:600;font-size:10px;
+  letter-spacing:.16em;color:var(--t4)}
+.setn{font-family:var(--font-display);font-weight:600;color:var(--t4);
+  font-variant-numeric:tabular-nums}
+.setin{background:transparent;border:none;border-bottom:1px solid transparent;
+  border-radius:0;text-align:center;font-family:var(--font-display);
+  font-weight:600;font-size:16px;letter-spacing:.5px;color:var(--t);
+  font-variant-numeric:tabular-nums;padding:6px 2px}
+.setin:focus{border-bottom-color:var(--accent);background:transparent;box-shadow:none}
+.setin::placeholder{color:var(--t4);font-weight:500}
+.setrow.done .setn{color:var(--accent)}
+.setdone{border-radius:var(--r-chip)}
+
+/* ── MACRO SPLIT ───────────────────────────
+   One bar. Each block is that macro's share of today's calories. */
+.split{display:flex;height:34px;overflow:hidden;background:var(--sig-track);
+  border:1px solid var(--bdr2);position:relative;margin-bottom:12px}
+.split-seg{display:flex;align-items:center;justify-content:center;min-width:0;
+  transition:flex-basis .7s cubic-bezier(.16,1,.3,1);overflow:hidden}
+.split-seg span{font-family:var(--font-display);font-weight:600;font-size:12px;
+  letter-spacing:.16em;color:var(--accent-ink);opacity:.82}
+.split-seg.s-p{background:var(--accent)}
+.split-seg.s-c{background:var(--sig-water)}
+.split-seg.s-f{background:var(--sig-fuel)}
+.split-empty{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:600;color:var(--t4);
+  letter-spacing:.1em;text-transform:uppercase;font-family:var(--font-display)}
+.split-key{display:flex;gap:18px;flex-wrap:wrap}
+.split-k{display:flex;align-items:baseline;gap:7px;font-size:12px;color:var(--t3)}
+.split-k i{width:9px;height:9px;flex-shrink:0;align-self:center}
+.split-k i.s-p{background:var(--accent)}
+.split-k i.s-c{background:var(--sig-water)}
+.split-k i.s-f{background:var(--sig-fuel)}
+.split-k b{font-family:var(--font-display);font-weight:600;font-size:17px;
+  color:var(--t);letter-spacing:.3px;font-variant-numeric:tabular-nums}
+
+/* ── BLUEPRINT PLOTS ───────────────────────
+   Empty states stop apologising. A surveyed plot with crosshairs at
+   the grid intersections reads as space waiting to be filled. The
+   marks live on a pseudo-element so they never clip the content. */
+.bp,.empty-state{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;text-align:center;
+  padding:34px 18px;border:1px dashed var(--bdr3);overflow:hidden}
+.bp::before,.empty-state::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M22 17.5v9M17.5 22h9' stroke='%233F3F46' stroke-width='1'/%3E%3C/svg%3E");
+  background-position:center center}
+body:not(.dark) .bp::before,body:not(.dark) .empty-state::before{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M22 17.5v9M17.5 22h9' stroke='%23D4D4D8' stroke-width='1'/%3E%3C/svg%3E")}
+.bp>*,.empty-state>*{position:relative;z-index:1}
+.bp-sm{padding:22px 14px}
+.bp-l,.empty-h{font-family:var(--font-display);font-weight:600;font-size:15px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t3)}
+.empty-sub{font-size:12.5px;color:var(--t4);max-width:34ch;line-height:1.5}
+body:not(.dark) .empty-sub{color:var(--t2)}
+.empty-ico{background:var(--bg);border:1px solid var(--bdr2);color:var(--t4);
+  width:48px;height:48px;border-radius:var(--r-chip);margin-bottom:2px}
+.empty-ico svg{width:26px;height:26px}
+
+/* ── WEEK STRIP + HEATMAP ──────────────────*/
+.wkday-dot{border-radius:var(--r-chip)}
+.hm-cell{border-radius:0}
+
+/* The empty heatmap swatch needs an edge or it vanishes into the card. */
+.hm-c0{border:1px solid var(--bdr2);background:transparent}
+
+/* ── CONTRAST ──────────────────────────────
+   --t3 carries every small label (readouts, ring units, tab names, the
+   date rule). At the old value it sat at 3.8:1 on obsidian and 2.5:1 on
+   white, i.e. below AA at the exact sizes it is used. Lift the step in
+   both themes; --t4 stays slate for decoration only. */
+:root{--t3:#6B7280}
+body.dark{--t3:#8C8C96}
+
+/* Light-mode status badges were amber-on-amber at 2.2:1. */
+body:not(.dark) .badge.by{background:rgba(234,88,12,.10);color:#9A3412}
+body:not(.dark) .badge.bb{background:rgba(37,99,235,.10);color:#1D4ED8}
+body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}

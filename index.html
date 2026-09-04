@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AthleteOS">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#0A0A0C">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>AthleteOS</title>
@@ -16,6 +16,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <script src="https://js-de.sentry-cdn.com/1a3054a66d6e176bbe70397d5fe7d1bb.min.js" crossorigin="anonymous"></script>
+<script>
+/* Theme bootstrap. initTheme() only runs after sign-in, so without this the
+   welcome, auth and onboarding screens paint white and then flip. Runs before
+   the stylesheet so there is no flash. */
+(function(){try{
+  var m=localStorage.getItem('athleteos_theme')||'dark';
+  var dark=m==='dark'||(m==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if(dark)document.documentElement.classList.add('dark');
+  var A={volt:['#CCFF00','#B4E600','#0A0A0C','#4D6A00','#3D5400'],green:['#22C55E','#16A34A','#FFFFFF'],
+         forge:['#FF6B35','#EA580C','#0A0A0C'],cool:['#22D3EE','#06B6D4','#0A0A0C'],
+         purple:['#A855F7','#9333EA','#FFFFFF'],pink:['#EC4899','#DB2777','#FFFFFF']};
+  var a=A[localStorage.getItem('athleteos_accent')||'volt']||A.volt;
+  var st=document.documentElement.style;
+  st.setProperty('--accent',(!dark&&a[3])?a[3]:a[0]);
+  st.setProperty('--accent-d',(!dark&&a[4])?a[4]:a[1]);
+  st.setProperty('--accent-ink',(!dark&&a[3])?'#FFFFFF':a[2]);
+}catch(e){}})();
+</script>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -86,25 +104,34 @@
 <div id="welcome" class="hidden">
   <div class="wc-inner">
     <div class="wc-hero" aria-hidden="true">
-      <svg width="280" height="240" viewBox="0 0 280 240" fill="none">
-        <circle cx="140" cy="120" r="110" fill="#E8F8EE"/>
-        <circle cx="140" cy="120" r="92" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="2 7" opacity="0.4"/>
-        <path d="M40 170 L75 145 L105 155 L140 110 L175 90 L210 65 L245 50" stroke="#22C55E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="40" cy="170" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="75" cy="145" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="105" cy="155" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="140" cy="110" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="175" cy="90" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="210" cy="65" r="5" fill="#fff" stroke="#22C55E" stroke-width="2.5"/>
-        <circle cx="245" cy="50" r="20" fill="#22C55E" opacity="0.18"/>
-        <circle cx="245" cy="50" r="12" fill="#22C55E"/>
-        <g transform="translate(28 70)">
-          <rect class="wc-chip" width="86" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
-          <text x="15" y="21" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0A0A0A">5 DAY RUN</text>
+      <svg width="280" height="230" viewBox="0 0 280 230" fill="none">
+        <!-- Surveyed plot: slate rules, volt trace, one live node. -->
+        <defs>
+          <linearGradient id="wcFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity=".20"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="var(--bdr2)" stroke-width="1">
+          <path d="M14 40h252M14 85h252M14 130h252M14 175h252"/>
+          <path d="M40 26v163M100 26v163M160 26v163M220 26v163" opacity=".55"/>
         </g>
-        <g transform="translate(180 175)">
-          <rect class="wc-chip" width="98" height="32" rx="16" fill="#fff" stroke="#E5E7EB"/>
-          <text x="13" y="21" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#0A0A0A">+12% VOLUME</text>
+        <path d="M14 175 L40 168 L75 146 L110 154 L145 112 L180 92 L220 66 L252 44 L252 190 L14 190 Z" fill="url(#wcFill)"/>
+        <path d="M14 175 L40 168 L75 146 L110 154 L145 112 L180 92 L220 66 L252 44"
+              stroke="var(--accent)" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        <g fill="var(--bg)" stroke="var(--accent)" stroke-width="2">
+          <rect x="72" y="143" width="6" height="6"/><rect x="107" y="151" width="6" height="6"/>
+          <rect x="142" y="109" width="6" height="6"/><rect x="177" y="89" width="6" height="6"/>
+          <rect x="217" y="63" width="6" height="6"/>
+        </g>
+        <rect x="245" y="37" width="14" height="14" fill="var(--accent)"/>
+        <g transform="translate(16 52)">
+          <rect width="96" height="28" fill="var(--card2)" stroke="var(--bdr3)"/>
+          <text x="10" y="19" font-family="Oswald, Inter, sans-serif" font-size="13" font-weight="600" letter-spacing="1.6" fill="#FFFFFF">5 DAY RUN</text>
+        </g>
+        <g transform="translate(150 186)">
+          <rect width="120" height="28" fill="var(--card2)" stroke="var(--bdr3)"/>
+          <text x="10" y="19" font-family="Oswald, Inter, sans-serif" font-size="13" font-weight="600" letter-spacing="1.6" fill="var(--accent)">+12% VOLUME</text>
         </g>
       </svg>
     </div>
@@ -415,31 +442,31 @@
           </button>
         </div>
 
-        <!-- First-run getting started -->
-        <div class="card gs-card hidden" id="gs-card">
-          <div class="fb" style="margin-bottom:10px;align-items:flex-start">
-            <div>
-              <div class="ctitle" style="margin:0">First three</div>
-              <div class="tm" style="font-size:12.5px;margin-top:5px"><span id="gs-progress">0 of 3</span> done</div>
-            </div>
-            <button type="button" class="btn-g" style="padding:5px 10px;font-size:12px" onclick="dismissGettingStarted()">Hide</button>
+        <!-- Daily targets: a checklist, not an instruction box -->
+        <section class="targets hidden" id="gs-card" aria-labelledby="targets-t">
+          <div class="targets-head">
+            <span class="targets-t" id="targets-t">Daily targets</span>
+            <span class="targets-n" id="gs-progress">0/3</span>
+            <button type="button" class="targets-x" onclick="dismissGettingStarted()" aria-label="Hide daily targets">
+              <svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-x"/></svg>
+            </button>
           </div>
-          <div class="gs-row" id="gs-row-workout" onclick="goTab('workout')">
-            <div class="gs-check" id="gs-check-workout">1</div>
-            <div class="gs-body"><div class="gs-t">Log a workout</div><div class="gs-s">One set counts. Train, then New Workout.</div></div>
-            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
-          </div>
-          <div class="gs-row" id="gs-row-meal" onclick="goTab('nutrition')">
-            <div class="gs-check" id="gs-check-meal">2</div>
-            <div class="gs-body"><div class="gs-t">Log a meal</div><div class="gs-s">Quick-add or scan the barcode. Protein counts itself.</div></div>
-            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
-          </div>
-          <div class="gs-row" id="gs-row-sleep" onclick="goTab('sleep')">
-            <div class="gs-check" id="gs-check-sleep">3</div>
-            <div class="gs-body"><div class="gs-t">Log last night</div><div class="gs-s">Hours in bed is enough to start.</div></div>
-            <div class="gs-arrow"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></div>
-          </div>
-        </div>
+          <button type="button" class="tgt" id="gs-row-workout" onclick="goTab('workout')">
+            <span class="tgt-box" id="gs-check-workout" aria-hidden="true"></span>
+            <span class="tgt-l">Train</span>
+            <span class="tgt-m">one set counts</span>
+          </button>
+          <button type="button" class="tgt" id="gs-row-meal" onclick="goTab('nutrition')">
+            <span class="tgt-box" id="gs-check-meal" aria-hidden="true"></span>
+            <span class="tgt-l">Eat</span>
+            <span class="tgt-m">log a meal</span>
+          </button>
+          <button type="button" class="tgt" id="gs-row-sleep" onclick="goTab('sleep')">
+            <span class="tgt-box" id="gs-check-sleep" aria-hidden="true"></span>
+            <span class="tgt-l">Sleep</span>
+            <span class="tgt-m">hours in bed</span>
+          </button>
+        </section>
 
         <!-- Adaptive plan refinement banner -->
         <div class="card" id="plan-tweak-banner" style="display:none;border-color:color-mix(in srgb,var(--sig-train) 32%,var(--bdr))">
@@ -525,12 +552,12 @@
         </div>
         <div id="active-sess" class="hidden">
           <div class="card" style="border-color:var(--accent)">
-            <div class="fb" style="margin-bottom:13px">
-              <div>
-                <div class="ctitle" style="margin:0">Active Session</div>
-                <span id="wtimer" class="tm" style="color:var(--accent);font-weight:600;margin-top:4px;display:block">0:00</span>
+            <div class="stopwatch">
+              <div class="sw-meta">
+                <span class="sw-live" aria-hidden="true"></span>Session running
               </div>
-              <button type="button" class="btn btnsm" style="background:var(--red);box-shadow:none" onclick="finishW()">Finish</button>
+              <div class="sw-time" id="wtimer">0:00</div>
+              <button type="button" class="btn btnsm btn-danger sw-finish" onclick="finishW()">Finish</button>
             </div>
             <div id="sess-bodymap" class="bm-card" style="display:none"></div>
             <div id="ex-list"></div>
@@ -557,7 +584,7 @@
             <div class="ctitle" style="margin:0">Cardio</div>
             <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openCardio()">+ Log</button>
           </div>
-          <div id="cd-list"><p class="tm tc" style="padding:14px 0">No cardio logged yet</p></div>
+          <div id="cd-list"><div class="bp"><span class="bp-l">No cardio yet</span><button type="button" class="empty-cta" onclick="openCardio()">Log one</button></div></div>
         </div>
 
         <!-- HEATMAP -->
@@ -617,7 +644,7 @@
             <button type="button" class="pill" onclick="filterPR('arms',this)">Arms</button>
             <button type="button" class="pill" onclick="filterPR('core',this)">Core</button>
           </div>
-          <div id="pr-list"><p class="tm tc" style="padding:18px 0">Log workouts to see PRs</p></div>
+          <div id="pr-list"><div class="bp"><span class="bp-l">No records set</span></div></div>
         </div>
         <div class="card">
           <div class="ctitle">This Week</div>
@@ -627,7 +654,7 @@
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">History</div></div>
           <input type="text" id="wh-search" placeholder="Search by exercise…" oninput="filterWHist(this.value)" style="width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:9px 12px;color:var(--t);font-family:inherit;font-size:13px;font-weight:500;outline:none;margin-bottom:10px">
-          <div id="w-hist"><p class="tm tc" style="padding:18px 0">No workouts yet</p></div>
+          <div id="w-hist"><div class="bp"><span class="bp-l">No sessions yet</span></div></div>
         </div>
       </div>
 
@@ -642,14 +669,18 @@
               <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;text-align:center">
-            <div><div class="sv ta" id="n-p">0</div><div class="sl">Protein g</div></div>
-            <div><div class="sv" id="n-c" style="color:var(--blue)">0</div><div class="sl">Carbs g</div></div>
-            <div><div class="sv" id="n-f" style="color:var(--yel)">0</div><div class="sl">Fat g</div></div>
+          <!-- One bar, split by each macro's share of the day's calories. -->
+          <div class="split" id="macro-split" role="img" aria-label="Macro split">
+            <div class="split-seg s-p" id="nb-p" style="flex:0 0 0%"><span>P</span></div>
+            <div class="split-seg s-c" id="nb-c" style="flex:0 0 0%"><span>C</span></div>
+            <div class="split-seg s-f" id="nb-f" style="flex:0 0 0%"><span>F</span></div>
+            <div class="split-empty" id="nb-empty">No food logged</div>
           </div>
-          <div class="pbar" style="margin-bottom:5px"><div class="pfill" id="nb-p" style="width:0%"></div></div>
-          <div class="pbar" style="margin-bottom:5px"><div class="pfill" id="nb-c" style="width:0%;background:var(--blue)"></div></div>
-          <div class="pbar"><div class="pfill" id="nb-f" style="width:0%;background:var(--yel)"></div></div>
+          <div class="split-key">
+            <div class="split-k"><i class="s-p"></i><b id="n-p">0</b><span>g protein</span></div>
+            <div class="split-k"><i class="s-c"></i><b id="n-c">0</b><span>g carbs</span></div>
+            <div class="split-k"><i class="s-f"></i><b id="n-f">0</b><span>g fat</span></div>
+          </div>
           <div style="height:170px;margin-top:18px;position:relative"><canvas id="macro-pie"></canvas></div>
         </div>
         <div class="card">
@@ -659,7 +690,7 @@
         </div>
         <div class="card">
           <div class="ctitle">Meals</div>
-          <div id="meal-log"><p class="tm tc" style="padding:18px 0">No meals logged today</p></div>
+          <div id="meal-log"><div class="bp"><span class="bp-l">Nothing logged today</span><button type="button" class="empty-cta" onclick="openMealM()">Add a meal</button></div></div>
         </div>
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Suggestions</div></div>
@@ -687,7 +718,7 @@
         </div>
         <div class="card">
           <div class="ctitle">Log</div>
-          <div id="w-log"><p class="tm tc" style="padding:18px 0">No entries yet</p></div>
+          <div id="w-log"><div class="bp"><span class="bp-l">No weigh-ins</span><button type="button" class="empty-cta" onclick="openWtM()">Log weight</button></div></div>
         </div>
         <div class="card" id="wproj-card" style="display:none">
           <div class="fb" style="margin-bottom:6px">
@@ -726,12 +757,12 @@
             <button type="button" class="btn-o" id="body-mm-edit" style="padding:7px 12px;font-size:12px" onclick="openMuscleEditor()">Edit <span class="pro-lock" id="body-mm-pro" style="display:none">PRO</span></button>
           </div>
           <div class="mm-legend" style="margin:8px 0 4px">
-            <div class="mm-leg"><span class="mm-leg-dot grow"></span>Grow</div>
-            <div class="mm-leg"><span class="mm-leg-dot def"></span>Define</div>
-            <div class="mm-leg"><span class="mm-leg-dot exc"></span>Exclude</div>
+            <div class="mm-leg"><span class="mm-leg-dot grow"></span>Build</div>
+            <div class="mm-leg"><span class="mm-leg-dot def"></span>Cut</div>
+            <div class="mm-leg"><span class="mm-leg-dot exc"></span>Skip</div>
           </div>
           <div class="mm-wrap" id="body-mm-wrap"></div>
-          <div id="body-mm-summary" class="tm" style="font-size:12.5px;text-align:center;margin-top:6px">Tap Edit to mark which muscles you want to grow, define, or skip.</div>
+          <div id="body-mm-summary" class="tm" style="font-size:12.5px;text-align:center;margin-top:6px">Tap Edit to mark what to build, what to cut, and what to leave alone.</div>
         </div>
         <div class="card" id="mes-card">
           <div class="fb" style="margin-bottom:14px">
@@ -740,7 +771,7 @@
           </div>
           <div id="mes-grid" class="mes-grid"></div>
           <div id="mes-summary" class="mes-summary" style="display:none;margin-top:10px"></div>
-          <div id="mes-empty" class="tm tc" style="padding:14px 0">No measurements yet — tap "Log" to start tracking</div>
+          <div id="mes-empty"><div class="bp"><span class="bp-l">No measurements</span><button type="button" class="empty-cta" onclick="openMeasure()">Take the first</button></div></div>
         </div>
         <div class="card">
           <div class="fb" style="margin-bottom:12px">
@@ -798,7 +829,7 @@
           </div>
           <button type="button" class="btn" onclick="logSleep()">Save Sleep</button>
         </div>
-        <div class="card"><div class="ctitle">History</div><div id="s-hist"><p class="tm tc" style="padding:18px 0">No sleep data yet</p></div></div>
+        <div class="card"><div class="ctitle">History</div><div id="s-hist"><div class="bp"><span class="bp-l">No nights logged</span></div></div></div>
       </div>
 
       <!-- SETTINGS -->
@@ -844,17 +875,18 @@
           <div class="f" style="margin-bottom:18px">
             <label>Theme · <span id="theme-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Currently dark</span></label>
             <div class="gpills" style="margin-top:8px">
-              <button type="button" class="gpill on" id="thm-light" onclick="setThemeMode('light')">Light</button>
-              <button type="button" class="gpill" id="thm-dark" onclick="setThemeMode('dark')">Dark</button>
+              <button type="button" class="gpill" id="thm-light" onclick="setThemeMode('light')">Light</button>
+              <button type="button" class="gpill on" id="thm-dark" onclick="setThemeMode('dark')">Dark</button>
               <button type="button" class="gpill" id="thm-system" onclick="setThemeMode('system')">System</button>
             </div>
           </div>
           <div class="f" style="margin-bottom:0">
-            <label>Accent color · <span id="accent-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Green</span></label>
+            <label>Accent color · <span id="accent-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Volt</span></label>
             <div class="acc-row">
-              <button type="button" class="acc-pick on" data-acc="green" onclick="setAccent('green')" style="--c:#22C55E" aria-label="Green"></button>
-              <button type="button" class="acc-pick" data-acc="forge" onclick="setAccent('forge')" style="--c:#F97316" aria-label="Forge"></button>
-              <button type="button" class="acc-pick" data-acc="cool" onclick="setAccent('cool')" style="--c:#3B82F6" aria-label="Cool"></button>
+              <button type="button" class="acc-pick on" data-acc="volt" onclick="setAccent('volt')" style="--c:#CCFF00" aria-label="Volt"></button>
+              <button type="button" class="acc-pick" data-acc="green" onclick="setAccent('green')" style="--c:#22C55E" aria-label="Green"></button>
+              <button type="button" class="acc-pick" data-acc="forge" onclick="setAccent('forge')" style="--c:#FF6B35" aria-label="Forge"></button>
+              <button type="button" class="acc-pick" data-acc="cool" onclick="setAccent('cool')" style="--c:#22D3EE" aria-label="Cool"></button>
               <button type="button" class="acc-pick" data-acc="purple" onclick="setAccent('purple')" style="--c:#A855F7" aria-label="Purple"></button>
               <button type="button" class="acc-pick" data-acc="pink" onclick="setAccent('pink')" style="--c:#EC4899" aria-label="Pink"></button>
             </div>
@@ -1154,7 +1186,7 @@
     </div>
     <div class="g2" style="margin-top:8px">
       <button type="button" class="btn-g" id="rest-mute-btn" style="font-size:12.5px;padding:10px" onclick="toggleRestMute(this)" aria-label="Toggle rest sound"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-bell"/></svg>Sound on</button>
-      <button type="button" class="btn-o" style="border-color:var(--red);color:var(--red)" onclick="cancelRest()">Cancel</button>
+      <button type="button" class="btn-o btn-o-danger" onclick="cancelRest()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1298,11 +1330,11 @@
 <!-- TARGET BODY AREAS (Muscle Map editor) -->
 <div class="modal" id="m-muscle"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="ctitle">Target body areas</div>
-  <p class="tm" style="font-size:12.5px;margin-bottom:14px">Tap a muscle to mark it. Tap again with the same mode to un-mark.</p>
+  <p class="tm" style="font-size:12.5px;margin-bottom:14px">Tap to mark. Tap again in the same mode to clear it.</p>
   <div class="mm-mode">
-    <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Grow</button>
-    <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Define</button>
-    <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Exclude</button>
+    <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Build</button>
+    <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Cut</button>
+    <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Skip</button>
   </div>
   <div class="mm-wrap" id="ob-mm-wrap" style="margin-bottom:14px"></div>
   <div class="mm-quick" style="margin-bottom:18px">
@@ -1323,7 +1355,7 @@
 <div class="modal" id="m-photo"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Add Progress Photo</div><div class="f"><label>Pose</label><select id="ph-pose"><option value="front">Front</option><option value="side">Side</option><option value="back">Back</option><option value="flex">Flex</option></select></div><div class="f"><label>Pick a photo</label><input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" style="font-size:14px;padding:10px"></div><div id="ph-prev-wrap" class="hidden" style="margin-bottom:10px;text-align:center"><img id="ph-prev" style="max-width:100%;max-height:240px;border-radius:10px"></div><div id="ph-msg" class="tm" style="font-size:12px;margin-bottom:6px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-photo')">Cancel</button><button type="button" class="btn" id="ph-btn" onclick="savePhoto()">Upload</button></div></div></div>
 
 <!-- VIEW PHOTO -->
-<div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-shuffle"/></svg>Compare</button><button type="button" class="btn-o" style="width:100%;border-color:var(--red);color:var(--red)" onclick="deletePhoto()">Delete</button></div></div></div>
+<div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-shuffle"/></svg>Compare</button><button type="button" class="btn-o btn-o-danger" style="width:100%" onclick="deletePhoto()">Delete</button></div></div></div>
 
 <!-- PHOTO COMPARE -->
 <div class="modal" id="m-photocomp">
@@ -1591,7 +1623,7 @@
 <div class="modal" id="m-exchart"><div class="msheet" style="max-height:90vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="exc-name">Exercise</div><button type="button" class="btn-g" onclick="cModal('m-exchart')">Done</button></div><div class="tm" style="font-size:12px;margin-bottom:10px" id="exc-meta">–</div><div class="chart-wrap" style="height:200px;margin-bottom:6px"><canvas id="exc-chart"></canvas></div><div id="exc-hist" style="max-height:200px;overflow-y:auto"></div></div></div>
 
 <!-- WORKOUT TEMPLATES -->
-<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><p class="tm tc" style="padding:18px 0">No templates yet</p></div></div></div>
+<div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><div class="bp"><span class="bp-l">No templates</span></div></div></div></div>
 
 <!-- SAVE TEMPLATE -->
 <div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template Name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
@@ -1612,7 +1644,7 @@
 <div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="PR" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
 
 <!-- DELETE ACCOUNT -->
-<div class="modal" id="m-delacc"><div class="msheet"><div class="mhandle"></div><div class="ctitle" style="color:var(--red)">Delete Account</div><p class="tm" style="line-height:1.65;margin-bottom:10px">This is permanent. We'll erase your profile, all workouts, meals, sleep, weight, photos, measurements, and chat history. There is no undo.</p><div class="f"><label>Type <b style="color:var(--red)">DELETE</b> to confirm</label><input type="text" id="del-confirm" placeholder="DELETE" autocomplete="off" autocapitalize="characters"></div><div id="del-msg" style="font-size:12.5px;margin:4px 0 8px;display:none;color:var(--red)"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-delacc')">Cancel</button><button type="button" class="btn" id="del-btn" style="background:var(--red);color:#fff" onclick="deleteMyAccount()">Erase forever</button></div></div></div>
+<div class="modal" id="m-delacc"><div class="msheet"><div class="mhandle"></div><div class="ctitle" style="color:var(--red)">Delete Account</div><p class="tm" style="line-height:1.65;margin-bottom:10px">This is permanent. We'll erase your profile, all workouts, meals, sleep, weight, photos, measurements, and chat history. There is no undo.</p><div class="f"><label>Type <b style="color:var(--red)">DELETE</b> to confirm</label><input type="text" id="del-confirm" placeholder="DELETE" autocomplete="off" autocapitalize="characters"></div><div id="del-msg" style="font-size:12.5px;margin:4px 0 8px;display:none;color:var(--red)"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-delacc')">Cancel</button><button type="button" class="btn btn-danger" id="del-btn" onclick="deleteMyAccount()">Erase forever</button></div></div></div>
 
 <!-- DAY DETAIL -->
 <div class="modal" id="m-day"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="day-title">Day</div><button type="button" class="btn-g" onclick="cModal('m-day')">Done</button></div><div id="day-body"></div></div></div>
@@ -1623,7 +1655,11 @@
 <!-- ONBOARDING WIZARD -->
 <div id="onb">
   <div class="onb-body-wrap">
-    <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
+    <div class="onb-rail">
+      <div class="onb-idx" aria-hidden="true"><b id="ob-idx-n">01</b><i>//</i><span id="ob-idx-t">14</span></div>
+      <div class="onb-ticks" id="ob-ticks"></div>
+      <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
+    </div>
 
     <!-- 0: Welcome -->
     <div class="onb-step on" id="os-0">
@@ -1772,12 +1808,12 @@
     <!-- 11: Muscle map -->
     <div class="onb-step" id="os-11">
       <div class="onb-h">Target body areas</div>
-      <div class="onb-sub">Tap to mark muscles you want to <b>Grow</b>, <b>Define</b>, or <b>Exclude</b>. Skip if unsure.</div>
+      <div class="onb-sub">Mark what you want built, what you want cut, and what to leave alone.</div>
       <div class="onb-body">
         <div class="mm-mode">
-          <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Grow</button>
-          <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Define</button>
-          <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Exclude</button>
+          <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Build</button>
+          <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Cut</button>
+          <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Skip</button>
         </div>
         <div class="mm-wrap" id="ob-mm-wrap"></div>
         <div class="mm-quick">
@@ -1883,6 +1919,9 @@
   // Pre-boot: if first launch (no session token and welcome unseen), swap auth → welcome
   // before app.js runs, so the user sees the intro instead of the sign-in form on cold open.
   (function(){
+    try{
+      if(document.documentElement.classList.contains('dark'))document.body.classList.add('dark');
+    }catch(e){}
     try{
       var seen=localStorage.getItem('aos_welcome_seen')==='1';
       // crude session check: any supabase auth key in localStorage means there's likely a session

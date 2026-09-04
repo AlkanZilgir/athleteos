@@ -8,7 +8,8 @@
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:ui": "npx playwright test --ui",
-    "screens": "node tools/marketing-screenshots.mjs"
+    "screens": "node tools/marketing-screenshots.mjs",
+    "contrast": "node tools/contrast-audit.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

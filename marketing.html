@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>AthleteOS — Train smart. Track everything.</title>
 <meta name="description" content="Personal fitness OS. Workouts, nutrition, sleep, body composition, and a coach that has read every session you logged. PWA. Installs to your home screen, works offline.">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0A0A0C">
 <meta property="og:title" content="AthleteOS — Train smart. Track everything.">
 <meta property="og:description" content="Workouts, nutrition, sleep, body composition, and a coach that reads your log, in one PWA.">
 <meta property="og:type" content="website">
@@ -27,28 +26,29 @@
 html{scroll-behavior:smooth}
 :root{
   /* surfaces */
-  --bg:#FFFFFF;
-  --surface:#F4F4F6;
-  --surface-2:#ECECF0;
-  --card:#FFFFFF;
-  --ink:#0A0B0F;
-  --bdr:rgba(10,11,15,.08);
-  --bdr-2:rgba(10,11,15,.14);
-  /* text — t3 darkened from #8896B3 (3.4:1) to #5F6B85 (≥4.5:1) for AA body */
-  --t:#0A0B0F;
-  --t2:#3F4A60;
-  --t3:#5F6B85;
-  /* brand */
-  --accent:#22C55E;
-  --accent-d:#16A34A;
-  --accent-h:#15803D;
-  --adim:rgba(34,197,94,.12);
-  --accent-glow:rgba(34,197,94,.32);
+  --bg:#0A0A0C;
+  --surface:#141417;
+  --surface-2:#1A1A1F;
+  --card:#141417;
+  --ink:#FFFFFF;
+  --bdr:#1C1C20;
+  --bdr-2:#27272C;
+  /* text — white is titles only; body sits on the soft grey step */
+  --t:#FFFFFF;
+  --t2:#A1A1AA;
+  --t3:#8C8C96;
+  /* brand — volt, with the ink that has to sit on top of it */
+  --accent:#CCFF00;
+  --accent-d:#B4E600;
+  --accent-h:#9FCC00;
+  --accent-ink:#0A0A0C;
+  --adim:rgba(204,255,0,.10);
+  --accent-glow:rgba(204,255,0,.28);
   /* rhythm */
-  --r-sm:12px;--r-md:18px;--r-lg:24px;--r-xl:32px;
+  --r-sm:3px;--r-md:4px;--r-lg:6px;--r-xl:8px;
   --sp-1:8px;--sp-2:14px;--sp-3:22px;--sp-4:36px;--sp-5:60px;--sp-6:96px;
-  --shadow-lift:0 12px 40px -16px rgba(10,11,15,.18),0 2px 8px -2px rgba(10,11,15,.06);
-  --shadow-deep:0 32px 80px -24px rgba(10,11,15,.30),0 4px 16px -4px rgba(10,11,15,.08);
+  --shadow-lift:none;
+  --shadow-deep:0 30px 80px -30px rgba(0,0,0,.9);
   --ease:cubic-bezier(.2,.7,.2,1);
   /* z-scale */
   --z-nav:50;--z-overlay:80;
@@ -89,7 +89,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .nav-r{display:flex;align-items:center;gap:6px}
 .nav-link{color:var(--t2);font-weight:600;font-size:14px;text-decoration:none;padding:8px 12px;border-radius:999px;transition:color .15s var(--ease),background .15s var(--ease)}
 .nav-link:hover{color:var(--ink);background:var(--surface)}
-.cta{background:var(--accent);color:#fff;text-decoration:none;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 6px 16px -8px var(--accent-glow)}
+.cta{background:var(--accent);color:var(--accent-ink);text-decoration:none;padding:12px 20px;border-radius:var(--r-sm);font-family:'Oswald',Inter,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.13em;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);box-shadow:4px 4px 0 #3F3F46}
 .cta:hover{background:var(--accent-d);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 10px 24px -8px var(--accent-glow);transform:translateY(-1px)}
 .cta:active{transform:translateY(0) scale(.98)}
 .cta.lg{padding:16px 26px;font-size:15.5px;letter-spacing:-.2px;border-radius:999px}
@@ -139,10 +139,10 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .feat.x2{grid-column:span 2}
 .feat.x6{grid-column:span 6}
 .feat-ico{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:18px;background:var(--adim);color:var(--accent-h)}
-.feat-ico.purple{background:rgba(168,85,247,.14);color:#9333EA}
-.feat-ico.blue{background:rgba(59,130,246,.14);color:#2563EB}
-.feat-ico.orange{background:rgba(245,158,11,.14);color:#D97706}
-.feat-ico.pink{background:rgba(236,72,153,.14);color:#DB2777}
+.feat-ico.purple{background:rgba(168,85,247,.14);color:#A78BFA}
+.feat-ico.blue{background:rgba(59,130,246,.14);color:#06B6D4}
+.feat-ico.orange{background:rgba(245,158,11,.14);color:#FF6B35}
+.feat-ico.pink{background:rgba(236,72,153,.14);color:#EC4899}
 .feat-ico svg{width:22px;height:22px}
 .feat h3{font-size:19px;font-weight:800;letter-spacing:-.018em;margin:0 0 6px;color:var(--ink)}
 .feat p{margin:0;font-size:15px;color:var(--t2);line-height:1.55;max-width:48ch}
@@ -185,7 +185,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .streak-dots{display:flex;gap:5px;margin-top:14px}
 .streak-dots i{width:18px;height:18px;border-radius:6px;background:var(--surface-2);display:inline-block}
 .streak-dots i.on{background:var(--accent)}
-.streak-dots i.freeze{background:#3B82F6}
+.streak-dots i.freeze{background:#22D3EE}
 @media(max-width:780px){
   .bento{padding:32px 16px}
   .bento-grid{grid-template-columns:1fr;gap:10px}
@@ -211,7 +211,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .price-feats li b{color:var(--ink);font-weight:700}
 .price-cta{text-align:center;padding:14px 18px;border-radius:999px;font-weight:700;font-size:14.5px;text-decoration:none;background:var(--surface);color:var(--ink);border:1.5px solid var(--bdr-2);transition:all .18s var(--ease);letter-spacing:-.01em}
 .price-cta:hover{border-color:var(--ink);background:var(--surface-2)}
-.price-cta.primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 8px 20px -8px var(--accent-glow)}
+.price-cta.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:4px 4px 0 #3F3F46}
 .price-cta.primary:hover{background:var(--accent-d);border-color:var(--accent-d);transform:translateY(-1px)}
 .price-foot{text-align:center;color:var(--t3);font-size:13.5px;margin-top:32px}
 .price-foot b{color:var(--ink);font-weight:700}
@@ -236,14 +236,14 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .faq-item p{color:var(--t2);margin:0 0 22px;font-size:15.5px;line-height:1.65;max-width:62ch}
 
 /* ── FINAL CTA (inverted, confident — no purple/green gradient) ──── */
-.final-cta{background:#0A0B0F;color:#fff;border-radius:var(--r-xl);padding:80px 40px;text-align:center;margin:var(--sp-5) 0 var(--sp-6);position:relative;overflow:hidden;isolation:isolate}
-@media (prefers-color-scheme:dark){.final-cta{background:#15171D;border:1px solid var(--bdr)}}
+.final-cta{background:var(--surface);color:var(--t);border:1px solid var(--bdr-2);border-radius:var(--r-xl);padding:80px 40px;text-align:center;margin:var(--sp-5) 0 var(--sp-6);position:relative;overflow:hidden;isolation:isolate}
+@media (prefers-color-scheme:dark){.final-cta{background:#141417;border:1px solid var(--bdr)}}
 .final-cta::before{content:"";position:absolute;left:50%;top:-30%;width:120%;height:160%;background:radial-gradient(50% 50% at 50% 50%,var(--accent-glow),transparent 60%);transform:translateX(-50%);z-index:-1;opacity:.6;pointer-events:none}
-.final-cta h2{color:#fff;font-size:clamp(30px,4vw,52px);font-weight:900;letter-spacing:-.035em;margin:0 0 14px;line-height:1.05;text-wrap:balance}
+.final-cta h2{color:var(--t);font-size:clamp(30px,4vw,52px);font-weight:900;letter-spacing:-.035em;margin:0 0 14px;line-height:1.05;text-wrap:balance}
 .final-cta h2 em{font-style:normal;color:var(--accent)}
 .final-cta p{color:rgba(255,255,255,.74);font-size:17px;margin:0 auto 32px;max-width:50ch;line-height:1.55;text-wrap:pretty}
-.final-cta .cta{background:var(--accent);color:#fff}
-.final-cta .cta:hover{background:var(--accent-d);color:#fff}
+.final-cta .cta{background:var(--accent);color:var(--accent-ink)}
+.final-cta .cta:hover{background:var(--accent-d);color:var(--accent-ink)}
 
 /* ── FOOTER ────────────────────────────────── */
 footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid var(--bdr)}
@@ -273,6 +273,30 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
 h1,h2,h3,.h1,.h2,.logo,.price-v{font-family:var(--font-display);font-weight:600;
   letter-spacing:.2px;text-transform:uppercase;text-wrap:balance}
 h1,.h1{line-height:.95}
+/* Oswald is condensed, so `ch` is narrower than the Inter measure these
+   headings were tuned against: the 14ch cap plus a 44px floor pushed the
+   longest word past the viewport on phones. Re-measure for the new face. */
+.hero h1{max-width:16ch;font-size:clamp(34px,8.6vw,84px);letter-spacing:.5px}
+.final-cta h2{font-size:clamp(26px,6.4vw,50px);letter-spacing:.5px}
+h1,h2,h3{overflow-wrap:break-word}
+/* The hero's decorative bleed has always pushed the page ~14px wide on
+   phones. `clip` contains it without creating a scroll container, so
+   sticky and absolutely-positioned children still behave. */
+.hero{overflow-x:clip}
+
+/* The header CTA grew when it went uppercase + tracked; at phone widths that
+   pushed the nav group past the viewport. Trim it rather than let it clip. */
+@media(max-width:560px){
+  /* The header CTA grew when it went uppercase and tracked, pushing the nav
+     group past the viewport. Trim the whole row; keep every link reachable. */
+  nav{gap:8px}
+  .brand{font-size:17px;gap:7px}
+  .nav-link{font-size:12.5px;padding:7px 6px}
+  .nav-r{gap:2px;min-width:0}
+  .nav-r .cta{padding:9px 10px;letter-spacing:.05em;font-size:11px;gap:5px;
+    box-shadow:3px 3px 0 #3F3F46;margin-right:4px}
+  .nav-r .cta svg{width:12px;height:10px}
+}
 </style>
 </head>
 <body>
@@ -286,7 +310,7 @@ h1,.h1{line-height:.95}
         <a class="nav-link" href="#pricing">Pricing</a>
         <a class="nav-link" href="#faq">FAQ</a>
         <a class="cta" href="index.html">Open app
-          <svg width="14" height="12" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="14" height="12" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
     </nav>
@@ -301,7 +325,7 @@ h1,.h1{line-height:.95}
     <p class="sub reveal d2">Workouts, nutrition, sleep, body composition, and a coach that has read every session you logged. Installs to your home screen. Works offline.</p>
     <div class="hero-actions reveal d3">
       <a class="cta lg" href="index.html">Start free
-        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="cta lg ghost" href="#features">See features</a>
     </div>
@@ -519,7 +543,7 @@ h1,.h1{line-height:.95}
     <h2>Ready to <em>train smarter?</em></h2>
     <p>Free to start. No credit card to sign up. Pro removes the limits when you're ready.</p>
     <a class="cta lg" href="index.html">Start free
-      <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M1 7h13M9 1.5L14.5 7 9 12.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </section>
 

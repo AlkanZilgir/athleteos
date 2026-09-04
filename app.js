@@ -868,12 +868,12 @@ function refresh(){
   setRing('ring-water',wp,RING_SM);
   var pRem=Math.max(0,G.protein-Math.round(t.p));
   var re=document.getElementById('p-rem');if(re)re.textContent=pRem>0?pRem+'g to go':'Protein hit.';
-  document.getElementById('n-p').textContent=Math.round(t.p);
-  document.getElementById('n-c').textContent=Math.round(t.c);
-  document.getElementById('n-f').textContent=Math.round(t.f);
-  document.getElementById('nb-p').style.width=pp+'%';
-  document.getElementById('nb-c').style.width=pct(t.c,250)+'%';
-  document.getElementById('nb-f').style.width=pct(t.f,80)+'%';
+  _set('n-p',Math.round(t.p));_set('n-c',Math.round(t.c));_set('n-f',Math.round(t.f));
+  // One bar split by each macro's share of the day's calories (4/4/9 kcal per g).
+  var kP=t.p*4,kC=t.c*4,kF=t.f*9,kT=kP+kC+kF;
+  var seg=function(id,v){var el=document.getElementById(id);if(el)el.style.flex='0 0 '+(kT?(v/kT*100):0)+'%';};
+  seg('nb-p',kP);seg('nb-c',kC);seg('nb-f',kF);
+  var mt=document.getElementById('nb-empty');if(mt)mt.style.display=kT?'none':'flex';
   document.getElementById('w-cnt').textContent=waterCups+'/'+G.water;
   renderMealLog();
   _paintRepeatMeal();
@@ -1207,7 +1207,7 @@ function renderExList(){
           '</div>';
         }).join('')+'</div>';
     }else{
-      setGrid='<div style="font-size:12.5px;color:var(--t3);margin-top:6px">No sets yet — tap + Set</div>';
+      setGrid='<div style="font-size:12px;color:var(--t4);margin-top:8px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-display)">No sets</div>';
     }
     return '<div class="exi">'+
       '<div class="fb"><div class="exn" onclick="openExInfo(\''+sn+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+ex.muscle+'</span>'+moveBtns+'</div>'+
@@ -1215,7 +1215,7 @@ function renderExList(){
       setGrid+
       '<div data-ex-demo="'+idx+'" class="exdemo" style="display:none"></div>'+
       '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">'+
-        '<button type="button" class="btn" style="padding:5px 12px;font-size:12px" onclick="addInlineSet('+idx+')">+ Set</button>'+
+        '<button type="button" class="btn-o" style="padding:7px 14px;font-size:12px" onclick="addInlineSet('+idx+')">+ Set</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExDemo('+idx+',\''+sn+'\',this)">▶ Demo</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExNote('+idx+',this)">'+ICO('notebook','12px')+(ex.note?'Edit note':'Add note')+'</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="openPlate('+topW+')" title="Plate calculator">'+ICO('calculator','13px')+'Plates</button>'+
@@ -2126,7 +2126,7 @@ async function loadWtLog(){
 function renderWtLog(){
   var el=document.getElementById('w-log');
   var rec=wtLog.slice().reverse().slice(0,10);
-  if(!rec.length){el.innerHTML='<p class="tm tc" style="padding:18px 0">No entries yet</p>';return;}
+  if(!rec.length){el.innerHTML='<div class="bp"><span class="bp-l">No weigh-ins</span><button type="button" class="empty-cta" onclick="openWtM()">Log weight</button></div>';return;}
   el.innerHTML=rec.map(function(w,i){var prev=rec[i+1];var d=prev?(w.weight-prev.weight).toFixed(1):null;var col=d&&parseFloat(d)<0?'var(--accent)':d&&parseFloat(d)>0?'var(--red)':'var(--t2)';return '<div class="fb" style="padding:10px 0;border-bottom:1px solid var(--bdr)"><div><div style="font-weight:600">'+w.weight+' kg</div><div style="font-size:11.5px;color:var(--t3)">'+fdate(w.date)+'</div></div>'+(d?'<span style="color:'+col+';font-size:13px;font-weight:600">'+(parseFloat(d)>0?'+':'')+d+'kg</span>':'')+'</div>';}).join('');
 }
 async function initChart(){
@@ -2804,14 +2804,13 @@ async function renderGettingStarted(){
       sb.from('sleep_logs').select('id',{count:'exact',head:true}).eq('user_id',CU.id)
     ]);
     var wd=(r[0].count||0)>0,md=(r[1].count||0)>0,sd=(r[2].count||0)>0;
-    document.getElementById('gs-row-workout').classList.toggle('done',wd);
-    document.getElementById('gs-row-meal').classList.toggle('done',md);
-    document.getElementById('gs-row-sleep').classList.toggle('done',sd);
-    if(wd)document.getElementById('gs-check-workout').innerHTML=ICO('check','15px');
-    if(md)document.getElementById('gs-check-meal').innerHTML=ICO('check','15px');
-    if(sd)document.getElementById('gs-check-sleep').innerHTML=ICO('check','15px');
+    [['workout',wd],['meal',md],['sleep',sd]].forEach(function(pair){
+      var row=document.getElementById('gs-row-'+pair[0]);if(row)row.classList.toggle('done',pair[1]);
+      var box=document.getElementById('gs-check-'+pair[0]);
+      if(box)box.innerHTML=pair[1]?ICO('check','13px'):'';
+    });
     var done=(wd?1:0)+(md?1:0)+(sd?1:0);
-    var prog=document.getElementById('gs-progress');if(prog)prog.textContent=done+' of 3';
+    var prog=document.getElementById('gs-progress');if(prog)prog.textContent=done+'/3';
     if(done>=3){
       try{localStorage.setItem('aos_gs_dismissed_'+CU.id,'1');}catch(e){}
       card.classList.add('hidden');
@@ -2844,7 +2843,7 @@ async function renderActivityFeed(){
   (wt_a.data||[]).forEach(function(w){items.push({t:new Date(w.created_at).getTime(),ico:ICO('scale'),bg:'rgba(168,85,247,.10)',col:'var(--sig-sleep)',title:'Weight logged',meta:w.weight_kg+' kg'});});
   (sl_a.data||[]).forEach(function(s){items.push({t:new Date(s.created_at).getTime(),ico:ICO('moon'),bg:'rgba(168,85,247,.10)',col:'var(--sig-sleep)',title:'Sleep logged',meta:parseFloat(s.duration_hours).toFixed(1)+'h'});});
   items.sort(function(a,b){return b.t-a.t;});items=items.slice(0,6);
-  if(!items.length){el.innerHTML='<p class="tm tc" style="padding:14px 0">Log something to see your activity here.</p>';return;}
+  if(!items.length){el.innerHTML='<div class="bp"><span class="bp-l">Nothing logged yet</span></div>';return;}
   el.innerHTML=items.map(function(it){
     return '<div class="act-row"><div class="act-ico" style="background:'+it.bg+';color:'+it.col+'">'+it.ico+'</div><div class="act-body"><div class="act-title">'+it.title+'</div><div class="act-meta">'+it.meta+'</div></div><div class="act-time">'+_relTime(it.t)+'</div></div>';
   }).join('');
@@ -3072,7 +3071,12 @@ function applyTheme(mode){
   var sub=document.getElementById('theme-sub');
   if(sub)sub.textContent=mode==='system'?'Following system ('+effective+')':'Currently '+effective;
   var meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.setAttribute('content',isDark?'#0B0B0F':'#FFFFFF');
+  if(meta)meta.setAttribute('content',isDark?'#0A0A0C':'#FFFFFF');
+  // Volt resolves differently per theme, so the accent has to follow the flip.
+  if(typeof applyAccent==='function'){
+    var acc='volt';try{acc=localStorage.getItem('athleteos_accent')||'volt';}catch(e){}
+    applyAccent(acc);
+  }
 }
 function setThemeMode(mode){
   localStorage.setItem('athleteos_theme',mode);
@@ -3085,24 +3089,34 @@ function setThemeMode(mode){
   }
 }
 function initTheme(){
-  var saved=localStorage.getItem('athleteos_theme')||'light';
+  var saved=localStorage.getItem('athleteos_theme')||'dark';
   setThemeMode(saved);
   initAccent();
 }
 
 /* ── ACCENT COLOR ─────────────────────────── */
 var ACCENTS={
-  green: {a:'#22C55E',d:'#16A34A',rgb:'34,197,94'},
-  forge: {a:'#F97316',d:'#EA580C',rgb:'249,115,22'},
-  cool:  {a:'#3B82F6',d:'#2563EB',rgb:'59,130,246'},
-  purple:{a:'#A855F7',d:'#9333EA',rgb:'168,85,247'},
-  pink:  {a:'#EC4899',d:'#DB2777',rgb:'236,72,153'}
+  // ink = what sits ON the accent. lt/ltd = the light-theme stand-in, needed
+  // because volt at 94% lightness is unreadable on white at any weight.
+  volt:  {a:'#CCFF00',d:'#B4E600',rgb:'204,255,0',   ink:'#0A0A0C',lt:'#4D6A00',ltd:'#3D5400'},
+  green: {a:'#22C55E',d:'#16A34A',rgb:'34,197,94',   ink:'#FFFFFF'},
+  forge: {a:'#FF6B35',d:'#EA580C',rgb:'255,107,53',  ink:'#0A0A0C'},
+  cool:  {a:'#22D3EE',d:'#06B6D4',rgb:'34,211,238',  ink:'#0A0A0C'},
+  purple:{a:'#A855F7',d:'#9333EA',rgb:'168,85,247',  ink:'#FFFFFF'},
+  pink:  {a:'#EC4899',d:'#DB2777',rgb:'236,72,153',  ink:'#FFFFFF'}
 };
 function applyAccent(name){
-  var p=ACCENTS[name]||ACCENTS.green;
+  var p=ACCENTS[name]||ACCENTS.volt;
   var root=document.documentElement;
-  root.style.setProperty('--accent',p.a);
-  root.style.setProperty('--accent-d',p.d);
+  var dark=document.body.classList.contains('dark');
+  // On the light ground a near-white accent has nowhere to go: swap to the
+  // declared stand-in and put white back on top of it.
+  var fill=(!dark&&p.lt)?p.lt:p.a;
+  var fillD=(!dark&&p.ltd)?p.ltd:p.d;
+  var ink=(!dark&&p.lt)?'#FFFFFF':(p.ink||'#FFFFFF');
+  root.style.setProperty('--accent',fill);
+  root.style.setProperty('--accent-d',fillD);
+  root.style.setProperty('--accent-ink',ink);
   root.style.setProperty('--adim','rgba('+p.rgb+',.10)');
   document.querySelectorAll('.acc-pick').forEach(function(b){b.classList.toggle('on',b.dataset.acc===name);});
   var sub=document.getElementById('accent-sub');if(sub)sub.textContent=name.charAt(0).toUpperCase()+name.slice(1);
@@ -3113,8 +3127,8 @@ function setAccent(name){
   _syncPref('accent',name);
 }
 function initAccent(){
-  var saved='green';
-  try{saved=localStorage.getItem('athleteos_accent')||'green';}catch(e){}
+  var saved='volt';
+  try{saved=localStorage.getItem('athleteos_accent')||'volt';}catch(e){}
   applyAccent(saved);
 }
 
@@ -3859,6 +3873,7 @@ function ob_goto(i){
   _ob.step=i;
   for(var k=0;k<OB_STEPS;k++){var s=document.getElementById('os-'+k);if(s)s.classList.toggle('on',k===i&&!OB_SKIP[k]);}
   var fill=document.getElementById('ob-prog');if(fill)fill.style.width=Math.round((_obVisibleIndex(i)/OB_VISIBLE_COUNT)*100)+'%';
+  _obRenderRail(i);
   _setOnbEyebrow();
   var back=document.getElementById('ob-back-btn');if(back)back.classList.toggle('hidden',i===0);
   var lastVis=_obLastVisible();
@@ -3885,6 +3900,21 @@ function ob_goto(i){
   if(i===15)ob_applyGoalDefaults();
   // Body-wrap scroll to top
   var bw=document.querySelector('.onb-body-wrap');if(bw)bw.scrollTop=0;
+}
+// Sequence index + tick rail. Reads as an instrument, not a loading bar.
+function _obRenderRail(i){
+  var pos=_obVisibleIndex(i),total=OB_VISIBLE_COUNT;
+  var pad=function(n){return (n<10?'0':'')+n;};
+  var n=document.getElementById('ob-idx-n');if(n)n.textContent=pad(pos);
+  var t=document.getElementById('ob-idx-t');if(t)t.textContent=pad(total);
+  var ticks=document.getElementById('ob-ticks');if(!ticks)return;
+  if(ticks.children.length!==total){
+    var h='';for(var k=0;k<total;k++)h+='<span class="onb-tick"></span>';
+    ticks.innerHTML=h;
+  }
+  Array.prototype.forEach.call(ticks.children,function(el,k){
+    el.className='onb-tick'+(k<pos-1?' done':k===pos-1?' now':'');
+  });
 }
 function _obSyncList(containerId,value){var c=document.getElementById(containerId);if(!c)return;c.querySelectorAll('.opt-item,.opt-row').forEach(function(o){o.classList.toggle('on',o.dataset.v===String(value));});}
 function _obSyncMulti(containerId,values){var c=document.getElementById(containerId);if(!c)return;c.querySelectorAll('.onb-multi-chip').forEach(function(o){o.classList.toggle('on',values.indexOf(o.dataset.v)>=0);});}
@@ -4365,7 +4395,7 @@ function renderBodyMuscleMap(){
   }).join('');
   var sum=document.getElementById('body-mm-summary');if(!sum)return;
   var total=g.length+d.length+x.length;
-  if(!total){sum.textContent='Tap Edit to mark which muscles you want to grow, define, or skip.';return;}
+  if(!total){sum.textContent='Tap Edit to mark what to build, what to cut, and what to leave alone.';return;}
   var parts=[];if(g.length)parts.push('<b style="color:#8B5CF6">'+g.length+' growing</b>');if(d.length)parts.push('<b style="color:#F59E0B">'+d.length+' defining</b>');if(x.length)parts.push('<b style="color:#EC4899">'+x.length+' excluded</b>');
   sum.innerHTML=parts.join(' · ');
 }
@@ -4942,7 +4972,7 @@ async function openDay(ds){
         var setStr=sets.length?sets.map(function(s,i){return 'Set '+(i+1)+': '+fmtSet(s.weight_kg,s.reps);}).join(' · '):'No sets';
         var safe=(ex.name||'').replace(/'/g,"\\'");
         return '<div class="exi"><div class="fb"><div class="exn" onclick="openExChart(\''+safe+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+(ex.muscle_group||'other')+'</span></div><div style="font-size:12.5px;color:var(--t2);margin-top:5px">'+setStr+'</div></div>';
-      }).join(''):'<p class="tm tc" style="padding:8px 0">No exercises logged</p>';
+      }).join(''):'<div class="bp bp-sm"><span class="bp-l">No exercises</span></div>';
       html+='<div class="card" style="background:var(--card2);margin-bottom:10px"><div class="fb" style="margin-bottom:10px"><div style="font-weight:600;display:flex;align-items:center;gap:8px">'+ICO('barbell','15px')+time+'</div><span class="tag">'+dur+' min</span></div>'+exHtml+'</div>';
     });
   }
@@ -4973,7 +5003,7 @@ async function openDay(ds){
     if(wa&&wa.cups)html+='<br>'+ICO('droplet','14px')+wa.cups+' cups water';
     html+='</div>';
   }
-  if(!html)html='<p class="tm tc" style="padding:30px 0">Rest day — nothing logged.</p>';
+  if(!html)html='<div class="bp"><span class="bp-l">Rest day</span></div>';
   document.getElementById('day-body').innerHTML=html;
 }
 
@@ -5086,7 +5116,7 @@ function filterExPk(){
       }).join('')+'<div style="height:8px"></div>';
     }
   }
-  if(!matches.length){list.innerHTML=header+pinnedHtml+'<p class="tm tc" style="padding:18px 0">No matches</p>';return;}
+  if(!matches.length){list.innerHTML=header+pinnedHtml+'<div class="bp bp-sm"><span class="bp-l">No matches</span></div>';return;}
   list.innerHTML=header+pinnedHtml+matches.map(function(x){
     var safe=x.name.replace(/'/g,"\\'");
     var tag=x.custom?' · <span style="color:var(--accent);font-weight:600">custom</span>':'';
