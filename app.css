@@ -1485,7 +1485,7 @@ body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
    the way the label is actually spoken.
    ═══════════════════════════════════════════════════════════════ */
 :root{
-  --r:14px;--r-sm:10px;--r-lg:20px;
+  --r:8px;--r-sm:5px;--r-lg:10px;   /* was 18 / 12 / 24 */
   --r-btn:8px;--r-chip:2px;
 }
 
@@ -2424,81 +2424,3 @@ body.dark .gpill.on{color:var(--accent)}
    30px, so light mode takes the darker step the status badges use. */
 .ty{color:var(--yel)}
 body:not(.dark) .ty{color:#B45309}
-
-
-/* ═══════════════════════════════════════════════════════════════
-   HOME: IDENTITY + QUICK ACCESS
-   The top of the screen answers two questions in order — who is this
-   and where do I stand — and then offers the three doors people came
-   through. Everything below it is detail.
-   ═══════════════════════════════════════════════════════════════ */
-.home-id{display:flex;align-items:center;gap:13px;margin-bottom:10px}
-.home-ava{
-  width:46px;height:46px;flex-shrink:0;border-radius:var(--r-sm);
-  display:flex;align-items:center;justify-content:center;
-  background:var(--adim);color:var(--accent);border:1px solid var(--bdr2);
-  font-family:var(--font-display);font-weight:600;font-size:20px;letter-spacing:.5px;
-  cursor:pointer;-webkit-appearance:none;padding:0;
-  transition:border-color .15s,background .15s}
-.home-ava:hover{border-color:var(--accent)}
-.home-id-t{flex:1;min-width:0}
-.hero-hi{font-size:13.5px;font-weight:500;color:var(--t3);letter-spacing:0;
-  margin-bottom:1px}
-.home-head .hero-title{margin:0;font-size:clamp(26px,7vw,34px);line-height:1.02;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.home-head .home-date{margin:0 0 14px}
-.home-sub{margin:0 0 18px;font-size:13.5px;line-height:1.5;color:var(--t2);
-  font-weight:500;max-width:46ch}
-
-.qacc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
-.qacc-i{
-  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
-  padding:14px 12px 13px;background:var(--card);border:1px solid var(--bdr);
-  border-radius:var(--r);cursor:pointer;font-family:inherit;text-align:left;
-  -webkit-appearance:none;min-width:0;
-  transition:border-color .15s,background .15s}
-.qacc-i:hover{border-color:var(--bdr3)}
-.qacc-ico{width:20px;height:20px;margin-bottom:8px;color:var(--accent);
-  fill:none;stroke:currentColor;stroke-width:1.8;
-  stroke-linecap:round;stroke-linejoin:round}
-.qacc-l{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.01em}
-.qacc-s{font-size:11px;color:var(--t3);line-height:1.35;
-  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-
-/* ═══════════════════════════════════════════════════════════════
-   STAT GRID
-   Label above, number leading, unit under it. Four of them read as one
-   block rather than four cards, so the totals compare at a glance.
-   ═══════════════════════════════════════════════════════════════ */
-.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;
-  background:var(--bdr);border:1px solid var(--bdr);border-radius:var(--r-sm);
-  overflow:hidden}
-.statt{display:flex;flex-direction:column;gap:3px;padding:15px 14px;
-  background:var(--card);min-width:0}
-.statt-l{font-family:var(--font-mono);font-size:9.5px;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
-.statt-v{font-family:var(--font-display);font-weight:600;font-size:27px;
-  line-height:1;color:var(--t);font-variant-numeric:tabular-nums;
-  letter-spacing:.2px;margin-top:2px}
-.statt-u{font-size:11.5px;color:var(--t3);line-height:1.3}
-.statgrid-cta{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  width:100%;margin-top:12px;padding:0;background:none;border:none;
-  cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
-  color:var(--accent);-webkit-appearance:none;transition:opacity .15s}
-.statgrid-cta:hover{opacity:.75}
-.statgrid-cta .sit-x{color:var(--accent)}
-body:not(.dark) .statgrid-cta{color:var(--accent-d)}
-
-@media(max-width:360px){
-  .qacc{gap:6px}
-  .qacc-i{padding:12px 10px}
-  .qacc-l{font-size:12.5px}
-  .statt-v{font-size:24px}
-}
-
-
-/* Goal rows share the home meters; they only need their own rhythm. */
-.gp-row+.gp-row{margin-top:16px}
-#goalprog .meter-l{font-size:10.5px;letter-spacing:.12em}
-#goalprog .meter-v{font-size:14px}

@@ -348,40 +348,12 @@
       <!-- HOME -->
       <div class="panel on" id="p-home">
 
-        <!-- Header: who you are, what day it is, and where today actually
-             stands. The line under the greeting is written from live data,
-             not a slogan — it is the first thing worth reading. -->
+        <!-- Header: date rule, display greeting, one line of state -->
         <header class="home-head">
           <div class="home-date" id="home-date"></div>
-          <div class="home-id">
-            <button type="button" class="home-ava" id="home-ava" onclick="goTab('settings')" aria-label="Open your profile">&nbsp;</button>
-            <div class="home-id-t">
-              <div class="hero-hi" id="hero-hi">Hello</div>
-              <h1 class="hero-title" id="hero-greet">Athlete</h1>
-            </div>
-          </div>
+          <h1 class="hero-title" id="hero-greet">Today</h1>
           <p class="home-sub" id="hero-sub">Show up, log it, beat it. That's the whole job today.</p>
         </header>
-
-        <!-- Quick access. The three things the app is opened to do, one tap
-             from the greeting instead of a scroll past everything else. -->
-        <nav class="qacc" aria-label="Quick access">
-          <button type="button" class="qacc-i" onclick="goTab('workout')">
-            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-barbell"/></svg>
-            <span class="qacc-l">Train</span>
-            <span class="qacc-s" id="qacc-train">Start a session</span>
-          </button>
-          <button type="button" class="qacc-i" onclick="goTab('nutrition')">
-            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-utensils"/></svg>
-            <span class="qacc-l">Nutrition</span>
-            <span class="qacc-s" id="qacc-fuel">Log a meal</span>
-          </button>
-          <button type="button" class="qacc-i" onclick="goTab('body')">
-            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-target"/></svg>
-            <span class="qacc-l">Goals</span>
-            <span class="qacc-s" id="qacc-goals">Track progress</span>
-          </button>
-        </nav>
 
         <!-- ── PRIMARY 1 · TRAINING ──────────────────────────────
              Full-width band. Volume headline, 7-day bars, four-slot readout. -->
@@ -549,17 +521,16 @@
           <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;align-items:center;gap:7px;background:none;border:none;color:var(--sig-train);font-family:inherit;font-size:13px;font-weight:700;padding:10px 0 0;cursor:pointer;letter-spacing:-.1px"><svg class="ic" style="font-size:15px" aria-hidden="true"><use href="#i-moon"/></svg>Resting today, keep my streak</button>
         </div>
 
-        <!-- Quick add. Train / Nutrition / Goals moved to the strip under the
-             greeting, so what is left here is the one-tap logging that does
-             not need a whole screen. -->
+        <!-- Quick add -->
         <div class="card">
-          <div class="ctitle">Log something</div>
+          <div class="ctitle">Quick actions</div>
           <div class="g2">
+            <button type="button" class="qa-btn" onclick="goTab('workout')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><span class="qa-lbl">New workout</span></button>
             <button type="button" class="qa-btn" onclick="qWater()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-droplet"/></svg></span><span class="qa-lbl">Add water</span></button>
             <button type="button" class="qa-btn" onclick="openMealM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></span><span class="qa-lbl">Log meal</span></button>
-            <button type="button" class="qa-btn" onclick="openWtM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><span class="qa-lbl">Log weight</span></button>
             <button type="button" class="qa-btn" onclick="goTab('ai')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-message"/></svg></span><span class="qa-lbl">Ask Coach</span></button>
             <button type="button" class="qa-btn hidden" id="qa-repeat-meal" style="grid-column:1/-1" onclick="repeatLastMeal()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg></span><span class="qa-lbl" id="qa-repeat-meal-lbl">Re-log last meal</span></button>
+            <button type="button" class="qa-btn" style="grid-column:1/-1" onclick="openWtM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><span class="qa-lbl">Log weight</span></button>
           </div>
         </div>
       </div>
@@ -888,48 +859,6 @@
           <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
 
-        <!-- Career totals. Four numbers, no chrome around them: this is the
-             one part of settings people come back to look at. -->
-        <div class="card">
-          <div class="ctitle">Your numbers</div>
-          <div class="statgrid">
-            <div class="statt">
-              <span class="statt-l">Workouts</span>
-              <span class="statt-v" id="ps-workouts">—</span>
-              <span class="statt-u">completed</span>
-            </div>
-            <div class="statt">
-              <span class="statt-l">Calories</span>
-              <span class="statt-v" id="ps-kcal">—</span>
-              <span class="statt-u">burned</span>
-            </div>
-            <div class="statt">
-              <span class="statt-l">Volume</span>
-              <span class="statt-v" id="ps-vol">—</span>
-              <span class="statt-u" id="ps-vol-u">lifted</span>
-            </div>
-            <div class="statt">
-              <span class="statt-l">Achievements</span>
-              <span class="statt-v" id="ps-ach">—</span>
-              <span class="statt-u" id="ps-ach-u">unlocked</span>
-            </div>
-          </div>
-          <button type="button" class="statgrid-cta" onclick="goTab('body')">
-            <span>See the full breakdown</span>
-            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-
-        <!-- Where the goals actually stand. Editing them is the same tap as
-             reading them, so setting a target is not a separate errand. -->
-        <div class="card">
-          <div class="fb" style="margin-bottom:14px">
-            <div class="ctitle" style="margin:0">Goal progress</div>
-            <button type="button" class="btn-g" onclick="openGoalsM()">Edit goals</button>
-          </div>
-          <div id="goalprog"><div class="skel" style="height:46px;margin-bottom:10px"></div><div class="skel" style="height:46px"></div></div>
-        </div>
-
         <!-- PROFILE -->
         <div class="card">
           <div class="ctitle">Profile</div>
@@ -1034,24 +963,14 @@
           </div>
         </div>
 
-        <!-- CONNECTED APPS -->
-        <div class="card">
-          <div class="ctitle">Connected apps</div>
-          <div class="sit" onclick="openImport()">
-            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <span class="sit-t"><span class="sit-l">Apple Health &amp; Google Fit</span><span class="sit-s" id="set-import-sub">Bring in weights, workouts and sleep by export file</span></span>
-            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" onclick="togglePushFromSettings()">
-            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-phone"/></svg>
-            <span class="sit-t"><span class="sit-l">This device</span><span class="sit-s" id="set-device-sub">Checking notification access…</span></span>
-            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
         <!-- YOUR DATA -->
         <div class="card">
           <div class="ctitle">Your data</div>
+          <div class="sit" onclick="openImport()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span class="sit-t"><span class="sit-l">Import from Apple Health or Google Fit</span><span class="sit-s">Weights, workouts and sleep</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
           <div class="sit" onclick="exportData()">
             <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span class="sit-t"><span class="sit-l">Export as CSV</span><span class="sit-s">One file per log, for spreadsheets</span></span>
