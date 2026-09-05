@@ -3612,48 +3612,64 @@ async function sendMsg(){
     '- No moralising about food, bodyweight, or missed sessions. Objective is not hostile.\n';
 
   var sys=persona+'\n'+safetyInstr+'\nWHAT YOU KNOW ABOUT THEM:\n'+buildCtx()+'\n\n'+planInstr+'\n\n'+actInstr;
-  // Retry with exponential backoff + per-attempt timeout.
-  // Pollinations cold-starts can take 10-15s; warm calls are <1s. We give each
-  // attempt 25s to finish before aborting, and retry up to 4 times. Total worst-
-  // case budget is ~110s but the typing indicator stays visible the whole time.
-  var body=JSON.stringify({messages:[{role:'system',content:sys}].concat(chatH.slice(-12)),model:'openai',private:true,seed:Math.floor(Math.random()*9999)});
-  var reply=null,lastErr=null;
-  for(var attempt=0;attempt<4;attempt++){
+  // Retry with exponential backoff + per-attempt timeout. The engine runs
+  // behind a Supabase edge function so the API key never reaches the browser;
+  // adaptive thinking means a considered answer can take 10-20s, so each
+  // attempt gets 45s and a cold function start is not mistaken for a failure.
+  var reply=null,lastErr=null,lastStatus=0;
+  var session=null;
+  try{var sres=await sb.auth.getSession();session=sres&&sres.data&&sres.data.session;}catch(e){}
+  if(!session){
+    tdiv.remove();
+    addMsg('a','Session expired. Sign in again and re-issue the command.');
+    return;
+  }
+  var payload=JSON.stringify({system:sys,messages:chatH.slice(-12)});
+  for(var attempt=0;attempt<3;attempt++){
     var ctrl=null,timer=null;
     try{
       ctrl=new AbortController();
-      timer=setTimeout(function(){try{ctrl.abort();}catch(e){}},25000);
-      var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:body,signal:ctrl.signal});
-      if(!res.ok){lastErr='HTTP '+res.status;
-        if(res.status>=400&&res.status<500&&res.status!==429)break; // 4xx (other than rate-limit) won't get better
-      }else{
-        var txt=await res.text();
-        if(txt&&txt.trim()){reply=txt.trim();break;}
-        lastErr='empty';
-      }
+      timer=setTimeout(function(){try{ctrl.abort();}catch(e){}},45000);
+      var res=await fetch(SUPA_URL+'/functions/v1/coach',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPA_KEY},
+        body:payload,signal:ctrl.signal});
+      lastStatus=res.status;
+      var j=null;try{j=await res.json();}catch(e){}
+      if(res.ok&&j&&j.text){reply=j.text.trim();break;}
+      lastErr=(j&&j.error)||('HTTP '+res.status);
+      // 4xx other than rate-limit will not improve on a retry.
+      if(res.status>=400&&res.status<500&&res.status!==429)break;
     }catch(e){lastErr=(e&&e.name==='AbortError')?'timeout':((e&&e.message)||'network');}
     finally{if(timer)clearTimeout(timer);}
-    if(attempt<3)await new Promise(function(r){setTimeout(r,500*Math.pow(2,attempt)+Math.random()*250);});
+    if(attempt<2)await new Promise(function(r){setTimeout(r,700*Math.pow(2,attempt)+Math.random()*300);});
   }
   tdiv.remove();
   if(reply){
     addMsg('a',reply);chatH.push({role:'assistant',content:reply});
   }else{
-    // Three failures used to share one message, and "unreachable, try again
-    // in a moment" sent people to check their wifi when the real cause was
-    // the upstream service refusing us outright. Say which one it is.
+    // Each failure has a different answer, so each gets its own line rather
+    // than one "unreachable" that sends people to check their connection.
     var help;
     if(!navigator.onLine){
-      help='You\'re offline. Coach needs a connection; everything else still works.';
-    }else if(lastStatus===401||lastStatus===402||lastStatus===403){
-      help='Coach is off right now: the model service behind it is refusing requests. '+
-        'That is on our side, not yours, and retrying will not help yet. Everything else '+
-        'in the app works and nothing you have logged is touched.';
+      help='Offline. The engine needs a connection; logging still works locally.';
+    }else if(lastErr==='engine_not_configured'){
+      help='Engine offline: no model key is configured on the server. Set ANTHROPIC_API_KEY in the Supabase function secrets and redeploy the coach function.';
+    }else if(lastErr==='engine_key_rejected'){
+      help='Engine offline: the configured model key was rejected. Check ANTHROPIC_API_KEY in the Supabase function secrets.';
+    }else if(lastErr==='refused'){
+      help='That request was declined by the model safety layer. Rephrase it, or ask a clinician if it concerns pain, injury or medication.';
+    }else if(lastStatus===429||lastErr==='rate_limited'){
+      help='Rate limited. Wait a moment and re-issue the command.';
+    }else if(lastStatus===401||lastStatus===403){
+      help='Session rejected. Sign out and back in, then re-issue the command.';
+    }else if(lastErr==='payload_too_large'){
+      help='This conversation is too long to send. Reset the session and re-issue the command.';
     }else{
-      help='Coach did not answer that one. Try again in a moment; your stats and logs are untouched.';
+      help='No output returned. Re-issue the command; your logs are untouched.';
     }
     addMsg('a',help);
-    if(window.Sentry)Sentry.captureMessage('AI chat failed: '+lastErr,{level:'warning'});
+    if(window.Sentry)Sentry.captureMessage('Coach engine failed: '+lastErr,{level:'warning'});
   }
 }
 function buildCtx(){
@@ -4589,16 +4605,16 @@ function updateProProfileUI(){
   // PRO badges on locked features
   var mmPro=document.getElementById('body-mm-pro');
   if(mmPro)mmPro.style.display=isPremium()?'none':'inline-flex';
-  // AI page header subtitle: show daily message allowance for free users
+  // Engine status line. Keeps the live dot — it is the only thing on the panel
+  // that says the engine is running rather than idle.
   var aiSub=document.getElementById('ai-page-sub');
   if(aiSub){
     if(isPremium()){
-      aiSub.textContent='Pro · unlimited messages';
-      aiSub.style.color='var(--accent-d)';
+      aiSub.innerHTML='<i class="eng-dot"></i>Pro · unlimited commands';
     }else{
       var left=premRemaining('ai_chat');
-      aiSub.innerHTML='Free · <b>'+left+'</b> of '+PREM_LIMITS.ai_chat+' messages left today · <span class="lnk" style="font-size:12px;padding:0;font-weight:700" onclick="openPaywall()">Upgrade</span>';
-      aiSub.style.color='var(--t2)';
+      aiSub.innerHTML='<i class="eng-dot"></i>'+left+' of '+PREM_LIMITS.ai_chat+' commands left today · '+
+        '<span class="lnk" onclick="openPaywall()">Upgrade</span>';
     }
   }
 }

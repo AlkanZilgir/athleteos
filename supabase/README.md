@@ -16,6 +16,7 @@ keep them in sync when you change a function.
 | `send-push` | yes | app | One-off web push to the calling user's own devices. |
 | `push-cron` | no | pg_cron `*/15 * * * *` | Daily reminders (workout, protein, streak-save, re-engage, weekly recap), timezone-aware. |
 | `rest-push-cron` | no | pg_cron `* * * * *` | Drains `scheduled_pushes` — backstop delivery for the rest-timer "complete" alert when the app/SW were killed. |
+| `coach` | yes | app | Command Engine proxy to the Anthropic Messages API. Holds `ANTHROPIC_API_KEY` server-side so it never reaches the browser. Model and effort are overridable per-deploy via `COACH_MODEL` / `COACH_EFFORT`. |
 
 ## Migrations (`migrations/`)
 
@@ -38,3 +39,20 @@ Both pass `x-cron-secret: <CRON_SECRET>`.
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — **flip to live keys before launch.**
 - `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`, `STRIPE_PRICE_LIFETIME` — live price IDs.
 - `APP_BASE_URL` — production return URL (e.g. `https://athleteos.app/index.html`).
+- `ANTHROPIC_API_KEY` — **required for the Coach tab to answer at all.** Without it
+  the `coach` function returns `engine_not_configured` and the app says so plainly.
+- `COACH_MODEL` — optional, defaults to `claude-opus-5`.
+- `COACH_EFFORT` — optional, defaults to `medium`. Raise to `high` for better
+  programming quality at higher token spend; drop to `low` for cheaper chat.
+
+## Coach engine notes
+
+The previous free provider (`text.pollinations.ai`) now returns HTTP 402 to every
+request, anonymous ones included, so the Coach tab was dead. It is replaced by the
+`coach` edge function above.
+
+**Cost control is currently client-side only.** `PREM_LIMITS.ai_chat` caps free
+users at 7 messages/day in the browser; a determined caller with a valid JWT can
+bypass that and spend tokens directly against the function. Before opening signups
+wide, add a server-side per-user daily counter in `coach/index.ts` — the request
+guards there today are payload size and turn count, not spend.

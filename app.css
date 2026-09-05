@@ -2526,3 +2526,7 @@ body.dark .chat-row{background:#0F0F12}
   .eng-out-b{padding:12px;font-size:12.5px}
 }
 @media (prefers-reduced-motion:reduce){.eng-dot{animation:none}}
+
+/* The upgrade link sits inside the status line, so it inherits its register. */
+.eng-status .lnk{font-family:inherit;font-size:inherit;letter-spacing:inherit;
+  text-transform:inherit;font-weight:700;padding:0}
