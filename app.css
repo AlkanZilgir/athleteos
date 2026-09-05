@@ -2496,3 +2496,9 @@ body:not(.dark) .statgrid-cta{color:var(--accent-d)}
   .qacc-l{font-size:12.5px}
   .statt-v{font-size:24px}
 }
+
+
+/* Goal rows share the home meters; they only need their own rhythm. */
+.gp-row+.gp-row{margin-top:16px}
+#goalprog .meter-l{font-size:10.5px;letter-spacing:.12em}
+#goalprog .meter-v{font-size:14px}

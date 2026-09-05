@@ -806,7 +806,7 @@ function goTab(t){
     renderCalendar();renderCardio();renderHeatmap();
     showTooltip('first-newsess',{targetId:'newsess-btn',title:'Tap here to start',body:'Begin a session, pick a lift, and log your first set. We pre-fill from your last workout.'});
   },60);
-  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();renderProfileStats();renderDeviceRow();},60);
+  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();renderProfileStats();renderDeviceRow();renderGoalProgress();},60);
 }
 
 /* HOME DATA VISUALS
@@ -3259,6 +3259,7 @@ async function saveGoals(){
   cModal('m-goals');initWGrid();refresh();
   document.getElementById('g-sub').textContent='Protein: '+G.protein+'g · Weight: '+G.weight+'kg';
   document.getElementById('b-gw').innerHTML=G.weight+'<span class="su">kg</span>';
+  renderGoalProgress();
   toast('Goals updated');
   await sb.from('profiles').update({protein_goal:G.protein,weight_goal:G.weight,water_goal:G.water,calorie_goal:G.calories}).eq('id',CU.id);
 }
@@ -3272,6 +3273,78 @@ function loadProfile(){
   }
   updateProfileUI();
 }
+/* ── PROFILE: GOAL PROGRESS ──────────────────
+   Three goals with a bar each. Weight is measured from where you started
+   rather than from zero, because "78 of 82 kg" is a meaningless fraction —
+   what you want to see is how much of the journey is behind you. A goal with
+   nothing to measure it against says what to do instead of showing 0%. */
+function _goalRow(label,valTxt,pct,hue,note){
+  var w=Math.max(0,Math.min(100,pct));
+  return '<div class="gp-row">'+
+    '<div class="meter-head"><span class="meter-l">'+label+'</span>'+
+    '<span class="meter-v">'+valTxt+'</span></div>'+
+    '<div class="meter"><div class="meter-fill" style="width:'+w+'%;--meter-hue:'+hue+'"></div></div>'+
+    (note?'<div class="meter-note">'+note+'</div>':'')+
+  '</div>';
+}
+function _goalEmpty(label,cta){
+  return '<div class="gp-row">'+
+    '<div class="meter-head"><span class="meter-l">'+label+'</span></div>'+
+    '<div class="meter"><div class="meter-fill" style="width:0%"></div></div>'+
+    '<div class="meter-note">'+cta+'</div></div>';
+}
+async function renderGoalProgress(){
+  var el=document.getElementById('goalprog');if(!el||!CU)return;
+  var html='';
+
+  // 1. Body weight, measured from the first log to the target.
+  var target=+G.weight||0;
+  var logs=(wtLog||[]).slice();
+  if(target&&logs.length){
+    var start=+logs[0].weight,now=+logs[logs.length-1].weight;
+    var span=Math.abs(target-start),done=Math.abs(now-start);
+    var pct=span>0?(done/span)*100:100;
+    // Moving away from the target is real information; do not hide it at 0.
+    var wrongWay=(target>start&&now<start)||(target<start&&now>start);
+    html+=_goalRow('Body weight',now+' \u2192 '+target+' kg',wrongWay?0:pct,'var(--sig-water)',
+      wrongWay?'Heading away from target since you started'
+        :(Math.abs(now-target)<=0.1?'Target reached':Math.round(Math.abs(now-target)*10)/10+' kg to go'));
+  }else{
+    html+=_goalEmpty('Body weight',target?'Log a weight to start tracking':'Set a target weight to track this');
+  }
+
+  // 2. Training days this week against the weekly goal from setup.
+  var weekly=0;
+  try{var pr=JSON.parse(localStorage.getItem('prefs_'+CU.id)||'null');if(pr)weekly=+pr.weekly||0;}catch(e){}
+  if(weekly>0){
+    var now2=new Date(),dow=now2.getDay(),diff=dow===0?6:dow-1;
+    var mon=new Date(now2);mon.setDate(now2.getDate()-diff);mon.setHours(0,0,0,0);
+    var days=0;
+    try{
+      var r=await sb.from('workouts').select('started_at').eq('user_id',CU.id).gte('started_at',mon.toISOString());
+      var seen={};(r.data||[]).forEach(function(w){seen[w.started_at.split('T')[0]]=1;});
+      days=Object.keys(seen).length;
+    }catch(e){}
+    var left=Math.max(0,weekly-days);
+    html+=_goalRow('Training days',days+' / '+weekly+' this week',(days/weekly)*100,'var(--sig-train)',
+      left===0?'Week complete':left+' more to hit the week');
+  }else{
+    html+=_goalEmpty('Training days','Redo setup to set a weekly target');
+  }
+
+  // 3. Today's protein, the one daily goal worth repeating here.
+  var pg=+G.protein||0;
+  if(pg>0){
+    var p=(meals||[]).reduce(function(a,m){return a+(+m.protein||0);},0);
+    html+=_goalRow('Protein today',Math.round(p)+' / '+pg+' g',(p/pg)*100,'var(--sig-fuel)',
+      p>=pg?'Hit for today':Math.round(pg-p)+' g to go');
+  }else{
+    html+=_goalEmpty('Protein today','Set a daily protein goal');
+  }
+
+  el.innerHTML=html;
+}
+
 /* ── PROFILE: CAREER TOTALS ──────────────────
    Four counts pulled in one parallel round. Calories burned come from logged
    cardio only — strength sessions carry no reliable burn figure, and inventing
