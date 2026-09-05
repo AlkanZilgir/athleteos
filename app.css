@@ -1428,7 +1428,6 @@ body.dark{
 
   /* High-voltage accent. Ink is what sits ON it — never white. */
   --accent-ink:#0A0A0C;
-  --btn-block:#3F3F46;
 
   /* Signal set. Volt is the only colour allowed to be loud; the other
      three are held back so the hierarchy is unmistakable. */
@@ -1443,7 +1442,7 @@ body.dark{
   --glow-water:0 0 12px rgba(34,211,238,.30);
   --glow-sleep:0 0 12px rgba(167,139,250,.28);
 }
-:root{--accent-ink:#FFFFFF;--btn-block:#0A0A0C}
+:root{--accent-ink:#FFFFFF}
 
 /* Layering: on obsidian, cards read by their own value, not by a shadow. */
 body.dark .card,body.dark .band,body.dark .pair-cell,body.dark .exi,body.dark .mc{
@@ -1480,52 +1479,47 @@ body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
 
 /* ═══════════════════════════════════════════════════════════════
    GEOMETRY + CONTROLS
-   Corners go sharp everywhere, primary actions get a solid offset
-   block that the button snaps into on press, and every action label
-   is set in the display face.
+   Cards and readouts keep the sharpened corners. Controls do not: a
+   button is the thing you should be able to reach for without noticing
+   it, so it gets an ordinary radius, the body face, and its label set
+   the way the label is actually spoken.
    ═══════════════════════════════════════════════════════════════ */
 :root{
   --r:8px;--r-sm:5px;--r-lg:10px;   /* was 18 / 12 / 24 */
-  --r-btn:3px;--r-chip:2px;
-  --press:3px;                       /* how far a primary button travels */
+  --r-btn:8px;--r-chip:2px;
 }
 
-/* Kill the global scale-on-press: primary buttons now translate into their
-   own shadow block instead, and scaling on top of that reads as jelly. */
 button:not([disabled]){transition:background .14s,border-color .14s,color .14s,box-shadow .1s,transform .1s}
-button:not([disabled]):active{transform:none}
+button:not([disabled]):active{transform:translateY(1px)}
 
 /* ── ACTION LABEL ──────────────────────────
-   Caps, tracked, in the display face. Applied to the action buttons only;
-   inputs and body text keep Inter. */
+   Inter, sentence case, one weight down from the old display caps. Caps
+   and wide tracking stay on headings and readouts, where they read as
+   voice; on every control at once they were just volume. Labels render
+   as written in the markup, so nothing here transforms them. */
 .btn,.btnsm,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.btn-o,.qa-btn .qa-lbl,
 .onb-cta .btn,.onb-cta .btn-o,.mm-mode-btn,.pill,.gpill{
-  font-family:var(--font-display);font-weight:600;text-transform:uppercase;
-  letter-spacing:.13em;
+  font-family:var(--font-body);font-weight:600;text-transform:none;
+  letter-spacing:0;
 }
-.btn,.wc-cta,.obp-cta,.pw-cta{letter-spacing:.15em;font-weight:700}
+.btn,.wc-cta,.obp-cta,.pw-cta{letter-spacing:-.01em}
 
 /* ── PRIMARY ───────────────────────────────
-   Volt fill, obsidian ink, and a hard slate block behind it. The block is
-   the affordance: press and the button lands on it. */
+   Volt fill, obsidian ink. The press is a 1px settle: the hard offset
+   block behind it read as a sticker pasted onto the page. */
 .btn,.wc-cta,.obp-cta,.pw-cta{
   border-radius:var(--r-btn);
   background:var(--accent);color:var(--accent-ink);
-  border:none;font-size:15px;padding:17px 22px;
-  box-shadow:var(--press) var(--press) 0 var(--btn-block);
-  text-shadow:none;
+  border:none;font-size:14.5px;padding:14px 20px;
+  box-shadow:none;text-shadow:none;
 }
-.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover{
-  background:var(--accent-d);box-shadow:var(--press) var(--press) 0 var(--btn-block)}
-.btn:active,.wc-cta:active,.obp-cta:active,.pw-cta:active{
-  transform:translate(var(--press),var(--press));box-shadow:none}
+.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover{background:var(--accent-d)}
 .btn:disabled{box-shadow:none;transform:none;opacity:1}
-.btnsm{border-radius:var(--r-btn);padding:11px 16px;font-size:13px;--press:2px}
+.btnsm{border-radius:var(--r-btn);padding:10px 15px;font-size:13.5px}
 .empty-cta{
   border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);
-  box-shadow:2px 2px 0 var(--btn-block);font-size:12px;padding:10px 16px;--press:2px}
+  box-shadow:none;font-size:13px;padding:9px 15px}
 .empty-cta:hover{background:var(--accent-d)}
-.empty-cta:active{transform:translate(2px,2px);box-shadow:none}
 .empty-cta.ghost{background:transparent;color:var(--accent);box-shadow:none;
   border:1.5px solid var(--bdr3)}
 .empty-cta.ghost:hover{border-color:var(--accent);background:var(--adim)}
@@ -1534,10 +1528,9 @@ button:not([disabled]):active{transform:none}
    Outline only. Border carries the contrast; the fill arrives on hover. */
 .btn-o{
   border-radius:var(--r-btn);background:transparent;color:var(--t);
-  border:1.5px solid var(--bdr3);font-size:13px;padding:12px 18px}
+  border:1.5px solid var(--bdr3);font-size:13.5px;padding:11px 16px}
 .btn-o:hover{background:var(--surface-2);border-color:var(--t);color:var(--t)}
-.btn-o:active{transform:translate(1px,1px)}
-.btn-g{border-radius:var(--r-btn);letter-spacing:.02em}
+.btn-g{border-radius:var(--r-btn);letter-spacing:0}
 .btn-oauth{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr3);
   box-shadow:none;text-transform:none;letter-spacing:0;font-family:var(--font-body)}
 .btn-oauth:hover{background:var(--surface-2);border-color:var(--t)}
@@ -1551,7 +1544,7 @@ button:not([disabled]):active{transform:none}
 .qa-btn:hover{background:var(--accent);border-color:var(--accent)}
 .qa-btn:hover .qa-lbl{color:var(--accent-ink)}
 .qa-btn:hover .qa-ico{background:transparent;border-color:transparent;color:var(--accent-ink)}
-.qa-btn:active{transform:translate(1px,1px)}
+.qa-btn:active{transform:translateY(1px)}
 .qa-ico{border-radius:var(--r-chip);background:transparent;border:1px solid var(--bdr2)}
 
 /* ── CHIPS, PILLS, BADGES ──────────────────*/
@@ -1559,16 +1552,16 @@ button:not([disabled]):active{transform:none}
 .obp-badge,.pw-plan-badge,.pw-hero-badge,.hm-c0,.hm-c1,.hm-c2,.hm-c3,.hm-cell,
 .rest-preset,.scale-b,.obp-plan,.pw-plan,.opt-item,.tip-card,.tip-card .tip-ok{
   border-radius:var(--r-chip)}
-.pill,.gpill,.mm-mode-btn{font-size:12px}
+.pill,.gpill,.chat-chip,.rest-preset{border-radius:var(--r-btn)}
+.pill,.gpill,.mm-mode-btn{font-size:13px}
 .pill.on,.gpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .chat-chip{font-family:var(--font-body);text-transform:none;letter-spacing:0}
 .chat-chip:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 
 /* ── CHAT CONTROLS ─────────────────────────*/
 .chat-send{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);
-  box-shadow:2px 2px 0 var(--btn-block)}
+  box-shadow:none}
 .chat-send:hover{background:var(--accent-d)}
-.chat-send:active{transform:translate(2px,2px);box-shadow:none}
 .chat-mic{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr2)}
 .chat-mic:hover{background:var(--surface-2);border-color:var(--t)}
 .chat-in{border-radius:var(--r-btn)}
@@ -1604,15 +1597,13 @@ body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{
 button:focus-visible,a:focus-visible,[role="button"]:focus-visible{box-shadow:0 0 0 3px var(--adim)}
 
 @media (prefers-reduced-motion:reduce){
-  .btn:active,.wc-cta:active,.obp-cta:active,.pw-cta:active,
-  .empty-cta:active,.chat-send:active,.btn-o:active,.qa-btn:active{transform:none}
+  button:not([disabled]):active,.qa-btn:active,.mm-chip:active{transform:none}
 }
 
-/* Destructive actions: same geometry, different signal. Red owns the block so
-   the press still reads, and the ink stays white because red is dark enough. */
-.btn-danger{background:var(--red);color:#FFFFFF;box-shadow:var(--press) var(--press) 0 rgba(239,68,68,.32)}
-.btn-danger:hover{background:#DC2626;box-shadow:var(--press) var(--press) 0 rgba(239,68,68,.32)}
-.btn-danger:active{transform:translate(var(--press),var(--press));box-shadow:none}
+/* Destructive actions: same geometry, different signal. The ink stays white
+   because red is dark enough to carry it. */
+.btn-danger{background:var(--red);color:#FFFFFF;box-shadow:none}
+.btn-danger:hover{background:#DC2626}
 .btn-o-danger{border-color:var(--red);color:var(--red)}
 .btn-o-danger:hover{background:var(--red);border-color:var(--red);color:#FFFFFF}
 
@@ -1763,10 +1754,10 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .mm-chips{gap:5px}
 .mm-chip{
   border-radius:var(--r-chip);background:transparent;border:1px solid var(--bdr2);
-  color:var(--t2);font-family:var(--font-display);font-weight:500;font-size:12.5px;
-  letter-spacing:.1em;text-transform:uppercase;padding:10px 13px}
+  color:var(--t2);font-family:var(--font-body);font-weight:500;font-size:12.5px;
+  letter-spacing:0;padding:10px 13px}
 .mm-chip:hover{border-color:var(--bdr3);background:var(--card)}
-.mm-chip:active{transform:translate(1px,1px)}
+.mm-chip:active{transform:translateY(1px)}
 .mm-chip-dot{border-radius:0;width:7px;height:7px}
 .mm-chip.grow{border-color:var(--accent);color:var(--accent);background:rgba(204,255,0,.09)}
 .mm-chip.def{border-color:var(--sig-water);color:var(--sig-water);background:rgba(34,211,238,.09)}
@@ -1776,19 +1767,13 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .mm-chip.def .mm-chip-dot{background:var(--sig-water)}
 .mm-chip.exc .mm-chip-dot{background:var(--sig-fuel)}
 .mm-quick button{
-  font-family:var(--font-display);font-weight:600;font-size:11.5px;
-  letter-spacing:.13em;text-transform:uppercase;border-radius:var(--r-chip)}
+  font-family:var(--font-body);font-weight:600;font-size:12px;
+  letter-spacing:0;border-radius:var(--r-btn)}
 
 @media(min-width:560px){
   .onb-body-wrap{max-width:600px;margin:0 auto;width:100%;padding-left:28px;padding-right:28px}
   .onb-cta{max-width:600px;margin:0 auto;width:100%}
 }
-
-/* The offset block is the whole point of the press, so let it read. Slate is
-   the brief's secondary colour and the only value with enough separation from
-   obsidian to register at a 4px offset. */
-:root{--press:4px}
-body.dark{--btn-block:#3F3F46}
 
 /* ═══════════════════════════════════════════════════════════════
    STRUCTURE SWEEP
@@ -1841,7 +1826,7 @@ body.dark{--btn-block:#3F3F46}
   font-size:clamp(46px,15vw,66px);line-height:.85;letter-spacing:.5px;
   color:var(--accent);font-variant-numeric:tabular-nums;
   text-shadow:var(--glow-train)}
-.sw-finish{align-self:end;--press:3px}
+.sw-finish{align-self:end}
 @media (prefers-reduced-motion:reduce){.sw-live{animation:none}}
 
 /* ── NOTEBOOK LOG ──────────────────────────
@@ -1957,7 +1942,7 @@ body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}
 .hud-vol .hud-v{color:var(--t)}
 .hud-l{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--t3);margin-top:8px;white-space:nowrap}
-.hud-end{align-self:end;--press:3px}
+.hud-end{align-self:end}
 #wtimer{text-shadow:var(--glow-train)}
 
 /* ── SET ROW ───────────────────────────────
@@ -2247,9 +2232,10 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 
 /* ── CHARTS BLEED ──────────────────────────
    Canvases run to the container edge; the card padding was doubling up
-   with Chart.js's own inset. */
-.card>[style*="position:relative"]>canvas,#hm-grid{display:block}
-.chartwrap{margin:0 -20px -6px;padding:0}
+   with Chart.js's own inset. NB: do not put #hm-grid in this rule — an id
+   beats .hm-grid's `display:grid` and collapses the heatmap into one
+   full-width column per cell. */
+.card>[style*="position:relative"]>canvas{display:block}
 
 /* ── WATER GRID ────────────────────────────
    Hollow technical cell, solid volt on tap. No fade. */
@@ -2303,8 +2289,10 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 .chart-wrap{margin-left:-20px;margin-right:-20px;padding:0}
 .card>.chart-wrap:last-child{margin-bottom:-20px}
 @media(min-width:820px){.band .chart-wrap,.card .chart-wrap{margin-left:-28px;margin-right:-28px}}
-/* Heatmap loses its inner gutter for the same reason. */
-#hm-grid{margin:0 -2px}
+/* Heatmap loses its inner gutter for the same reason. The display is pinned
+   here at id strength: any blanket display:block on #hm-grid outranks
+   .hm-grid and stacks each week into full-width, day-sized blocks. */
+#hm-grid{margin:0 -2px;display:grid}
 
 /* ── MUSCLE MAP: diagnostic blueprint ──────
    A marked zone is a solid contrast block with the survey grid showing
