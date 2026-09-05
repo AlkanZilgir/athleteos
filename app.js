@@ -806,7 +806,7 @@ function goTab(t){
     renderCalendar();renderCardio();renderHeatmap();
     showTooltip('first-newsess',{targetId:'newsess-btn',title:'Tap here to start',body:'Begin a session, pick a lift, and log your first set. We pre-fill from your last workout.'});
   },60);
-  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();},60);
+  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();renderProfileStats();renderDeviceRow();},60);
 }
 
 /* HOME DATA VISUALS
@@ -2129,6 +2129,7 @@ async function deleteCustomAch(dbId){
     await loadCustomAch();renderAchievements();
   }catch(e){console.warn('deleteCustomAch',e);}
 }
+var _achUnlocked=0;
 var ACHIEVEMENTS=[
   {id:'first',ico:ICO('target'),name:'First Step',desc:'Log 1 workout',check:function(c){return c.workouts>=1;}},
   {id:'wo10',ico:ICO('star'),name:'Tenth Time',desc:'10 workouts',check:function(c){return c.workouts>=10;}},
@@ -2187,6 +2188,8 @@ async function renderAchievements(){
     return '<div class="ach '+(got?'on':'off')+'" style="position:relative" title="'+a.desc+'">'+del+'<div class="ach-ico">'+a.ico+'</div><div class="ach-name">'+a.name+'</div><div class="ach-desc">'+a.desc+'</div></div>';
   }).join('');
   if(count)count.textContent=unlocked+'/'+all.length;
+  _achUnlocked=unlocked;
+  renderProfileStats();
 }
 
 /* ── MUSCLE BROWSER ────────────────────────── */
@@ -2952,15 +2955,64 @@ async function renderDailySummary(){
     card.style.display='block';
   }catch(e){console.warn('daily summary',e);card.style.display='none';}
 }
-function _greeting(){
-  var h=new Date().getHours();
-  var who=(CU&&CU._name)||(CU&&CU.user_metadata&&CU.user_metadata.name)||(CU&&CU.email&&CU.email.split('@')[0])||'there';
-  var g=h<5?'Still up':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Good night';
-  return g+', '+who.split(' ')[0];
+function _firstName(){
+  var who=(CU&&CU._name)||(CU&&CU.user_metadata&&CU.user_metadata.name)||(CU&&CU.email&&CU.email.split('@')[0])||'Athlete';
+  return who.split(' ')[0];
 }
+function _salutation(){
+  var h=new Date().getHours();
+  return h<5?'Still up':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Good night';
+}
+// Kept for anywhere that still wants the whole line in one string.
+function _greeting(){return _salutation()+', '+_firstName();}
+/* ── HOME: IDENTITY, SUMMARY, QUICK ACCESS ───
+   The line under the greeting used to be a slogan. It now reports where the
+   week actually stands, because that is the question the app is opened to
+   answer and a slogan answers nothing. */
+function renderHomeAvatar(){
+  var el=document.getElementById('home-ava');if(!el||!CU)return;
+  var n=CU._name||(CU.user_metadata&&CU.user_metadata.name)||(CU.email||'').split('@')[0]||'';
+  el.textContent=(n||'?').charAt(0).toUpperCase();
+}
+function renderHeroSummary(sessions,totalVol){
+  var el=document.getElementById('hero-sub');if(!el)return;
+  var bits=[];
+  if(sessions>0){
+    bits.push(sessions+' session'+(sessions===1?'':'s')+' this week');
+    if(totalVol>0){
+      var t=totalVol>=1000?(totalVol/1000).toFixed(1)+' tonnes':Math.round(totalVol).toLocaleString()+' kg';
+      bits.push(t+' moved');
+    }
+  }
+  if(_streakCount>0)bits.push(_streakCount+'-day streak');
+  // Nothing logged yet is a real state, not an error — say the useful thing.
+  el.textContent=bits.length?bits.join(' \u00b7 '):'Nothing logged this week yet. One set counts.';
+}
+function renderQuickAccess(){
+  var t=document.getElementById('qacc-train');
+  if(t)t.textContent=_streakCount>0?_streakCount+'-day streak':'Start a session';
+  var f=document.getElementById('qacc-fuel');
+  if(f){
+    var kcal=(meals||[]).reduce(function(a,m){return a+(+m.calories||0);},0);
+    f.textContent=kcal>0?Math.round(kcal).toLocaleString()+' / '+(G.calories||0)+' kcal':'Log a meal';
+  }
+  var gl=document.getElementById('qacc-goals');
+  if(gl){
+    var w=(wtLog&&wtLog.length)?+wtLog[wtLog.length-1].weight:0;
+    var target=+G.weight||0;
+    if(w&&target){
+      var d=Math.round(Math.abs(w-target)*10)/10;
+      gl.textContent=d<=0.1?'Target reached':d+' kg to target';
+    }else{gl.textContent='Set a target';}
+  }
+}
+
 async function renderHero(){
-  var g=document.getElementById('hero-greet');if(g)g.textContent=_greeting();
+  var hi=document.getElementById('hero-hi');if(hi)hi.textContent=_salutation();
+  var g=document.getElementById('hero-greet');if(g)g.textContent=_firstName();
   setHomeDate();
+  renderHomeAvatar();
+  renderQuickAccess();
   // Weekly stats from the last 7 days of workouts (incl. exercises/sets for volume).
   var since=new Date();since.setDate(since.getDate()-6);since.setHours(0,0,0,0);
   var{data}=await sb.from('workouts')
@@ -2992,6 +3044,7 @@ async function renderHero(){
   _tickerTo(document.getElementById('hero-streak'),(_streakCount||0),500,function(v){return Math.round(v)+'d';});
   var dur=document.getElementById('hero-duration');
   if(dur){var hh=Math.floor(totalSecs/3600),mm=Math.round((totalSecs%3600)/60);dur.textContent=hh>0?hh+'h '+mm+'m':mm+'m';}
+  renderHeroSummary(sessions,totalVol);
   // Sparkline (oldest → today)
   var labels=[],values=[];
   Object.keys(byDay).sort().forEach(function(k){labels.push(k.slice(5));values.push(Math.round(byDay[k]));});
@@ -3218,6 +3271,40 @@ function loadProfile(){
     if(saved)P=Object.assign({gender:'male',age:0,height:0,units:'metric'},saved);
   }
   updateProfileUI();
+}
+/* ── PROFILE: CAREER TOTALS ──────────────────
+   Four counts pulled in one parallel round. Calories burned come from logged
+   cardio only — strength sessions carry no reliable burn figure, and inventing
+   one would put a made-up number next to three real ones. */
+async function renderProfileStats(){
+  if(!CU||!sb)return;
+  var elW=document.getElementById('ps-workouts');if(!elW)return;
+  try{
+    var r=await Promise.all([
+      sb.from('workouts').select('id,exercises(sets(weight_kg,reps))').eq('user_id',CU.id),
+      sb.from('cardio_sessions').select('calories').eq('user_id',CU.id)
+    ]);
+    var wList=r[0].data||[],cList=r[1].data||[];
+    var vol=0;
+    wList.forEach(function(w){(w.exercises||[]).forEach(function(ex){(ex.sets||[]).forEach(function(st){
+      vol+=(+st.weight_kg||0)*(+st.reps||0);});});});
+    var kcal=cList.reduce(function(a,c){return a+(+c.calories||0);},0);
+    elW.textContent=wList.length.toLocaleString();
+    var elK=document.getElementById('ps-kcal');
+    if(elK)elK.textContent=kcal>0?Math.round(kcal).toLocaleString():'0';
+    var elV=document.getElementById('ps-vol'),elVu=document.getElementById('ps-vol-u');
+    if(elV){
+      var heavy=vol>=1000;
+      elV.textContent=heavy?(vol/1000).toFixed(1):Math.round(vol).toLocaleString();
+      if(elVu)elVu.textContent=heavy?'tonnes lifted':'kg lifted';
+    }
+    var elA=document.getElementById('ps-ach'),elAu=document.getElementById('ps-ach-u');
+    if(elA){
+      var total=ACHIEVEMENTS.length+(CUSTOM_ACH?CUSTOM_ACH.length:0);
+      elA.textContent=String(_achUnlocked);
+      if(elAu)elAu.textContent='of '+total+' unlocked';
+    }
+  }catch(e){}
 }
 function updateProfileUI(){
   var n=CU._name||CU.user_metadata&&CU.user_metadata.name||CU.email.split('@')[0];
@@ -3601,14 +3688,14 @@ async function sendMsg(){
   // attempt 25s to finish before aborting, and retry up to 4 times. Total worst-
   // case budget is ~110s but the typing indicator stays visible the whole time.
   var body=JSON.stringify({messages:[{role:'system',content:sys}].concat(chatH.slice(-12)),model:'openai',private:true,seed:Math.floor(Math.random()*9999)});
-  var reply=null,lastErr=null;
+  var reply=null,lastErr=null,lastStatus=0;
   for(var attempt=0;attempt<4;attempt++){
     var ctrl=null,timer=null;
     try{
       ctrl=new AbortController();
       timer=setTimeout(function(){try{ctrl.abort();}catch(e){}},25000);
       var res=await fetch('https://text.pollinations.ai/',{method:'POST',headers:{'Content-Type':'application/json'},body:body,signal:ctrl.signal});
-      if(!res.ok){lastErr='HTTP '+res.status;
+      if(!res.ok){lastErr='HTTP '+res.status;lastStatus=res.status;
         if(res.status>=400&&res.status<500&&res.status!==429)break; // 4xx (other than rate-limit) won't get better
       }else{
         var txt=await res.text();
@@ -3623,9 +3710,19 @@ async function sendMsg(){
   if(reply){
     addMsg('a',reply);chatH.push({role:'assistant',content:reply});
   }else{
-    var help=navigator.onLine
-      ? 'Coach is unreachable right now. Try again in a moment; your stats and logs are untouched.'
-      : 'You\'re offline. Coach needs a connection; everything else still works.';
+    // Three failures used to share one message, and "unreachable, try again
+    // in a moment" sent people to check their wifi when the real cause was
+    // the upstream service refusing us outright. Say which one it is.
+    var help;
+    if(!navigator.onLine){
+      help='You\'re offline. Coach needs a connection; everything else still works.';
+    }else if(lastStatus===401||lastStatus===402||lastStatus===403){
+      help='Coach is off right now: the model service behind it is refusing requests. '+
+        'That is on our side, not yours, and retrying will not help yet. Everything else '+
+        'in the app works and nothing you have logged is touched.';
+    }else{
+      help='Coach did not answer that one. Try again in a moment; your stats and logs are untouched.';
+    }
     addMsg('a',help);
     if(window.Sentry)Sentry.captureMessage('AI chat failed: '+lastErr,{level:'warning'});
   }
@@ -5789,6 +5886,32 @@ async function togglePush(checked){
   }else{
     await pushUnsubscribe();
   }
+}
+async function renderDeviceRow(){
+  var el=document.getElementById('set-device-sub');if(!el)return;
+  var name=_deviceLabel();
+  if(typeof Notification==='undefined'||!('serviceWorker' in navigator)){
+    el.textContent=name+' \u00b7 push not supported in this browser';return;
+  }
+  if(Notification.permission==='denied'){
+    el.textContent=name+' \u00b7 notifications blocked in browser settings';return;
+  }
+  var on=false;try{on=await pushIsSubscribed();}catch(e){}
+  el.textContent=name+(on?' \u00b7 receiving push':' \u00b7 push off, tap to turn on');
+}
+function _deviceLabel(){
+  var ua=navigator.userAgent||'';
+  var os=/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':/Mac OS X/.test(ua)?'Mac':/Windows/.test(ua)?'Windows':/Linux/.test(ua)?'Linux':'This browser';
+  var br=/Edg\//.test(ua)?'Edge':/OPR\//.test(ua)?'Opera':/Chrome\//.test(ua)?'Chrome':/Firefox\//.test(ua)?'Firefox':/Safari\//.test(ua)?'Safari':'Browser';
+  return os+' \u00b7 '+br;
+}
+async function togglePushFromSettings(){
+  if(typeof Notification==='undefined'){toast('This browser cannot show notifications');return;}
+  if(Notification.permission==='denied'){toast('Notifications are blocked in your browser settings');return;}
+  var on=false;try{on=await pushIsSubscribed();}catch(e){}
+  await togglePush(!on);
+  await refreshPushToggleUI();
+  renderDeviceRow();
 }
 async function refreshPushToggleUI(){
   var t=document.getElementById('rm-push');if(!t)return;

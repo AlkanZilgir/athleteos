@@ -170,8 +170,8 @@ body.dark .obp-radio{background:var(--card2)}
 .atab{flex:1;padding:11px;border:none;border-radius:10px;background:transparent;color:var(--t2);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;-webkit-appearance:none}
 .atab.on{background:#FFFFFF;color:var(--t);box-shadow:var(--shadow-sm)}
 .f{margin-bottom:14px}
-.f label{display:block;font-size:13px;color:var(--t);margin-bottom:8px;font-weight:600;letter-spacing:0;text-transform:none}
-.f input,.f select{width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:14px 16px;color:var(--t);font-size:16px;outline:none;-webkit-appearance:none;transition:all .18s;font-weight:500}
+.f label{display:block;font-size:12.5px;color:var(--t2);margin-bottom:7px;font-weight:600;letter-spacing:0;text-transform:none}
+.f input,.f select{width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:11px 14px;color:var(--t);font-size:16px;outline:none;-webkit-appearance:none;transition:all .18s;font-weight:500}
 .f input:focus,.f select:focus{border-color:var(--accent);background:#FFFFFF;box-shadow:0 0 0 4px var(--adim)}
 .f input::placeholder{color:var(--t3);font-weight:400}
 .f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:42px}
@@ -1485,7 +1485,7 @@ body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
    the way the label is actually spoken.
    ═══════════════════════════════════════════════════════════════ */
 :root{
-  --r:8px;--r-sm:5px;--r-lg:10px;   /* was 18 / 12 / 24 */
+  --r:14px;--r-sm:10px;--r-lg:20px;
   --r-btn:8px;--r-chip:2px;
 }
 
@@ -2309,3 +2309,190 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
   text-decoration:line-through;text-decoration-thickness:1px}
 .mm-chip.grow .mm-chip-dot,.mm-chip.def .mm-chip-dot{background:currentColor;opacity:.5}
 .mm-wrap{border:1px dashed var(--bdr3);padding:14px 12px}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SETTINGS
+   A settings screen is somewhere you go to find one specific thing
+   and leave. So it is built for scanning, not for looking at: bare
+   monochrome icons at one size, one weight for labels and one for
+   values, rows tight enough that a group reads as a group.
+
+   Colour appears exactly twice — the Pro card and the destructive
+   rows — and carries meaning both times. The old tinted icon tiles
+   spent eight different hues on rows that meant nothing by colour,
+   which is what made the screen read as decoration.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── IDENTITY ──────────────────────────────
+   The whole row opens the profile editor, so there is no separate
+   button competing with it for the same job. */
+.set-id{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:14px 16px;margin-bottom:10px;cursor:pointer;font-family:inherit;
+  -webkit-appearance:none;transition:border-color .15s,background .15s}
+.set-id:hover{border-color:var(--bdr3)}
+.set-ava{
+  width:44px;height:44px;flex-shrink:0;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--adim);color:var(--accent);border:1px solid var(--bdr2);
+  font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.5px}
+.set-id-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.set-id-n{font-size:15px;font-weight:600;color:var(--t);letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.set-id-e{font-size:12.5px;color:var(--t3);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── ROWS ──────────────────────────────────
+   Icon, label stack, chevron. The icon is a landmark for the eye, not
+   an ornament, so it stays the same size and the same colour on every
+   row and only the label carries the difference. */
+#p-settings .sit,#p-settings .tog-row{
+  display:flex;align-items:center;gap:13px;padding:12px 0;
+  border-bottom:1px solid var(--bdr)}
+#p-settings .sit{cursor:pointer;transition:opacity .15s}
+#p-settings .sit:hover{opacity:.72}
+#p-settings .sit:last-child,#p-settings .tog-row:last-child,
+#p-settings .tog-row-last{border-bottom:none}
+.sic{width:19px;height:19px;flex-shrink:0;color:var(--t3);
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.sit-t,#p-settings .tog-lbl{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sit-l{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.01em}
+.sit-s{font-size:12px;color:var(--t3);line-height:1.4}
+.sit-x{width:15px;height:15px;flex-shrink:0;color:var(--t4);
+  fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+#p-settings .sit-s .lnk{font-size:12px;padding:0}
+
+/* Destructive rows are the second and last place colour appears. Signal red
+   sits at 3.8:1 on white, below AA at label size, so light mode takes a
+   darker step of the same hue; the icon can stay bright, it is not text. */
+.set-danger .sit-danger .sic{color:var(--red)}
+.set-danger .sit-danger .sit-l{color:#B91C1C}
+body.dark .set-danger .sit-danger .sit-l{color:var(--red)}
+
+/* ── FIELDS (theme, accent) ────────────────*/
+.set-field{padding:12px 0;border-bottom:1px solid var(--bdr)}
+.set-field-last{border-bottom:none;padding-bottom:2px}
+.set-field-h{display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;margin-bottom:10px}
+.set-field-h>span:first-child{font-size:13.5px;font-weight:600;color:var(--t)}
+.set-field-h .tm{font-size:12px}
+
+/* ── SUBSCRIPTION ──────────────────────────*/
+.set-pro{display:flex;align-items:center;gap:14px;cursor:pointer;
+  border-color:color-mix(in srgb,var(--accent) 34%,transparent);
+  background:var(--adim);transition:border-color .15s}
+.set-pro:hover{border-color:var(--accent)}
+.set-pro-ico{width:22px;height:22px;flex-shrink:0;color:var(--accent);
+  fill:currentColor;stroke:none}
+.set-pro-t{font-size:14px;font-weight:600;color:var(--t);letter-spacing:-.01em}
+.set-pro-s{font-size:12px;color:var(--t2);line-height:1.4}
+.set-pro .sit-x{color:var(--accent)}
+
+/* ── ABOUT ─────────────────────────────────
+   Facts, not tappable rows. Set as a definition list would be. */
+.set-meta{display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;padding:11px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.set-meta-last{border-bottom:none;padding-bottom:0}
+.set-meta>span:first-child{color:var(--t3)}
+.set-meta>span:last-child{color:var(--t);font-weight:500;text-align:right}
+.set-meta .lnk{font-size:13px;padding:0}
+
+@media(max-width:400px){
+  #p-settings .sit,#p-settings .tog-row{gap:11px}
+  .sit-l{font-size:13px}
+}
+
+
+/* ── SEGMENTED CONTROLS ────────────────────
+   A filter chip is small enough that a solid accent fill reads as a mark.
+   A segmented control is not: Male / Metric / Dark are half-width slabs, and
+   filling one solid volt put the loudest object on the screen on a field
+   label. Selection here is carried the way the rest of the app carries it
+   (rest presets, muscle map) — accent edge, dim accent ground, accent ink. */
+.gpill.on{background:var(--adim);color:var(--accent-d);border-color:var(--accent)}
+body.dark .gpill.on{color:var(--accent)}
+.gpill{transition:background .14s,border-color .14s,color .14s}
+
+/* Field labels sit above their value, so they recede and the value leads. */
+.f label{line-height:1.3}
+
+/* Amber readout text. Signal amber is 2.15:1 on white, under AA even at
+   30px, so light mode takes the darker step the status badges use. */
+.ty{color:var(--yel)}
+body:not(.dark) .ty{color:#B45309}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   HOME: IDENTITY + QUICK ACCESS
+   The top of the screen answers two questions in order — who is this
+   and where do I stand — and then offers the three doors people came
+   through. Everything below it is detail.
+   ═══════════════════════════════════════════════════════════════ */
+.home-id{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+.home-ava{
+  width:46px;height:46px;flex-shrink:0;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--adim);color:var(--accent);border:1px solid var(--bdr2);
+  font-family:var(--font-display);font-weight:600;font-size:20px;letter-spacing:.5px;
+  cursor:pointer;-webkit-appearance:none;padding:0;
+  transition:border-color .15s,background .15s}
+.home-ava:hover{border-color:var(--accent)}
+.home-id-t{flex:1;min-width:0}
+.hero-hi{font-size:13.5px;font-weight:500;color:var(--t3);letter-spacing:0;
+  margin-bottom:1px}
+.home-head .hero-title{margin:0;font-size:clamp(26px,7vw,34px);line-height:1.02;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.home-head .home-date{margin:0 0 14px}
+.home-sub{margin:0 0 18px;font-size:13.5px;line-height:1.5;color:var(--t2);
+  font-weight:500;max-width:46ch}
+
+.qacc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.qacc-i{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  padding:14px 12px 13px;background:var(--card);border:1px solid var(--bdr);
+  border-radius:var(--r);cursor:pointer;font-family:inherit;text-align:left;
+  -webkit-appearance:none;min-width:0;
+  transition:border-color .15s,background .15s}
+.qacc-i:hover{border-color:var(--bdr3)}
+.qacc-ico{width:20px;height:20px;margin-bottom:8px;color:var(--accent);
+  fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.qacc-l{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.01em}
+.qacc-s{font-size:11px;color:var(--t3);line-height:1.35;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* ═══════════════════════════════════════════════════════════════
+   STAT GRID
+   Label above, number leading, unit under it. Four of them read as one
+   block rather than four cards, so the totals compare at a glance.
+   ═══════════════════════════════════════════════════════════════ */
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--bdr);border:1px solid var(--bdr);border-radius:var(--r-sm);
+  overflow:hidden}
+.statt{display:flex;flex-direction:column;gap:3px;padding:15px 14px;
+  background:var(--card);min-width:0}
+.statt-l{font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.statt-v{font-family:var(--font-display);font-weight:600;font-size:27px;
+  line-height:1;color:var(--t);font-variant-numeric:tabular-nums;
+  letter-spacing:.2px;margin-top:2px}
+.statt-u{font-size:11.5px;color:var(--t3);line-height:1.3}
+.statgrid-cta{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;margin-top:12px;padding:0;background:none;border:none;
+  cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+  color:var(--accent);-webkit-appearance:none;transition:opacity .15s}
+.statgrid-cta:hover{opacity:.75}
+.statgrid-cta .sit-x{color:var(--accent)}
+body:not(.dark) .statgrid-cta{color:var(--accent-d)}
+
+@media(max-width:360px){
+  .qacc{gap:6px}
+  .qacc-i{padding:12px 10px}
+  .qacc-l{font-size:12.5px}
+  .statt-v{font-size:24px}
+}

@@ -272,7 +272,7 @@
       <div id="resend-row" class="hidden" style="text-align:center;margin-top:12px"><button type="button" class="lnk" onclick="resendConfirm()">Resend confirmation email</button></div>
     </form>
     <form id="fr" class="hidden" onsubmit="event.preventDefault();doReg();">
-      <div class="f"><label>Your Name</label><input type="text" id="r-n" placeholder="e.g. Alex" autocomplete="name"></div>
+      <div class="f"><label>Your name</label><input type="text" id="r-n" placeholder="e.g. Alex" autocomplete="name"></div>
       <div class="f"><label>Email</label><input type="email" id="r-e" placeholder="you@email.com" autocomplete="email"></div>
       <div class="f"><label>Password</label><input type="password" id="r-p" placeholder="Min 6 characters" autocomplete="new-password"></div>
       <div class="g2">
@@ -348,12 +348,40 @@
       <!-- HOME -->
       <div class="panel on" id="p-home">
 
-        <!-- Header: date rule, display greeting, one line of state -->
+        <!-- Header: who you are, what day it is, and where today actually
+             stands. The line under the greeting is written from live data,
+             not a slogan — it is the first thing worth reading. -->
         <header class="home-head">
           <div class="home-date" id="home-date"></div>
-          <h1 class="hero-title" id="hero-greet">Today</h1>
+          <div class="home-id">
+            <button type="button" class="home-ava" id="home-ava" onclick="goTab('settings')" aria-label="Open your profile">&nbsp;</button>
+            <div class="home-id-t">
+              <div class="hero-hi" id="hero-hi">Hello</div>
+              <h1 class="hero-title" id="hero-greet">Athlete</h1>
+            </div>
+          </div>
           <p class="home-sub" id="hero-sub">Show up, log it, beat it. That's the whole job today.</p>
         </header>
+
+        <!-- Quick access. The three things the app is opened to do, one tap
+             from the greeting instead of a scroll past everything else. -->
+        <nav class="qacc" aria-label="Quick access">
+          <button type="button" class="qacc-i" onclick="goTab('workout')">
+            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-barbell"/></svg>
+            <span class="qacc-l">Train</span>
+            <span class="qacc-s" id="qacc-train">Start a session</span>
+          </button>
+          <button type="button" class="qacc-i" onclick="goTab('nutrition')">
+            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-utensils"/></svg>
+            <span class="qacc-l">Nutrition</span>
+            <span class="qacc-s" id="qacc-fuel">Log a meal</span>
+          </button>
+          <button type="button" class="qacc-i" onclick="goTab('body')">
+            <svg class="qacc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-target"/></svg>
+            <span class="qacc-l">Goals</span>
+            <span class="qacc-s" id="qacc-goals">Track progress</span>
+          </button>
+        </nav>
 
         <!-- ── PRIMARY 1 · TRAINING ──────────────────────────────
              Full-width band. Volume headline, 7-day bars, four-slot readout. -->
@@ -521,16 +549,17 @@
           <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;align-items:center;gap:7px;background:none;border:none;color:var(--sig-train);font-family:inherit;font-size:13px;font-weight:700;padding:10px 0 0;cursor:pointer;letter-spacing:-.1px"><svg class="ic" style="font-size:15px" aria-hidden="true"><use href="#i-moon"/></svg>Resting today, keep my streak</button>
         </div>
 
-        <!-- Quick add -->
+        <!-- Quick add. Train / Nutrition / Goals moved to the strip under the
+             greeting, so what is left here is the one-tap logging that does
+             not need a whole screen. -->
         <div class="card">
-          <div class="ctitle">Quick actions</div>
+          <div class="ctitle">Log something</div>
           <div class="g2">
-            <button type="button" class="qa-btn" onclick="goTab('workout')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><span class="qa-lbl">New workout</span></button>
             <button type="button" class="qa-btn" onclick="qWater()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-droplet"/></svg></span><span class="qa-lbl">Add water</span></button>
             <button type="button" class="qa-btn" onclick="openMealM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></span><span class="qa-lbl">Log meal</span></button>
+            <button type="button" class="qa-btn" onclick="openWtM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><span class="qa-lbl">Log weight</span></button>
             <button type="button" class="qa-btn" onclick="goTab('ai')"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-message"/></svg></span><span class="qa-lbl">Ask Coach</span></button>
             <button type="button" class="qa-btn hidden" id="qa-repeat-meal" style="grid-column:1/-1" onclick="repeatLastMeal()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg></span><span class="qa-lbl" id="qa-repeat-meal-lbl">Re-log last meal</span></button>
-            <button type="button" class="qa-btn" style="grid-column:1/-1" onclick="openWtM()"><span class="qa-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><span class="qa-lbl">Log weight</span></button>
           </div>
         </div>
       </div>
@@ -836,7 +865,7 @@
             </div>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
-          <div class="f" style="margin-top:14px"><label>Sleep Quality</label>
+          <div class="f" style="margin-top:14px"><label>Sleep quality</label>
             <select id="s-q"><option value="great">Great</option><option value="good" selected>Good</option><option value="ok">OK</option><option value="poor">Poor</option></select>
           </div>
           <button type="button" class="btn" onclick="logSleep()">Save Sleep</button>
@@ -847,53 +876,98 @@
       <!-- SETTINGS -->
       <div class="panel hidden" id="p-settings">
         <div class="ptitle">Settings</div>
-        <!-- Profile header -->
-        <div class="card" style="text-align:center;padding:24px 18px 20px;margin-bottom:10px">
-          <div id="set-ava" style="width:68px;height:68px;border-radius:50%;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 12px;font-family:'Inter',sans-serif;letter-spacing:1px">?</div>
-          <div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:2px" id="set-name">—</div>
-          <div class="tm" style="font-size:12px" id="set-email">—</div>
-          <button type="button" class="btn-o" style="margin-top:16px;padding:9px 22px;font-size:13px;width:auto;display:inline-block" onclick="openProfileM()">Edit Profile</button>
-        </div>
-        <!-- Profile & Goals -->
+
+        <!-- Identity. The whole row is the affordance; no centred hero, no
+             separate Edit button competing with it. -->
+        <button type="button" class="set-id" onclick="openProfileM()">
+          <span class="set-ava" id="set-ava">?</span>
+          <span class="set-id-t">
+            <span class="set-id-n" id="set-name">—</span>
+            <span class="set-id-e" id="set-email">—</span>
+          </span>
+          <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <!-- Career totals. Four numbers, no chrome around them: this is the
+             one part of settings people come back to look at. -->
         <div class="card">
+          <div class="ctitle">Your numbers</div>
+          <div class="statgrid">
+            <div class="statt">
+              <span class="statt-l">Workouts</span>
+              <span class="statt-v" id="ps-workouts">—</span>
+              <span class="statt-u">completed</span>
+            </div>
+            <div class="statt">
+              <span class="statt-l">Calories</span>
+              <span class="statt-v" id="ps-kcal">—</span>
+              <span class="statt-u">burned</span>
+            </div>
+            <div class="statt">
+              <span class="statt-l">Volume</span>
+              <span class="statt-v" id="ps-vol">—</span>
+              <span class="statt-u" id="ps-vol-u">lifted</span>
+            </div>
+            <div class="statt">
+              <span class="statt-l">Achievements</span>
+              <span class="statt-v" id="ps-ach">—</span>
+              <span class="statt-u" id="ps-ach-u">unlocked</span>
+            </div>
+          </div>
+          <button type="button" class="statgrid-cta" onclick="goTab('body')">
+            <span>See the full breakdown</span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="card">
+          <div class="ctitle">Profile</div>
           <div class="sit" onclick="openProfileM()">
-            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Personal Info</div><div class="tm" id="prof-sub" style="font-size:12px;margin-top:1px">Age, height, gender</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="sit-t"><span class="sit-l">Personal info</span><span class="sit-s" id="prof-sub">Age, height, gender</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
-          <div class="sit" style="border:none" onclick="openGoalsM()">
-            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Training Goals</div><div class="tm" id="g-sub" style="font-size:12px;margin-top:1px">Protein &amp; weight targets</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="sit" onclick="openGoalsM()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="sit-t"><span class="sit-l">Training goals</span><span class="sit-s" id="g-sub">Protein &amp; weight targets</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
-        </div>
-        <!-- Account -->
-        <div class="card">
-          <div class="ctitle">Account</div>
-          <div class="sit" onclick="openChangeEmailM()">
-            <div class="sib" style="background:rgba(59,130,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Change email</div><div class="tm" style="font-size:12px">We'll send a confirmation link</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="sit" onclick="openMuscleEditor()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-target"/></svg>
+            <span class="sit-t"><span class="sit-l">Target body areas</span><span class="sit-s" id="set-mm-sub">Edit your muscle map</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
-          <div class="sit" style="border:none" onclick="openChangePasswordM()">
-            <div class="sib" style="background:rgba(168,85,247,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pur)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Change password</div><div class="tm" style="font-size:12px">Update your sign-in password</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="sit" onclick="replayOnboarding()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-repeat"/></svg>
+            <span class="sit-t"><span class="sit-l">Redo setup</span><span class="sit-s">Goal, experience, weekly days and muscle map</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
         </div>
-        <!-- Appearance -->
+
+        <!-- SUBSCRIPTION — one of two places colour is allowed here. -->
+        <div class="card set-pro" id="set-pro-card" onclick="openPaywall()">
+          <svg class="set-pro-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg>
+          <span class="sit-t">
+            <span class="set-pro-t" id="set-pro-title">Try AthleteOS Pro</span>
+            <span class="set-pro-s" id="set-pro-sub">7 days free — unlock plans, demos &amp; analytics</span>
+          </span>
+          <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <!-- APPEARANCE -->
         <div class="card">
           <div class="ctitle">Appearance</div>
-          <div class="f" style="margin-bottom:18px">
-            <label>Theme · <span id="theme-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Currently dark</span></label>
-            <div class="gpills" style="margin-top:8px">
+          <div class="set-field">
+            <div class="set-field-h"><span>Theme</span><span class="tm" id="theme-sub">Currently dark</span></div>
+            <div class="gpills">
               <button type="button" class="gpill" id="thm-light" onclick="setThemeMode('light')">Light</button>
               <button type="button" class="gpill on" id="thm-dark" onclick="setThemeMode('dark')">Dark</button>
               <button type="button" class="gpill" id="thm-system" onclick="setThemeMode('system')">System</button>
             </div>
           </div>
-          <div class="f" style="margin-bottom:0">
-            <label>Accent color · <span id="accent-sub" class="tm" style="font-size:11px;text-transform:none;letter-spacing:0">Volt</span></label>
+          <div class="set-field set-field-last">
+            <div class="set-field-h"><span>Accent</span><span class="tm" id="accent-sub">Volt</span></div>
             <div class="acc-row">
               <button type="button" class="acc-pick on" data-acc="volt" onclick="setAccent('volt')" style="--c:#CCFF00" aria-label="Volt"></button>
               <button type="button" class="acc-pick" data-acc="green" onclick="setAccent('green')" style="--c:#22C55E" aria-label="Green"></button>
@@ -904,127 +978,110 @@
             </div>
           </div>
         </div>
-        <!-- Reminders -->
+
+        <!-- REMINDERS -->
         <div class="card">
           <div class="ctitle">Reminders</div>
           <div class="tog-row">
-            <div class="sib icb" style="background:var(--adim);font-size:18px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></div>
-            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Workout reminder</div><div class="tm" style="font-size:12px"><span id="rt-wo-time">5:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('workout')">change</span></div></div>
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-barbell"/></svg>
+            <span class="tog-lbl"><span class="sit-l">Workout reminder</span><span class="sit-s"><span id="rt-wo-time">5:00 PM</span> · <span class="lnk" onclick="event.stopPropagation();pickReminderTime('workout')">change</span></span></span>
             <label class="tog-sw"><input type="checkbox" id="rm-wo" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib icb" style="background:rgba(56,189,248,.1);font-size:18px;color:var(--sig-water)"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></div>
-            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Protein nudge</div><div class="tm" style="font-size:12px"><span id="rt-pr-time">8:00 PM</span> · <span class="lnk" style="font-size:12px;padding:0" onclick="pickReminderTime('protein')">change</span></div></div>
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-utensils"/></svg>
+            <span class="tog-lbl"><span class="sit-l">Protein nudge</span><span class="sit-s"><span id="rt-pr-time">8:00 PM</span> · <span class="lnk" onclick="event.stopPropagation();pickReminderTime('protein')">change</span></span></span>
             <label class="tog-sw"><input type="checkbox" id="rm-pr" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib icb" style="background:rgba(251,191,36,.12);font-size:18px;color:var(--sig-fuel)"><svg class="ic" aria-hidden="true"><use href="#i-droplet"/></svg></div>
-            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Hydration check</div><div class="tm" style="font-size:12px">Every 3 hours, 9 AM – 9 PM</div></div>
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-droplet"/></svg>
+            <span class="tog-lbl"><span class="sit-l">Hydration check</span><span class="sit-s">Every 3 hours, 9 AM – 9 PM</span></span>
             <label class="tog-sw"><input type="checkbox" id="rm-wt" onchange="saveReminders()"><span class="tog-track"></span></label>
           </div>
           <div class="tog-row">
-            <div class="sib icb" style="background:rgba(34,197,94,.12);font-size:18px;color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></div>
-            <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Push notifications</div><div class="tm" style="font-size:12px">Live nudges across devices — even when the app is closed</div></div>
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"/></svg>
+            <span class="tog-lbl"><span class="sit-l">Auto rest timer</span><span class="sit-s">Starts <span id="ar-time">90s</span> after an exercise · <span class="lnk" onclick="event.stopPropagation();pickRestDefault()">change</span></span></span>
+            <label class="tog-sw"><input type="checkbox" id="ar-tog" onchange="saveAutoRest()"><span class="tog-track"></span></label>
+          </div>
+          <div class="tog-row tog-row-last">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bell"/></svg>
+            <span class="tog-lbl"><span class="sit-l">Push notifications</span><span class="sit-s">Nudges reach you with the app closed</span></span>
             <label class="tog-sw"><input type="checkbox" id="rm-push" onchange="togglePush(this.checked)"><span class="tog-track"></span></label>
           </div>
         </div>
 
-        <!-- Subscription -->
-        <div class="card" id="set-pro-card" style="background:linear-gradient(135deg,var(--adim) 0%,rgba(168,85,247,.06) 100%);border:1px solid rgba(34,197,94,.22);cursor:pointer" onclick="openPaywall()">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="width:46px;height:46px;border-radius:14px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></div>
-            <div style="flex:1">
-              <div style="font-size:15.5px;font-weight:800;color:var(--t);letter-spacing:-.2px" id="set-pro-title">Try AthleteOS Pro</div>
-              <div class="tm" style="font-size:12.5px;margin-top:2px" id="set-pro-sub">7 days free — unlock plans, demos &amp; analytics</div>
-            </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- Personalization -->
-        <div class="card">
-          <div class="ctitle">Personalization</div>
-          <div class="sit" onclick="replayOnboarding()">
-            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Replay setup walkthrough</div><div class="tm" style="font-size:12px">Re-answer goal, experience, muscle map &amp; more</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" onclick="replayOnboarding()">
-            <div class="sib" style="background:rgba(34,197,94,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Redo onboarding</div><div class="tm" style="font-size:12px">Walk through setup again to update goals or muscles</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" style="border:none" onclick="openMuscleEditor()">
-            <div class="sib" style="background:rgba(139,92,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/><circle cx="12" cy="12" r="4"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Target body areas</div><div class="tm" id="set-mm-sub" style="font-size:12px">Edit your muscle map</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- Invite -->
-        <div class="card invite-card" onclick="inviteFriend()" style="cursor:pointer">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div class="sib" style="background:rgba(34,197,94,.14);width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" class="icb"><svg class="ic" aria-hidden="true"><use href="#i-gift"/></svg></div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:14.5px;font-weight:700;color:var(--t);letter-spacing:-.2px">Invite a friend</div>
-              <div class="tm" style="font-size:12.5px;margin-top:2px;line-height:1.4">Lifting together hits harder. Share AthleteOS.</div>
-            </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-          </div>
-        </div>
-
-        <!-- Data -->
-        <div class="card">
-          <div class="ctitle">Your Data</div>
-          <div class="sit" onclick="openImport()">
-            <div class="sib" style="background:rgba(34,197,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Import from Apple Health / Google Fit</div><div class="tm" style="font-size:12px">Bring in weights, workouts &amp; sleep</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" onclick="exportData()">
-            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Export my data</div><div class="tm" style="font-size:12px">Download as CSV bundle</div></div>
-          </div>
-          <div class="sit" onclick="openLegal('privacy')">
-            <div class="sib" style="background:rgba(167,139,250,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pur)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Privacy Policy</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" style="border:none" onclick="openLegal('terms')">
-            <div class="sib" style="background:var(--surface)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Terms of Service</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- Advanced -->
-        <details class="card" style="padding:0">
-          <summary style="cursor:pointer;list-style:none;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:var(--t)"><span>Advanced</span><span class="icb" style="color:var(--t3);transition:transform .2s;font-size:13px"><svg class="ic" aria-hidden="true"><use href="#i-chevron-right"/></svg></span></summary>
-          <div style="padding:0 20px 16px">
-            <div class="tog-row">
-              <div class="sib icb" style="background:var(--adim);font-size:18px;color:var(--accent)"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></div>
-              <div class="tog-lbl"><div style="font-size:14px;font-weight:600">Auto rest timer</div><div class="tm" style="font-size:12px">Starts <span id="ar-time">90s</span> after saving an exercise · <span class="lnk" style="font-size:12px;padding:0" onclick="pickRestDefault()">change</span></div></div>
-              <label class="tog-sw"><input type="checkbox" id="ar-tog" onchange="saveAutoRest()"><span class="tog-track"></span></label>
-            </div>
-          </div>
-        </details>
-
-        <!-- Account -->
+        <!-- ACCOUNT -->
         <div class="card">
           <div class="ctitle">Account</div>
-          <div class="sit" onclick="exportMyData()">
-            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-d)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Export my data</div><div class="tm" style="font-size:12px">Download a JSON file of everything you've logged</div></div>
+          <div class="sit" onclick="openChangeEmailM()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span class="sit-t"><span class="sit-l">Change email</span><span class="sit-s">We'll send a confirmation link</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
-          <div class="sit" onclick="doLogout()">
-            <div class="sib" style="background:rgba(244,63,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--red)">Sign Out</div></div>
-          </div>
-          <div class="sit" style="border:none" onclick="openDeleteAccount()">
-            <div class="sib" style="background:rgba(244,63,94,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--red)">Delete Account</div><div class="tm" style="font-size:12px">Permanently erase all your data</div></div>
+          <div class="sit" onclick="openChangePasswordM()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="sit-t"><span class="sit-l">Change password</span><span class="sit-s">Update your sign-in password</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
         </div>
+
+        <!-- CONNECTED APPS -->
+        <div class="card">
+          <div class="ctitle">Connected apps</div>
+          <div class="sit" onclick="openImport()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span class="sit-t"><span class="sit-l">Apple Health &amp; Google Fit</span><span class="sit-s" id="set-import-sub">Bring in weights, workouts and sleep by export file</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" onclick="togglePushFromSettings()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-phone"/></svg>
+            <span class="sit-t"><span class="sit-l">This device</span><span class="sit-s" id="set-device-sub">Checking notification access…</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- YOUR DATA -->
+        <div class="card">
+          <div class="ctitle">Your data</div>
+          <div class="sit" onclick="exportData()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="sit-t"><span class="sit-l">Export as CSV</span><span class="sit-s">One file per log, for spreadsheets</span></span>
+          </div>
+          <div class="sit" onclick="exportMyData()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+            <span class="sit-t"><span class="sit-l">Export as JSON</span><span class="sit-s">Everything you've logged, in one file</span></span>
+          </div>
+          <div class="sit" onclick="openLegal('privacy')">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="sit-t"><span class="sit-l">Privacy policy</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" onclick="openLegal('terms')">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span class="sit-t"><span class="sit-l">Terms of service</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- HELP -->
+        <div class="card">
+          <div class="ctitle">Help</div>
+          <div class="sit" onclick="window.open('mailto:support@athleteos.app?subject=AthleteOS%20support%20request')">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span class="sit-t"><span class="sit-l">Contact support</span><span class="sit-s">We reply within 24 hours</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" onclick="openFeedback()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="sit-t"><span class="sit-l">Send feedback</span><span class="sit-s">Tell us what to build next</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="sit" onclick="inviteFriend()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gift"/></svg>
+            <span class="sit-t"><span class="sit-l">Invite a friend</span><span class="sit-s">Lifting together hits harder</span></span>
+            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
         <!-- Get on phone (desktop + tablet only) -->
         <div class="card" id="install-card">
           <div class="ctitle">Get AthleteOS on your phone</div>
@@ -1043,41 +1100,34 @@
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M3.6 2.3c-.4.4-.6 1-.6 1.7v16c0 .7.2 1.3.6 1.7l9-9-9-10.4zM14.6 11.3l2.7-1.5c.9-.5.9-1.9 0-2.4L14.6 5.9 12.5 8l2.1 3.3zM12.5 8L4.2 2.5C4.4 2.4 4.7 2.3 5 2.3c.3 0 .6.1.9.3L14.6 7l-2.1 1zM4.2 21.5l8.3-13.5 2.1 3.3-8.6 5.6c-.3.2-.6.3-.9.3-.4 0-.6-.1-.9-.7z"/></svg>
                 <span class="store-btn-body"><span class="store-btn-pre">Coming to</span><span class="store-btn-name">Google Play</span></span>
               </a>
-              <button type="button" class="btn-o hidden" id="install-btn" onclick="doInstall()" style="margin-top:4px">+ Install web app</button>
+              <button type="button" class="btn-o hidden" id="install-btn" onclick="doInstall()" style="margin-top:4px">Install web app</button>
             </div>
           </div>
         </div>
 
-        <!-- Help & support -->
+        <!-- ABOUT -->
         <div class="card">
-          <div class="ctitle">Help &amp; Support</div>
-          <div class="sit" onclick="window.open('mailto:support@athleteos.app?subject=AthleteOS%20support%20request')">
-            <div class="sib" style="background:rgba(34,197,94,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Contact support</div><div class="tm" style="font-size:12px">Get help via email — we reply within 24h</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="ctitle">About</div>
+          <div class="set-meta">
+            <span>Version</span><span>AthleteOS <span id="app-version">v1.0.0</span></span>
           </div>
-          <div class="sit" style="border:none" onclick="openFeedback()">
-            <div class="sib" style="background:rgba(59,130,246,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Send feedback</div><div class="tm" style="font-size:12px">Tell us what to build next</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="set-meta">
+            <span>Website</span><span class="lnk" onclick="window.open('https://athleteos.app','_blank')">athleteos.app</span>
+          </div>
+          <div class="set-meta set-meta-last">
+            <span>Built by</span><span>Alkan · 2026</span>
           </div>
         </div>
 
-        <!-- About -->
-        <div class="card">
-          <div class="ctitle">About</div>
-          <div class="sit" style="cursor:default">
-            <div class="sib" style="background:var(--adim)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Version</div><div class="tm" style="font-size:12px">AthleteOS <span id="app-version">v1.0.0</span></div></div>
+        <!-- Leaving. Kept apart from everything else on purpose. -->
+        <div class="card set-danger">
+          <div class="sit" onclick="doLogout()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span class="sit-t"><span class="sit-l">Sign out</span></span>
           </div>
-          <div class="sit" onclick="window.open('https://athleteos.app','_blank')">
-            <div class="sib" style="background:rgba(56,189,248,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Website</div><div class="tm" style="font-size:12px">athleteos.app</div></div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" style="border:none;cursor:default">
-            <div class="sib" style="background:rgba(245,158,11,.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--yel)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-            <div style="flex:1"><div style="font-size:14px;font-weight:600">Made with care</div><div class="tm" style="font-size:12px">Built by Alkan · 2026</div></div>
+          <div class="sit sit-danger" onclick="openDeleteAccount()">
+            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+            <span class="sit-t"><span class="sit-l">Delete account</span><span class="sit-s">Permanently erases everything you've logged</span></span>
           </div>
         </div>
       </div>
@@ -1126,7 +1176,7 @@
 
 <!-- MODALS -->
 <!-- PROFILE -->
-<div class="modal" id="m-profile"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Profile</div><div class="f"><label>Full Name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name"></div><div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div><div class="g2"><div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100"></div><div class="f"><label id="ht-lbl">Height (cm)</label><input type="number" id="pf-ht" placeholder="175" min="50" max="300"></div></div><div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div><div class="g2" style="margin-top:14px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-profile')">Cancel</button><button type="button" class="btn" onclick="saveProfile()">Save Profile</button></div></div></div>
+<div class="modal" id="m-profile"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Profile</div><div class="f"><label>Full name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name"></div><div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div><div class="g2"><div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100"></div><div class="f"><label id="ht-lbl">Height (cm)</label><input type="number" id="pf-ht" placeholder="175" min="50" max="300"></div></div><div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div><div class="g2" style="margin-top:14px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-profile')">Cancel</button><button type="button" class="btn" onclick="saveProfile()">Save profile</button></div></div></div>
 
 <!-- EXERCISE INFO -->
 <div class="modal" id="m-exi">
@@ -1162,9 +1212,9 @@
   </div>
 </div>
 
-<div class="modal" id="m-ex"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Add Exercise</div><button type="button" class="btn-g" style="font-size:12px" onclick="openExPicker()"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-plan"/></svg>Browse</button></div><div class="f"><label>Exercise Name</label><input type="text" id="ex-n" placeholder="e.g. Bench Press" list="ex-dl" autocomplete="off" oninput="_onExNameInput(this.value)"><div id="ex-last-hint" style="font-size:12px;color:var(--accent-d);font-weight:600;margin-top:6px;display:none"></div><datalist id="ex-dl"><option value="Bench Press"><option value="Incline Press"><option value="Decline Press"><option value="Close-Grip Bench"><option value="Dumbbell Fly"><option value="Cable Fly"><option value="Dips"><option value="Push-up"><option value="Squat"><option value="Romanian Deadlift"><option value="Leg Press"><option value="Hip Thrust"><option value="Deadlift"><option value="Bulgarian Split Squat"><option value="Lunge"><option value="Leg Extension"><option value="Leg Curl"><option value="Calf Raise"><option value="Barbell Row"><option value="Dumbbell Row"><option value="Cable Row"><option value="Pull-up"><option value="Lat Pulldown"><option value="Face Pull"><option value="Overhead Press"><option value="Arnold Press"><option value="Lateral Raise"><option value="Front Raise"><option value="Rear Delt Fly"><option value="Barbell Curl"><option value="Dumbbell Curl"><option value="Hammer Curl"><option value="Tricep Pushdown"><option value="Skull Crusher"><option value="Plank"><option value="Crunches"><option value="Russian Twist"><option value="Hanging Leg Raise"><option value="Ab Wheel"></datalist></div><div class="f"><label>Muscle Group</label><select id="ex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option></select></div><div class="shrow" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div><div id="sets-list"></div><button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button><div class="g2" style="margin-top:12px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button><button type="button" class="btn" onclick="saveEx()">Add Exercise</button></div></div></div>
+<div class="modal" id="m-ex"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Add Exercise</div><button type="button" class="btn-g" style="font-size:12px" onclick="openExPicker()"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-plan"/></svg>Browse</button></div><div class="f"><label>Exercise name</label><input type="text" id="ex-n" placeholder="e.g. Bench Press" list="ex-dl" autocomplete="off" oninput="_onExNameInput(this.value)"><div id="ex-last-hint" style="font-size:12px;color:var(--accent-d);font-weight:600;margin-top:6px;display:none"></div><datalist id="ex-dl"><option value="Bench Press"><option value="Incline Press"><option value="Decline Press"><option value="Close-Grip Bench"><option value="Dumbbell Fly"><option value="Cable Fly"><option value="Dips"><option value="Push-up"><option value="Squat"><option value="Romanian Deadlift"><option value="Leg Press"><option value="Hip Thrust"><option value="Deadlift"><option value="Bulgarian Split Squat"><option value="Lunge"><option value="Leg Extension"><option value="Leg Curl"><option value="Calf Raise"><option value="Barbell Row"><option value="Dumbbell Row"><option value="Cable Row"><option value="Pull-up"><option value="Lat Pulldown"><option value="Face Pull"><option value="Overhead Press"><option value="Arnold Press"><option value="Lateral Raise"><option value="Front Raise"><option value="Rear Delt Fly"><option value="Barbell Curl"><option value="Dumbbell Curl"><option value="Hammer Curl"><option value="Tricep Pushdown"><option value="Skull Crusher"><option value="Plank"><option value="Crunches"><option value="Russian Twist"><option value="Hanging Leg Raise"><option value="Ab Wheel"></datalist></div><div class="f"><label>Muscle group</label><select id="ex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option></select></div><div class="shrow" style="margin-bottom:8px"><div class="shl">#</div><div class="shl">Weight kg</div><div class="shl">Reps</div><div></div></div><div id="sets-list"></div><button type="button" class="btn-g" style="width:100%;margin:4px 0" onclick="addSet()">+ Add Set</button><div class="g2" style="margin-top:12px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-ex')">Cancel</button><button type="button" class="btn" onclick="saveEx()">Add Exercise</button></div></div></div>
 
-<div class="modal" id="m-meal"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Log Meal</div><button type="button" class="btn-g" style="font-size:12px;padding:7px 12px;display:flex;align-items:center;gap:6px" onclick="openBarcodeScan()" aria-label="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="6" x2="6" y2="18"/><line x1="10" y1="6" x2="10" y2="18"/><line x1="14" y1="6" x2="14" y2="18"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scan</button></div><div class="f"><label>Meal Name</label><input type="text" id="mn" placeholder="e.g. Chicken & Rice"></div><div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="m-p" placeholder="0" min="0"></div><div class="f"><label>Carbs (g)</label><input type="number" id="m-c" placeholder="0" min="0"></div><div class="f"><label>Fat (g)</label><input type="number" id="m-f" placeholder="0" min="0"></div><div class="f"><label>Calories</label><input type="number" id="m-k" placeholder="0" min="0"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button><button type="button" class="btn" onclick="saveMeal()">Log Meal</button></div></div></div>
+<div class="modal" id="m-meal"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Log Meal</div><button type="button" class="btn-g" style="font-size:12px;padding:7px 12px;display:flex;align-items:center;gap:6px" onclick="openBarcodeScan()" aria-label="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="6" x2="6" y2="18"/><line x1="10" y1="6" x2="10" y2="18"/><line x1="14" y1="6" x2="14" y2="18"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scan</button></div><div class="f"><label>Meal name</label><input type="text" id="mn" placeholder="e.g. Chicken & Rice"></div><div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="m-p" placeholder="0" min="0"></div><div class="f"><label>Carbs (g)</label><input type="number" id="m-c" placeholder="0" min="0"></div><div class="f"><label>Fat (g)</label><input type="number" id="m-f" placeholder="0" min="0"></div><div class="f"><label>Calories</label><input type="number" id="m-k" placeholder="0" min="0"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button><button type="button" class="btn" onclick="saveMeal()">Log Meal</button></div></div></div>
 
 <!-- BARCODE SCANNER -->
 <div class="modal" id="m-barcode"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:10px"><div class="ctitle" style="margin:0">Scan Barcode</div><button type="button" class="btn-g" onclick="closeBarcodeScan()">Cancel</button></div><div id="bc-stage" style="position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:14px;overflow:hidden"><video id="bc-video" playsinline muted autoplay style="width:100%;height:100%;object-fit:cover"></video><div id="bc-frame" style="position:absolute;inset:18%;border:2px solid rgba(255,255,255,.8);border-radius:10px;box-shadow:0 0 0 4000px rgba(0,0,0,.45);pointer-events:none"></div></div><div id="bc-status" style="margin-top:10px;font-size:13px;color:var(--t2);text-align:center;font-weight:600">Point at the barcode on the package.</div></div></div>
@@ -1221,10 +1271,10 @@
   </div>
 </div>
 
-<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-calculator"/></svg>Work it out from my stats</button><div class="g2"><div class="f"><label>Daily Protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target Weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water Goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie Goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save Goals</button></div></div></div>
+<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-calculator"/></svg>Work it out from my stats</button><div class="g2"><div class="f"><label>Daily protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save goals</button></div></div></div>
 
 <!-- MACRO CALCULATOR -->
-<div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv" id="mc-f" style="color:var(--yel)">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
+<div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv ty" id="mc-f">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
 
 <div class="modal" id="m-bc"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Scan Barcode</div><p class="tm" style="margin-bottom:11px">Point camera at a food barcode</p><video id="bc-vid" autoplay muted playsinline></video><div id="bc-result" class="hidden" style="margin-top:13px"><div class="mc"><div class="mcn" id="bc-name">–</div><div class="mcm" id="bc-macros">–</div></div><button type="button" class="btn" style="margin-top:10px" onclick="addScanned()">Add to Today</button></div><div id="bc-manual" class="hidden" style="margin-top:13px"><p class="tm" style="margin-bottom:9px;font-size:12px">Enter barcode manually:</p><div style="display:flex;gap:8px"><input type="number" id="bc-manual-in" placeholder="e.g. 5000159407236" style="flex:1;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:13px;color:var(--t);font-size:16px;outline:none;font-weight:600"><button type="button" class="btn" style="width:auto;padding:12px 16px" onclick="manualBarcode()">Look Up</button></div></div><button type="button" class="btn-g" style="width:100%;margin-top:12px" onclick="closeBc()">Close</button></div></div>
 
@@ -1372,7 +1422,7 @@
 </div></div>
 
 <!-- LOG MEASUREMENTS -->
-<div class="modal" id="m-measure"><div class="msheet" style="overflow-y:auto;max-height:90vh"><div class="mhandle"></div><div class="ctitle">Log Measurements</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Leave any field blank to skip it.</p><div class="g2"><div class="f"><label>Waist (cm)</label><input type="number" id="mes-waist" step="0.1" min="30" max="200"></div><div class="f"><label>Chest (cm)</label><input type="number" id="mes-chest" step="0.1" min="40" max="200"></div><div class="f"><label>Hips (cm)</label><input type="number" id="mes-hips" step="0.1" min="40" max="200"></div><div class="f"><label>Neck (cm)</label><input type="number" id="mes-neck" step="0.1" min="20" max="80"></div><div class="f"><label>Arm (cm)</label><input type="number" id="mes-arm" step="0.1" min="15" max="80"></div><div class="f"><label>Thigh (cm)</label><input type="number" id="mes-thigh" step="0.1" min="20" max="100"></div></div><div class="f"><label>Body Fat % (optional)</label><input type="number" id="mes-bf" step="0.1" min="3" max="60"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-measure')">Cancel</button><button type="button" class="btn" onclick="saveMeasure()">Save</button></div></div></div>
+<div class="modal" id="m-measure"><div class="msheet" style="overflow-y:auto;max-height:90vh"><div class="mhandle"></div><div class="ctitle">Log Measurements</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Leave any field blank to skip it.</p><div class="g2"><div class="f"><label>Waist (cm)</label><input type="number" id="mes-waist" step="0.1" min="30" max="200"></div><div class="f"><label>Chest (cm)</label><input type="number" id="mes-chest" step="0.1" min="40" max="200"></div><div class="f"><label>Hips (cm)</label><input type="number" id="mes-hips" step="0.1" min="40" max="200"></div><div class="f"><label>Neck (cm)</label><input type="number" id="mes-neck" step="0.1" min="20" max="80"></div><div class="f"><label>Arm (cm)</label><input type="number" id="mes-arm" step="0.1" min="15" max="80"></div><div class="f"><label>Thigh (cm)</label><input type="number" id="mes-thigh" step="0.1" min="20" max="100"></div></div><div class="f"><label>Body fat % (optional)</label><input type="number" id="mes-bf" step="0.1" min="3" max="60"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-measure')">Cancel</button><button type="button" class="btn" onclick="saveMeasure()">Save</button></div></div></div>
 
 <!-- UPLOAD PROGRESS PHOTO -->
 <div class="modal" id="m-photo"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Add Progress Photo</div><div class="f"><label>Pose</label><select id="ph-pose"><option value="front">Front</option><option value="side">Side</option><option value="back">Back</option><option value="flex">Flex</option></select></div><div class="f"><label>Pick a photo</label><input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" style="font-size:14px;padding:10px"></div><div id="ph-prev-wrap" class="hidden" style="margin-bottom:10px;text-align:center"><img id="ph-prev" style="max-width:100%;max-height:240px;border-radius:10px"></div><div id="ph-msg" class="tm" style="font-size:12px;margin-bottom:6px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-photo')">Cancel</button><button type="button" class="btn" id="ph-btn" onclick="savePhoto()">Upload</button></div></div></div>
@@ -1662,7 +1712,7 @@
 <div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><div class="bp"><span class="bp-l">No templates</span></div></div></div></div>
 
 <!-- SAVE TEMPLATE -->
-<div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template Name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
+<div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
 
 <!-- RECIPE DETAIL -->
 <div class="modal" id="m-recipe"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="rc-name">Recipe</div><button type="button" class="btn-g" onclick="cModal('m-recipe')">Done</button></div><div id="rc-macros" class="tm" style="font-size:12.5px;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Ingredients</div><div id="rc-ing" class="tm" style="font-size:13px;line-height:1.85;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Steps</div><div id="rc-steps" class="tm" style="font-size:13px;line-height:1.7;margin-bottom:16px"></div><button type="button" class="btn" style="width:100%" onclick="logRecipeAsMeal()">+ Log as Meal</button></div></div>
@@ -1674,7 +1724,7 @@
 <div class="modal" id="m-expk"><div class="msheet" style="max-height:80vh;display:flex;flex-direction:column"><div class="mhandle"></div><div class="ctitle">Pick Exercise</div><input type="text" id="expk-q" placeholder="Search exercises..." style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px 14px;color:var(--t);font-size:15px;outline:none;margin-bottom:10px" oninput="filterExPk()"><div id="expk-list" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch"></div></div></div>
 
 <!-- CREATE CUSTOM EXERCISE -->
-<div class="modal" id="m-cuex"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Exercise</div><div class="f"><label>Name</label><input type="text" id="cuex-n" placeholder="e.g. Cable Crossover Variant" autocomplete="off"></div><div class="f"><label>Primary Muscle</label><select id="cuex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option><option value="other">Other</option></select></div><div class="f"><label>Demo video URL (optional)</label><input type="url" id="cuex-demo" placeholder="https://youtube.com/..." autocomplete="off"></div><div class="f"><label>Tips (one per line, optional)</label><textarea id="cuex-tips" rows="4" placeholder="e.g.&#10;Pause at the contraction&#10;Slow eccentric on the way down" style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px;color:var(--t);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px"></textarea></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuex')">Cancel</button><button type="button" class="btn" onclick="saveCustomEx()">Save</button></div></div></div>
+<div class="modal" id="m-cuex"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Exercise</div><div class="f"><label>Name</label><input type="text" id="cuex-n" placeholder="e.g. Cable Crossover Variant" autocomplete="off"></div><div class="f"><label>Primary muscle</label><select id="cuex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option><option value="other">Other</option></select></div><div class="f"><label>Demo video URL (optional)</label><input type="url" id="cuex-demo" placeholder="https://youtube.com/..." autocomplete="off"></div><div class="f"><label>Tips (one per line, optional)</label><textarea id="cuex-tips" rows="4" placeholder="e.g.&#10;Pause at the contraction&#10;Slow eccentric on the way down" style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px;color:var(--t);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px"></textarea></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuex')">Cancel</button><button type="button" class="btn" onclick="saveCustomEx()">Save</button></div></div></div>
 
 <!-- CREATE CUSTOM ACHIEVEMENT -->
 <div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="PR" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
