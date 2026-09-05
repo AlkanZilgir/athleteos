@@ -2424,3 +2424,105 @@ body.dark .gpill.on{color:var(--accent)}
    30px, so light mode takes the darker step the status badges use. */
 .ty{color:var(--yel)}
 body:not(.dark) .ty{color:#B45309}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMAND ENGINE
+   The chat metaphor is gone. What is left reads as an instrument:
+   a header that reports state, output in bordered data cards with a
+   labelled rule across the top, and a command bar instead of a
+   message box. No pills, no bubbles, no tails, no sparkles.
+   ═══════════════════════════════════════════════════════════════ */
+.eng-head{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:14px;padding-bottom:12px;margin-bottom:12px;
+  border-bottom:1px solid var(--bdr2);flex-shrink:0}
+.eng-head-t{min-width:0}
+.eng-title{font-family:var(--font-display);font-weight:600;font-size:19px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t);line-height:1.05}
+.eng-status{display:flex;align-items:center;gap:7px;margin-top:6px;
+  font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3)}
+.eng-dot{width:6px;height:6px;flex-shrink:0;background:var(--accent);
+  border-radius:0;animation:engPulse 2s ease-in-out infinite}
+@keyframes engPulse{0%,100%{opacity:1}50%{opacity:.3}}
+.eng-reset{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
+  padding:7px 11px;background:transparent;border:1px solid var(--bdr2);
+  border-radius:0;color:var(--t3);cursor:pointer;font-family:var(--font-mono);
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  -webkit-appearance:none;transition:border-color .15s,color .15s}
+.eng-reset:hover{border-color:var(--t3);color:var(--t)}
+
+/* ── OUTPUT CARD ───────────────────────────
+   Square corners, one hairline border, and a rule under the header so the
+   label reads as a column heading rather than a title. */
+.eng-out{border:1px solid var(--bdr2);border-radius:0;background:var(--card);
+  max-width:100%;flex-shrink:0}
+body.dark .eng-out{background:#0F0F12}
+.eng-out-h{display:flex;align-items:center;gap:8px;
+  padding:9px 14px;border-bottom:1px solid var(--bdr2);background:var(--surface);
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3)}
+body.dark .eng-out-h{background:#141418}
+.eng-out-ico{width:13px;height:13px;flex-shrink:0;color:var(--accent);
+  fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.eng-out-ts{margin-left:auto;color:var(--t4);letter-spacing:.1em}
+.eng-out-b{padding:14px;font-family:var(--font-mono);font-size:13px;
+  line-height:1.65;color:var(--t);white-space:pre-wrap;word-break:break-word;
+  font-variant-numeric:tabular-nums}
+
+/* ── COMMAND ECHO ──────────────────────────
+   What you typed is a logged command, not a message from a person. */
+.eng-cmd{display:flex;gap:9px;align-items:baseline;flex-shrink:0;padding:2px 2px 2px 0;
+  font-family:var(--font-mono);font-size:13px;line-height:1.5;
+  color:var(--t2);word-break:break-word}
+.eng-cmd-k{color:var(--accent);flex-shrink:0;font-size:11px}
+.eng-cmd-t{min-width:0}
+
+/* ── PRESETS ───────────────────────────────*/
+.eng-presets{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 10px;flex-shrink:0}
+.eng-presets .chat-chip{border-radius:0;border-color:var(--bdr2);
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:8px 11px;color:var(--t2)}
+.eng-presets .chat-chip:hover{border-color:var(--accent);background:var(--adim);
+  color:var(--accent)}
+body:not(.dark) .eng-presets .chat-chip:hover{color:var(--accent-d)}
+
+/* ── COMMAND BAR ───────────────────────────
+   A single field with a caret marker, squared off and flush to the input. */
+.chat-row{align-items:stretch;gap:0;border:1px solid var(--bdr2);
+  background:var(--card);padding:0}
+body.dark .chat-row{background:#0F0F12}
+.chat-row:focus-within{border-color:var(--accent)}
+.eng-caret{display:flex;align-items:center;padding:0 2px 0 12px;flex-shrink:0;
+  color:var(--accent);font-size:12px;line-height:1}
+#p-ai .chat-in{border:none;border-radius:0;background:transparent;
+  padding:12px 10px;font-size:14px;font-family:var(--font-mono);
+  line-height:1.5;box-shadow:none}
+#p-ai .chat-in:focus{border:none;background:transparent;box-shadow:none}
+/* The command hint is long by design. The field stays one line — a search
+   bar, not a text box — so the hint is truncated rather than wrapped, and
+   the full string still reaches assistive tech from the placeholder attr. */
+#p-ai .chat-in{white-space:nowrap;overflow-x:hidden;
+  -webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+#p-ai .chat-in::placeholder{color:var(--t4);font-family:var(--font-mono);
+  font-size:11.5px;line-height:1.5;letter-spacing:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#p-ai .chat-mic,#p-ai .chat-send{border-radius:0;align-self:stretch;
+  height:auto;width:46px;flex-shrink:0;box-shadow:none;border:none}
+#p-ai .chat-mic{background:transparent;border-left:1px solid var(--bdr2);color:var(--t3)}
+#p-ai .chat-mic:hover{color:var(--t);background:var(--surface)}
+#p-ai .chat-send{background:var(--accent);color:var(--accent-ink)}
+#p-ai .chat-send:hover{background:var(--accent-d)}
+
+/* The action confirmation card follows the same geometry. */
+#p-ai .act-card,#p-ai .acard{border-radius:0}
+
+.eng-out+.eng-out,.eng-cmd+.eng-out,.eng-out+.eng-cmd{margin-top:2px}
+.chat-msgs{gap:12px}
+
+@media(max-width:400px){
+  .eng-title{font-size:16.5px;letter-spacing:.1em}
+  .eng-out-b{padding:12px;font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){.eng-dot{animation:none}}

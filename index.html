@@ -81,7 +81,7 @@
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/></symbol>
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.5 2"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></symbol>
-<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
 <symbol id="i-snowflake" viewBox="0 0 24 24"><path d="M2 12h20M12 2v20m5.6-15.6-11.2 11.2m0-11.2 11.2 11.2"/></symbol>
 <symbol id="i-run" viewBox="0 0 24 24"><circle cx="15" cy="4" r="2"/><path d="m11 21 2.5-5.5-3.5-3 1-5.5 3.5 3.5 3.5 1M6.5 12 9 9.5M9.5 21 12 16.5"/></symbol>
 <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
@@ -161,8 +161,8 @@
       <div class="obp-feat">
         <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">A plan written for you</div>
-          <div class="obp-feat-b">Your goal, your days, the kit you actually have.</div>
+          <div class="obp-feat-t">Programming on demand</div>
+          <div class="obp-feat-b">Periodised blocks generated against your 1RM curve, weekly availability and equipment.</div>
         </div>
       </div>
       <div class="obp-feat">
@@ -175,8 +175,8 @@
       <div class="obp-feat">
         <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
         <div class="obp-feat-text">
-          <div class="obp-feat-t">The numbers behind it</div>
-          <div class="obp-feat-b">Volume per muscle, 1RM curves, weight projections.</div>
+          <div class="obp-feat-t">Biometric readout</div>
+          <div class="obp-feat-b">Per-muscle volume allocation, estimated 1RM regression, bodyweight trend projection.</div>
         </div>
       </div>
       <div class="obp-feat">
@@ -1065,23 +1065,30 @@
 
     <!-- AI PANEL -->
     <div id="p-ai">
-      <div class="ai-header">
-        <div>
-          <div class="ptitle" style="margin:0;line-height:1.05">Coach</div>
-          <div id="ai-page-sub" class="tm" style="font-size:12px;margin-top:4px"></div>
+      <!-- Command engine header. Reads as an instrument panel: what this is,
+           whether it is live, and the one control that resets it. -->
+      <div class="eng-head">
+        <div class="eng-head-t">
+          <div class="eng-title">AthleteOS Command&nbsp;Engine</div>
+          <div class="eng-status" id="ai-page-sub"><i class="eng-dot"></i>Indexing session history</div>
         </div>
-        <button type="button" class="btn-g" onclick="clearChat()">Clear</button>
+        <button type="button" class="eng-reset" onclick="clearChat()" aria-label="Clear the session">
+          <svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-repeat"/></svg>Reset
+        </button>
       </div>
       <div class="chat-msgs" id="chat-msgs">
-        <div class="msg a">I've got your numbers in front of me. What do you want to work on?</div>
+        <div class="eng-out"><div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Engine ready</div><div class="eng-out-b">Session history, macro log and bodyweight series are loaded. Issue a command.</div></div>
       </div>
-      <div id="chat-suggest" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 8px;flex-shrink:0">
-        <button type="button" class="chat-chip" onclick="askAI('Build me a 4-week training plan based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Next 4 weeks</button>
-        <button type="button" class="chat-chip" onclick="askAI('What should I eat today to hit my protein goal? Give me 3 quick meal ideas.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-utensils"/></svg>Meal ideas</button>
-        <button type="button" class="chat-chip" onclick="askAI('Look at my recent lifts and tell me which muscle group I am neglecting this week.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-search"/></svg>What am I skipping?</button>
+      <div id="chat-suggest" class="eng-presets">
+        <button type="button" class="chat-chip" onclick="askAI('Generate a 4-day powerbuilding block based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-grid"/></svg>Generate block</button>
+        <button type="button" class="chat-chip" onclick="askAI('Suggest high-protein meals that close the gap to my daily protein target. Emit each as an addMeal action.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-utensils"/></svg>High-protein meals</button>
+        <button type="button" class="chat-chip" onclick="askAI('Report my volume allocation per muscle group over the last 14 days and name the undertrained group.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-activity"/></svg>Volume audit</button>
+        <button type="button" class="chat-chip" onclick="askAI('Review my current block against my logged RPE and bodyweight trend, and adjust the loading.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-gear"/></svg>Adjust loading</button>
       </div>
       <div class="chat-row">
-        <textarea class="chat-in" id="chat-in" placeholder="Message your coach" rows="1"
+        <span class="eng-caret" aria-hidden="true">&#9656;</span>
+        <textarea class="chat-in" id="chat-in" rows="1"
+          placeholder="Execute command or request adjustments (e.g., 'Generate 4-day powerbuilding block' or 'Suggest high-protein meals')."
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
           oninput="autoH(this)"></textarea>
         <button type="button" class="chat-mic" id="chat-mic-btn" onclick="toggleVoice('chat-in',this)" title="Voice input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
@@ -1683,7 +1690,7 @@
       <div class="onb-feat-list">
         <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--adim);color:var(--accent-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Beat last session</div><div class="onb-feat-b">See exactly what you did last time and what to aim for now.</div></div></div>
         <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--bdim);color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Log in seconds</div><div class="onb-feat-b">Your last set is pre-filled. Tap, save, get back to training.</div></div></div>
-        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">A coach who reads your log</div><div class="onb-feat-b">Meals, form, when to back off. It has seen every session you logged.</div></div></div>
+        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Computed, never guessed</div><div class="onb-feat-b">Tonnage, macro load and recovery windows derived from your own sets. Your data is never sold, shared, or used to train anything.</div></div></div>
       </div>
     </div>
 
