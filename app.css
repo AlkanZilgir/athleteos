@@ -2595,3 +2595,73 @@ body:not(.dark) .eng-grid b{color:var(--accent-d)}
 .eng-log li{position:relative;padding-left:16px;line-height:1.55}
 .eng-log li::before{content:"";position:absolute;left:2px;top:.62em;
   width:5px;height:1px;background:var(--accent)}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   PROFILE SECTIONS
+   Biometrics, calibrations and the distribution matrix are the three
+   things the engine reads before it prescribes anything, so they sit
+   on the page as sections rather than behind three sheets.
+   ═══════════════════════════════════════════════════════════════ */
+.sec-note{font-size:12px;line-height:1.5;color:var(--t3);margin:0 0 16px;max-width:52ch}
+.sec-tag{font-family:var(--font-mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);
+  padding:3px 8px;white-space:nowrap}
+body:not(.dark) .sec-tag{color:var(--accent-d)}
+.sec-tag.warn{color:var(--yel);border-color:color-mix(in srgb,var(--yel) 40%,transparent)}
+body:not(.dark) .sec-tag.warn{color:#B45309}
+/* A committed jump should say where it landed. */
+@keyframes secFlash{0%{box-shadow:0 0 0 0 var(--adim)}100%{box-shadow:0 0 0 5px transparent}}
+.sec-flash{animation:secFlash .9s ease-out}
+@media (prefers-reduced-motion:reduce){.sec-flash{animation:none}}
+
+/* ── ENGINE CALIBRATIONS ───────────────────*/
+.cal-rows{display:flex;flex-direction:column;gap:18px}
+.cal-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.cal-l{font-size:13.5px;font-weight:600;color:var(--t)}
+.cal-now{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;color:var(--t3)}
+.cal-set{display:flex;align-items:stretch;gap:0;margin-bottom:10px;
+  border:1.5px solid var(--bdr2);border-radius:var(--r-btn);overflow:hidden}
+.cal-set:focus-within{border-color:var(--accent)}
+.cal-set input{flex:1;min-width:0;background:transparent;border:none;outline:none;
+  padding:9px 12px;color:var(--t);font-family:var(--font-display);font-weight:600;
+  font-size:19px;letter-spacing:.3px;font-variant-numeric:tabular-nums;-webkit-appearance:none}
+.cal-u{display:flex;align-items:center;padding:0 12px;flex-shrink:0;
+  background:var(--surface);border-left:1px solid var(--bdr2);
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--t3);white-space:nowrap}
+body.dark .cal-u{background:var(--bg2)}
+
+/* ── VOLUME DISTRIBUTION MATRIX ────────────*/
+.vdm-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px}
+.vdm-k{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);
+  font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.vdm-k i{width:9px;height:9px;flex-shrink:0}
+.vdm-k.build i{background:var(--sig-train)}
+.vdm-k.maintain i{background:var(--sig-water)}
+.vdm-k.cut i{background:var(--sig-fuel)}
+.vdm{display:flex;flex-direction:column;gap:16px}
+.vdm-gh{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.vdm-row{display:flex;align-items:center;gap:10px;
+  padding:9px 11px;background:var(--surface);margin-bottom:3px}
+body.dark .vdm-row{background:var(--bg2)}
+/* The swatch is the same mark as the legend key, so the row reads against it
+   directly. A coloured side stripe would say the same thing less precisely. */
+.vdm-row::before{content:"";width:9px;height:9px;flex-shrink:0;
+  background:var(--bdr3);box-shadow:none}
+.vdm-n{flex:1;font-size:13px;font-weight:500;color:var(--t2);min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vdm-s{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--t3);flex-shrink:0}
+.vdm-row.build::before{background:var(--sig-train)}
+.vdm-row.build .vdm-n{color:var(--t)}
+.vdm-row.build .vdm-s{color:var(--sig-train)}
+.vdm-row.maintain::before{background:var(--sig-water)}
+.vdm-row.maintain .vdm-n{color:var(--t)}
+.vdm-row.maintain .vdm-s{color:var(--sig-water)}
+.vdm-row.cut::before{background:var(--sig-fuel)}
+.vdm-row.cut .vdm-n{color:var(--t)}
+.vdm-row.cut .vdm-s{color:var(--sig-fuel)}
+body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}

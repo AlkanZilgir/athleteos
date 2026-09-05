@@ -782,7 +782,7 @@ async function bootApp(){
   document.getElementById('ava').textContent=n.charAt(0).toUpperCase();
   document.getElementById('sb-ava').textContent=n.charAt(0).toUpperCase();
   document.getElementById('sb-name').textContent=n;
-  document.getElementById('g-sub').textContent='Protein: '+G.protein+'g · Weight: '+G.weight+'kg';
+  renderCalibrations();
   document.getElementById('b-gw').innerHTML=G.weight+'<span class="su">kg</span>';
   showInitialSkeletons();
   // Critical path for Home: just today's row + check-in + streak. Everything
@@ -872,7 +872,7 @@ function goTab(t){
     renderCalendar();renderCardio();renderHeatmap();
     showTooltip('first-newsess',{targetId:'newsess-btn',title:'Tap here to start',body:'Begin a session, pick a lift, and log your first set. We pre-fill from your last workout.'});
   },60);
-  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();},60);
+  if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();renderBiometrics();renderCalibrations();renderVDM();},60);
 }
 
 /* HOME DATA VISUALS
@@ -3265,20 +3265,106 @@ function applyMacros(){
   if(!r){toast('Fill in weight, height, age');return;}
   document.getElementById('g-p').value=r.p;
   document.getElementById('g-k').value=r.kcal;
-  cModal('m-macro');toast('Filled — review and Save Goals');
+  cModal('m-macro');_calDirty();
+  toast('Derived from Mifflin-St Jeor — review and commit');
 }
 
 /* ── GOALS MODAL ──────────────────────────── */
-function openGoalsM(){document.getElementById('g-p').value=G.protein;document.getElementById('g-w').value=G.weight;document.getElementById('g-wtr').value=G.water;document.getElementById('g-k').value=G.calories;oModal('m-goals');}
+// The editors are sections on the profile page now, so "open" means bring the
+// section into view. Callers elsewhere in the app keep working unchanged.
+function _revealSection(id,focusSel){
+  if(!document.getElementById('p-settings').classList.contains('on'))goTab('settings');
+  setTimeout(function(){
+    var el=document.getElementById(id);if(!el)return;
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    el.classList.remove('sec-flash');void el.offsetWidth;el.classList.add('sec-flash');
+    if(focusSel){var f=el.querySelector(focusSel);if(f)setTimeout(function(){f.focus();},380);}
+  },90);
+}
+function renderBiometrics(){
+  if(!CU)return;
+  var n=CU._name||(CU.user_metadata&&CU.user_metadata.name)||(CU.email||'').split('@')[0];
+  var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v;};
+  set('pf-name',n||'');set('pf-age',P.age||'');set('pf-ht',P.height||'');
+  _selGender=P.gender||'male';_selUnits=P.units||'metric';
+  ['male','female'].forEach(function(g){var e=document.getElementById('gpill-'+g);if(e)e.classList.toggle('on',g===_selGender);});
+  ['metric','imperial'].forEach(function(u){var e=document.getElementById('gpill-'+u);if(e)e.classList.toggle('on',u===_selUnits);});
+  var hl=document.getElementById('ht-lbl');
+  if(hl)hl.textContent=_selUnits==='metric'?'Height (cm)':'Height (in)';
+  var t=document.getElementById('bio-state');
+  if(t){t.textContent='Synced';t.classList.remove('warn');}
+}
+function openGoalsM(){renderCalibrations();_revealSection('sec-calibrations');}
+function openProfileM(){_revealSection('sec-biometrics','input');}
+
+/* ── ENGINE CALIBRATIONS ─────────────────────
+   Four targets, each as a meter against today's actual. The input carries the
+   id the rest of the app already writes to (applyMacros fills g-p and g-k), so
+   moving the field out of the sheet changed where it lives, not what owns it. */
+function _calPct(a,b){if(!b)return 0;return Math.max(0,Math.min(100,(a/b)*100));}
+function renderCalibrations(){
+  var box=document.getElementById('cal-rows');if(!box)return;
+  var kcal=0,prot=0;
+  (meals||[]).forEach(function(m){kcal+=(+m.calories||0);prot+=(+m.protein||0);});
+  var wNow=(wtLog&&wtLog.length)?+wtLog[wtLog.length-1].weight:0;
+  var rows=[
+    {id:'g-p',  l:'Protein',  u:'g/day',   v:G.protein,  now:Math.round(prot), hue:'var(--sig-train)', step:'5'},
+    {id:'g-k',  l:'Calories', u:'kcal/day',v:G.calories, now:Math.round(kcal), hue:'var(--sig-fuel)',  step:'50'},
+    {id:'g-wtr',l:'Water',    u:'cups/day',v:G.water,    now:waterCups||0,     hue:'var(--sig-water)', step:'1'},
+    {id:'g-w',  l:'Bodyweight',u:'kg target',v:G.weight, now:wNow,             hue:'var(--sig-sleep)', step:'0.5'}
+  ];
+  box.innerHTML=rows.map(function(r){
+    // Bodyweight is a target to converge on, not a quantity to accumulate, so
+    // it reports proximity rather than a fill.
+    var isW=r.id==='g-w';
+    var pct=isW?(r.now?Math.max(0,100-Math.min(100,Math.abs(r.now-r.v)/Math.max(r.v,1)*100*4)):0):_calPct(r.now,r.v);
+    var actual=isW?(r.now?r.now+' kg now':'no weight logged'):(r.now+' today');
+    return '<div class="cal-row">'+
+      '<div class="cal-head"><span class="cal-l">'+r.l+'</span>'+
+        '<span class="cal-now">'+_esc(actual)+'</span></div>'+
+      '<div class="cal-set">'+
+        '<input type="number" id="'+r.id+'" step="'+r.step+'" value="'+r.v+'" oninput="_calDirty()" aria-label="'+r.l+' target">'+
+        '<span class="cal-u">'+r.u+'</span></div>'+
+      '<div class="meter"><div class="meter-fill" style="width:'+pct.toFixed(0)+'%;--meter-hue:'+r.hue+'"></div></div>'+
+    '</div>';
+  }).join('');
+}
+function _calDirty(){var t=document.getElementById('bio-state');if(t){}}
+function _bioDirty(){
+  var t=document.getElementById('bio-state');
+  if(t){t.textContent='Uncommitted';t.classList.add('warn');}
+}
+
+/* ── VOLUME DISTRIBUTION MATRIX ──────────────
+   The muscle map read as an allocation table. grow/def/exc are the stored
+   states; Build / Maintenance / Cut is what they mean to the athlete. */
+var VDM_STATE={grow:{k:'build',l:'Build'},def:{k:'maintain',l:'Maintenance'},exc:{k:'cut',l:'Cut'}};
+function renderVDM(){
+  var box=document.getElementById('vdm-list');if(!box)return;
+  var html=MM_GROUPS.map(function(g){
+    var rows=g.keys.map(function(k){
+      var st=_mmStateOf(k);
+      var m=VDM_STATE[st];
+      var cls='vdm-row'+(m?' '+m.k:'');
+      var tag=m?m.l:'Unassigned';
+      return '<div class="'+cls+'"><span class="vdm-n">'+_esc(MM_LABELS[k]||k)+'</span>'+
+        '<span class="vdm-s">'+tag+'</span></div>';
+    }).join('');
+    return '<div class="vdm-g"><div class="vdm-gh">'+_esc(g.h)+'</div>'+rows+'</div>';
+  }).join('');
+  box.innerHTML=html;
+}
 async function saveGoals(){
-  G.protein=parseInt(document.getElementById('g-p').value)||G.protein;
-  G.weight=parseFloat(document.getElementById('g-w').value)||G.weight;
-  G.water=parseInt(document.getElementById('g-wtr').value)||G.water;
-  G.calories=parseInt(document.getElementById('g-k').value)||G.calories;
-  cModal('m-goals');initWGrid();refresh();
-  document.getElementById('g-sub').textContent='Protein: '+G.protein+'g · Weight: '+G.weight+'kg';
-  document.getElementById('b-gw').innerHTML=G.weight+'<span class="su">kg</span>';
-  toast('Goals updated');
+  var _v=function(id){var e=document.getElementById(id);return e?e.value:'';};
+  G.protein=parseInt(_v('g-p'))||G.protein;
+  G.weight=parseFloat(_v('g-w'))||G.weight;
+  G.water=parseInt(_v('g-wtr'))||G.water;
+  G.calories=parseInt(_v('g-k'))||G.calories;
+  initWGrid();refresh();
+  var bgw=document.getElementById('b-gw');
+  if(bgw)bgw.innerHTML=G.weight+'<span class="su">kg</span>';
+  renderCalibrations();
+  toast('Calibrations committed');
   await sb.from('profiles').update({protein_goal:G.protein,weight_goal:G.weight,water_goal:G.water,calorie_goal:G.calories}).eq('id',CU.id);
 }
 
@@ -3303,17 +3389,6 @@ function updateProfileUI(){
   if(P.height)parts.push(P.height+(P.units==='metric'?'cm':'in'));
   var ps=document.getElementById('prof-sub');if(ps)ps.textContent=parts.join(' · ')||'Tap to set up';
 }
-function openProfileM(){
-  var n=CU._name||CU.user_metadata&&CU.user_metadata.name||CU.email.split('@')[0];
-  document.getElementById('pf-name').value=n||'';
-  document.getElementById('pf-age').value=P.age||'';
-  document.getElementById('pf-ht').value=P.height||'';
-  _selGender=P.gender||'male';_selUnits=P.units||'metric';
-  ['male','female'].forEach(function(g){document.getElementById('gpill-'+g).classList.toggle('on',g===_selGender);});
-  ['metric','imperial'].forEach(function(u){document.getElementById('gpill-'+u).classList.toggle('on',u===_selUnits);});
-  document.getElementById('ht-lbl').textContent=_selUnits==='metric'?'Height (cm)':'Height (in)';
-  oModal('m-profile');
-}
 function selGender(g){
   _selGender=g;
   ['male','female'].forEach(function(x){var el=document.getElementById('gpill-'+x);if(el)el.classList.toggle('on',x===g);});
@@ -3337,8 +3412,10 @@ async function saveProfile(){
   }
   var{error}=await sb.from('profiles').update(update).eq('id',CU.id);
   updateProfileUI();
-  cModal('m-profile');
-  toast(error?'Saved locally. Sync failed.':'Profile saved');
+  var t=document.getElementById('bio-state');
+  if(t){t.textContent=error?'Local only':'Synced';t.classList.toggle('warn',!!error);}
+  renderCalibrations();
+  toast(error?'Biometrics saved locally. Sync failed.':'Biometrics committed');
 }
 
 /* ── THEME ────────────────────────────────── */
@@ -3914,7 +3991,7 @@ async function executeAction(act){
       if(a.water)G.water=parseInt(a.water)||G.water;
       if(a.calories)G.calories=parseInt(a.calories)||G.calories;
       initWGrid();refresh();
-      document.getElementById('g-sub').textContent='Protein: '+G.protein+'g · Weight: '+G.weight+'kg';
+      renderCalibrations();
       document.getElementById('b-gw').innerHTML=G.weight+'<span class="su">kg</span>';
       await sb.from('profiles').update({protein_goal:G.protein,weight_goal:G.weight,water_goal:G.water,calorie_goal:G.calories,updated_at:new Date().toISOString()}).eq('id',CU.id);
       return{ok:true,msg:'Goals updated'};
@@ -4809,7 +4886,8 @@ async function saveMuscleMap(){
   cModal('m-muscle');
   updateMuscleSummary();
   renderBodyMuscleMap();
-  toast('Saved');
+  renderVDM();
+  toast('Allocation committed');
 }
 function updateMuscleSummary(){
   var el=document.getElementById('set-mm-sub');if(!el)return;
@@ -6605,7 +6683,7 @@ function inputModal(opts,cb){
 }
 function _inputOk(){var v=document.getElementById('inp-val').value;var cb=_inputCb;_inputCb=null;cModal('m-input');if(cb)cb(v);}
 function oModal(id){document.getElementById(id).classList.add('on');}
-function cModal(id){document.getElementById(id).classList.remove('on');if(id==='m-bc')stopBc();if(id==='m-exi'&&typeof _stopExGif==='function')_stopExGif();}
+function cModal(id){var _m=document.getElementById(id);if(!_m)return;_m.classList.remove('on');if(id==='m-bc')stopBc();if(id==='m-exi'&&typeof _stopExGif==='function')_stopExGif();}
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},3000);}
 document.querySelectorAll('.modal').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)cModal(m.id);});});
 

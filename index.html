@@ -868,19 +868,57 @@
           <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
 
-        <!-- PROFILE -->
+        <!-- ══ VERIFIED BIOMETRICS ══════════════════════════════════
+             The inputs used to live behind a modal. They are the smallest
+             set of values every calculation on the platform derives from,
+             so they sit on the page in one grid instead. -->
+        <div class="card" id="sec-biometrics">
+          <div class="fb" style="margin-bottom:4px">
+            <div class="ctitle" style="margin:0">Verified biometrics</div>
+            <span class="sec-tag" id="bio-state">Synced</span>
+          </div>
+          <p class="sec-note">Source values for BMR, TDEE and load prescription.</p>
+          <div class="g2">
+            <div class="f"><label>Full name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name" oninput="_bioDirty()"></div>
+            <div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100" oninput="_bioDirty()"></div>
+            <div class="f"><label id="ht-lbl">Height (cm)</label><input type="number" id="pf-ht" placeholder="175" min="50" max="300" oninput="_bioDirty()"></div>
+            <div class="f"><label>Gender</label><div class="gpills"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div>
+          </div>
+          <div class="f" style="margin-bottom:12px"><label>Units</label><div class="gpills"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div>
+          <button type="button" class="btn" style="width:100%" onclick="saveProfile()">Commit biometrics</button>
+        </div>
+
+        <!-- ══ ENGINE CALIBRATIONS ══════════════════════════════════
+             Each target reads as a meter against today's actual, so the
+             number being set and the number being hit sit on one line. -->
+        <div class="card" id="sec-calibrations">
+          <div class="fb" style="margin-bottom:4px">
+            <div class="ctitle" style="margin:0">Engine calibrations</div>
+            <button type="button" class="btn-g" onclick="openMacroCalc()">Derive</button>
+          </div>
+          <p class="sec-note">Targets the engine calibrates every prescription against.</p>
+          <div class="cal-rows" id="cal-rows"></div>
+          <button type="button" class="btn" style="width:100%;margin-top:14px" onclick="saveGoals()">Commit calibrations</button>
+        </div>
+
+        <!-- ══ VOLUME DISTRIBUTION MATRIX ═══════════════════════════ -->
+        <div class="card" id="sec-matrix">
+          <div class="fb" style="margin-bottom:4px">
+            <div class="ctitle" style="margin:0">Volume distribution matrix</div>
+            <button type="button" class="btn-g" onclick="openMuscleEditor()">Edit</button>
+          </div>
+          <p class="sec-note">Per-region allocation the engine weights session volume by.</p>
+          <div class="vdm-legend">
+            <span class="vdm-k build"><i></i>Build</span>
+            <span class="vdm-k maintain"><i></i>Maintenance</span>
+            <span class="vdm-k cut"><i></i>Cut</span>
+          </div>
+          <div class="vdm" id="vdm-list"></div>
+        </div>
+
+        <!-- PERSONALISATION -->
         <div class="card">
-          <div class="ctitle">Profile</div>
-          <div class="sit" onclick="openProfileM()">
-            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span class="sit-t"><span class="sit-l">Personal info</span><span class="sit-s" id="prof-sub">Age, height, gender</span></span>
-            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div class="sit" onclick="openGoalsM()">
-            <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span class="sit-t"><span class="sit-l">Training goals</span><span class="sit-s" id="g-sub">Protein &amp; weight targets</span></span>
-            <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
+          <div class="ctitle">Personalisation</div>
           <div class="sit" onclick="openMuscleEditor()">
             <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-target"/></svg>
             <span class="sit-t"><span class="sit-l">Target body areas</span><span class="sit-s" id="set-mm-sub">Edit your muscle map</span></span>
@@ -1121,7 +1159,7 @@
 
 <!-- MODALS -->
 <!-- PROFILE -->
-<div class="modal" id="m-profile"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Profile</div><div class="f"><label>Full name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name"></div><div class="f"><label>Gender</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div><div class="g2"><div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100"></div><div class="f"><label id="ht-lbl">Height (cm)</label><input type="number" id="pf-ht" placeholder="175" min="50" max="300"></div></div><div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div><div class="g2" style="margin-top:14px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-profile')">Cancel</button><button type="button" class="btn" onclick="saveProfile()">Save profile</button></div></div></div>
+
 
 <!-- EXERCISE INFO -->
 <div class="modal" id="m-exi">
@@ -1216,7 +1254,7 @@
   </div>
 </div>
 
-<div class="modal" id="m-goals"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Edit Goals</div><button type="button" class="btn-o" style="width:100%;margin-bottom:14px" onclick="openMacroCalc()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-calculator"/></svg>Derive from body metrics</button><div class="g2"><div class="f"><label>Daily protein (g)</label><input type="number" id="g-p" placeholder="170"></div><div class="f"><label>Target weight (kg)</label><input type="number" id="g-w" placeholder="85" step="0.5"></div><div class="f"><label>Water goal (cups)</label><input type="number" id="g-wtr" placeholder="8"></div><div class="f"><label>Calorie goal</label><input type="number" id="g-k" placeholder="2500"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-goals')">Cancel</button><button type="button" class="btn" onclick="saveGoals()">Save goals</button></div></div></div>
+
 
 <!-- MACRO CALCULATOR -->
 <div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv ty" id="mc-f">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
