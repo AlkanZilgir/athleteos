@@ -462,7 +462,10 @@ function renderPlan(){
     sessHtml='<div class="psesh">'+exHtml+'</div><button type="button" class="btn" style="width:100%;margin-top:10px" onclick="startPlanSession()">Start This Session</button>';
   }
   var focusStr=sel.focus?'<span class="tm" style="font-size:11px;font-weight:400"> — '+sel.focus+'</span>':'';
-  sec.innerHTML='<div class="card" style="margin-bottom:10px"><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">'+(AI_PLAN.name||'Training Plan')+'</div><button type="button" class="btn-g" onclick="clearPlan()">Change</button></div><div class="plan-days">'+daysHtml+'</div><div><div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:6px">'+(sel.name||'Rest')+focusStr+'</div>'+sessHtml+'</div></div>';
+  // meta.rationale is generated per block; showing it is the difference
+  // between a schedule and a programming decision the athlete can read.
+  var why=AI_PLAN.rationale?'<p class="plan-why">'+_esc(AI_PLAN.rationale)+'</p>':'';
+  sec.innerHTML='<div class="card" style="margin-bottom:10px"><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">'+(AI_PLAN.name||'Training Plan')+'</div><button type="button" class="btn-g" onclick="clearPlan()">Change</button></div>'+why+'<div class="plan-days">'+daysHtml+'</div><div><div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:6px">'+(sel.name||'Rest')+focusStr+'</div>'+sessHtml+'</div></div>';
 }
 function selectPlanDay(i){planDayIdx=i;renderPlan();}
 function startPlanChat(){
@@ -483,6 +486,69 @@ function startPlanSession(){
   toast('Session started — '+day.exercises.length+' exercises loaded');
 }
 function clearPlan(){AI_PLAN=null;planDayIdx=0;localStorage.removeItem('athleteos_plan_'+CU.id);renderPlan();}
+/* ── PLAN PAYLOAD ────────────────────────────
+   The engine emits {action, meta:{block_name, rationale}, days:[{day_number,
+   focus, exercises}]}. The renderer wants {name, days:[{day, name, focus,
+   exercises, rest}]} and plans persisted by earlier builds are already in that
+   older shape, so everything funnels through one normaliser rather than
+   teaching the renderer two vocabularies. */
+var _PLAN_DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+// [PLAN]…[/PLAN] is the contract, but a dropped delimiter should not cost the
+// user their block: fall back to the first balanced object carrying "days".
+function _parsePlanPayload(text){
+  var m=text.match(/\[PLAN\]([\s\S]*?)\[\/PLAN\]/);
+  if(m){
+    try{return{plan:JSON.parse(m[1].trim()),raw:m[0]};}catch(e){}
+  }
+  var i=text.indexOf('{');
+  while(i!==-1){
+    var depth=0,inStr=false,esc=false;
+    for(var j=i;j<text.length;j++){
+      var c=text[j];
+      if(esc){esc=false;continue;}
+      if(c==='\\'){esc=true;continue;}
+      if(c==='"'){inStr=!inStr;continue;}
+      if(inStr)continue;
+      if(c==='{')depth++;
+      else if(c==='}'){
+        depth--;
+        if(depth===0){
+          var slice=text.slice(i,j+1);
+          try{
+            var o=JSON.parse(slice);
+            if(o&&Array.isArray(o.days)&&o.days.length)return{plan:o,raw:slice};
+          }catch(e){}
+          break;
+        }
+      }
+    }
+    i=text.indexOf('{',i+1);
+  }
+  return null;
+}
+
+function _normalizePlan(raw){
+  if(!raw||!Array.isArray(raw.days)||!raw.days.length)return null;
+  var meta=raw.meta||{};
+  var days=raw.days.map(function(d,i){
+    // day_number is 1-7 Monday-first; fall back to position, then to any
+    // weekday name an older payload already carried.
+    var n=parseInt(d.day_number,10);
+    var name=(!isNaN(n)&&n>=1&&n<=7)?_PLAN_DAYS[n-1]:(d.day||_PLAN_DAYS[i%7]);
+    var ex=Array.isArray(d.exercises)?d.exercises:[];
+    var isRest=d.rest===true||ex.length===0;
+    var label=d.focus||d.name||(isRest?'Rest':'Train');
+    return{day:name,name:label,focus:d.focus||d.name||'',exercises:ex,rest:isRest};
+  });
+  return{
+    name:meta.block_name||raw.name||'Training block',
+    rationale:meta.rationale||raw.rationale||'',
+    action:raw.action||'CREATE_TEMPLATE',
+    days:days
+  };
+}
+
 function applyPlan(plan){AI_PLAN=plan;planDayIdx=0;localStorage.setItem('athleteos_plan_'+CU.id,JSON.stringify(plan));renderPlan();toast('Plan saved — check the Train tab!');}
 
 /* ── INIT ─────────────────────────────────── */
@@ -2806,14 +2872,24 @@ var COACH_TIPS=[
   {t:'Log it or it did not happen',b:'A month of half-logged sessions tells you nothing. Log every set, even the throwaway ones, and the trend becomes real.'},
   {t:'Six hours costs you a set',b:'Under seven hours and your top sets drop before you notice. Sleep is the cheapest performance gain on the list.'}
 ];
+// The card boots as a synchronisation skeleton. The first thing that resolves —
+// a rotated tip or a computed insight — takes the card over and the skeleton
+// goes for good; it is a loading state, not a thing to flash back to.
+function _coachResolved(title,body,badge){
+  var sync=document.getElementById('coach-sync');
+  if(sync){sync.hidden=true;sync.setAttribute('aria-busy','false');}
+  var tEl=document.getElementById('coach-title'),bEl=document.getElementById('coach-body');
+  if(tEl){tEl.hidden=false;tEl.textContent=title;}
+  if(bEl){bEl.hidden=false;bEl.textContent=body;}
+  var b=document.getElementById('coach-badge');
+  if(b&&badge)b.textContent=badge;
+}
 function rotateCoachTip(){
   var idx=parseInt(localStorage.getItem('coach_tip_idx')||'-1')+1;
   if(idx>=COACH_TIPS.length)idx=0;
   localStorage.setItem('coach_tip_idx',String(idx));
   var t=COACH_TIPS[idx];
-  var tEl=document.getElementById('coach-title'),bEl=document.getElementById('coach-body');
-  if(tEl)tEl.textContent=t.t;
-  if(bEl)bEl.textContent=t.b;
+  _coachResolved(t.t,t.b,'Readout');
   // On every tap also try to refresh the personalized insight first thing tomorrow.
   generateCoachInsight();
 }
@@ -2874,11 +2950,7 @@ function _firstDaysInsight(workouts,sleeps){
   return null;
 }
 function _applyCoachInsight(ins){
-  var tEl=document.getElementById('coach-title'),bEl=document.getElementById('coach-body');
-  if(tEl)tEl.textContent=ins.t;
-  if(bEl)bEl.textContent=ins.b;
-  var card=document.querySelector('.coach-card .badge');
-  if(card)card.textContent='Insight';
+  _coachResolved(ins.t,ins.b,'Insight');
 }
 // Today's recap card: pulls today's workout + cardio + meals + sleep and compares the strength session
 // against the user's prior session that hit the same muscle group(s).
@@ -3529,40 +3601,37 @@ async function sendMsg(){
   inp.value='';inp.style.height='auto';
   addMsg('u',msg);chatH.push({role:'user',content:msg});
   var tdiv=addTyping();
-  // Routines and meal plans leave as structured payloads, never as prose the
-  // user would have to retype. One line of confirmation, then the object.
+  // Routines leave as a structured payload, never as prose the user would have
+  // to retype. The delimiters are what the client parses on; the bare-object
+  // fallback in _parsePlanPayload covers the model dropping them.
   var planInstr=
     'STRUCTURED OUTPUT (non-negotiable)\n'+
-    'A request to create, build, generate, modify, or adjust a routine, program, block, split or '+
-    'schedule is a data request, not a writing request. Do not write the routine out in prose. '+
-    'Emit exactly one line of confirmation naming what you are generating and the constraint it is '+
-    'built against, then the payload immediately after it.\n'+
-    'Example confirmation: "Generating a 4-day upper/lower hypertrophy block against a 170g protein target."\n'+
-    'Training payload, inside [PLAN] and [/PLAN]:\n'+
-    '{"name":"Plan Name","days":[{"day":"Monday","name":"Upper A","focus":"Horizontal press, vertical pull",'+
+    'A request to create, build, generate, modify, or adjust a routine, program, block or split '+
+    'is an execution call, not a writing task. Never write the routine out in prose. Never say '+
+    '"here is your routine" or "I can make that for you". Emit exactly one sentence confirming '+
+    'the action and the constraint it is built against, then the payload immediately after it.\n'+
+    'Example: "Generating a 4-day upper/lower hypertrophy block against a 170g protein target."\n'+
+    'Payload, wrapped in [PLAN] and [/PLAN]:\n'+
+    '{"action":"CREATE_TEMPLATE",'+
+    '"meta":{"block_name":"4-Day Hypertrophy Split",'+
+    '"rationale":"Volume allocation balanced against progressive fatigue scaling across a 4-day availability window."},'+
+    '"days":[{"day_number":1,"focus":"Upper Push",'+
     '"exercises":[{"name":"Bench Press","sets":4,"reps":"6-8","rest":"120s"},'+
     '{"name":"Overhead Press","sets":3,"reps":"8-10","rest":"90s"}]},'+
-    '{"day":"Tuesday","name":"Rest","rest":true}]}\n'+
-    'Constraints: all seven days present, Monday through Sunday. Rest days carry "rest":true and no '+
-    'exercises array. Sets 2-5. Reps as a range. Exercise names must be real movements the user has '+
-    'the equipment for.\n'+
-    'A meal plan is the same contract: one line of confirmation, then one [ACTION]addMeal[/ACTION] block '+
-    'per meal so the user can approve them into the log. Do not paste a menu as prose.\n'+
-    'Anything that is not a routine or a meal plan stays in the report register above.';
+    '{"day_number":2,"focus":"Rest","rest":true}]}\n'+
+    'Field rules:\n'+
+    '- action: CREATE_TEMPLATE for a new block, UPDATE_TEMPLATE for an adjustment to the current one.\n'+
+    '- meta.rationale: one sentence in sports-science terms. Name the mechanism (volume allocation, '+
+    'fatigue scaling, frequency, intensity distribution), not the sentiment.\n'+
+    '- day_number: 1 through 7, Monday through Sunday. All seven present, no gaps, no duplicates.\n'+
+    '- Rest days carry "rest":true and no exercises array.\n'+
+    '- Sets 2-5. Reps as a range. Exercise names must be real movements the athlete has equipment for.\n'+
+    'A meal plan follows the same law: one sentence of confirmation, then one '+
+    '[ACTION]addMeal[/ACTION] block per meal so each lands in the log through the approval card. '+
+    'Never paste a menu as prose.\n'+
+    'For anything that is not a routine or a meal plan: answer at maximum data density. Zero filler, '+
+    'zero emoji, no restatement of the question.';
 
-  var actInstr='You can also perform actions in the app on the user\'s behalf. To request an action, emit one or more [ACTION]{json}[/ACTION] blocks alongside your reply. The user will see a confirmation card and tap "Run" or "Cancel" — never assume they ran. Supported actions:\n'+
-    '- addMeal {name, protein, carbs, fat, calories}\n'+
-    '- logWater {cups} (total cups for today, e.g. 6)\n'+
-    '- logSleep {bedtime:"HH:MM", wake_time:"HH:MM", quality:"great"|"good"|"ok"|"poor"}\n'+
-    '- logWeight {kg}\n'+
-    '- setBodyStats {gender?, age?, height_cm?, units?:"metric"|"imperial"}\n'+
-    '- setGoals {protein?, weight?, water?, calories?}\n'+
-    '- startWorkout {}\n'+
-    '- addExerciseToSession {name, muscle:"chest"|"back"|"legs"|"shoulders"|"arms"|"core"|"other", sets:[{weight,reps}]}\n'+
-    '- finishWorkout {}\n'+
-    '- setRestTimer {seconds}\n'+
-    'Example: "Logging that. [ACTION]{\"type\":\"addMeal\",\"args\":{\"name\":\"Chicken bowl\",\"protein\":40,\"carbs\":50,\"fat\":10,\"calories\":480}}[/ACTION]"\n'+
-    'Only emit ACTION blocks when the user clearly asks for an action. For pure questions, just answer.';
   var safetyInstr='SAFETY RULES (non-negotiable):\n'+
     '- You are NOT a doctor, physiotherapist, dietitian, or licensed medical professional. Do not diagnose, prescribe, or claim to treat conditions.\n'+
     '- If a user describes pain, injury symptoms, dizziness, chest discomfort, bleeding, mental-health crisis, eating disorder behaviour, or anything that sounds medically serious — refuse to give specific advice and direct them to a qualified professional (GP, A&E, or local mental-health line). Phrase it as care, not refusal: "This needs a real clinician, not me — please see your GP / call 999 / call 116 123 (UK Samaritans)."\n'+
@@ -3691,8 +3760,20 @@ function buildCtx(){
 function addMsg(role,text){
   var pendingActs=null;
   if(role==='a'){
-    var pm=text.match(/\[PLAN\]([\s\S]*?)\[\/PLAN\]/);
-    if(pm){try{var plan=JSON.parse(pm[1].trim());applyPlan(plan);text=text.replace(/\[PLAN\][\s\S]*?\[\/PLAN\]/,'').trim();if(!text)text='Your '+plan.name+' is ready! Head to the Train tab to see your schedule.';}catch(e){}}
+    var parsed=_parsePlanPayload(text);
+    if(parsed){
+      var plan=_normalizePlan(parsed.plan);
+      if(plan){
+        applyPlan(plan);
+        text=text.split(parsed.raw).join('').trim();
+        // The confirmation sentence is the model's job. If it omitted one,
+        // state the result rather than leaving an empty card.
+        if(!text){
+          var td=plan.days.filter(function(d){return !d.rest;}).length;
+          text=plan.name+' compiled. '+td+' training day'+(td===1?'':'s')+'. Open Train to run it.';
+        }
+      }
+    }
     var acts=[];
     text=text.replace(/\[ACTION\]([\s\S]*?)\[\/ACTION\]/g,function(_,j){
       try{var a=JSON.parse(j.trim());if(a&&a.type)acts.push(a);}catch(e){}

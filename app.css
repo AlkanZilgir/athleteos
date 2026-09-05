@@ -2480,11 +2480,13 @@ body.dark .eng-out-h{background:#141418}
 
 /* ── PRESETS ───────────────────────────────*/
 .eng-presets{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 10px;flex-shrink:0}
-.eng-presets .chat-chip{border-radius:0;border-color:var(--bdr2);
+.eng-presets .chat-chip{position:relative;border-radius:0;border:1px solid var(--bdr3);
+  border-left:2px solid var(--accent);background:transparent;
   font-family:var(--font-mono);font-size:10.5px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;padding:8px 11px;color:var(--t2)}
+  letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;color:var(--t2)}
 .eng-presets .chat-chip:hover{border-color:var(--accent);background:var(--adim);
   color:var(--accent)}
+.eng-presets .chat-chip:active{transform:translateY(1px)}
 body:not(.dark) .eng-presets .chat-chip:hover{color:var(--accent-d)}
 
 /* ── COMMAND BAR ───────────────────────────
@@ -2530,3 +2532,36 @@ body.dark .chat-row{background:#0F0F12}
 /* The upgrade link sits inside the status line, so it inherits its register. */
 .eng-status .lnk{font-family:inherit;font-size:inherit;letter-spacing:inherit;
   text-transform:inherit;font-weight:700;padding:0}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SYSTEM SYNCHRONIZATION
+   The readout card's loading state. Three labelled bars for the three
+   series being compiled, so the wait shows what is being waited on
+   instead of the word "Loading".
+   ═══════════════════════════════════════════════════════════════ */
+.sync{padding-top:2px}
+.sync-t{font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.sync-rows{display:flex;flex-direction:column;gap:9px}
+.sync-row{display:flex;align-items:center;gap:12px}
+.sync-l{flex:0 0 62px;font-family:var(--font-mono);font-size:10px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.sync-bar{flex:1;height:8px;position:relative;overflow:hidden;
+  background:var(--sig-track);border-radius:1px}
+.sync-bar::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0,var(--adim) 40%,
+    color-mix(in srgb,var(--accent) 42%,transparent) 50%,var(--adim) 60%,transparent 100%);
+  background-size:220% 100%;animation:syncScan 1.5s linear infinite}
+.sync-row:nth-child(2) .sync-bar::after{animation-delay:.18s}
+.sync-row:nth-child(3) .sync-bar::after{animation-delay:.36s}
+@keyframes syncScan{0%{background-position:200% 0}100%{background-position:-200% 0}}
+body:not(.dark) .sync-bar{background:var(--surface-2)}
+
+/* The block rationale: one sentence of programming reasoning above the week. */
+.plan-why{font-size:12.5px;line-height:1.55;color:var(--t2);margin:-4px 0 14px;
+  padding-left:10px;border-left:1px solid var(--bdr3);max-width:62ch}
+
+@media (prefers-reduced-motion:reduce){
+  .sync-bar::after{animation:none;background:var(--adim)}
+}
