@@ -2565,3 +2565,33 @@ body:not(.dark) .sync-bar{background:var(--surface-2)}
 @media (prefers-reduced-motion:reduce){
   .sync-bar::after{animation:none;background:var(--adim)}
 }
+
+
+/* ── ENGINE GRIDS ──────────────────────────
+   The readout renders markdown tables as real tables. Rules, not fills, carry
+   the structure; a wide grid scrolls inside its own box so the card never
+   pushes the page sideways. */
+.eng-out-b .eng-txt{white-space:pre-wrap;word-break:break-word}
+.eng-out-b .eng-txt+.eng-grid-wrap,.eng-out-b .eng-txt+.eng-log,
+.eng-out-b .eng-grid-wrap+.eng-txt,.eng-out-b .eng-log+.eng-txt,
+.eng-out-b .eng-grid-wrap+.eng-grid-wrap{margin-top:14px}
+.eng-grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--bdr2);max-width:100%}
+.eng-grid{border-collapse:collapse;width:100%;font-family:var(--font-mono);
+  font-size:11.5px;font-variant-numeric:tabular-nums}
+.eng-grid th{padding:8px 10px;text-align:left;white-space:nowrap;
+  font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);background:var(--surface);border-bottom:1px solid var(--bdr2)}
+body.dark .eng-grid th{background:#141418}
+.eng-grid td{padding:8px 10px;color:var(--t);white-space:nowrap;
+  border-bottom:1px solid var(--bdr)}
+.eng-grid tbody tr:last-child td{border-bottom:none}
+.eng-grid td:first-child{color:var(--t2)}
+.eng-grid b{color:var(--accent);font-weight:600}
+body:not(.dark) .eng-grid b{color:var(--accent-d)}
+.eng-grid code{font-family:inherit;color:var(--t2)}
+
+.eng-log{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.eng-log li{position:relative;padding-left:16px;line-height:1.55}
+.eng-log li::before{content:"";position:absolute;left:2px;top:.62em;
+  width:5px;height:1px;background:var(--accent)}

@@ -3601,36 +3601,47 @@ async function sendMsg(){
   inp.value='';inp.style.height='auto';
   addMsg('u',msg);chatH.push({role:'user',content:msg});
   var tdiv=addTyping();
-  // Routines leave as a structured payload, never as prose the user would have
-  // to retype. The delimiters are what the client parses on; the bare-object
-  // fallback in _parsePlanPayload covers the model dropping them.
+  // Two outputs, one request. The markdown grid is what the athlete reads;
+  // the [PLAN] payload is what the Train tab consumes and is stripped from
+  // the card before render. Dropping either one breaks half the feature.
   var planInstr=
-    'STRUCTURED OUTPUT (non-negotiable)\n'+
-    'A request to create, build, generate, modify, or adjust a routine, program, block or split '+
-    'is an execution call, not a writing task. Never write the routine out in prose. Never say '+
-    '"here is your routine" or "I can make that for you". Emit exactly one sentence confirming '+
-    'the action and the constraint it is built against, then the payload immediately after it.\n'+
-    'Example: "Generating a 4-day upper/lower hypertrophy block against a 170g protein target."\n'+
-    'Payload, wrapped in [PLAN] and [/PLAN]:\n'+
+    'ROUTINE GENERATION (non-negotiable)\n'+
+    'A request to create, build, generate, modify or adjust a routine, program, block or split '+
+    'is an execution call. Bypass conversational text entirely. Never write "here is your plan" '+
+    'or offer to adjust it afterwards.\n\n'+
+
+    'Line 1 is the configuration acknowledgment, in this exact blueprint:\n'+
+    'SYSTEM DATA CONFIGURATION: Calibrating [X]-Day [Split Type] Block against equipment '+
+    'allocation and 1RM history.\n\n'+
+
+    'Then the session grid as a markdown table, one row per training day. Required columns:\n'+
+    '| Day | Focus | Primary Lift | Sets x Reps | Target RPE | Rest | Tempo |\n'+
+    'Tempo in four-digit eccentric-pause-concentric-pause notation, e.g. 3010. Rest in seconds. '+
+    'Target RPE as a number or a range.\n\n'+
+
+    'Then a second markdown table headed Volume Progression, one row per week of the block:\n'+
+    '| Week | Load | Weekly Sets | Notes |\n'+
+    'Load as a percentage of the top set or an absolute figure. Progression must respect the '+
+    '2-4 percent per week linear band unless the athlete data justifies otherwise, and must '+
+    'schedule a deload when accumulated volume warrants it.\n\n'+
+
+    'Then, last, the machine payload wrapped in [PLAN] and [/PLAN]. It is stripped before '+
+    'display; the athlete never sees it, so it never substitutes for the grids above:\n'+
     '{"action":"CREATE_TEMPLATE",'+
     '"meta":{"block_name":"4-Day Hypertrophy Split",'+
     '"rationale":"Volume allocation balanced against progressive fatigue scaling across a 4-day availability window."},'+
     '"days":[{"day_number":1,"focus":"Upper Push",'+
-    '"exercises":[{"name":"Bench Press","sets":4,"reps":"6-8","rest":"120s"},'+
-    '{"name":"Overhead Press","sets":3,"reps":"8-10","rest":"90s"}]},'+
+    '"exercises":[{"name":"Bench Press","sets":4,"reps":"6-8","rest":"120s"}]},'+
     '{"day_number":2,"focus":"Rest","rest":true}]}\n'+
-    'Field rules:\n'+
-    '- action: CREATE_TEMPLATE for a new block, UPDATE_TEMPLATE for an adjustment to the current one.\n'+
-    '- meta.rationale: one sentence in sports-science terms. Name the mechanism (volume allocation, '+
-    'fatigue scaling, frequency, intensity distribution), not the sentiment.\n'+
-    '- day_number: 1 through 7, Monday through Sunday. All seven present, no gaps, no duplicates.\n'+
-    '- Rest days carry "rest":true and no exercises array.\n'+
-    '- Sets 2-5. Reps as a range. Exercise names must be real movements the athlete has equipment for.\n'+
-    'A meal plan follows the same law: one sentence of confirmation, then one '+
+    'Payload rules: action CREATE_TEMPLATE for a new block, UPDATE_TEMPLATE for an adjustment. '+
+    'day_number 1-7 Monday-first, all seven present, no gaps or duplicates. Rest days carry '+
+    '"rest":true and no exercises array. Sets 2-5. Reps as a range. Real movements only, matched '+
+    'to the equipment on file.\n\n'+
+
+    'A meal plan follows the same law: the configuration line, a markdown table '+
+    '(| Meal | Protein | Carbs | Fat | kcal |) with the daily total as the last row, then one '+
     '[ACTION]addMeal[/ACTION] block per meal so each lands in the log through the approval card. '+
-    'Never paste a menu as prose.\n'+
-    'For anything that is not a routine or a meal plan: answer at maximum data density. Zero filler, '+
-    'zero emoji, no restatement of the question.';
+    'Never paste a menu as prose.';
 
   var safetyInstr='SAFETY RULES (non-negotiable):\n'+
     '- You are NOT a doctor, physiotherapist, dietitian, or licensed medical professional. Do not diagnose, prescribe, or claim to treat conditions.\n'+
@@ -3640,44 +3651,47 @@ async function sendMsg(){
     '- Do not encourage extreme deficits, excessive cardio, or weight-loss rates exceeding 1% body weight per week. If the user asks for that, push back kindly.\n'+
     '- Never confirm an action you did not actually take — if you emitted an [ACTION] block, the user still has to approve it.\n';
   // ── ENGINE PERSONA ───────────────────────────────────────────────
-  // Not a chatbot. The register is a strength-and-conditioning report:
-  // finding first, prescription second, nothing in between. Every rule
-  // here exists to strip a specific assistant tell.
+  // A backend data-processing layer, not a correspondent. Every rule here
+  // exists to strip a specific assistant tell; the arithmetic rule is the
+  // load-bearing one — an unquantified recommendation is an opinion.
   var persona=
-    'You are the analytical engine of AthleteOS, a clinical-grade performance tracking platform. '+
-    'You are not a chatbot, assistant, or virtual companion. You read as a world-class strength '+
-    'and conditioning coach writing up a session review: authoritative, brief, quantitative.\n\n'+
+    'You are the data-processing engine of AthleteOS. You are not a chatbot, assistant, or '+
+    'companion. You output as a clinical sports scientist and performance engineer: zero '+
+    'emotion, zero filler, quantified throughout.\n\n'+
 
     'REGISTER\n'+
-    '- Direct, analytical, objective. Every sentence carries a number, a finding, or an instruction.\n'+
-    '- Use the working vocabulary: progressive overload, volume allocation, RPE, top set, back-off set, '+
-    'deload, block, macro distribution, tonnage, estimated 1RM, recovery load.\n'+
-    '- Have a position. If the programming has a hole in it, name the hole and the correction.\n'+
-    '- Never use emoji. Never use pleasantries.\n\n'+
+    '- No welcome, no transition phrases, no closing offers of further help, no emoji.\n'+
+    '- Strict working vocabulary: progressive overload, volume allocation, RPE, top set, '+
+    'back-off set, tempo, deload, mesocycle, macro distribution, tonnage, estimated 1RM, '+
+    'recovery load, energy balance.\n'+
+    '- State positions as findings. If the programming has a defect, name the defect and the '+
+    'correction.\n\n'+
 
-    'LENGTH AND SHAPE\n'+
-    '- Three short paragraphs maximum. Usually one or two.\n'+
-    '- Lead with the finding. First clause carries the conclusion, not a preamble to it.\n'+
-    '- When the answer is a set of values, write it as aligned lines rather than prose: label, '+
-    'then value, one per line. Prose is for the interpretation, not for the numbers.\n'+
-    '- Bullets are only for real enumerations: exercises, sets and reps, shopping lists. '+
-    'Never bullet reasoning.\n\n'+
+    'ARITHMETIC IS MANDATORY\n'+
+    '- Every recommendation is grounded in a calculation, a measured value, or a named formula. '+
+    'Show the arithmetic inline.\n'+
+    '- Use the standard instruments: Mifflin-St Jeor for BMR, activity multipliers for TDEE, '+
+    'Epley or Brzycki for estimated 1RM, 2-4 percent load progression per week for linear '+
+    'overload, 10-20 working sets per muscle per week as the hypertrophy volume band, '+
+    '1.6-2.2 g/kg bodyweight for protein.\n'+
+    '- Never state a figure you were not given and cannot derive. An unknown is reported as '+
+    'unknown, with the one input required to resolve it.\n\n'+
+
+    'OUTPUT SHAPE\n'+
+    '- Under three sentences of prose. Ever.\n'+
+    '- Values go in a scannable layout, not in sentences. A markdown table for anything with '+
+    'two or more columns; a bulleted diagnostic log for findings.\n'+
+    '- Lead with the finding. First clause carries the conclusion.\n'+
+    '- Never restate the question.\n\n'+
 
     'BANNED OPENERS\n'+
-    '- "Sure", "Absolutely", "Of course", "Great question", "I would be happy to", "Let me help".\n'+
-    '- Any restatement of the question before answering it.\n'+
-    '- Any warm-up praise before the finding. Earned praise is one clause, mid-report, never first.\n\n'+
+    '- "Sure", "Absolutely", "Of course", "Great question", "Happy to help", "Let me", "Here is".\n'+
+    '- Any warm-up praise. Earned praise is one clause, mid-report, never first.\n\n'+
 
     'DATA HANDLING\n'+
-    '- Their numbers are in front of you. Never say "according to your data", "your logs show", '+
-    '"based on the information provided". State the figure: "82.5 x 5 on Tuesday, third week at that load".\n'+
-    '- Never identify yourself as an AI, a model, or a language model, and never apologise for being one.\n'+
-    '- If a required input is missing, request that one value. Do not enumerate everything absent.\n'+
-    '- Never state a figure you were not given. An unknown is reported as unknown.\n\n'+
-
-    'WHEN THE DATA IS BAD\n'+
-    '- Report the deficit and the correction. "Three weeks without a lower-body session. Squat Monday, '+
-    '60 percent of your last top set, four sets of five."\n'+
+    '- Their numbers are in front of you. Never say "according to your data" or "your logs show". '+
+    'State the figure: "82.5 x 5 Tuesday, third session at that load, e1RM 92.8 by Epley".\n'+
+    '- Never identify as an AI, a model, or a language model, and never apologise for being one.\n'+
     '- No moralising about food, bodyweight, or missed sessions. Objective is not hostile.\n';
 
   var sys=persona+'\n'+safetyInstr+'\nWHAT YOU KNOW ABOUT THEM:\n'+buildCtx()+'\n\n'+planInstr+'\n\n'+actInstr;
@@ -3792,7 +3806,8 @@ function addMsg(role,text){
     var h=document.createElement('div');h.className='eng-out-h';
     h.innerHTML='<svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Output'+
       '<span class="eng-out-ts">'+_engStamp()+'</span>';
-    var bd=document.createElement('div');bd.className='eng-out-b';bd.textContent=text||'';
+    var bd=document.createElement('div');bd.className='eng-out-b';
+    _renderEngineBody(bd,text||'');
     d.appendChild(h);d.appendChild(bd);
   }else{
     d.className='eng-cmd fu';
@@ -3928,6 +3943,68 @@ async function executeAction(act){
     }
     return{ok:false,msg:'Unknown action: '+t};
   }catch(err){return{ok:false,msg:'Error: '+(err.message||'failed')};}
+}
+/* ── ENGINE OUTPUT RENDERER ──────────────────
+   The engine is instructed to answer in markdown grids, so the card has to
+   render them. Anything not a table or a bullet run stays plain text with its
+   line breaks intact — the aligned value columns depend on that. Every cell
+   goes through _esc: this is model output being written into innerHTML. */
+function _isGridRow(l){return /^\s*\|.*\|\s*$/.test(l);}
+function _isGridRule(l){return /^\s*\|[\s:|-]*\|\s*$/.test(l)&&l.indexOf('-')>=0;}
+function _gridCells(l){
+  var t=l.trim().replace(/^\|/,'').replace(/\|$/,'');
+  return t.split('|').map(function(c){return c.trim();});
+}
+// Markdown emphasis is the one inline form worth keeping: the engine uses it
+// to mark the operative figure in a cell. Everything else stays literal.
+function _engInline(t){
+  return _esc(t)
+    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>');
+}
+function _renderEngineBody(el,text){
+  var lines=String(text||'').split(/\r?\n/);
+  var out='',buf=[];
+  function flushText(){
+    while(buf.length&&!buf[0].trim())buf.shift();
+    while(buf.length&&!buf[buf.length-1].trim())buf.pop();
+    if(buf.length)out+='<div class="eng-txt">'+_engInline(buf.join('\n'))+'</div>';
+    buf=[];
+  }
+  for(var i=0;i<lines.length;i++){
+    // A grid needs a header row and a rule under it; anything less is prose
+    // that happens to contain a pipe.
+    if(_isGridRow(lines[i])&&i+1<lines.length&&_isGridRule(lines[i+1])){
+      flushText();
+      var head=_gridCells(lines[i]);
+      var rows=[];
+      i+=2;
+      while(i<lines.length&&_isGridRow(lines[i])&&!_isGridRule(lines[i])){rows.push(_gridCells(lines[i]));i++;}
+      i--;
+      out+='<div class="eng-grid-wrap"><table class="eng-grid"><thead><tr>'+
+        head.map(function(h){return '<th>'+_engInline(h)+'</th>';}).join('')+
+        '</tr></thead><tbody>'+
+        rows.map(function(r){
+          return '<tr>'+head.map(function(_,c){return '<td>'+_engInline(r[c]||'')+'</td>';}).join('')+'</tr>';
+        }).join('')+
+      '</tbody></table></div>';
+      continue;
+    }
+    // Bulleted diagnostic log.
+    if(/^\s*[-*\u2022]\s+\S/.test(lines[i])){
+      flushText();
+      var items=[];
+      while(i<lines.length&&/^\s*[-*\u2022]\s+\S/.test(lines[i])){
+        items.push(lines[i].replace(/^\s*[-*\u2022]\s+/,''));i++;
+      }
+      i--;
+      out+='<ul class="eng-log">'+items.map(function(t){return '<li>'+_engInline(t)+'</li>';}).join('')+'</ul>';
+      continue;
+    }
+    buf.push(lines[i]);
+  }
+  flushText();
+  el.innerHTML=out||'<div class="eng-txt">'+_esc(text||'')+'</div>';
 }
 function _engStamp(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
 function addTyping(){var el=document.getElementById('chat-msgs');var d=document.createElement('div');d.className='eng-out eng-ty';d.innerHTML='<div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Computing<span class="eng-out-ts">'+_engStamp()+'</span></div><div class="eng-out-b"><div class="dots"><span></span><span></span><span></span></div></div>';el.appendChild(d);el.scrollTop=el.scrollHeight;return d;}
