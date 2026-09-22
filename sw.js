@@ -1,4 +1,4 @@
-const CACHE='athleteos-v64';
+const CACHE='athleteos-v65';
 
 const BASE=self.registration.scope;
 const ASSETS=[
@@ -214,17 +214,35 @@ self.addEventListener('fetch',e=>{
   // Hitting cache.put with a non-GET throws and surfaces in DevTools.
   if(e.request.method!=='GET')return;
 
-  e.respondWith(
-    caches.match(e.request).then(cached=>{
-      if(cached)return cached;
+  // Code and styles are stale-while-revalidate; everything else stays
+  // cache-first. Pure cache-first meant a CSS or module change stayed invisible
+  // until someone remembered to bump CACHE — which is how an old app.css ends
+  // up paired with a new index.html.
+  const isCode=/\.(?:css|js|html)$/.test(new URL(url).pathname);
 
-      return fetch(e.request).then(r=>{
-        if(!r || r.status!==200 || r.type==='opaque')return r;
+  // The revalidation must bypass the HTTP cache or it re-reads the same stale
+  // bytes: a static host sends Cache-Control: max-age=3600, so a plain fetch()
+  // is answered from the browser cache and the SW 'refreshes' to the old copy
+  // forever. 'no-cache' still revalidates, and a 304 costs nothing.
+  const req=isCode?new Request(e.request.url,{cache:'no-cache',credentials:'same-origin'}):e.request;
 
-        const cl=r.clone();
-        caches.open(CACHE).then(cache=>cache.put(e.request,cl));
-        return r;
-      });
-    })
-  );
+  e.respondWith((async()=>{
+    const cached=await caches.match(e.request);
+
+    const fresh=fetch(req).then(r=>{
+      if(!r || r.status!==200 || r.type==='opaque')return r;
+
+      const cl=r.clone();
+      return caches.open(CACHE).then(cache=>cache.put(e.request,cl)).then(()=>r);
+    });
+
+    if(cached){
+      // waitUntil is load-bearing: without it the SW may be killed the moment
+      // respondWith settles, the write-back never lands, and the stale copy is
+      // served forever — the exact failure this strategy exists to prevent.
+      if(isCode)e.waitUntil(fresh.catch(()=>{}));
+      return cached;
+    }
+    return fresh;
+  })());
 });
