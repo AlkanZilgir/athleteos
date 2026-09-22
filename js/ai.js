@@ -465,9 +465,9 @@ async function sendMsg(){
     if(!navigator.onLine){
       help='Offline. The engine needs a connection; logging still works locally.';
     }else if(lastErr==='engine_not_configured'){
-      help='Engine offline: no model key is configured on the server. Set ANTHROPIC_API_KEY in the Supabase function secrets and redeploy the coach function.';
+      help='Engine offline: no model key is configured on the server. Set GEMINI_API_KEY in the Supabase function secrets — the function reads it per request, so no redeploy is needed.';
     }else if(lastErr==='engine_key_rejected'){
-      help='Engine offline: the configured model key was rejected. Check ANTHROPIC_API_KEY in the Supabase function secrets.';
+      help='Engine offline: the configured model key was rejected. Check GEMINI_API_KEY in the Supabase function secrets.';
     }else if(lastErr==='refused'){
       help='That request was declined by the model safety layer. Rephrase it, or ask a clinician if it concerns pain, injury or medication.';
     }else if(lastStatus===429||lastErr==='rate_limited'){
