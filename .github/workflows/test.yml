@@ -19,7 +19,7 @@ jobs:
     env:
       # If you want the sign-in test to run too, add TEST_EMAIL + TEST_PASSWORD
       # as GitHub repo secrets at Settings → Secrets and variables → Actions.
-      # Without them, that single test self-skips and the job still passes.
+      # Without them, the 'signed-in flows' group self-skips and the job still passes.
       TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
     steps:
