@@ -15,7 +15,10 @@ const ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 
 // Tunable without a code change if the latency or the quota needs moving.
 // Flash is the free tier's workhorse: fast, and generous on requests per day.
-const MODEL = Deno.env.get('COACH_MODEL') || 'gemini-2.0-flash';
+// Google retires these on its own schedule — 2.0-flash started answering 404
+// with "no longer available" — so keep this overridable by secret, and read
+// the 404 body rather than guessing when it happens again.
+const MODEL = Deno.env.get('COACH_MODEL') || 'gemini-3.6-flash';
 
 // The engine answers in three short paragraphs; a seven-day plan payload is
 // the long case. The cap is headroom, not a target.
