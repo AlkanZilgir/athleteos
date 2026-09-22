@@ -1,11 +1,21 @@
-const CACHE='athleteos-v63';
+const CACHE='athleteos-v64';
 
 const BASE=self.registration.scope;
 const ASSETS=[
   BASE,
   BASE+'index.html',
   BASE+'app.css',
-  BASE+'app.js',
+  BASE+'js/core.js',
+  BASE+'js/auth.js',
+  BASE+'js/onboarding.js',
+  BASE+'js/home.js',
+  BASE+'js/workout.js',
+  BASE+'js/nutrition.js',
+  BASE+'js/body.js',
+  BASE+'js/sleep.js',
+  BASE+'js/ai.js',
+  BASE+'js/settings.js',
+  BASE+'js/boot.js',
   BASE+'manifest.json',
   BASE+'icon-192.png',
   BASE+'icon-512.png'
