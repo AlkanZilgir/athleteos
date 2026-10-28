@@ -18,12 +18,15 @@ async function syncWater(){
 /* ── MEALS ────────────────────────────────── */
 function openMealM(){oModal('m-meal');}
 // ── Barcode scanner (ZXing lazy-loaded, OpenFoodFacts lookup) ──
-var _bcReader=null,_bcStream=null;
+var _bcReader=null,_bcStream=null,_bcRaf=0;
 function _loadZXing(){
   if(window.ZXingBrowser||window.ZXing)return Promise.resolve(window.ZXingBrowser||window.ZXing);
   return new Promise(function(resolve,reject){
     var s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/index.min.js';
+    // @zxing/library's UMD exposes window.ZXing with BrowserMultiFormatReader.
+    // The previous path (@zxing/browser .../umd/index.min.js) does not exist: 404,
+    // so every scan failed before the camera was ever asked.
+    s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
     s.onload=function(){resolve(window.ZXingBrowser||window.ZXing);};
     s.onerror=function(){reject(new Error('Could not load barcode scanner'));};
     document.head.appendChild(s);
@@ -32,10 +35,31 @@ function _loadZXing(){
 async function openBarcodeScan(){
   oModal('m-barcode');
   var status=document.getElementById('bc-status');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){status.textContent='Camera not supported in this browser';return;}
+  var video=document.getElementById('bc-video');
+  if(video){video.setAttribute('playsinline','');video.muted=true;}
+  // Chrome on Android ships a native BarcodeDetector: no library, no download.
+  if('BarcodeDetector' in window){
+    try{
+      var det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','code_39']});
+      _bcStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      video.srcObject=_bcStream;await video.play();
+      status.textContent='Point at the barcode on the package.';
+      var tick=async function(){
+        if(!_bcStream)return;
+        try{
+          var codes=await det.detect(video);
+          if(codes&&codes.length){var code=codes[0].rawValue;_stopBcStream();status.textContent='Found '+code+'. Looking up the product…';_lookupBarcode(code);return;}
+        }catch(e){}
+        _bcRaf=requestAnimationFrame(tick);
+      };
+      tick();
+      return;
+    }catch(e){console.warn('native barcode detector',e);_stopBcStream();}
+  }
   status.textContent='Loading scanner…';
   var ZX;
-  try{ZX=await _loadZXing();}catch(e){status.textContent='Scanner library failed to load';return;}
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){status.textContent='Camera not supported in this browser';return;}
+  try{ZX=await _loadZXing();}catch(e){status.textContent='Scanner library failed to load. Check your connection and try again.';return;}
   try{
     var Reader=ZX.BrowserMultiFormatReader||(ZX.BrowserBarcodeReader);
     _bcReader=new Reader();
@@ -56,6 +80,7 @@ async function openBarcodeScan(){
   }
 }
 function _stopBcStream(){
+  if(_bcRaf){cancelAnimationFrame(_bcRaf);_bcRaf=0;}
   if(_bcStream){try{_bcStream.getTracks().forEach(function(t){t.stop();});}catch(e){}_bcStream=null;}
   var v=document.getElementById('bc-video');
   if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(function(t){t.stop();});}catch(e){}v.srcObject=null;}

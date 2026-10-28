@@ -1099,55 +1099,51 @@ function celebratePRs(names){
   var n=names.length;
   _fxPRArpeggio();
   try{navigator.vibrate&&navigator.vibrate([60,40,60,40,120]);}catch(e){}
-  var head=n===1?'New Personal Record!':n+' New Personal Records!';
-  var sub=n===1?'That is a number you have never hit before.':n+' lifts above anything you had done before.';
-  var KIND_LBL={weight:'Heavier',reps:'More reps','1rm':'New 1RM',new:'First entry'};
+  // The lift and the number are the hero. No gradient, no trophy wall, no
+  // slogan: a record is a fact, and the dialog states it the way the log does.
+  var KIND_LBL={weight:'Heavier than before',reps:'More reps at this weight','1rm':'New estimated 1RM',new:'First entry'};
   var rows=names.slice(0,4).map(function(name){
     var p=allPRs[name]||{};
     var w=Number(p.weight||0),r=Number(p.reps||0),prev=Number(p.prevWeight||0),prevR=Number(p.prevReps||0);
     var oneRm=Number(p.oneRm||0)||_epley1rm(w,r);
     var prevOneRm=Number(p.prevOneRm||0)||_epley1rm(prev,prevR);
     var kind=p.kind||'weight';
-    var deltaTxt;
-    if(kind==='weight')deltaTxt=prev>0?('+'+(w-prev)+' kg'):'First entry';
-    else if(kind==='reps')deltaTxt=prevR>0?('+'+(r-prevR)+' rep'+(r-prevR===1?'':'s')+' @ '+w+'kg'):'+'+r+' reps';
-    else if(kind==='1rm')deltaTxt=prevOneRm>0?('+'+((oneRm-prevOneRm).toFixed(1))+' kg 1RM'):('est. 1RM '+oneRm.toFixed(1)+' kg');
-    else deltaTxt='First entry';
-    var oneRmTxt=(r>1&&kind!=='1rm')?(' · est. 1RM '+oneRm.toFixed(1)+' kg'):'';
-    var prevTxt=prev>0?(' · prev '+prev+' kg × '+prevR):'';
-    return '<div style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.20);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left">'
-      +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">'
-        +'<div style="flex:1;min-width:0">'
-          +'<div style="font-weight:800;font-size:15px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+name+'</div>'
-          +'<div style="font-size:10.5px;font-weight:800;letter-spacing:1px;opacity:.85;margin-top:3px">'+KIND_LBL[kind].toUpperCase()+' PR</div>'
-        +'</div>'
-        +'<div style="font-weight:900;font-size:18px;letter-spacing:-.5px;white-space:nowrap">'+w+' kg × '+r+'</div>'
-      +'</div>'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;font-size:11.5px;opacity:.92">'
-        +'<span style="text-transform:capitalize">'+(p.muscle||'')+prevTxt+'</span>'
-        +'<span style="font-weight:800">'+deltaTxt+oneRmTxt+'</span>'
-      +'</div>'
-      +'</div>';
+    var meta=[];
+    if(prev>0)meta.push('Previous '+prev+' kg \u00d7 '+prevR);
+    if(kind==='weight'&&prev>0)meta.push('+'+(w-prev)+' kg');
+    else if(kind==='reps'&&prevR>0)meta.push('+'+(r-prevR)+' rep'+(r-prevR===1?'':'s'));
+    else if(kind==='1rm'&&prevOneRm>0)meta.push('+'+((oneRm-prevOneRm).toFixed(1))+' kg est. 1RM');
+    if(r>1)meta.push('est. 1RM '+oneRm.toFixed(1)+' kg');
+    return '<li class="prc-row">'
+      +'<div class="prc-kind">'+(KIND_LBL[kind]||'Personal record')+'</div>'
+      +'<div class="prc-name">'+_esc(name)+'</div>'
+      +'<div class="prc-num">'+w+'<small> kg</small> \u00d7 '+r+'</div>'
+      +(meta.length?'<div class="prc-meta">'+_esc(meta.join(' \u00b7 '))+'</div>':'')
+      +'</li>';
   }).join('');
-  if(n>4)rows+='<div style="text-align:center;font-size:12.5px;opacity:.88;margin-top:2px">+ '+(n-4)+' more new PR'+(n-4===1?'':'s')+'</div>';
+  var more=n>4?'<li class="prc-more">+ '+(n-4)+' more record'+(n-4===1?'':'s')+'</li>':'';
   var el=document.getElementById('pr-celebrate');
   if(!el){
     el=document.createElement('div');
     el.id='pr-celebrate';
-    el.style.cssText='position:fixed;inset:0;z-index:950;background:rgba(10,10,15,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeUp .28s ease both;overflow-y:auto';
+    el.className='prc-overlay';
     document.body.appendChild(el);
   }
-  el.innerHTML='<div style="background:linear-gradient(135deg,var(--accent) 0%,#A855F7 100%);color:#FFFFFF;padding:26px 22px 20px;border-radius:24px;text-align:center;width:100%;max-width:440px;box-shadow:0 24px 60px rgba(0,0,0,.4);position:relative;overflow:hidden">'
-    +'<div style="font-size:52px;line-height:1;margin-bottom:8px;animation:fadeUp .5s ease both;display:flex;justify-content:center">'+ICO('trophy')+'</div>'
-    +'<div style="font-family:Inter,sans-serif;font-weight:900;font-size:24px;letter-spacing:-1px;margin-bottom:4px;line-height:1.15">'+head+'</div>'
-    +'<div style="font-size:13.5px;line-height:1.5;opacity:.94;margin-bottom:16px">'+sub+'</div>'
-    +'<div style="margin-bottom:14px">'+rows+'</div>'
-    +'<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
-      +'<button type="button" onclick="sharePRImage(\''+(names[0]||'').replace(/\'/g,"\\\\\'")+'\')" style="all:unset;cursor:pointer;background:rgba(255,255,255,.20);color:#FFFFFF;padding:11px 18px;border-radius:999px;font-weight:700;font-size:13.5px;font-family:inherit;display:inline-flex;align-items:center;gap:7px">'+ICO('share','14px')+'Share</button>'
-      +'<button type="button" onclick="document.getElementById(\'pr-celebrate\').remove();goTab(\'workout\');setTimeout(function(){var t=document.getElementById(\'pr-list\');if(t)t.scrollIntoView({behavior:\'smooth\',block:\'center\'});},150);" style="all:unset;cursor:pointer;background:rgba(255,255,255,.20);color:#FFFFFF;padding:11px 18px;border-radius:999px;font-weight:700;font-size:13.5px;font-family:inherit">See all PRs</button>'
-      +'<button type="button" onclick="document.getElementById(\'pr-celebrate\').remove()" style="all:unset;cursor:pointer;background:#FFFFFF;color:#0A0A0C;padding:11px 22px;border-radius:999px;font-weight:800;font-size:13.5px;font-family:inherit">Back to it</button>'
+  var safeFirst=(names[0]||'').replace(/'/g,"\\'");
+  el.innerHTML='<div class="prc" role="dialog" aria-modal="true" aria-labelledby="prc-h">'
+    +'<div class="prc-head"><span class="prc-ico" aria-hidden="true">'+ICO('trophy','16px')+'</span><h2 class="prc-h" id="prc-h">'+(n===1?'Personal record':n+' personal records')+'</h2></div>'
+    +'<ul class="prc-list">'+rows+more+'</ul>'
+    +'<div class="prc-actions">'
+      +'<button type="button" class="btn" onclick="document.getElementById(\'pr-celebrate\').remove()">Done</button>'
+      +'<div class="prc-sec">'
+        +'<button type="button" class="btn-g" onclick="sharePRImage(\''+safeFirst+'\')">'+ICO('share','14px')+'Share</button>'
+        +'<button type="button" class="btn-g" onclick="document.getElementById(\'pr-celebrate\').remove();goTab(\'workout\');setTimeout(function(){var t=document.getElementById(\'pr-list\');if(t)t.scrollIntoView({behavior:\'smooth\',block:\'center\'});},150);">See all records</button>'
+      +'</div>'
     +'</div>'
   +'</div>';
+  // Focus the dialog, not the button: screen readers announce it, and no focus
+  // ring lands on the volt surface for pointer users.
+  var dlg=el.querySelector('.prc');if(dlg){dlg.setAttribute('tabindex','-1');setTimeout(function(){try{dlg.focus({preventScroll:true});}catch(e){}},50);}
 }
 // Renders the named PR onto a 1080×1080 canvas, brands it, and opens the
 // native share sheet. Falls back to a download link when Web Share isn't
