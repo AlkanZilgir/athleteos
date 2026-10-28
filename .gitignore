@@ -35,3 +35,10 @@ npm-debug.log*
 # OS-specific
 ehthumbs.db
 _backup_pre_split/
+
+# Supabase CLI local state (link target, temp files) — not shareable config.
+# supabase/config.toml and supabase/migrations/ ARE tracked.
+supabase/.temp/
+
+# Local scratch tooling
+_wk.mjs

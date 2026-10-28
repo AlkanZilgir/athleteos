@@ -25,9 +25,15 @@ Deno.serve(async (req: Request) => {
   if (!CRON_SECRET) return new Response('forbidden: CRON_SECRET not set', { status: 403 });
   if ((req.headers.get('x-cron-secret') || '') !== CRON_SECRET) return new Response('forbidden', { status: 403 });
 
-  const debug = req.headers.get('x-debug-force') === '1';
-  const debugUser = req.headers.get('x-debug-user') || '';
-  const debugKind = req.headers.get('x-debug-kind') || 'debug';
+  // Debug targeting is off unless DEBUG_PUSH is explicitly set in the function
+  // secrets, which it should not be in production. Previously CRON_SECRET alone
+  // unlocked it, which made the dedup bypass below reachable by anyone holding
+  // the cron secret and turned the response into an oracle for which user ids
+  // have a push subscription.
+  const debugEnabled = Deno.env.get('DEBUG_PUSH') === '1';
+  const debug = debugEnabled && req.headers.get('x-debug-force') === '1';
+  const debugUser = debugEnabled ? (req.headers.get('x-debug-user') || '') : '';
+  const debugKind = debugEnabled ? (req.headers.get('x-debug-kind') || 'debug') : 'debug';
   const results: Record<string, number> = { workout: 0, protein: 0, streak_save: 0, re_engage: 0, weekly_recap: 0, debug: 0, pruned: 0, errors: 0 };
   const errlog: string[] = [];
   try {
@@ -53,7 +59,10 @@ Deno.serve(async (req: Request) => {
           ? [{ kind: debugKind, title: 'Cron alive 🔔', body: 'Notifications cron is wired and healthy.', url: '/' }]
           : await whatToSend(uid, prof, local, today);
         for (const item of due) {
-          if (!debug) { const ok = await tryClaim(uid, item.kind, today); if (!ok) continue; }
+          // Claim on every path. Skipping it for debug made the send repeatable
+          // without limit, which is the amplification half of the problem.
+          const ok = await tryClaim(uid, item.kind, today);
+          if (!ok) continue;
           for (const s of (byUser.get(uid) || [])) {
             try {
               const status = await pushOne(s, { title: item.title, body: item.body, url: item.url || '/', tag: item.kind });

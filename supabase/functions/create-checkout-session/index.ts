@@ -13,6 +13,26 @@ const json = (body: unknown, status = 200) =>
     headers: { ...CORS, 'Content-Type': 'application/json' },
   });
 
+// Stripe validates that success_url/cancel_url are syntactically URLs, but it
+// does NOT restrict them to the account's own domains. An unvalidated value
+// here mints a stripe.com link that redirects wherever the caller likes, which
+// is a phishing primitive on our account. Legitimate clients only ever send
+// their own location, so anything off our origin is refused.
+function safeReturnUrl(candidate: unknown): string {
+  const fallback = Deno.env.get('APP_BASE_URL') || 'http://localhost:8080/index.html';
+  if (typeof candidate !== 'string' || candidate === '') return fallback;
+  try {
+    const want = new URL(candidate);
+    const base = new URL(fallback);
+    if (want.origin !== base.origin) return fallback;
+    // Drop any fragment; the caller appends its own #paywall=... marker.
+    want.hash = '';
+    return want.toString();
+  } catch {
+    return fallback;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
@@ -41,8 +61,10 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const plan: string = String(body.plan ?? '');
-    const returnUrl: string | undefined = body.returnUrl;
-    const priceId = PRICE_BY_PLAN[plan];
+    // hasOwn, not a bare lookup: PRICE_BY_PLAN is an object literal, so
+    // plan="constructor" would otherwise return a truthy prototype member and
+    // sail past this guard into a confusing 500 from Stripe.
+    const priceId = Object.hasOwn(PRICE_BY_PLAN, plan) ? PRICE_BY_PLAN[plan] : undefined;
     if (!priceId) return json({ error: 'unknown_plan', plan }, 400);
 
     const admin = createClient(supaUrl, svcKey);
@@ -63,7 +85,7 @@ Deno.serve(async (req) => {
       await admin.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
     }
 
-    const base = returnUrl || Deno.env.get('APP_BASE_URL') || 'http://localhost:8080/index.html';
+    const base = safeReturnUrl(body.returnUrl);
     const mode = plan === 'lifetime' ? 'payment' : 'subscription';
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
