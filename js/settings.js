@@ -43,9 +43,9 @@ async function saveProfile(){
   var{error}=await sb.from('profiles').update(update).eq('id',CU.id);
   updateProfileUI();
   var t=document.getElementById('bio-state');
-  if(t){t.textContent=error?'Local only':'Synced';t.classList.toggle('warn',!!error);}
+  if(t){t.textContent=error?'On this device':'Saved';t.classList.toggle('warn',!!error);}
   renderCalibrations();
-  toast(error?'Biometrics saved locally. Sync failed.':'Biometrics committed');
+  toast(error?'Saved on this device. Sync failed.':'Details saved');
 }
 
 /* ── THEME ────────────────────────────────── */

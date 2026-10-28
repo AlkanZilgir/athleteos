@@ -263,6 +263,11 @@ function stopBc(){if(bcStream){bcStream.getTracks().forEach(function(t){t.stop()
 var macroPieChart=null;
 async function renderMacroPie(){
   var canvas=document.getElementById('macro-pie');if(!canvas)return;
+  // A doughnut of three zeros is a 170px hole. The 'No food logged' bar above
+  // already says it; the chart appears with the first meal.
+  var hasFood=(typeof meals!=='undefined'&&meals&&meals.length>0);
+  canvas.parentNode.style.display=hasFood?'':'none';
+  if(!hasFood)return;
   var t=meals.reduce(function(a,m){return{p:a.p+(m.protein||0),c:a.c+(m.carbs||0),f:a.f+(m.fat||0)};},{p:0,c:0,f:0});
   var pK=t.p*4,cK=t.c*4,fK=t.f*9;
   var data=[pK,cK,fK];

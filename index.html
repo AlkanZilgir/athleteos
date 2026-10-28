@@ -706,7 +706,7 @@
           <div style="height:170px;margin-top:18px;position:relative"><canvas id="macro-pie"></canvas></div>
         </div>
         <div class="card">
-          <div class="fb" style="margin-bottom:9px"><div class="ctitle" style="margin:0">Water</div><span id="w-cnt" style="font-weight:700;color:var(--blue);font-size:14px;font-family:'Inter',sans-serif">0/8</span></div>
+          <div class="fb" style="margin-bottom:9px"><div class="ctitle" style="margin:0">Water</div><span id="w-cnt" style="font-weight:700;color:var(--sig-water);font-size:14px;font-family:'Inter',sans-serif">0/8</span></div>
           <div class="wg" id="w-grid"></div>
           <p class="tm tc" style="font-size:11.5px;margin-top:4px">Tap to log · 250ml per cup</p>
         </div>
@@ -869,16 +869,16 @@
           <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
 
-        <!-- ══ VERIFIED BIOMETRICS ══════════════════════════════════
+        <!-- ══ YOUR DETAILS ═════════════════════════════════════════
              The inputs used to live behind a modal. They are the smallest
              set of values every calculation on the platform derives from,
              so they sit on the page in one grid instead. -->
         <div class="card" id="sec-biometrics">
           <div class="fb" style="margin-bottom:4px">
-            <div class="ctitle" style="margin:0">Verified biometrics</div>
-            <span class="sec-tag" id="bio-state">Synced</span>
+            <div class="ctitle" style="margin:0">Your details</div>
+            <span class="sec-tag" id="bio-state">Saved</span>
           </div>
-          <p class="sec-note">Source values for BMR, TDEE and load prescription.</p>
+          <p class="sec-note">Used for calorie and protein targets, and for starting loads.</p>
           <div class="g2">
             <div class="f"><label>Full name</label><input type="text" id="pf-name" placeholder="Your name" autocomplete="name" oninput="_bioDirty()"></div>
             <div class="f"><label>Age</label><input type="number" id="pf-age" placeholder="25" min="10" max="100" oninput="_bioDirty()"></div>
@@ -886,7 +886,7 @@
             <div class="f"><label>Gender</label><div class="gpills"><button type="button" class="gpill on" id="gpill-male" onclick="selGender('male')">Male</button><button type="button" class="gpill" id="gpill-female" onclick="selGender('female')">Female</button></div></div>
           </div>
           <div class="f" style="margin-bottom:12px"><label>Units</label><div class="gpills"><button type="button" class="gpill on" id="gpill-metric" onclick="selUnits('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="gpill-imperial" onclick="selUnits('imperial')">Imperial (lb/in)</button></div></div>
-          <button type="button" class="btn" style="width:100%" onclick="saveProfile()">Commit biometrics</button>
+          <button type="button" class="btn" style="width:100%" onclick="saveProfile()">Save details</button>
         </div>
 
         <!-- ══ DAILY TARGETS ═════════════════════════════════════════
