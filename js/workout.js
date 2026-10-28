@@ -226,7 +226,6 @@ async function _loadExImg(name){
 function openExInfo(name){
   var info=findExInfo(name);
   if(!info)return;
-  if(!premCheckUse('ex_demo'))return;
   document.getElementById('exi-name').textContent=name;
   var mHtml='';
   (info.pri||[]).forEach(function(m){mHtml+='<span class="mtag p">'+m+'</span>';});
@@ -401,13 +400,14 @@ function renderExList(){
     var topW=(ex.sets&&ex.sets.length)?ex.sets.reduce(function(a,s){return(parseFloat(s.weight)||0)>a?parseFloat(s.weight)||0:a;},0):0;
     var setGrid;
     if(ex.sets&&ex.sets.length){
+      var wn=0;
       setGrid='<div class="setgrid"><div class="setrow sethead"><div>#</div><div>Weight</div><div>Reps</div><div>RIR</div><div></div></div>'+
         ex.sets.map(function(s,si){
-          var done=!!s.done;
+          var done=!!s.done;var warm=!!s.warm;if(!warm)wn++;var label=warm?'W':wn;
           var rv=(s.rir===0||s.rir)?s.rir:'';
           var sug=_setSuggest(ex,si);
-          return '<div class="setrow'+(done?' done':'')+'">'+
-            '<div class="setn">'+(si+1)+'</div>'+
+          return '<div class="setrow'+(done?' done':'')+(warm?' warm':'')+'">'+
+            '<div class="setn" role="button" tabindex="0" title="'+(warm?'Warm-up set. Tap to make it a working set':'Working set. Tap to make it a warm-up')+'" onclick="toggleWarm('+idx+','+si+')">'+label+'</div>'+
             _stepper(idx,si,'weight',s.weight,sug.weight,_wStep(),'Weight')+
             _stepper(idx,si,'reps',s.reps,sug.reps,1,'Reps')+
             '<div class="setrir"><span class="rir-dot" style="background:'+rirColor(rv)+'"></span><input type="number" inputmode="numeric" step="1" min="0" max="10" class="setin rir-in" value="'+rv+'" placeholder="–" aria-label="Reps in reserve" oninput="setField('+idx+','+si+',\'rir\',this.value)"></div>'+
@@ -419,12 +419,14 @@ function renderExList(){
       setGrid='<div style="font-size:12px;color:var(--t4);margin-top:8px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-display)">No sets</div>';
     }
     return '<div class="exi">'+
-      '<div class="fb"><div class="exn" onclick="openExInfo(\''+sn+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+ex.muscle+'</span>'+moveBtns+'</div>'+
+      '<div class="fb"><div class="exn" onclick="openExInfo(\''+sn+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+ex.muscle+'</span>'+(ex.ss?'<span class="ss-chip">Superset '+String.fromCharCode(64+ex.ss)+'</span>':'')+moveBtns+'</div>'+
       lastLine+targetLine+
       setGrid+
       '<div data-ex-demo="'+idx+'" class="exdemo" style="display:none"></div>'+
       '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">'+
         '<button type="button" class="btn-o" style="padding:7px 14px;font-size:12px" onclick="addInlineSet('+idx+')">+ Set</button>'+
+        '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="addWarmups('+idx+')">'+ICO('flame','12px')+'Warm-up</button>'+
+        ((idx<wExs.length-1||ex.ss)?'<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleSuperset('+idx+')">'+ICO('repeat','12px')+(ex.ss?'Unlink':'Superset')+'</button>':'')+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExDemo('+idx+',\''+sn+'\',this)">'+ICO('film','12px')+'Demo</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="toggleExNote('+idx+',this)">'+ICO('notebook','12px')+(ex.note?'Edit note':'Add note')+'</button>'+
         '<button type="button" class="btn-g" style="padding:4px 8px;font-size:11.5px" onclick="openPlate('+topW+')" title="Plate calculator">'+ICO('calculator','13px')+'Plates</button>'+
@@ -481,6 +483,7 @@ function _wUnit(){return (P&&P.units==='imperial')?'lb':'kg';}
 function _setSuggest(ex,si){
   for(var k=si-1;k>=0;k--){
     var p=ex.sets[k];
+    if(p&&p.warm)continue;  // a 40% ramp set must not ghost into the first working set
     if(p&&(p.weight!==''&&p.weight!=null)||(p&&p.reps!==''&&p.reps!=null))
       return{weight:p.weight,reps:p.reps};
   }
@@ -531,7 +534,7 @@ function stepSet(idx,si,field,delta){
 function updateSessionHUD(){
   var vol=0,sets=0;
   wExs.forEach(function(ex){(ex.sets||[]).forEach(function(s){
-    if(!s.done)return;
+    if(!s.done||s.warm)return;
     sets++;vol+=(parseFloat(s.weight)||0)*(parseInt(s.reps)||0);
   });});
   var heavy=vol>=1000;
@@ -587,7 +590,8 @@ function toggleSetDone(idx,si,btn){
   updateSessionHUD();
   if(nowDone){
     if(navigator.vibrate)try{navigator.vibrate(35);}catch(e){}
-    if(P._autoRest)restForEx(idx);
+    // In a superset the rest comes after the round: only the last exercise in the group starts the timer.
+    if(P._autoRest&&_isLastInGroup(idx))restForEx(idx);
   }
 }
 // Add a blank set row, pre-filling weight/reps from this session's last set,
@@ -604,6 +608,55 @@ function removeSet(idx,si){
   var ex=wExs[idx];if(!ex||!ex.sets)return;
   ex.sets.splice(si,1);
   renderExList();updateSessionHUD();
+}
+
+/* ── WARM-UP SETS ──────────────────────────
+   A warm-up is logged like any set but is not working volume: it never counts
+   toward the HUD, the summary or a record. Tap the set number to switch. */
+function toggleWarm(idx,si){
+  var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
+  ex.sets[si].warm=!ex.sets[si].warm;
+  renderExList();updateSessionHUD();
+}
+// Three ramp sets from the first working weight (40%, 60%, 80%), rounded to the
+// plate step. With no working weight known yet, one empty warm-up row.
+function addWarmups(idx){
+  var ex=wExs[idx];if(!ex)return;
+  ex.sets=ex.sets||[];
+  if(ex.sets.some(function(s){return s.warm;})){toast('Warm-ups already added');return;}
+  var top=0;
+  ex.sets.forEach(function(s){if(!s.warm&&(parseFloat(s.weight)||0)>top)top=parseFloat(s.weight)||0;});
+  if(!top){var sug=_setSuggest(ex,0);top=parseFloat(sug.weight)||0;}
+  var step=_wStep()||2.5;
+  var rows=top
+    ?[[.4,8],[.6,5],[.8,3]].map(function(p){return{weight:Math.max(step,Math.round(top*p[0]/step)*step),reps:p[1],rir:null,done:false,warm:true};})
+    :[{weight:'',reps:'',rir:null,done:false,warm:true}];
+  ex.sets=rows.concat(ex.sets);
+  renderExList();updateSessionHUD();
+}
+function _workingOnly(exs){
+  return exs.map(function(ex){return{name:ex.name,muscle:ex.muscle,note:ex.note,ss:ex.ss,sets:(ex.sets||[]).filter(function(s){return !s.warm;})};});
+}
+
+/* ── SUPERSETS ─────────────────────────────
+   Consecutive exercises sharing a group number are one superset: alternate
+   them, rest after the round. The group is persisted on the exercise row. */
+function toggleSuperset(idx){
+  var ex=wExs[idx];if(!ex)return;
+  if(ex.ss){
+    var g=ex.ss;
+    wExs.forEach(function(e){if(e.ss===g)e.ss=null;});
+    renderExList();return;
+  }
+  var next=wExs[idx+1];if(!next){toast('Add the next exercise first');return;}
+  var g2=next.ss||(Math.max.apply(null,[0].concat(wExs.map(function(e){return e.ss||0;})))+1);
+  ex.ss=g2;next.ss=g2;
+  renderExList();
+}
+function _isLastInGroup(idx){
+  var ex=wExs[idx];if(!ex||!ex.ss)return true;
+  for(var k=idx+1;k<wExs.length;k++){if(wExs[k].ss===ex.ss)return false;}
+  return true;
 }
 
 /* ── INLINE QUICK-ADD ──────────────────────
@@ -784,23 +837,23 @@ async function finishW(){
   for(var i=0;i<wExs.length;i++){
     var ex=wExs[i];
     var exId=_genId();
-    var exPayload={id:exId,workout_id:workoutId,user_id:CU.id,name:ex.name,muscle_group:ex.muscle,sort_order:i};
+    var exPayload={id:exId,workout_id:workoutId,user_id:CU.id,name:ex.name,muscle_group:ex.muscle,sort_order:i,superset_group:ex.ss||null};
     if(ex.note&&ex.note.trim())exPayload.notes=ex.note.trim();
     await sbQueueInsert('exercises',exPayload);
     if(ex.sets.length){
-      var setRows=ex.sets.map(function(s,si){return{id:_genId(),exercise_id:exId,user_id:CU.id,set_number:si+1,weight_kg:s.weight,reps:s.reps,rir:(s.rir===0||s.rir)?s.rir:null};});
+      var setRows=ex.sets.map(function(s,si){return{id:_genId(),exercise_id:exId,user_id:CU.id,set_number:si+1,weight_kg:s.weight,reps:s.reps,rir:(s.rir===0||s.rir)?s.rir:null,is_warmup:!!s.warm};});
       await sbQueueInsert('sets',setRows);
     }
   }
   var wo={id:workoutId};
-  var newPRs=savePRs(wExs);
+  var newPRs=savePRs(_workingOnly(wExs));
   // Snapshot summary data BEFORE we wipe wExs.
   var summary={
     dur:dur,
     kcal:estKcal(dur*60),
-    sets:wExs.reduce(function(a,ex){return a+(ex.sets||[]).length;},0),
-    vol:Math.round(wExs.reduce(function(a,ex){return a+(ex.sets||[]).reduce(function(b,s){return b+(parseFloat(s.weight)||0)*(parseInt(s.reps)||0);},0);},0)),
-    exs:wExs.map(function(ex){return{name:ex.name,muscle:ex.muscle,sets:(ex.sets||[]).length,note:ex.note};}),
+    sets:wExs.reduce(function(a,ex){return a+(ex.sets||[]).filter(function(s){return !s.warm;}).length;},0),
+    vol:Math.round(wExs.reduce(function(a,ex){return a+(ex.sets||[]).reduce(function(b,s){if(s.warm)return b;return b+(parseFloat(s.weight)||0)*(parseInt(s.reps)||0);},0);},0)),
+    exs:wExs.map(function(ex){return{name:ex.name,muscle:ex.muscle,sets:(ex.sets||[]).filter(function(s){return !s.warm;}).length,note:ex.note};}),
     note:wNote,
     newPRs:newPRs.slice()
   };
@@ -818,8 +871,6 @@ async function finishW(){
     persistPRs(wo?wo.id:null,summary.exs,newPRs);
   }
   loadRecentPRs();
-  // First gentle Pro nudge after finishing a workout — only fires once ever.
-  setTimeout(function(){softProNudge('first_workout','Loved the session? Try Pro free for 7 days — unlimited AI plans &amp; templates.');},2400);
 }
 var _lastSummary=null;
 async function shareWorkout(){
@@ -2096,11 +2147,6 @@ function openPlanLibrary(){
 async function importPlan(planId){
   var plan=PLAN_LIBRARY.find(function(p){return p.id===planId;});
   if(!plan)return;
-  // Free tier check — imports count toward the 2-template cap.
-  if(!isPremium()){
-    var capacity=PREM_LIMITS.templates-((templates||[]).length);
-    if(capacity<plan.templates.length){toast('Free tier holds '+PREM_LIMITS.templates+' templates. Upgrade to import full plans.');openPaywall();return;}
-  }
   toast('Importing '+plan.name+'…');
   for(var i=0;i<plan.templates.length;i++){
     var t=plan.templates[i];
@@ -2115,30 +2161,27 @@ async function importPlan(planId){
 async function saveTemplate(){
   var name=document.getElementById('tpl-n').value.trim();
   if(!name){toast('Enter a name');return;}
-  if(!premCheckTotal('templates',(templates||[]).length)){return;}
   var exs=wExs.map(function(e){
-    var sets=(e.sets||[]).map(function(s){return{weight:+s.weight||0,reps:+s.reps||0};});
+    var sets=(e.sets||[]).map(function(s){return{weight:+s.weight||0,reps:+s.reps||0,warm:!!s.warm};});
     if(!sets.length)sets=[{weight:0,reps:0},{weight:0,reps:0},{weight:0,reps:0}];
-    return{name:e.name,muscle:e.muscle,sets:sets};
+    return{name:e.name,muscle:e.muscle,sets:sets,ss:e.ss||null};
   });
   var{error}=await sb.from('workout_templates').insert({user_id:CU.id,name:name,exercises:exs});
   if(error){toast('Save failed');return;}
   cModal('m-tplsave');toast('Template saved');await loadTemplates();
-  // Nudge once after first template — they're already saving plans, so Pro is the natural upsell.
-  if((templates||[]).length>=1)softProNudge('first_template','Saving plans? Pro removes the 2-template cap and adds the full plan library.');
 }
 async function _lastLoggedSets(name){
   // Fetch the user's most recent logged copy of this exercise (by workout start).
   try{
     var{data}=await sb.from('exercises')
-      .select('id,name,muscle_group,workouts!inner(started_at,user_id),sets(set_number,weight_kg,reps)')
+      .select('id,name,muscle_group,workouts!inner(started_at,user_id),sets(set_number,weight_kg,reps,is_warmup)')
       .eq('user_id',CU.id).ilike('name',name)
       .order('started_at',{foreignTable:'workouts',ascending:false})
       .limit(1);
     if(!data||!data.length)return null;
     var ex=data[0];
     var sets=(ex.sets||[]).slice().sort(function(a,b){return (a.set_number||0)-(b.set_number||0);})
-      .map(function(s){return{weight:+s.weight_kg||0,reps:+s.reps||0};});
+      .map(function(s){return{weight:+s.weight_kg||0,reps:+s.reps||0,warm:!!s.is_warmup};});
     return{muscle:ex.muscle_group||null,sets:sets};
   }catch(e){return null;}
 }
@@ -2152,16 +2195,16 @@ async function loadTemplate(id){
     var last=await _lastLoggedSets(e.name);
     var sets;
     if(last&&last.sets.length){
-      sets=last.sets.map(function(s){return{weight:s.weight,reps:s.reps};});
+      sets=last.sets.map(function(s){return{weight:s.weight,reps:s.reps,warm:!!s.warm};});
     }else if(Array.isArray(e.sets)){
       // New-format snapshot (array of {weight,reps})
-      sets=e.sets.map(function(s){return{weight:+s.weight||0,reps:+s.reps||0};});
+      sets=e.sets.map(function(s){return{weight:+s.weight||0,reps:+s.reps||0,warm:!!s.warm};});
     }else{
       // Legacy snapshot — just a count
       var n=+e.sets||3;sets=[];for(var i=0;i<n;i++)sets.push({weight:0,reps:0});
     }
     if(!sets.length)sets=[{weight:0,reps:0}];
-    return{name:e.name,muscle:e.muscle||(last&&last.muscle)||'other',sets:sets};
+    return{name:e.name,muscle:e.muscle||(last&&last.muscle)||'other',sets:sets,ss:e.ss||null};
   }));
   wExs=resolved;
   renderExList();cModal('m-templates');toast('Loaded '+t.name);

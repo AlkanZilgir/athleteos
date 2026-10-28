@@ -324,8 +324,6 @@ async function sendMsg(){
   var inp=document.getElementById('chat-in'),msg=inp.value.trim();
   if(!msg)return;
   if(!_aiRateOk())return;
-  if(!premCheckUse('ai_chat')){return;}
-  updateProProfileUI(); // refresh "X messages left" subtitle
   inp.value='';inp.style.height='auto';
   addMsg('u',msg);chatH.push({role:'user',content:msg});
   var tdiv=addTyping();
@@ -388,9 +386,7 @@ async function sendMsg(){
       help='Session rejected. Sign out and back in, then re-issue the command.';
     }else if(lastErr==='quota_exceeded'){
       // The server, not localStorage, is the authority on the daily allowance.
-      // Open the paywall rather than printing an error the user cannot act on.
-      help='Daily coach allowance used up. Pro removes the limit.';
-      try{openPaywall();}catch(e){}
+      help='Daily coach allowance used up. It resets at midnight.';
     }else if(lastErr==='payload_too_large'){
       help='This conversation is too long to send. Reset the session and re-issue the command.';
     }else{

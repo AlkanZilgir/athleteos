@@ -14,7 +14,7 @@ async function loadGoals(){
     P._onboardingDone=!!data.onboarding_done;
     P._autoRest=data.auto_rest!==false;
     P._defaultRest=parseInt(data.default_rest_seconds)||90;
-    P._isPremium=!!data.is_premium;P._premiumPlan=data.premium_plan||null;P._premiumUntil=data.premium_until||null;
+    
     P._muscle_grow=data.muscle_grow||[];P._muscle_define=data.muscle_define||[];P._muscle_exclude=data.muscle_exclude||[];
     P._onbV2Done=!!data.onb_v2_done;P._mainGoal=data.onb_main_goal||null;P._experience=data.onb_experience||null;P._weeklyDays=data.onb_weekly_days||null;
     P._freezesUsedMonth=data.freezes_used_month||null;P._freezesUsedDates=data.freezes_used_dates||[];
@@ -47,8 +47,7 @@ function goTab(t){
   }
   var nav=document.getElementById('n-'+t);if(nav)nav.classList.add('on');
   var sb2=document.getElementById('s-'+t);if(sb2)sb2.classList.add('on');
-  if(t==='home')setTimeout(function(){renderHero();renderNextSession();renderActivityFeed();loadRecentPRs();updateProProfileUI();maybeShowIosInstall();renderGettingStarted();},60);
-  if(t==='ai')setTimeout(updateProProfileUI,60);
+  if(t==='home')setTimeout(function(){renderHero();renderNextSession();renderActivityFeed();loadRecentPRs();maybeShowIosInstall();renderGettingStarted();},60);
   if(t==='body'){setTimeout(function(){
     // initChart is normally called by the background loader chain after boot,
     // but a user can hit the Body tab before that finishes — kick it off now

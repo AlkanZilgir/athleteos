@@ -230,7 +230,6 @@ document.addEventListener('change',function(e){
 });
 async function savePhoto(){
   if(!_phFile){toast('Pick a photo first');return;}
-  if(!premCheckTotal('photos',(photoList||[]).length)){return;}
   if(_phFile.size>8*1024*1024){toast('Image too large (max 8 MB)');return;}
   var btn=document.getElementById('ph-btn');btn.disabled=true;btn.textContent='…';
   var msg=document.getElementById('ph-msg');msg.style.display='none';
@@ -247,8 +246,6 @@ async function savePhoto(){
   cModal('m-photo');_phFile=null;document.getElementById('ph-file').value='';document.getElementById('ph-prev-wrap').classList.add('hidden');
   btn.disabled=false;btn.textContent='Upload';
   toast('Photo saved');
-  // Nudge when approaching the free 5-photo limit.
-  if((photoList||[]).length>=3)softProNudge('photos_3','You\'re close to the 5-photo free limit. Pro gets you 100.');
 }
 async function loadPhotos(){
   var{data}=await sb.from('progress_photos').select('*').eq('user_id',CU.id).order('taken_at',{ascending:false}).limit(24);

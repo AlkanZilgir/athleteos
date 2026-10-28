@@ -94,7 +94,7 @@ test('all modules load and their handlers are global', async ({ page }) => {
   // One representative export per module, plus boot.js having run init().
   const missing = await page.evaluate(() => [
     'init', 'doLogin', 'ob_goto', 'goTab', 'startW', 'saveMeal',
-    'openPaywall', 'buildCtx', 'runActions', '_genId', 'sbQueueInsert',
+    'startSession', 'toggleSuperset', 'addWarmups', 'buildCtx', 'runActions', '_genId', 'sbQueueInsert',
   ].filter((n) => typeof window[n] !== 'function'));
   expect(missing, 'globals missing after split').toEqual([]);
 });

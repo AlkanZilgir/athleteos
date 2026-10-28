@@ -241,7 +241,6 @@ function replayOnboarding(){
   showOnboarding();
 }
 function openMuscleEditor(){
-  if(!premCheckLock())return;
   // Load current map into _ob so mm_render reflects existing state
   if(P._muscle_grow)_ob.muscle_grow=P._muscle_grow.slice();else _ob.muscle_grow=_ob.muscle_grow||[];
   if(P._muscle_define)_ob.muscle_define=P._muscle_define.slice();else _ob.muscle_define=_ob.muscle_define||[];
@@ -433,64 +432,7 @@ async function ob_finish(){
   _splashStep('Ready!',100);
   await new Promise(function(r){setTimeout(r,420);});
   document.getElementById('onb-splash').classList.remove('on');
-  // Second-to-last step: show the paywall (skipped for users who are already premium).
-  if(!isPremium()){
-    showOnbPaywall();
-  }else{
-    document.getElementById('app').style.display='flex';
-    toast('You are in. Go log something.');
-  }
-  btn.disabled=false;btn.textContent='Finish setup';
-}
-
-/* ── ONBOARDING PAYWALL (second-to-last sign-up step) ─ */
-function showOnbPaywall(){
-  document.getElementById('app').style.display='none';
-  var s=document.getElementById('onb-splash');if(s)s.classList.remove('on');
-  var o=document.getElementById('onb');if(o)o.classList.remove('on');
-  var w=document.getElementById('welcome');if(w)w.classList.add('hidden');
-  var a=document.getElementById('auth');if(a)a.style.display='none';
-  var p=document.getElementById('ob-paywall');if(p)p.classList.remove('hidden');
-  obp_pick('yearly');
-  try{window.scrollTo(0,0);}catch(e){}
-}
-function obp_pick(plan){
-  _pwPlan=plan;
-  document.querySelectorAll('.obp-plan').forEach(function(b){
-    b.classList.toggle('on',b.dataset.plan===plan);
-  });
-  var cta=document.getElementById('obp-cta');
-  if(cta){cta.textContent=plan==='yearly'?'Start 7-day free trial':(plan==='lifetime'?'Get lifetime access':'Subscribe monthly');}
-}
-async function obp_start(){
-  var cta=document.getElementById('obp-cta');
-  var orig=cta?cta.textContent:'';
-  if(cta){cta.disabled=true;cta.textContent='Opening checkout…';}
-  try{
-    var{data:{session}}=await sb.auth.getSession();
-    if(!session){toast('Please sign in again');if(cta){cta.disabled=false;cta.textContent=orig;}return;}
-    var base=location.href.split('#')[0];
-    var r=await fetch(SUPA_URL+'/functions/v1/create-checkout-session',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPA_KEY},
-      body:JSON.stringify({plan:_pwPlan,returnUrl:base})
-    });
-    if(!r.ok){
-      var body=await r.text();console.warn('onb checkout failed',r.status,body);
-      toast(r.status===500?'Stripe not configured yet':'Checkout failed');
-      if(cta){cta.disabled=false;cta.textContent=orig;}return;
-    }
-    var j=await r.json();
-    if(j.url){location.href=j.url;}
-    else{toast('Checkout failed');if(cta){cta.disabled=false;cta.textContent=orig;}}
-  }catch(err){
-    console.warn('onb checkout error',err);
-    toast('Network error');
-    if(cta){cta.disabled=false;cta.textContent=orig;}
-  }
-}
-function obp_skip(){
-  var p=document.getElementById('ob-paywall');if(p)p.classList.add('hidden');
   document.getElementById('app').style.display='flex';
   toast('You are in. Go log something.');
+  btn.disabled=false;btn.textContent='Finish setup';
 }

@@ -2771,8 +2771,6 @@ body.dark .band{background:var(--card)}
 .next-cta .btn-g{padding:14px 16px}
 .next .lnk{font-size:13px;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
 
-/* 7. Payments off: nothing sells. */
-.nopay .sb-pro,.nopay #set-pro-card,.nopay .tb-pro-pill,.nopay #tb-pro,.nopay .pro-lock{display:none!important}
 
 /* Follow-up to the human pass: rules that outranked the first block. */
 .split-empty{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:13px;font-weight:500}
@@ -2784,3 +2782,11 @@ body.dark .band{background:var(--card)}
 /* The prompt prefix on sent messages and the input caret were terminal cues. */
 .eng-cmd-k,.eng-caret{display:none}
 .eng-cmd{gap:0}
+
+/* Warm-up sets and supersets. The set number is the switch; a warm row reads
+   as support work, not a record in waiting. */
+.setn[role="button"]{cursor:pointer;border-radius:6px;user-select:none}
+.setrow.warm .setn{color:var(--sig-water);font-weight:700}
+.setrow.warm .setin{opacity:.72}
+.ss-chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;color:var(--t2);background:var(--surface-2);border:1px solid var(--bdr2);border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
+.hud-meta{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px;font-weight:500}

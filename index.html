@@ -149,106 +149,6 @@
   </div>
 </div>
 
-<!-- ONBOARDING PAYWALL (second-to-last step of new-account flow) -->
-<div id="ob-paywall" class="hidden">
-  <div class="obp-inner">
-    <div class="obp-title-block">
-      <div class="obp-eyebrow"><span class="obp-eyedot"></span>LAST STEP</div>
-      <h2 class="obp-title">Train with <span>the full room</span></h2>
-    </div>
-
-    <div class="obp-feats">
-      <div class="obp-feat">
-        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div>
-        <div class="obp-feat-text">
-          <div class="obp-feat-t">Programming on demand</div>
-          <div class="obp-feat-b">Periodised blocks generated against your 1RM curve, weekly availability and equipment.</div>
-        </div>
-      </div>
-      <div class="obp-feat">
-        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
-        <div class="obp-feat-text">
-          <div class="obp-feat-t">Demos and cues</div>
-          <div class="obp-feat-b">See the lift, then the two cues that fix it.</div>
-        </div>
-      </div>
-      <div class="obp-feat">
-        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
-        <div class="obp-feat-text">
-          <div class="obp-feat-t">Biometric readout</div>
-          <div class="obp-feat-b">Per-muscle volume allocation, estimated 1RM regression, bodyweight trend projection.</div>
-        </div>
-      </div>
-      <div class="obp-feat">
-        <div class="obp-tile icb"><svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg></div>
-        <div class="obp-feat-text">
-          <div class="obp-feat-t">Unlimited photos and splits</div>
-          <div class="obp-feat-b">Proof in the mirror, plus every session saved to reuse.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="obp-plans">
-      <button type="button" class="obp-plan" data-plan="monthly" onclick="obp_pick('monthly')">
-        <span class="obp-radio"></span>
-        <div class="obp-plan-body">
-          <div class="obp-plan-t">Monthly</div>
-          <div class="obp-plan-b">Flexible — pause anytime</div>
-        </div>
-        <div class="obp-plan-price">
-          <div class="obp-plan-v">€4.99</div>
-          <div class="obp-plan-u">per month</div>
-        </div>
-      </button>
-      <button type="button" class="obp-plan on" data-plan="yearly" onclick="obp_pick('yearly')">
-        <span class="obp-badge">BEST VALUE</span>
-        <span class="obp-radio"></span>
-        <div class="obp-plan-body">
-          <div class="obp-plan-t">Yearly</div>
-          <div class="obp-plan-b">7 days free · saves €43.89/yr</div>
-        </div>
-        <div class="obp-plan-price">
-          <div class="obp-plan-v">€1.33</div>
-          <div class="obp-plan-u">per month, billed yearly</div>
-        </div>
-      </button>
-      <button type="button" class="obp-plan" data-plan="lifetime" onclick="obp_pick('lifetime')">
-        <span class="obp-radio"></span>
-        <div class="obp-plan-body">
-          <div class="obp-plan-t">Lifetime</div>
-          <div class="obp-plan-b">Pay once, use forever</div>
-        </div>
-        <div class="obp-plan-price">
-          <div class="obp-plan-v">€49.99</div>
-          <div class="obp-plan-u">one-time</div>
-        </div>
-      </button>
-    </div>
-
-    <div class="obp-actions">
-      <button type="button" class="obp-cta" id="obp-cta" onclick="obp_start()">Start 7-day free trial</button>
-      <button type="button" class="obp-later" onclick="obp_skip()">Maybe later</button>
-    </div>
-
-    <div class="obp-trust">
-      <span>
-        <svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden="true">
-          <rect x="1" y="6" width="9" height="6.5" rx="1.4" stroke="currentColor" stroke-width="1.3"/>
-          <path d="M3 6V4a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-        </svg>
-        Secure checkout
-      </span>
-      <span class="obp-dot-sep"></span>
-      <span>Cancel anytime</span>
-      <span class="obp-dot-sep"></span>
-      <span>€0 today</span>
-    </div>
-    <div class="obp-fine">
-      By continuing you agree to our <b>Terms</b> &amp; <b>Privacy</b>.<br>
-      Renews automatically. Manage in Settings.
-    </div>
-  </div>
-</div>
 
 <!-- AUTH -->
 <div id="auth">
@@ -309,14 +209,6 @@
       <div class="sb-item" id="s-settings" onclick="goTab('settings')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
     </nav>
     <div class="sb-foot">
-      <!-- Pro upsell (free users) or status badge (paying users) -->
-      <div class="sb-pro" id="sb-pro" onclick="openPaywall()">
-        <div class="sb-pro-ico icb" id="sb-pro-ico"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></div>
-        <div class="sb-pro-body">
-          <div class="sb-pro-t" id="sb-pro-t">Go Pro</div>
-          <div class="sb-pro-b" id="sb-pro-b">7 days on the house</div>
-        </div>
-      </div>
       <div class="sb-user" onclick="goTab('settings')">
         <div class="sb-avatar" id="sb-ava">?</div>
         <div>
@@ -334,7 +226,6 @@
     <header class="topbar">
       <div class="tlogo" onclick="goTab('home')">Athlete<span>OS</span></div>
       <div class="tright">
-        <button type="button" class="tb-pro-pill" id="tb-pro" onclick="openPaywall()" style="display:none"><svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-star"/></svg>Pro</button>
         <span class="badge by streak-pill" id="streak"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>0d</span>
         <button type="button" class="badge bb" id="freeze-pill" onclick="useStreakFreeze()" style="display:none;border:none;cursor:pointer;font-family:inherit" title="Use your monthly streak freeze" class="badge bb streak-pill"><svg class="ic" aria-hidden="true"><use href="#i-snowflake"/></svg>Freeze</button>
         <div class="avatar" id="ava" onclick="goTab('settings')">?</div>
@@ -781,7 +672,7 @@
         <div class="card" id="body-mm-card">
           <div class="fb" style="margin-bottom:6px">
             <div class="ctitle" style="margin:0">Target Body Areas</div>
-            <button type="button" class="btn-o" id="body-mm-edit" style="padding:7px 12px;font-size:12px" onclick="openMuscleEditor()">Edit <span class="pro-lock" id="body-mm-pro" style="display:none">PRO</span></button>
+            <button type="button" class="btn-o" id="body-mm-edit" style="padding:7px 12px;font-size:12px" onclick="openMuscleEditor()">Edit</button>
           </div>
           <div class="mm-legend" style="margin:8px 0 4px">
             <div class="mm-leg"><span class="mm-leg-dot grow"></span>Build</div>
@@ -933,15 +824,6 @@
           </div>
         </div>
 
-        <!-- SUBSCRIPTION — one of two places colour is allowed here. -->
-        <div class="card set-pro" id="set-pro-card" onclick="openPaywall()">
-          <svg class="set-pro-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg>
-          <span class="sit-t">
-            <span class="set-pro-t" id="set-pro-title">Try AthleteOS Pro</span>
-            <span class="set-pro-s" id="set-pro-sub">7 days free — unlock plans, demos &amp; analytics</span>
-          </span>
-          <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
 
         <!-- APPEARANCE -->
         <div class="card">
@@ -1301,87 +1183,6 @@
   <div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-plate')">Close</button></div>
 </div></div>
 
-<!-- PAYWALL -->
-<div class="modal" id="m-paywall"><div class="msheet pw-sheet">
-  <button type="button" class="pw-close" onclick="cModal('m-paywall')" aria-label="Close"><svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-x"/></svg></button>
-  <div class="pw-scroll">
-
-    <div class="pw-hero">
-      <div class="pw-hero-badge">AthleteOS Pro</div>
-      <h2 class="pw-hero-title">You've earned<br>the key.</h2>
-      <p class="pw-hero-sub">The whole gym: your coach on call, a plan written round your week, and every number that proves it worked.</p>
-    </div>
-
-    <!-- Feature ledger. Numbered, not ticked; the coach line leads. -->
-    <ol class="pw-ledger">
-      <li class="pw-led pw-led-lead">
-        <span class="pw-led-n">01</span>
-        <span class="pw-led-b"><b>Unmetered analysis</b><em>Real-time biometric feedback and form assessment, every set.</em></span>
-      </li>
-      <li class="pw-led"><span class="pw-led-n">02</span><span class="pw-led-b"><b>A plan built round your week</b><em>Your goal, your days, the kit you actually have.</em></span></li>
-      <li class="pw-led"><span class="pw-led-n">03</span><span class="pw-led-b"><b>Demos and cues</b><em>See the lift, then the two cues that fix it.</em></span></li>
-      <li class="pw-led"><span class="pw-led-n">04</span><span class="pw-led-b"><b>The numbers behind it</b><em>Volume per muscle, 1RM curves, weight projections.</em></span></li>
-      <li class="pw-led"><span class="pw-led-n">05</span><span class="pw-led-b"><b>Unlimited photos and splits</b><em>Proof in the mirror, every session saved to reuse.</em></span></li>
-    </ol>
-
-    <!-- One stream. Every tier shares a structure; the selected one expands. -->
-    <div class="pw-plans" role="radiogroup" aria-label="Billing">
-      <button type="button" class="pw-plan" data-plan="monthly" role="radio" aria-checked="false" onclick="pw_pick('monthly')">
-        <span class="pw-mark" aria-hidden="true"></span>
-        <span class="pw-p-t">Monthly</span>
-        <span class="pw-p-price"><b>&euro;4.99</b><small>per month</small></span>
-        <span class="pw-p-extra">Rolling. Pause or leave whenever you want.</span>
-      </button>
-
-      <button type="button" class="pw-plan on" data-plan="yearly" role="radio" aria-checked="true" onclick="pw_pick('yearly')">
-        <span class="pw-p-tag">Best value</span>
-        <span class="pw-mark" aria-hidden="true"></span>
-        <span class="pw-p-t">Yearly</span>
-        <span class="pw-p-price"><b>&euro;1.33</b><small>per month, billed yearly</small></span>
-        <span class="pw-p-extra">7 days free <i>//</i> saves &euro;43.89 a year <i>//</i> &euro;0 today</span>
-      </button>
-
-      <button type="button" class="pw-plan" data-plan="lifetime" role="radio" aria-checked="false" onclick="pw_pick('lifetime')">
-        <span class="pw-mark" aria-hidden="true"></span>
-        <span class="pw-p-t">Lifetime</span>
-        <span class="pw-p-price"><b>&euro;49.99</b><small>one payment</small></span>
-        <span class="pw-p-extra">Pay once. No renewal, no expiry, no second invoice.</span>
-      </button>
-    </div>
-
-    <button type="button" class="btn pw-cta" id="pw-cta" onclick="pw_checkout()">Start 7-day free trial</button>
-
-    <!-- Receipt -->
-    <div class="pw-receipt">
-      <div class="pw-r-line"><span>Due today</span><b id="pw-r-today">&euro;0.00</b></div>
-      <div class="pw-r-line"><span>Then</span><b id="pw-r-then">&euro;15.99 / yr</b></div>
-      <div class="pw-r-rule" aria-hidden="true"></div>
-      <div class="pw-r-line pw-r-meta"><span>Checkout</span><b>Secure &middot; Stripe</b></div>
-      <div class="pw-r-line pw-r-meta"><span>Cancel</span><b>Anytime, in Settings</b></div>
-      <div class="pw-r-rule" aria-hidden="true"></div>
-      <div class="pw-r-fine">Renews automatically until cancelled. By continuing you agree to our Terms &amp; Privacy.</div>
-    </div>
-
-    <!-- Trial tracker -->
-    <details class="pw-timeline">
-      <summary>How the free trial runs</summary>
-      <div class="pw-track">
-        <div class="pw-track-bar" aria-hidden="true">
-          <span class="pw-track-fill"></span>
-          <span class="pw-track-node n0"></span>
-          <span class="pw-track-node n1"></span>
-          <span class="pw-track-node n2"></span>
-        </div>
-        <ol class="pw-track-steps">
-          <li><span class="pw-track-d">Day 00</span><span class="pw-track-t">Everything opens. No half-features.</span></li>
-          <li><span class="pw-track-d">Day 05</span><span class="pw-track-t">We tell you it ends in two days. No ambush.</span></li>
-          <li><span class="pw-track-d">Day 07</span><span class="pw-track-t">Billing starts. Walk before then and you pay nothing.</span></li>
-        </ol>
-      </div>
-    </details>
-
-  </div>
-</div></div>
 
 <!-- TARGET BODY AREAS (Muscle Map editor) -->
 <div class="modal" id="m-muscle"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div>

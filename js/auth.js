@@ -115,7 +115,7 @@ async function bootApp(){
   await loadToday();
   initWGrid();renderPRs();
   AI_PLAN=JSON.parse(localStorage.getItem('athleteos_plan_'+CU.id)||'null');
-  renderPlan();loadProfile();initTheme();updateProProfileUI();handlePaywallReturn();refreshInstallUI();
+  renderPlan();loadProfile();initTheme();refreshInstallUI();
   await Promise.all([calcStreak(),loadCheckin()]);
   rotateCoachTip();
   // Fire-and-forget: render Home cards (each queries supabase directly).
