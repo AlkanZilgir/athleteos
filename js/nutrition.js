@@ -17,102 +17,6 @@ async function syncWater(){
 
 /* ── MEALS ────────────────────────────────── */
 function openMealM(){oModal('m-meal');}
-// ── Barcode scanner (ZXing lazy-loaded, OpenFoodFacts lookup) ──
-var _bcReader=null,_bcStream=null,_bcRaf=0;
-function _loadZXing(){
-  if(window.ZXingBrowser||window.ZXing)return Promise.resolve(window.ZXingBrowser||window.ZXing);
-  return new Promise(function(resolve,reject){
-    var s=document.createElement('script');
-    // @zxing/library's UMD exposes window.ZXing with BrowserMultiFormatReader.
-    // The previous path (@zxing/browser .../umd/index.min.js) does not exist: 404,
-    // so every scan failed before the camera was ever asked.
-    s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
-    s.onload=function(){resolve(window.ZXingBrowser||window.ZXing);};
-    s.onerror=function(){reject(new Error('Could not load barcode scanner'));};
-    document.head.appendChild(s);
-  });
-}
-async function openBarcodeScan(){
-  oModal('m-barcode');
-  var status=document.getElementById('bc-status');
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){status.textContent='Camera not supported in this browser';return;}
-  var video=document.getElementById('bc-video');
-  if(video){video.setAttribute('playsinline','');video.muted=true;}
-  // Chrome on Android ships a native BarcodeDetector: no library, no download.
-  if('BarcodeDetector' in window){
-    try{
-      var det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','code_39']});
-      _bcStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-      video.srcObject=_bcStream;await video.play();
-      status.textContent='Point at the barcode on the package.';
-      var tick=async function(){
-        if(!_bcStream)return;
-        try{
-          var codes=await det.detect(video);
-          if(codes&&codes.length){var code=codes[0].rawValue;_stopBcStream();status.textContent='Found '+code+'. Looking up the product…';_lookupBarcode(code);return;}
-        }catch(e){}
-        _bcRaf=requestAnimationFrame(tick);
-      };
-      tick();
-      return;
-    }catch(e){console.warn('native barcode detector',e);_stopBcStream();}
-  }
-  status.textContent='Loading scanner…';
-  var ZX;
-  try{ZX=await _loadZXing();}catch(e){status.textContent='Scanner library failed to load. Check your connection and try again.';return;}
-  try{
-    var Reader=ZX.BrowserMultiFormatReader||(ZX.BrowserBarcodeReader);
-    _bcReader=new Reader();
-    var video=document.getElementById('bc-video');
-    status.textContent='Point at the barcode on the package.';
-    await _bcReader.decodeFromVideoDevice(undefined,video,function(result,err){
-      if(result){
-        var code=result.getText();
-        _bcReader.reset();_bcReader=null;
-        _stopBcStream();
-        status.textContent='Found '+code+' — looking up product…';
-        _lookupBarcode(code);
-      }
-    });
-  }catch(e){
-    console.warn('barcode start',e);
-    status.textContent='Camera permission denied or unavailable';
-  }
-}
-function _stopBcStream(){
-  if(_bcRaf){cancelAnimationFrame(_bcRaf);_bcRaf=0;}
-  if(_bcStream){try{_bcStream.getTracks().forEach(function(t){t.stop();});}catch(e){}_bcStream=null;}
-  var v=document.getElementById('bc-video');
-  if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(function(t){t.stop();});}catch(e){}v.srcObject=null;}
-}
-function closeBarcodeScan(){if(_bcReader){try{_bcReader.reset();}catch(e){}_bcReader=null;}_stopBcStream();cModal('m-barcode');}
-async function _lookupBarcode(code){
-  try{
-    var r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(code)+'.json?fields=product_name,brands,nutriments,serving_size');
-    if(!r.ok)throw new Error('OFF '+r.status);
-    var j=await r.json();
-    var p=j&&j.product;
-    if(!p||(j.status!==1&&!p.product_name)){toast('Product not found — try entering it manually');closeBarcodeScan();return;}
-    var n=p.nutriments||{};
-    var nameParts=[];
-    if(p.brands)nameParts.push(p.brands.split(',')[0].trim());
-    if(p.product_name)nameParts.push(p.product_name);
-    var serv=p.serving_size||'100 g';
-    // OFF nutriments are per 100g by default unless _serving fields are present.
-    var prot=Math.round((n['proteins_serving']!=null?n['proteins_serving']:n.proteins)||0);
-    var carb=Math.round((n['carbohydrates_serving']!=null?n['carbohydrates_serving']:n.carbohydrates)||0);
-    var fat =Math.round((n['fat_serving']!=null?n['fat_serving']:n.fat)||0);
-    var kcal=Math.round((n['energy-kcal_serving']!=null?n['energy-kcal_serving']:n['energy-kcal'])||0);
-    document.getElementById('mn').value=nameParts.join(' ').slice(0,80)||'Scanned item';
-    document.getElementById('m-p').value=prot;
-    document.getElementById('m-c').value=carb;
-    document.getElementById('m-f').value=fat;
-    document.getElementById('m-k').value=kcal;
-    closeBarcodeScan();
-    if(!document.getElementById('m-meal').classList.contains('on'))oModal('m-meal');
-    toast('Per '+serv+' — adjust if needed');
-  }catch(e){console.warn('OFF lookup failed',e);toast('Lookup failed — try again');closeBarcodeScan();}
-}
 async function saveMeal(){
   var m={name:document.getElementById('mn').value||'Meal',protein:parseFloat(document.getElementById('m-p').value)||0,carbs:parseFloat(document.getElementById('m-c').value)||0,fat:parseFloat(document.getElementById('m-f').value)||0,calories:parseFloat(document.getElementById('m-k').value)||0};
   var mealId=_genId();m.id=mealId;
@@ -259,20 +163,189 @@ function applyMacros(){
   toast('Derived from Mifflin-St Jeor — review and commit');
 }
 
-/* ── BARCODE ──────────────────────────────── */
-function openBcM(){document.getElementById('bc-result').classList.add('hidden');document.getElementById('bc-manual').classList.add('hidden');oModal('m-bc');startBc();}
-async function startBc(){
-  try{
-    bcStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-    var v=document.getElementById('bc-vid');v.srcObject=bcStream;
-    if('BarcodeDetector' in window){var det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});var scan=async function(){try{var c=await det.detect(v);if(c.length){await lookupCode(c[0].rawValue);return;}}catch(e){}if(bcStream)setTimeout(scan,500);};v.addEventListener('playing',function(){setTimeout(scan,600);},{once:true});}
-    else{document.getElementById('bc-manual').classList.remove('hidden');}
-  }catch(e){document.getElementById('bc-manual').classList.remove('hidden');}
+/* ── BARCODE ──────────────────────────────────
+   One scanner. The Scan button opens #m-bc. Detection prefers the platform
+   BarcodeDetector (Chrome on Android) and falls back to ZXing, lazy-loaded
+   from jsdelivr, everywhere else: desktop Chrome exposes the class without a
+   detection service, and Safari on iOS has no class at all. Every failure
+   lands in the status line, and typing the number always works.
+   bcStream and sfood are declared in core.js. */
+var _bcTimer=0,_bcRun=0;
+function _loadZXing(){
+  if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)return Promise.resolve(window.ZXing);
+  return new Promise(function(resolve,reject){
+    var s=document.createElement('script');
+    // @zxing/library's UMD exposes window.ZXing. (@zxing/browser has no UMD
+    // build on the CDN; that 404 is why scanning never started before.)
+    s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
+    s.onload=function(){if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)resolve(window.ZXing);else reject(new Error('ZXing missing'));};
+    s.onerror=function(){reject(new Error('Could not load barcode scanner'));};
+    document.head.appendChild(s);
+  });
 }
-async function manualBarcode(){var code=document.getElementById('bc-manual-in').value.trim();if(code.length<8){toast('Enter a valid barcode');return;}await lookupCode(code);}
+function _bcStatus(msg){var el=document.getElementById('bc-status');if(el)el.textContent=msg;}
+function _bcCamError(e){
+  var n=(e&&e.name)||'';
+  if(n==='NotAllowedError'||n==='SecurityError')return 'Camera access was blocked. Allow the camera for this site in your browser settings, or type the number below.';
+  if(n==='NotFoundError'||n==='OverconstrainedError')return 'No camera found on this device. Type the number below.';
+  if(n==='NotReadableError'||n==='AbortError')return 'The camera is busy in another app. Close it and try again, or type the number below.';
+  return 'Could not open the camera'+(n?' ('+n+')':'')+'. Type the number below.';
+}
+function openBcM(){
+  sfood=null;
+  document.getElementById('bc-result').classList.add('hidden');
+  document.getElementById('bc-stage').classList.remove('hidden');
+  var inp=document.getElementById('bc-manual-in');if(inp)inp.value='';
+  oModal('m-bc');
+  startBc();
+}
+async function startBc(){
+  _bcPause();
+  var run=_bcRun;
+  var v=document.getElementById('bc-vid');
+  if(!window.isSecureContext){_bcStatus('The camera only works over https. Type the number below.');return;}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){_bcStatus('This browser cannot open the camera. Type the number below.');return;}
+  // A lookup only pauses detection; the stream stays up so a retry is instant.
+  var stream=(bcStream&&bcStream.active)?bcStream:null;
+  if(!stream){
+    _bcStatus('Opening the camera\u2026');
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+    }catch(e){
+      console.warn('barcode camera',e);
+      if(run===_bcRun)_bcStatus(_bcCamError(e));
+      return;
+    }
+    // The sheet was closed while the permission prompt was up.
+    if(run!==_bcRun){try{stream.getTracks().forEach(function(t){t.stop();});}catch(e){}return;}
+    bcStream=stream;
+  }
+  if(v.srcObject!==stream)v.srcObject=stream;
+  try{await v.play();}catch(e){}
+  if(run!==_bcRun)return;
+  var det=await _bcNativeDetector();
+  if(run!==_bcRun)return;
+  if(det){_bcNativeLoop(det,v,run);return;}
+  _bcZXing(v,run);
+}
+// The platform detector, only where it can really decode a retail barcode.
+async function _bcNativeDetector(){
+  if(!('BarcodeDetector' in window))return null;
+  try{
+    var have=BarcodeDetector.getSupportedFormats?await BarcodeDetector.getSupportedFormats():[];
+    var want=['ean_13','ean_8','upc_a','upc_e','code_128'].filter(function(f){return have.indexOf(f)>=0;});
+    if(!want.length)return null;
+    return new BarcodeDetector({formats:want});
+  }catch(e){console.warn('BarcodeDetector',e);return null;}
+}
+function _bcNativeLoop(det,v,run){
+  _bcStatus('Point the camera at the barcode.');
+  var fails=0;
+  var scan=async function(){
+    if(run!==_bcRun||!bcStream)return;
+    try{
+      if(v.readyState>=2){
+        var codes=await det.detect(v);
+        if(run!==_bcRun)return;
+        if(codes&&codes.length&&codes[0].rawValue){_onBcCode(codes[0].rawValue);return;}
+      }
+    }catch(e){
+      // "Barcode detection service unavailable": the class exists, the
+      // service does not (some Android builds). ZXing takes over.
+      if(++fails>=3){console.warn('BarcodeDetector.detect',e);_bcZXing(v,run);return;}
+    }
+    _bcTimer=setTimeout(scan,200);
+  };
+  _bcTimer=setTimeout(scan,250);
+}
+async function _bcZXing(v,run){
+  _bcStatus('Loading the scanner\u2026');
+  var ZX;
+  try{ZX=await _loadZXing();}catch(e){if(run===_bcRun)_bcStatus('The scanner could not load. Check your connection, or type the number below.');return;}
+  if(run!==_bcRun||!bcStream)return;
+  try{
+    var hints=new Map();
+    hints.set(ZX.DecodeHintType.POSSIBLE_FORMATS,[ZX.BarcodeFormat.EAN_13,ZX.BarcodeFormat.EAN_8,ZX.BarcodeFormat.UPC_A,ZX.BarcodeFormat.UPC_E,ZX.BarcodeFormat.CODE_128]);
+    hints.set(ZX.DecodeHintType.TRY_HARDER,true);
+    var reader=new ZX.MultiFormatReader();reader.setHints(hints);
+    var cv=document.createElement('canvas');
+    var cx=cv.getContext('2d',{willReadFrequently:true})||cv.getContext('2d');
+    _bcStatus('Point the camera at the barcode.');
+    // Our own loop over a plain canvas, not ZXing's video reader: that one
+    // flips the luminance on alternate frames and, with TRY_HARDER, flips it
+    // again on the rotation retry, so every frame is read inverted and a
+    // clean barcode never decodes (0.21.x). A canvas source is never flipped.
+    var tick=function(){
+      if(run!==_bcRun||!bcStream)return;
+      try{
+        if(v.readyState>=2&&v.videoWidth){
+          var s=v.videoWidth>960?960/v.videoWidth:1,cw=Math.round(v.videoWidth*s),ch=Math.round(v.videoHeight*s);
+          if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch;}
+          cx.drawImage(v,0,0,cw,ch);
+          var bmp=new ZX.BinaryBitmap(new ZX.HybridBinarizer(new ZX.HTMLCanvasElementLuminanceSource(cv)));
+          var res=reader.decodeWithState(bmp);
+          var txt=res&&res.getText&&res.getText();
+          if(txt){_onBcCode(txt);return;}
+        }
+      }catch(e){/* NotFoundException on most frames */}
+      _bcTimer=setTimeout(tick,120);
+    };
+    _bcTimer=setTimeout(tick,100);
+  }catch(e){
+    console.warn('ZXing start',e);
+    if(run===_bcRun)_bcStatus('Could not start the scanner'+(e&&e.name?' ('+e.name+')':'')+'. Type the number below.');
+  }
+}
+function _onBcCode(code){
+  code=String(code||'').replace(/\D/g,'');
+  if(!code)return;
+  _bcPause();
+  sfood=null;
+  document.getElementById('bc-result').classList.add('hidden');
+  document.getElementById('bc-stage').classList.remove('hidden');
+  try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
+  _bcStatus('Found '+code+'. Looking it up\u2026');
+  lookupCode(code);
+}
+function manualBarcode(){
+  var code=(document.getElementById('bc-manual-in').value||'').replace(/\D/g,'');
+  if(code.length<8||code.length>14){toast('A barcode has 8 to 14 digits');return;}
+  _onBcCode(code);
+}
 async function lookupCode(code){
-  toast('Looking up...');
-  try{var r=await fetch('https://world.openfoodfacts.org/api/v0/product/'+code+'.json');var d=await r.json();if(d.status===1){var p=d.product,n=p.nutriments;sfood={name:p.product_name||'Unknown',protein:Math.round(n.proteins_100g||0),carbs:Math.round(n.carbohydrates_100g||0),fat:Math.round(n.fat_100g||0),calories:Math.round(n['energy-kcal_100g']||0)};document.getElementById('bc-name').textContent=sfood.name+' (per 100g)';document.getElementById('bc-macros').textContent=sfood.protein+'g protein · '+sfood.carbs+'g carbs · '+sfood.fat+'g fat · '+sfood.calories+' kcal';document.getElementById('bc-result').classList.remove('hidden');stopBc();}else toast('Product not found');}catch(e){toast('Lookup failed');}
+  var stage=document.getElementById('bc-stage');
+  try{
+    var r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(code)+'.json?fields=product_name,brands,nutriments');
+    if(r.status===404){_bcRetry('No product found for '+code+'. Try again, or type the number below.');return;}
+    if(!r.ok)throw new Error('OFF '+r.status);
+    var d=await r.json();
+    var p=d&&d.product;
+    if(!p||(d.status!==1&&!p.product_name)){_bcRetry('No product found for '+code+'. Try again, or type the number below.');return;}
+    var n=p.nutriments||{};
+    var kcal=n['energy-kcal_100g'];
+    if(kcal==null&&n['energy_100g']!=null)kcal=n['energy_100g']/4.184; // some entries only carry kJ
+    var brand=p.brands?p.brands.split(',')[0].trim():'';
+    var name=(p.product_name||'').trim()||'Unnamed product';
+    if(brand&&name.toLowerCase().indexOf(brand.toLowerCase())<0)name=brand+' '+name;
+    sfood={name:name.slice(0,80),protein:Math.round(n.proteins_100g||0),carbs:Math.round(n.carbohydrates_100g||0),fat:Math.round(n.fat_100g||0),calories:Math.round(kcal||0)};
+    document.getElementById('bc-name').textContent=sfood.name;
+    document.getElementById('bc-macros').textContent='Per 100 g: '+sfood.protein+' g protein \u00b7 '+sfood.carbs+' g carbs \u00b7 '+sfood.fat+' g fat \u00b7 '+sfood.calories+' kcal';
+    stopBc();
+    document.getElementById('bc-result').classList.remove('hidden');
+    if(stage)stage.classList.add('hidden');
+    _bcStatus('');
+  }catch(e){
+    console.warn('OFF lookup',e);
+    _bcRetry('The lookup failed. Check your connection and try again.');
+  }
+}
+// After a miss, detection resumes on its own; the status line explains why.
+function _bcRetry(msg){
+  _bcStatus(msg);
+  _bcTimer=setTimeout(function(){
+    var m=document.getElementById('m-bc');
+    if(m&&m.classList.contains('on')&&document.getElementById('bc-result').classList.contains('hidden'))startBc();
+  },1800);
 }
 async function addScanned(){
   if(!sfood)return;
@@ -281,8 +354,14 @@ async function addScanned(){
   meals.push(m);refresh();closeBc();toast('Food added');
   await sbQueueInsert('meals',{id:id,user_id:CU.id,logged_date:today(),name:sfood.name,protein_g:sfood.protein,carbs_g:sfood.carbs,fat_g:sfood.fat,calories:sfood.calories});
 }
-function closeBc(){stopBc();cModal('m-bc');}
-function stopBc(){if(bcStream){bcStream.getTracks().forEach(function(t){t.stop();});bcStream=null;}}
+function closeBc(){cModal('m-bc');} // cModal stops the camera for m-bc
+function _bcPause(){_bcRun++;if(_bcTimer){clearTimeout(_bcTimer);_bcTimer=0;}}
+function stopBc(){
+  _bcPause();
+  if(bcStream){try{bcStream.getTracks().forEach(function(t){t.stop();});}catch(e){}bcStream=null;}
+  var v=document.getElementById('bc-vid');
+  if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(function(t){t.stop();});}catch(e){}v.srcObject=null;}
+}
 
 /* ── MACRO PIE ────────────────────────────── */
 var macroPieChart=null;
