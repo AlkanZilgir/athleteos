@@ -45,11 +45,3 @@ drop trigger if exists scheduled_pushes_cap_trg on public.scheduled_pushes;
 create trigger scheduled_pushes_cap_trg
   before insert on public.scheduled_pushes
   for each row execute function public.scheduled_pushes_cap();
-
--- A trigger function still lands in the exposed API schema, where PostgREST
--- will offer it at /rest/v1/rpc/. Calling it outside a trigger context only
--- errors, but a SECURITY DEFINER function reachable by anon is noise the
--- database linter rightly flags, so close it.
-revoke execute on function public.scheduled_pushes_cap() from public;
-revoke execute on function public.scheduled_pushes_cap() from anon;
-revoke execute on function public.scheduled_pushes_cap() from authenticated;
