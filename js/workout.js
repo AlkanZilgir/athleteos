@@ -263,6 +263,15 @@ function toggleSessNote(btn){
   if(!shown){setTimeout(function(){ta.focus();},10);}
   if(btn)btn.textContent=ICO('notebook','13px')+(wNote?'Edit session note':(shown?'Add session note':'Hide note'));
 }
+// Anything outside the Workout tab that starts a session goes through here, so
+// the active-session panel is actually on screen when it opens.
+function startSession(){goTab('workout');startW();}
+function startFromTemplate(id){
+  goTab('workout');
+  var sess=document.getElementById('active-sess');
+  if(sess&&sess.classList.contains('hidden'))startW();
+  if(typeof loadTemplate==='function')loadTemplate(id);
+}
 function startW(){
   if(!document.getElementById('active-sess').classList.contains('hidden'))return;
   wExs=[];wStart=Date.now();wNote='';
@@ -1258,7 +1267,7 @@ async function renderHeatmap(){
   }
   var total=Object.keys(counts).length;
   grid.className='hm-grid';
-  grid.innerHTML=total?html:'<div class="bp bp-sm" style="grid-column:1/-1"><span class="bp-l">Nothing logged in the last six months</span><button type="button" class="empty-cta" onclick="startW()">Start a session</button></div>';
+  grid.innerHTML=total?html:'<div class="bp bp-sm quiet" style="grid-column:1/-1"><span class="bp-l">Nothing logged in the last six months</span><button type="button" class="empty-cta" onclick="startSession()">Start a session</button></div>';
   // The legend starts hidden in the markup so it never floats above an unrendered grid.
   var legend=grid.nextElementSibling;if(legend)legend.style.display=total?'flex':'none';
   if(count)count.textContent=total+' active day'+(total===1?'':'s');
@@ -1869,7 +1878,7 @@ function filterExPk(){
       }).join('')+'<div style="height:8px"></div>';
     }
   }
-  if(!matches.length){list.innerHTML=header+pinnedHtml+'<div class="bp bp-sm"><span class="bp-l">No matches</span></div>';return;}
+  if(!matches.length){list.innerHTML=header+pinnedHtml+'<div class="bp bp-sm quiet"><span class="bp-l">No matches</span></div>';return;}
   list.innerHTML=header+pinnedHtml+matches.map(function(x){
     var safe=x.name.replace(/'/g,"\\'");
     var tag=x.custom?' · <span style="color:var(--accent);font-weight:600">custom</span>':'';
@@ -1955,6 +1964,7 @@ var templates=[];
 async function loadTemplates(){
   var{data}=await sb.from('workout_templates').select('*').eq('user_id',CU.id).order('created_at',{ascending:false});
   templates=data||[];
+  if(typeof renderNextSession==='function')renderNextSession();
 }
 function openTemplates(){
   loadTemplates().then(renderTemplates);

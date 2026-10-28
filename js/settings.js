@@ -342,7 +342,7 @@ async function openCustomerPortal(){
     if(j.url)location.href=j.url;
   }catch(err){console.warn(err);toast('Network error');}
 }
-function isPremium(){return !!(P&&P._isPremium);}
+function isPremium(){return !PAYMENTS_ENABLED||!!(P&&P._isPremium);}
 // Show a one-time, gentle "Try Pro" nudge at a chosen moment. Stored per-user so it never repeats.
 // Tap = open paywall. Auto-dismisses after ~7s. Free users only; no-op for Pro.
 function softProNudge(key,msg){

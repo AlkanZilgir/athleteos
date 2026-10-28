@@ -303,8 +303,7 @@
       <div class="sb-item on" id="s-home" onclick="goTab('home')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
       <div class="sb-item" id="s-workout" onclick="goTab('workout')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Workout</div>
       <div class="sb-item" id="s-nutrition" onclick="goTab('nutrition')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.3.78-4.42 2.08-6.12"/><path d="M12 6v6l4 2"/></svg>Nutrition</div>
-      <div class="sb-item" id="s-body" onclick="goTab('body')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Body Stats</div>
-      <div class="sb-item" id="s-sleep" onclick="goTab('sleep')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Sleep</div>
+      <div class="sb-item" id="s-body" onclick="goTab('body')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Progress</div>
       <div class="sb-div"></div>
       <div class="sb-item" id="s-ai" onclick="goTab('ai')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Coach</div>
       <div class="sb-item" id="s-settings" onclick="goTab('settings')"><svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
@@ -352,8 +351,14 @@
         <header class="home-head">
           <div class="home-date" id="home-date"></div>
           <h1 class="hero-title" id="hero-greet">Today</h1>
-          <p class="home-sub" id="hero-sub">Show up, log it, beat it. That's the whole job today.</p>
+          <p class="home-sub" id="hero-sub">Reading your log.</p>
         </header>
+
+        <!-- Next session. The workout is the spine of Home; the numbers below are its consequences. -->
+        <section class="next" id="next-sess" aria-labelledby="next-t">
+          <div class="next-head"><h2 class="next-t" id="next-t">Next session</h2><button type="button" class="lnk" onclick="goTab('workout');openTemplates()">Routines</button></div>
+          <div class="next-body" id="next-body"></div>
+        </section>
 
         <!-- ── PRIMARY 1 · TRAINING ──────────────────────────────
              Full-width band. Volume headline, 7-day bars, four-slot readout. -->
@@ -368,7 +373,7 @@
             <span class="tr-vol-unit" id="hero-stat-unit">kg</span>
           </div>
           <div class="hero-spark"><canvas id="hero-spark"></canvas></div>
-          <div class="bp bp-sm" id="tr-first" style="display:none"><span class="bp-l">No sessions this week</span><button type="button" class="empty-cta" onclick="startW()">Start one</button></div>
+          <div class="bp bp-sm quiet" id="tr-first" style="display:none"><span class="bp-l">No sessions logged this week.</span></div>
           <div class="readout">
             <div class="readout-i"><div class="readout-v" id="hero-sessions">0</div><div class="readout-l">Sessions</div></div>
             <div class="readout-i"><div class="readout-v" id="hero-duration">0m</div><div class="readout-l">Time</div></div>
@@ -606,7 +611,7 @@
             <div class="ctitle" style="margin:0">Cardio</div>
             <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openCardio()">+ Log</button>
           </div>
-          <div id="cd-list"><div class="bp"><span class="bp-l">No cardio yet</span><button type="button" class="empty-cta" onclick="openCardio()">Log one</button></div></div>
+          <div id="cd-list"><div class="bp quiet"><span class="bp-l">No cardio yet</span><button type="button" class="empty-cta" onclick="openCardio()">Log one</button></div></div>
         </div>
 
         <!-- HEATMAP -->
@@ -635,12 +640,12 @@
           <div class="ctitle">Exercise Library</div>
           <p class="tm" style="font-size:13px;margin-bottom:14px">Pick a muscle group to see all exercises with demos and tips, top picks first.</p>
           <div class="musc-grid">
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:rgba(239,68,68,.12);color:#EF4444" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-chest"/></svg></span><span>Chest</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:rgba(59,130,246,.12);color:#3B82F6" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-back"/></svg></span><span>Back</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:rgba(245,158,11,.12);color:#F59E0B" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-shoulder"/></svg></span><span>Shoulders</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:var(--adim);color:var(--accent)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-arm"/></svg></span><span>Arms</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:rgba(168,85,247,.12);color:#A855F7" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-leg"/></svg></span><span>Legs</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:rgba(236,72,153,.12);color:#EC4899" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-core"/></svg></span><span>Core</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-chest"/></svg></span><span>Chest</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-back"/></svg></span><span>Back</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-shoulder"/></svg></span><span>Shoulders</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-arm"/></svg></span><span>Arms</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-leg"/></svg></span><span>Legs</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:var(--surface-2);color:var(--t)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-core"/></svg></span><span>Core</span></button>
           </div>
         </div>
 
@@ -666,7 +671,7 @@
             <button type="button" class="pill" onclick="filterPR('arms',this)">Arms</button>
             <button type="button" class="pill" onclick="filterPR('core',this)">Core</button>
           </div>
-          <div id="pr-list"><div class="bp"><span class="bp-l">No records set</span></div></div>
+          <div id="pr-list"><div class="bp quiet"><span class="bp-l">No records set</span></div></div>
         </div>
         <div class="card">
           <div class="ctitle">This Week</div>
@@ -676,7 +681,7 @@
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">History</div></div>
           <input type="text" id="wh-search" placeholder="Search by exercise…" oninput="filterWHist(this.value)" style="width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:10px;padding:9px 12px;color:var(--t);font-family:inherit;font-size:13px;font-weight:500;outline:none;margin-bottom:10px">
-          <div id="w-hist"><div class="bp"><span class="bp-l">No sessions yet</span></div></div>
+          <div id="w-hist"><div class="bp quiet"><span class="bp-l">No sessions yet</span></div></div>
         </div>
       </div>
 
@@ -726,12 +731,12 @@
 
       <!-- BODY -->
       <div class="panel hidden" id="p-body">
-        <div class="ptitle">Body Stats</div>
+        <div class="ptitle">Progress</div>
         <div class="sg" style="margin-bottom:12px">
           <div class="sc" style="--sc:var(--accent)"><div class="sv" id="b-cw"><span class="nodata">no data</span></div><div class="sl">Current</div></div>
           <div class="sc" style="--sc:var(--blue)"><div class="sv" id="b-gw"><span class="nodata">not set</span></div><div class="sl">Goal</div></div>
         </div>
-        <div class="card" id="w-chart-card">
+        <div class="card" id="w-chart-card" style="display:none">
           <div class="fb" style="margin-bottom:14px">
             <div class="ctitle" style="margin:0">Weight</div>
             <button type="button" class="btn-o" style="padding:8px 14px;font-size:12px" onclick="openWtM()">+ Log</button>
@@ -763,8 +768,8 @@
             <div class="ctitle" style="margin:0">Weekly Volume</div>
             <span class="tm" style="font-size:11px">last 6 weeks</span>
           </div>
-          <div class="chart-wrap" style="height:200px"><canvas id="vol-chart"></canvas></div>
-          <div id="vol-empty" class="bp bp-sm" style="display:none"><span class="bp-l">No strength sessions in six weeks</span><button type="button" class="empty-cta" onclick="startW()">Start one</button></div>
+          <div class="chart-wrap" style="height:200px;display:none"><canvas id="vol-chart"></canvas></div>
+          <div id="vol-empty" class="bp bp-sm quiet" style="display:none"><span class="bp-l">No strength sessions in six weeks</span><button type="button" class="empty-cta" onclick="startSession()">Start one</button></div>
         </div>
         <div class="card" id="bf-card" style="display:none">
           <div class="fb" style="margin-bottom:12px">
@@ -793,7 +798,7 @@
           </div>
           <div id="mes-grid" class="mes-grid"></div>
           <div id="mes-summary" class="mes-summary" style="display:none;margin-top:10px"></div>
-          <div id="mes-empty"><div class="bp"><span class="bp-l">No measurements</span><button type="button" class="empty-cta" onclick="openMeasure()">Take the first</button></div></div>
+          <div id="mes-empty"><div class="bp quiet"><span class="bp-l">No measurements</span><button type="button" class="empty-cta" onclick="openMeasure()">Take the first</button></div></div>
         </div>
         <div class="card">
           <div class="fb" style="margin-bottom:12px">
@@ -807,11 +812,7 @@
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Achievements</div><div style="display:flex;align-items:center;gap:10px"><span class="tm" style="font-size:12px" id="ach-count">0/0</span><button type="button" class="btn-g" style="font-size:12px;padding:4px 10px" onclick="openCustomAch()">+ Add</button></div></div>
           <div class="ach-grid" id="ach-grid"></div>
         </div>
-      </div>
-
-      <!-- SLEEP -->
-      <div class="panel hidden" id="p-sleep">
-        <div class="ptitle">Sleep</div>
+        <h2 class="ptitle sub" id="sec-sleep">Sleep</h2>
         <div class="card tc">
           <div class="sring-wrap">
             <svg viewBox="0 0 160 160" width="160" height="160">
@@ -851,7 +852,7 @@
           </div>
           <button type="button" class="btn" onclick="logSleep()">Save Sleep</button>
         </div>
-        <div class="card"><div class="ctitle">History</div><div id="s-hist"><div class="bp"><span class="bp-l">No nights logged</span></div></div></div>
+        <div class="card"><div class="ctitle">History</div><div id="s-hist"><div class="bp quiet"><span class="bp-l">No nights logged</span></div></div></div>
       </div>
 
       <!-- SETTINGS -->
@@ -1134,7 +1135,6 @@
         <button type="button" class="chat-chip" onclick="askAI('Review my current block against my logged RPE and bodyweight trend, and adjust the loading.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-gear"/></svg>Adjust my loads</button>
       </div>
       <div class="chat-row">
-        <span class="eng-caret" aria-hidden="true">&#9656;</span>
         <textarea class="chat-in" id="chat-in" rows="1"
           placeholder="Ask the coach"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
@@ -1149,8 +1149,7 @@
       <div class="nv on" id="n-home" onclick="goTab('home')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
       <div class="nv" id="n-workout" onclick="goTab('workout')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Train</span></div>
       <div class="nv" id="n-nutrition" onclick="goTab('nutrition')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.3.78-4.42 2.08-6.12"/><path d="M12 6v6l4 2"/></svg><span>Nutrition</span></div>
-      <div class="nv" id="n-sleep" onclick="goTab('sleep')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Sleep</span></div>
-      <div class="nv" id="n-body" onclick="goTab('body')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Body</span></div>
+      <div class="nv" id="n-body" onclick="goTab('body')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Progress</span></div>
       <div class="nv" id="n-ai" onclick="goTab('ai')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Coach</span></div>
     </nav>
 
@@ -1726,7 +1725,7 @@
 <div id="onb">
   <div class="onb-body-wrap">
     <div class="onb-rail">
-      <div class="onb-idx" aria-hidden="true"><span class="onb-idx-k">Profile step</span><i>//</i><b id="ob-idx-n">01</b><i>//</i><span id="ob-idx-t">14</span></div>
+      <div class="onb-idx" aria-hidden="true"><span class="onb-idx-k">Step</span><i>//</i><b id="ob-idx-n">01</b><i>//</i><span id="ob-idx-t">14</span></div>
       <div class="onb-ticks" id="ob-ticks"></div>
       <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
     </div>
@@ -1794,13 +1793,13 @@
         </div>
         <div class="onb-sect">Days per week</div>
         <div class="opt-group" id="ob-week-list">
-          <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">First Steps</span></div>
-          <div class="opt-row" data-v="2" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">2 Days</span><span class="opt-row-r">Double Pump</span></div>
-          <div class="opt-row on" data-v="3" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">3 Days</span><span class="opt-row-r">Triple Threat</span></div>
-          <div class="opt-row" data-v="4" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">4 Days</span><span class="opt-row-r">Lean Machine</span></div>
-          <div class="opt-row" data-v="5" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">5 Days</span><span class="opt-row-r">Iron Addict</span></div>
-          <div class="opt-row" data-v="6" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">6 Days</span><span class="opt-row-r">Gym Rat</span></div>
-          <div class="opt-row" data-v="7" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">Every Day</span><span class="opt-row-r">Legend</span></div>
+          <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">Getting started</span></div>
+          <div class="opt-row" data-v="2" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">2 Days</span><span class="opt-row-r">Light</span></div>
+          <div class="opt-row on" data-v="3" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">3 Days</span><span class="opt-row-r">Steady</span></div>
+          <div class="opt-row" data-v="4" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">4 Days</span><span class="opt-row-r">Solid</span></div>
+          <div class="opt-row" data-v="5" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">5 Days</span><span class="opt-row-r">Serious</span></div>
+          <div class="opt-row" data-v="6" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">6 Days</span><span class="opt-row-r">Heavy</span></div>
+          <div class="opt-row" data-v="7" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">Every Day</span><span class="opt-row-r">Daily</span></div>
         </div>
       </div>
     </div>

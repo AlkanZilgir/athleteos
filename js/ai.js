@@ -449,7 +449,7 @@ function addMsg(role,text){
     // from the model survive.
     d.className='eng-out fu';
     var h=document.createElement('div');h.className='eng-out-h';
-    h.innerHTML='<svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Output'+
+    h.innerHTML='<svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Coach'+
       '<span class="eng-out-ts">'+_engStamp()+'</span>';
     var bd=document.createElement('div');bd.className='eng-out-b';
     _renderEngineBody(bd,text||'');

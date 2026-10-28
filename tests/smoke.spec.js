@@ -41,13 +41,12 @@ test('landing page loads', async ({ page }) => {
   await expect(page.getByRole('link', { name: /Start free/i }).first()).toBeVisible();
 });
 
-test('pricing section shows all three plans', async ({ page }) => {
-  await page.goto('/marketing.html#pricing');
-  await expect(page.getByRole('heading', { name: /Simple pricing/i })).toBeVisible();
-  await expect(page.locator('text=€1.33')).toBeVisible();
-  await expect(page.locator('text=€4.99')).toBeVisible();
-  await expect(page.locator('text=€0').first()).toBeVisible();
-  await expect(page.getByRole('link', { name: /Start 7-day free trial/i }).first()).toBeVisible();
+test('pricing is hidden while payments are off', async ({ page }) => {
+  // PAYMENTS_ENABLED=false (js/core.js) for the diploma demo: the section stays
+  // in the markup, hidden, and no navigation points at it.
+  await page.goto('/marketing.html');
+  await expect(page.locator('#pricing')).toBeHidden();
+  await expect(page.getByRole('link', { name: /^Pricing$/ })).toHaveCount(0);
 });
 
 test('privacy and terms pages render', async ({ page }) => {

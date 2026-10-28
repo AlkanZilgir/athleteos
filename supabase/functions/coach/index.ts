@@ -43,9 +43,12 @@ const MAX_CHARS = 60000;
 // buildCtx() produces, tight enough that it cannot carry a second prompt.
 const MAX_CTX = 4000;
 
-// Must match PREM_LIMITS.ai_chat in js/settings.js. That copy drives the UI
-// copy; this one is the control.
-const FREE_PER_DAY = Number(Deno.env.get('COACH_FREE_PER_DAY') || '7');
+// The per-user daily allowance while payments are switched off (PAYMENTS_ENABLED
+// in js/core.js). It is an abuse cap, not a tier: generous enough that nobody
+// demoing the app meets it, low enough that one account cannot drain the key.
+// When payments come back, drop this to the free tier (PREM_LIMITS.ai_chat in
+// js/settings.js, 7) or set COACH_FREE_PER_DAY as a secret.
+const FREE_PER_DAY = Number(Deno.env.get('COACH_FREE_PER_DAY') || '40');
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',

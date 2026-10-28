@@ -85,6 +85,11 @@ function track(event,props){
 
 const SUPA_URL='https://apnxpcehjapfhcybciqd.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwbnhwY2VoamFwZmhjeWJjaXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNTAzMzAsImV4cCI6MjA5NDYyNjMzMH0.jx61F_MGGINbEZgMJLZNeza0mS1spO4zUr7r5ZvnfGI';
+// Payments are switched off for the diploma demo. The entitlement path (Stripe,
+// webhook, column grants, server quota) stays intact; this flag only makes every
+// feature available and hides the upgrade surfaces.
+var PAYMENTS_ENABLED=false;
+if(!PAYMENTS_ENABLED)document.documentElement.classList.add('nopay');
 
 /* ── LAZY SCRIPT LOADERS ─────────────────────
    Chart.js (~250KB) and supabase-js (~120KB) are no longer in <head>.

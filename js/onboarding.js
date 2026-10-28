@@ -80,7 +80,7 @@ function ob_goto(i){
 // Sequence index + tick rail. Reads as an instrument, not a loading bar.
 function _obRenderRail(i){
   var pos=_obVisibleIndex(i),total=OB_VISIBLE_COUNT;
-  var pad=function(n){return (n<10?'0':'')+n;};
+  var pad=function(n){return String(n);};  // 'Step 2 of 5', not '02 // 05'
   var n=document.getElementById('ob-idx-n');if(n)n.textContent=pad(pos);
   var t=document.getElementById('ob-idx-t');if(t)t.textContent=pad(total);
   var ticks=document.getElementById('ob-ticks');if(!ticks)return;

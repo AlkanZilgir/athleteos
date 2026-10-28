@@ -32,6 +32,8 @@ async function loadGoals(){
 
 /* ── NAVIGATION ───────────────────────────── */
 function goTab(t){
+  // Sleep lives on the Progress tab now; older callers still say 'sleep'.
+  var toSleep=(t==='sleep');if(toSleep)t='body';
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');p.classList.add('hidden');});
   document.querySelectorAll('.nv,.sb-item').forEach(function(n){n.classList.remove('on');});
   var ai=document.getElementById('p-ai');ai.classList.remove('on');
@@ -45,7 +47,7 @@ function goTab(t){
   }
   var nav=document.getElementById('n-'+t);if(nav)nav.classList.add('on');
   var sb2=document.getElementById('s-'+t);if(sb2)sb2.classList.add('on');
-  if(t==='home')setTimeout(function(){renderHero();renderActivityFeed();loadRecentPRs();updateProProfileUI();maybeShowIosInstall();renderGettingStarted();},60);
+  if(t==='home')setTimeout(function(){renderHero();renderNextSession();renderActivityFeed();loadRecentPRs();updateProProfileUI();maybeShowIosInstall();renderGettingStarted();},60);
   if(t==='ai')setTimeout(updateProProfileUI,60);
   if(t==='body'){setTimeout(function(){
     // initChart is normally called by the background loader chain after boot,
@@ -54,6 +56,7 @@ function goTab(t){
     if(!wChart)initChart();else renderChart();
     renderMeasure();renderPhotos();loadVolumeChart();renderBfChart();renderWeightProjection();renderBodyMuscleMap();renderAchievements();
   },60);}
+  if(toSleep)setTimeout(function(){var sec=document.getElementById('sec-sleep');if(sec)sec.scrollIntoView({block:'start'});},140);
   if(t==='nutrition')setTimeout(renderMacroPie,60);
   if(t==='workout')setTimeout(function(){
     renderCalendar();renderCardio();renderHeatmap();
@@ -452,6 +455,19 @@ async function renderHero(){
     if(key in byDay)byDay[key]+=vol;
     totalVol+=vol;
   });
+  // The subline says what the log says, not a slogan.
+  var sub=document.getElementById('hero-sub');
+  if(sub){
+    var goalDays=3;try{var pr=JSON.parse(localStorage.getItem('prefs_'+CU.id)||'null');if(pr&&+pr.weekly)goalDays=+pr.weekly;}catch(e){}
+    if(!sessions){sub.textContent='Nothing logged this week yet. The goal is '+goalDays+' session'+(goalDays===1?'':'s')+'.';}
+    else{
+      var last=data[data.length-1];var lastVol=0;
+      (last.exercises||[]).forEach(function(ex){(ex.sets||[]).forEach(function(s){lastVol+=(+s.weight_kg||0)*(+s.reps||0);});});
+      var when=new Date(last.started_at);
+      var dayName=when.toDateString()===new Date().toDateString()?'today':when.toLocaleDateString('en',{weekday:'long'});
+      sub.textContent='Last session '+dayName+', '+Math.round(lastVol).toLocaleString()+' kg. '+sessions+' of '+goalDays+' this week.';
+    }
+  }
   // Render stat
   var stat=document.getElementById('hero-stat'),statU=document.getElementById('hero-stat-unit');
   if(stat){
@@ -534,7 +550,7 @@ async function renderActivityFeed(){
   (wt_a.data||[]).forEach(function(w){items.push({t:new Date(w.created_at).getTime(),ico:ICO('scale'),bg:'rgba(168,85,247,.10)',col:'var(--sig-sleep)',title:'Weight logged',meta:w.weight_kg+' kg'});});
   (sl_a.data||[]).forEach(function(s){items.push({t:new Date(s.created_at).getTime(),ico:ICO('moon'),bg:'rgba(168,85,247,.10)',col:'var(--sig-sleep)',title:'Sleep logged',meta:parseFloat(s.duration_hours).toFixed(1)+'h'});});
   items.sort(function(a,b){return b.t-a.t;});items=items.slice(0,6);
-  if(!items.length){el.innerHTML='<div class="bp"><span class="bp-l">Nothing logged yet</span></div>';return;}
+  if(!items.length){el.innerHTML='<div class="bp quiet"><span class="bp-l">Nothing logged yet</span></div>';return;}
   el.innerHTML=items.map(function(it){
     return '<div class="act-row"><div class="act-ico" style="background:'+it.bg+';color:'+it.col+'">'+it.ico+'</div><div class="act-body"><div class="act-title">'+it.title+'</div><div class="act-meta">'+it.meta+'</div></div><div class="act-time">'+_relTime(it.t)+'</div></div>';
   }).join('');
@@ -776,7 +792,7 @@ async function openDay(ds){
         var setStr=sets.length?sets.map(function(s,i){return 'Set '+(i+1)+': '+fmtSet(s.weight_kg,s.reps);}).join(' · '):'No sets';
         var safe=(ex.name||'').replace(/'/g,"\\'");
         return '<div class="exi"><div class="fb"><div class="exn" onclick="openExChart(\''+safe+'\')" style="cursor:pointer">'+ex.name+'</div><span class="tag">'+(ex.muscle_group||'other')+'</span></div><div style="font-size:12.5px;color:var(--t2);margin-top:5px">'+setStr+'</div></div>';
-      }).join(''):'<div class="bp bp-sm"><span class="bp-l">No exercises</span></div>';
+      }).join(''):'<div class="bp bp-sm quiet"><span class="bp-l">No exercises</span></div>';
       html+='<div class="card" style="background:var(--card2);margin-bottom:10px"><div class="fb" style="margin-bottom:10px"><div style="font-weight:600;display:flex;align-items:center;gap:8px">'+ICO('barbell','15px')+time+'</div><span class="tag">'+dur+' min</span></div>'+exHtml+'</div>';
     });
   }
@@ -807,6 +823,26 @@ async function openDay(ds){
     if(wa&&wa.cups)html+='<br>'+ICO('droplet','14px')+wa.cups+' cups water';
     html+='</div>';
   }
-  if(!html)html='<div class="bp"><span class="bp-l">Rest day</span></div>';
+  if(!html)html='<div class="bp quiet"><span class="bp-l">Rest day</span></div>';
   document.getElementById('day-body').innerHTML=html;
 }
+
+/* ── NEXT SESSION ───────────────────────────
+   The workout is the spine of Home. Everything under it is a consequence.
+   Reads the routines loadTemplates() fetched; re-rendered when they land. */
+function renderNextSession(){
+  var el=document.getElementById('next-body');if(!el)return;
+  var list=(typeof templates!=='undefined'&&templates)?templates:[];
+  if(!list.length){
+    el.innerHTML='<p class="next-sub">No routine saved yet. Start an empty session, or have the coach write a block around your week.</p>'+
+      '<div class="next-cta"><button type="button" class="btn" onclick="startSession()">Start a session</button><button type="button" class="btn-g" onclick="goTab(\'ai\')">Ask the coach</button></div>';
+    return;
+  }
+  var t=list[0];var exs=t.exercises||[];
+  var sets=exs.reduce(function(a,e){return a+(Array.isArray(e.sets)?e.sets.length:(+e.sets||0));},0);
+  var names=exs.slice(0,3).map(function(e){return e.name;}).join(', ')+(exs.length>3?' and '+(exs.length-3)+' more':'');
+  el.innerHTML='<div class="next-name">'+_nsEsc(t.name)+'</div>'+
+    '<p class="next-sub">'+exs.length+' exercise'+(exs.length===1?'':'s')+', '+sets+' sets. '+_nsEsc(names)+'.</p>'+
+    '<div class="next-cta"><button type="button" class="btn" onclick="startFromTemplate(\''+_nsEsc(t.id)+'\')">Start '+_nsEsc(t.name)+'</button><button type="button" class="btn-g" onclick="startSession()">Empty session</button></div>';
+}
+function _nsEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
