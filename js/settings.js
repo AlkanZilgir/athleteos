@@ -461,8 +461,10 @@ function updateProProfileUI(){
   // that says the engine is running rather than idle.
   var aiSub=document.getElementById('ai-page-sub');
   if(aiSub){
-    if(isPremium()){
-      aiSub.innerHTML='<i class="eng-dot"></i>Pro · unlimited commands';
+    if(!PAYMENTS_ENABLED){
+      aiSub.innerHTML='<i class="eng-dot"></i>Ready';
+    }else if(isPremium()){
+      aiSub.innerHTML='<i class="eng-dot"></i>Pro · unlimited';
     }else{
       var left=premRemaining('ai_chat');
       aiSub.innerHTML='<i class="eng-dot"></i>'+left+' of '+PREM_LIMITS.ai_chat+' commands left today · '+
@@ -1085,7 +1087,7 @@ var LEGAL_HTML={
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">3. Your responsibilities</h4>'+
 '<ul style="padding-left:18px;margin-bottom:14px"><li>Lift within your ability with proper form. Warm up. Stop if something hurts.</li><li>Provide accurate information when logging — calculations rely on it.</li><li>Keep your password secure. Don\'t share your account.</li><li>Use the service only for lawful, personal purposes.</li></ul>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">4. Subscriptions &amp; billing</h4>'+
-'<ul style="padding-left:18px;margin-bottom:14px"><li>Free tier includes core logging features. Pro adds unlimited AI coaching, plans, demos, analytics, photos, and templates.</li><li>Pro is billed by Stripe. Recurring plans auto-renew until cancelled.</li><li>Yearly plan includes a 7-day free trial. You will not be charged if you cancel before day 7.</li><li>Cancel any time in Settings → Manage Subscription. Cancellation takes effect at the end of the current billing period — no refunds for partial periods.</li><li>Lifetime is a one-time purchase, non-refundable except where required by law.</li><li>Sales taxes are handled by Stripe via Managed Payments.</li></ul>'+
+'<ul style="padding-left:18px;margin-bottom:14px"><li>There is currently nothing to pay: every feature is included. If paid plans are introduced later, these terms will be updated first and billing will be handled by Stripe.</li></ul>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">5. AI coach limits</h4>'+
 '<p style="margin-bottom:14px">The AI trainer uses an LLM and may produce inaccurate, incomplete, or unsafe suggestions. Use professional judgment. We are not liable for actions you take based on AI output.</p>'+
 '<h4 style="font-size:14px;font-weight:700;color:var(--t);margin:18px 0 8px">6. Acceptable use</h4>'+
