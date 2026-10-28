@@ -31,7 +31,10 @@ async function initChart(){
   wChart=new Chart(ctx,{type:'line',data:{labels:[],datasets:[{label:'Weight',data:[],borderColor:_sig('--accent'),backgroundColor:'rgba(204,255,0,.07)',borderWidth:2,pointBackgroundColor:_sig('--accent'),pointBorderWidth:0,pointRadius:2.5,tension:.32,fill:true}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:0},plugins:{legend:{display:false}},scales:_chartAxes()}});
   renderChart();
 }
-function renderChart(){if(!wChart)return;var d=wtLog.slice(-21);wChart.data.labels=d.map(function(w){return w.date.slice(5);});wChart.data.datasets[0].data=d.map(function(w){return w.weight;});wChart.update();}
+function renderChart(){
+  // One point is not a trend. The Log card below carries the first-entry prompt.
+  var card=document.getElementById('w-chart-card');if(card)card.style.display=(wtLog&&wtLog.length>=2)?'':'none';
+  if(!wChart)return;var d=wtLog.slice(-21);wChart.data.labels=d.map(function(w){return w.date.slice(5);});wChart.data.datasets[0].data=d.map(function(w){return w.weight;});wChart.update();}
 
 /* ── WEEKLY VOLUME CHART ──────────────────── */
 var volChart=null;
@@ -65,10 +68,10 @@ async function loadVolumeChart(){
   var hasAny=labels.some(function(l){return weeks[l]&&muscles.some(function(m){return weeks[l][m]>0;});});
   var empty=document.getElementById('vol-empty');
   var wrap=document.getElementById('vol-card').querySelector('.chart-wrap');
-  if(!hasAny){empty.style.display='block';wrap.style.display='none';if(volChart){volChart.destroy();volChart=null;}return;}
+  if(!hasAny){empty.style.display='';wrap.style.display='none';if(volChart){volChart.destroy();volChart=null;}return;}
   empty.style.display='none';wrap.style.display='block';
   var datasets=muscles.map(function(m){
-    return{label:m.charAt(0).toUpperCase()+m.slice(1),backgroundColor:MUSCLE_COLORS[m],borderWidth:0,
+    return{label:m.charAt(0).toUpperCase()+m.slice(1),backgroundColor:(m==='chest'?_sig('--sig-train-pure'):MUSCLE_COLORS[m]),borderWidth:0,
       data:labels.map(function(l){return Math.round((weeks[l]&&weeks[l][m])||0);})};
   }).filter(function(ds){return ds.data.some(function(v){return v>0;});});
   await _ensureChart();

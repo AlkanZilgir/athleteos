@@ -261,7 +261,7 @@
     </div>
     <form id="fl" onsubmit="event.preventDefault();doLogin();">
       <div class="f"><label>Email</label><input type="email" id="l-u" placeholder="you@email.com" autocomplete="email"></div>
-      <div class="f" style="margin-bottom:6px"><label>Password</label><input type="password" id="l-p" placeholder="••••••••" autocomplete="current-password"></div>
+      <div class="f" style="margin-bottom:6px"><label>Password</label><input type="password" id="l-p" placeholder="Your password" autocomplete="current-password"></div>
       <div style="text-align:right;margin-bottom:14px"><button type="button" class="lnk" onclick="openForgot()">Forgot password?</button></div>
       <button type="submit" class="btn" id="login-btn">Sign in<svg class="ic" style="font-size:16px" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
       <div class="oauth-divider"><span>or</span></div>
@@ -368,6 +368,7 @@
             <span class="tr-vol-unit" id="hero-stat-unit">kg</span>
           </div>
           <div class="hero-spark"><canvas id="hero-spark"></canvas></div>
+          <div class="bp bp-sm" id="tr-first" style="display:none"><span class="bp-l">No sessions this week</span><button type="button" class="empty-cta" onclick="startW()">Start one</button></div>
           <div class="readout">
             <div class="readout-i"><div class="readout-v" id="hero-sessions">0</div><div class="readout-l">Sessions</div></div>
             <div class="readout-i"><div class="readout-v" id="hero-duration">0m</div><div class="readout-l">Time</div></div>
@@ -479,10 +480,10 @@
         <div class="card coach-card" onclick="rotateCoachTip()">
           <div class="fb" style="align-items:flex-start">
             <div class="coach-mark"><svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg></div>
-            <span class="badge bg" id="coach-badge" style="font-size:10.5px;padding:3px 9px">Readout</span>
+            <span class="badge bg" id="coach-badge" style="font-size:10.5px;padding:3px 9px">Coach</span>
           </div>
           <div class="sync" id="coach-sync" aria-live="polite" aria-busy="true">
-            <div class="sync-t">System synchronization</div>
+            <div class="sync-t">Reading your log</div>
             <div class="sync-rows">
               <div class="sync-row"><span class="sync-l">Volume</span><span class="sync-bar"></span></div>
               <div class="sync-row"><span class="sync-l">Calories</span><span class="sync-bar"></span></div>
@@ -612,7 +613,7 @@
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Activity (last 6 months)</div><span class="tm" style="font-size:12px" id="hm-count">0 workouts</span></div>
           <div id="hm-grid"></div>
-          <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-top:8px;font-size:10.5px;color:var(--t3);font-weight:500">Less<span class="hm-c0"></span><span class="hm-c1"></span><span class="hm-c2"></span><span class="hm-c3"></span>More</div>
+          <div style="display:none;align-items:center;gap:6px;justify-content:flex-end;margin-top:8px;font-size:10.5px;color:var(--t3);font-weight:500">Less<span class="hm-c0"></span><span class="hm-c1"></span><span class="hm-c2"></span><span class="hm-c3"></span>More</div>
         </div>
 
         <!-- CALENDAR -->
@@ -637,7 +638,7 @@
             <button type="button" class="musc-pill" onclick="openMuscBrowse('chest')"><span class="musc-ico" style="background:rgba(239,68,68,.12);color:#EF4444" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-chest"/></svg></span><span>Chest</span></button>
             <button type="button" class="musc-pill" onclick="openMuscBrowse('back')"><span class="musc-ico" style="background:rgba(59,130,246,.12);color:#3B82F6" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-back"/></svg></span><span>Back</span></button>
             <button type="button" class="musc-pill" onclick="openMuscBrowse('shoulders')"><span class="musc-ico" style="background:rgba(245,158,11,.12);color:#F59E0B" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-shoulder"/></svg></span><span>Shoulders</span></button>
-            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:rgba(34,197,94,.12);color:#22C55E" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-arm"/></svg></span><span>Arms</span></button>
+            <button type="button" class="musc-pill" onclick="openMuscBrowse('arms')"><span class="musc-ico" style="background:var(--adim);color:var(--accent)" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-arm"/></svg></span><span>Arms</span></button>
             <button type="button" class="musc-pill" onclick="openMuscBrowse('legs')"><span class="musc-ico" style="background:rgba(168,85,247,.12);color:#A855F7" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-leg"/></svg></span><span>Legs</span></button>
             <button type="button" class="musc-pill" onclick="openMuscBrowse('core')"><span class="musc-ico" style="background:rgba(236,72,153,.12);color:#EC4899" class="musc-ico icb"><svg class="ic" style="font-size:19px" aria-hidden="true"><use href="#i-m-core"/></svg></span><span>Core</span></button>
           </div>
@@ -730,7 +731,7 @@
           <div class="sc" style="--sc:var(--accent)"><div class="sv" id="b-cw"><span class="nodata">no data</span></div><div class="sl">Current</div></div>
           <div class="sc" style="--sc:var(--blue)"><div class="sv" id="b-gw"><span class="nodata">not set</span></div><div class="sl">Goal</div></div>
         </div>
-        <div class="card">
+        <div class="card" id="w-chart-card">
           <div class="fb" style="margin-bottom:14px">
             <div class="ctitle" style="margin:0">Weight</div>
             <button type="button" class="btn-o" style="padding:8px 14px;font-size:12px" onclick="openWtM()">+ Log</button>
@@ -763,7 +764,7 @@
             <span class="tm" style="font-size:11px">last 6 weeks</span>
           </div>
           <div class="chart-wrap" style="height:200px"><canvas id="vol-chart"></canvas></div>
-          <p id="vol-empty" class="tm tc" style="padding:14px 0;display:none">Log a strength workout to see volume per muscle.</p>
+          <div id="vol-empty" class="bp bp-sm" style="display:none"><span class="bp-l">No strength sessions in six weeks</span><button type="button" class="empty-cta" onclick="startW()">Start one</button></div>
         </div>
         <div class="card" id="bf-card" style="display:none">
           <div class="fb" style="margin-bottom:12px">
@@ -888,26 +889,26 @@
           <button type="button" class="btn" style="width:100%" onclick="saveProfile()">Commit biometrics</button>
         </div>
 
-        <!-- ══ ENGINE CALIBRATIONS ══════════════════════════════════
+        <!-- ══ DAILY TARGETS ═════════════════════════════════════════
              Each target reads as a meter against today's actual, so the
              number being set and the number being hit sit on one line. -->
         <div class="card" id="sec-calibrations">
           <div class="fb" style="margin-bottom:4px">
-            <div class="ctitle" style="margin:0">Engine calibrations</div>
-            <button type="button" class="btn-g" onclick="openMacroCalc()">Derive</button>
+            <div class="ctitle" style="margin:0">Daily targets</div>
+            <button type="button" class="btn-g" onclick="openMacroCalc()">Calculate</button>
           </div>
-          <p class="sec-note">Targets the engine calibrates every prescription against.</p>
+          <p class="sec-note">Protein, calories, water and weight. The coach plans against these.</p>
           <div class="cal-rows" id="cal-rows"></div>
-          <button type="button" class="btn" style="width:100%;margin-top:14px" onclick="saveGoals()">Commit calibrations</button>
+          <button type="button" class="btn" style="width:100%;margin-top:14px" onclick="saveGoals()">Save targets</button>
         </div>
 
-        <!-- ══ VOLUME DISTRIBUTION MATRIX ═══════════════════════════ -->
+        <!-- ══ TARGET MUSCLE FOCUS ══════════════════════════════════ -->
         <div class="card" id="sec-matrix">
           <div class="fb" style="margin-bottom:4px">
-            <div class="ctitle" style="margin:0">Volume distribution matrix</div>
+            <div class="ctitle" style="margin:0">Target muscle focus</div>
             <button type="button" class="btn-g" onclick="openMuscleEditor()">Edit</button>
           </div>
-          <p class="sec-note">Per-region allocation the engine weights session volume by.</p>
+          <p class="sec-note">Where you want the work to go. Sessions are weighted by this.</p>
           <div class="vdm-legend">
             <span class="vdm-k build"><i></i>Build</span>
             <span class="vdm-k maintain"><i></i>Maintenance</span>
@@ -1112,30 +1113,30 @@
 
     <!-- AI PANEL -->
     <div id="p-ai">
-      <!-- Command engine header. Reads as an instrument panel: what this is,
+      <!-- Coach header: what this is, whether it is live, and the one control that resets it.
            whether it is live, and the one control that resets it. -->
       <div class="eng-head">
         <div class="eng-head-t">
-          <div class="eng-title">AthleteOS Command&nbsp;Engine</div>
-          <div class="eng-status" id="ai-page-sub"><i class="eng-dot"></i>Indexing session history</div>
+          <div class="eng-title">Coach</div>
+          <div class="eng-status" id="ai-page-sub"><i class="eng-dot"></i>Reading your log</div>
         </div>
         <button type="button" class="eng-reset" onclick="clearChat()" aria-label="Clear the session">
           <svg class="ic" style="font-size:13px" aria-hidden="true"><use href="#i-repeat"/></svg>Reset
         </button>
       </div>
       <div class="chat-msgs" id="chat-msgs">
-        <div class="eng-out"><div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Diagnostics</div><div class="eng-out-b">System: Operational. Core metrics verified. Awaiting routine parameters.</div></div>
+        <p class="chat-empty">Ask about your last session, the gap to today's protein target, or a plan for the week.</p>
       </div>
       <div id="chat-suggest" class="eng-presets">
-        <button type="button" class="chat-chip" onclick="askAI('Generate a 4-day powerbuilding block based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-grid"/></svg>Generate block</button>
+        <button type="button" class="chat-chip" onclick="askAI('Generate a 4-day powerbuilding block based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-grid"/></svg>Build a block</button>
         <button type="button" class="chat-chip" onclick="askAI('Suggest high-protein meals that close the gap to my daily protein target. Emit each as an addMeal action.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-utensils"/></svg>High-protein meals</button>
-        <button type="button" class="chat-chip" onclick="askAI('Report my volume allocation per muscle group over the last 14 days and name the undertrained group.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-activity"/></svg>Volume audit</button>
-        <button type="button" class="chat-chip" onclick="askAI('Review my current block against my logged RPE and bodyweight trend, and adjust the loading.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-gear"/></svg>Adjust loading</button>
+        <button type="button" class="chat-chip" onclick="askAI('Report my volume allocation per muscle group over the last 14 days and name the undertrained group.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-activity"/></svg>Undertrained muscles</button>
+        <button type="button" class="chat-chip" onclick="askAI('Review my current block against my logged RPE and bodyweight trend, and adjust the loading.')"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-gear"/></svg>Adjust my loads</button>
       </div>
       <div class="chat-row">
         <span class="eng-caret" aria-hidden="true">&#9656;</span>
         <textarea class="chat-in" id="chat-in" rows="1"
-          placeholder="Execute command or request adjustments (e.g., 'Generate 4-day powerbuilding block' or 'Suggest high-protein meals')."
+          placeholder="Ask the coach"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
           oninput="autoH(this)"></textarea>
         <button type="button" class="chat-mic" id="chat-mic-btn" onclick="toggleVoice('chat-in',this)" title="Voice input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
@@ -1642,8 +1643,8 @@
   <form onsubmit="event.preventDefault();saveChangePassword();">
   <div class="ctitle">Change password</div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">Pick a new password — at least 8 characters.</p>
-  <div class="f"><label>New password</label><input type="password" id="chpw-new" placeholder="••••••••" autocomplete="new-password"></div>
-  <div class="f"><label>Confirm password</label><input type="password" id="chpw-conf" placeholder="••••••••" autocomplete="new-password"></div>
+  <div class="f"><label>New password</label><input type="password" id="chpw-new" placeholder="New password" autocomplete="new-password"></div>
+  <div class="f"><label>Confirm password</label><input type="password" id="chpw-conf" placeholder="New password" autocomplete="new-password"></div>
   <div class="g2" style="margin-top:6px">
     <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-chpw')">Cancel</button>
     <button type="submit" class="btn" id="chpw-btn">Update password</button>
@@ -1760,7 +1761,7 @@
     <!-- 2: Main goal -->
     <div class="onb-step" id="os-2">
       <div class="onb-h">What's your main training goal?</div>
-      <div class="onb-sub">The engine compiles every metric against this.</div>
+      <div class="onb-sub">Everything else gets set from this.</div>
       <div class="onb-body">
         <div class="opt-list" id="ob-goal-list">
           <button type="button" class="opt-item" data-v="strength" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span><div class="opt-body"><div class="opt-title">Get strong</div><div class="opt-sub">Heavy bar, low reps, numbers that go up</div></div></button>
@@ -1782,13 +1783,24 @@
 
     <!-- 4: Experience -->
     <div class="onb-step" id="os-4">
-      <div class="onb-h">What's your experience level?</div>
-      <div class="onb-sub">No judgement. It just sets the starting weights.</div>
+      <div class="onb-h">Your training</div>
+      <div class="onb-sub">Experience sets the starting loads. Days per week sets the pace.</div>
       <div class="onb-body">
+        <div class="onb-sect" style="margin-top:0">Experience</div>
         <div class="opt-list" id="ob-exp-list">
           <button type="button" class="opt-item" data-v="beginner" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-sprout"/></svg></span><div class="opt-body"><div class="opt-title">Beginner</div><div class="opt-sub">New to strength training</div></div></button>
           <button type="button" class="opt-item" data-v="intermediate" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg></span><div class="opt-body"><div class="opt-title">Intermediate</div><div class="opt-sub">Comfortable with the basics</div></div></button>
           <button type="button" class="opt-item" data-v="advanced" onclick="ob_pick('experience',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="opt-body"><div class="opt-title">Advanced</div><div class="opt-sub">Years of consistent training</div></div></button>
+        </div>
+        <div class="onb-sect">Days per week</div>
+        <div class="opt-group" id="ob-week-list">
+          <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">First Steps</span></div>
+          <div class="opt-row" data-v="2" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">2 Days</span><span class="opt-row-r">Double Pump</span></div>
+          <div class="opt-row on" data-v="3" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">3 Days</span><span class="opt-row-r">Triple Threat</span></div>
+          <div class="opt-row" data-v="4" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">4 Days</span><span class="opt-row-r">Lean Machine</span></div>
+          <div class="opt-row" data-v="5" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">5 Days</span><span class="opt-row-r">Iron Addict</span></div>
+          <div class="opt-row" data-v="6" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">6 Days</span><span class="opt-row-r">Gym Rat</span></div>
+          <div class="opt-row" data-v="7" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">Every Day</span><span class="opt-row-r">Legend</span></div>
         </div>
       </div>
     </div>
@@ -1865,15 +1877,6 @@
       <div class="onb-h">Set a weekly goal</div>
       <div class="onb-sub">How many days are you actually showing up? We'll hold you to it.</div>
       <div class="onb-body">
-        <div class="opt-group" id="ob-week-list">
-          <div class="opt-row" data-v="1" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">1 Day</span><span class="opt-row-r">First Steps</span></div>
-          <div class="opt-row" data-v="2" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">2 Days</span><span class="opt-row-r">Double Pump</span></div>
-          <div class="opt-row on" data-v="3" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">3 Days</span><span class="opt-row-r">Triple Threat</span></div>
-          <div class="opt-row" data-v="4" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">4 Days</span><span class="opt-row-r">Lean Machine</span></div>
-          <div class="opt-row" data-v="5" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">5 Days</span><span class="opt-row-r">Iron Addict</span></div>
-          <div class="opt-row" data-v="6" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">6 Days</span><span class="opt-row-r">Gym Rat</span></div>
-          <div class="opt-row" data-v="7" onclick="ob_pick('weekly_days',this)"><span class="opt-row-l">Every Day</span><span class="opt-row-r">Legend</span></div>
-        </div>
       </div>
     </div>
 
@@ -1912,22 +1915,14 @@
     <!-- 13: Current weight -->
     <div class="onb-step" id="os-13">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
-      <div class="onb-h">Current weight</div>
-      <div class="onb-sub">Just the starting point for your chart. You can update it any time.</div>
+      <div class="onb-h">Your weight</div>
+      <div class="onb-sub">Where you are now and where you are heading. Both can change later.</div>
       <div class="onb-body">
         <div class="onb-num-wrap">
-          <input type="number" class="onb-num" id="ob-cw" placeholder="80" step="0.1" min="30" max="300" inputmode="decimal">
+          <input type="number" class="onb-num" id="ob-cw" placeholder="80" step="0.1" min="30" max="300" inputmode="decimal" oninput="ob_renderProjection()">
           <span class="onb-num-u" id="ob-cw-u">kg</span>
         </div>
-      </div>
-    </div>
-
-    <!-- 14: Goal weight + projection -->
-    <div class="onb-step" id="os-14">
-      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><path d="M6 9h12l1 11H5z"/></svg></div>
-      <div class="onb-h">Weight goal</div>
-      <div class="onb-sub">A realistic target you can reach with healthy habits.</div>
-      <div class="onb-body">
+        <div class="onb-sect">Goal weight</div>
         <div class="onb-num-wrap">
           <input type="number" class="onb-num" id="ob-gw" placeholder="75" step="0.1" min="30" max="300" inputmode="decimal" oninput="ob_renderProjection()">
           <span class="onb-num-u" id="ob-gw-u">kg</span>
@@ -1941,6 +1936,15 @@
             <div><div class="wp-foot-l">Realistic</div><div class="wp-foot-v dim" id="wp-real">—</div></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 14: Goal weight + projection -->
+    <div class="onb-step" id="os-14">
+      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><path d="M6 9h12l1 11H5z"/></svg></div>
+      <div class="onb-h">Weight goal</div>
+      <div class="onb-sub">A realistic target you can reach with healthy habits.</div>
+      <div class="onb-body">
       </div>
     </div>
 

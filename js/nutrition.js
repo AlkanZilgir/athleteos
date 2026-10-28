@@ -268,7 +268,7 @@ async function renderMacroPie(){
   var data=[pK,cK,fK];
   if(!macroPieChart){
     await _ensureChart();
-    macroPieChart=new Chart(canvas.getContext('2d'),{type:'doughnut',data:{labels:['Protein','Carbs','Fat'],datasets:[{data:data,backgroundColor:['#22C55E','#3B82F6','#F59E0B'],borderColor:'rgba(0,0,0,0)',borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'#6B7280',font:{size:11,weight:'500'},boxWidth:10}}}}});
+    macroPieChart=new Chart(canvas.getContext('2d'),{type:'doughnut',data:{labels:['Protein','Carbs','Fat'],datasets:[{data:data,backgroundColor:[_sig('--sig-train-pure'),'#3B82F6','#F59E0B'],borderColor:'rgba(0,0,0,0)',borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'#6B7280',font:{size:11,weight:'500'},boxWidth:10}}}}});
   }else{
     macroPieChart.data.datasets[0].data=data;macroPieChart.update();
   }

@@ -1,4 +1,7 @@
 /* ── EXERCISE DATABASE ────────────────────── */
+// Canvas cannot read CSS custom properties, so the share image asks the
+// live accent for its rgb triple and builds the alpha variant itself.
+function _accentRgba(a){var rgb='';try{rgb=getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim();}catch(e){}return 'rgba('+(rgb||'204,255,0')+','+a+')';}
 var EX_DB={
   'Bench Press':{an:'push_h',pri:['Chest'],sec:['Front Delts','Triceps'],desc:'The cornerstone of upper body pushing strength. Lying flat, you lower a barbell to the lower chest and drive it back up, building raw chest mass and power.',tips:['Retract and depress shoulder blades throughout the lift','Maintain a slight arch — keep your feet flat on the floor','Bar touches lower chest, not your neck']},
   'Incline Press':{an:'push_h',pri:['Upper Chest'],sec:['Front Delts','Triceps'],desc:'Shifts emphasis to the clavicular head of the chest — the upper portion that creates a full, complete chest from top to bottom.',tips:['Set bench at 30–45 degrees','Avoid excessive elbow flare','Feel the deep stretch at the bottom of each rep']},
@@ -452,7 +455,7 @@ function rirColor(v){
   var n=parseInt(v);if(isNaN(n))return 'var(--t4)';
   if(n<=1)return '#EF4444';
   if(n<=3)return '#F59E0B';
-  return '#22C55E';
+  return _sig('--sig-train-pure');
 }
 // Write an edited cell straight back to the in-memory session model.
 /* ── RAPID-FIRE SET LOGGING ────────────────
@@ -822,14 +825,14 @@ async function shareWorkout(){
     ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
     // Subtle green halo
     var halo=ctx.createRadialGradient(W/2,260,40,W/2,260,500);
-    halo.addColorStop(0,'rgba(34,197,94,.28)');halo.addColorStop(1,'rgba(34,197,94,0)');
+    halo.addColorStop(0,_accentRgba(.28));halo.addColorStop(1,_accentRgba(0));
     ctx.fillStyle=halo;ctx.fillRect(0,0,W,H);
     // Brand
     ctx.font='900 50px Inter,system-ui,sans-serif';
     ctx.textBaseline='top';
     ctx.fillStyle='#FFFFFF';ctx.fillText('Athlete',70,80);
     var aw=ctx.measureText('Athlete').width;
-    ctx.fillStyle='#22C55E';ctx.fillText('OS',70+aw,80);
+    ctx.fillStyle=_sig('--accent');ctx.fillText('OS',70+aw,80);
     // Date
     ctx.font='600 22px Inter,system-ui,sans-serif';
     ctx.fillStyle='rgba(255,255,255,.5)';
@@ -846,7 +849,7 @@ async function shareWorkout(){
     // Stats grid 2×2
     var statBoxes=[
       {label:'DURATION',value:s.dur+' min',color:'#FFFFFF'},
-      {label:'VOLUME',value:(s.vol>=1000?(s.vol/1000).toFixed(1)+'t':s.vol+'kg'),color:'#22C55E'},
+      {label:'VOLUME',value:(s.vol>=1000?(s.vol/1000).toFixed(1)+'t':s.vol+'kg'),color:_sig('--accent')},
       {label:'SETS',value:String(s.sets),color:'#3B82F6'},
       {label:'KCAL',value:String(s.kcal||0),color:'#F59E0B'}
     ];
@@ -876,7 +879,7 @@ async function shareWorkout(){
       ctx.fillStyle='#FFFFFF';
       ctx.fillText(ex.name,70,ey);
       ctx.font='600 22px Inter,system-ui,sans-serif';
-      ctx.fillStyle='rgba(34,197,94,.85)';
+      ctx.fillStyle=_accentRgba(.85);
       ctx.textAlign='right';
       ctx.fillText(ex.sets+' sets',W-70,ey+5);
       ctx.textAlign='left';
@@ -1078,7 +1081,7 @@ function celebratePRs(names){
     +'<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
       +'<button type="button" onclick="sharePRImage(\''+(names[0]||'').replace(/\'/g,"\\\\\'")+'\')" style="all:unset;cursor:pointer;background:rgba(255,255,255,.20);color:#FFFFFF;padding:11px 18px;border-radius:999px;font-weight:700;font-size:13.5px;font-family:inherit;display:inline-flex;align-items:center;gap:7px">'+ICO('share','14px')+'Share</button>'
       +'<button type="button" onclick="document.getElementById(\'pr-celebrate\').remove();goTab(\'workout\');setTimeout(function(){var t=document.getElementById(\'pr-list\');if(t)t.scrollIntoView({behavior:\'smooth\',block:\'center\'});},150);" style="all:unset;cursor:pointer;background:rgba(255,255,255,.20);color:#FFFFFF;padding:11px 18px;border-radius:999px;font-weight:700;font-size:13.5px;font-family:inherit">See all PRs</button>'
-      +'<button type="button" onclick="document.getElementById(\'pr-celebrate\').remove()" style="all:unset;cursor:pointer;background:#FFFFFF;color:#16A34A;padding:11px 22px;border-radius:999px;font-weight:800;font-size:13.5px;font-family:inherit">Back to it</button>'
+      +'<button type="button" onclick="document.getElementById(\'pr-celebrate\').remove()" style="all:unset;cursor:pointer;background:#FFFFFF;color:#0A0A0C;padding:11px 22px;border-radius:999px;font-weight:800;font-size:13.5px;font-family:inherit">Back to it</button>'
     +'</div>'
   +'</div>';
 }
@@ -1099,7 +1102,7 @@ async function sharePRImage(name){
   var c=canvas.getContext('2d');
   // Gradient background
   var grad=c.createLinearGradient(0,0,1080,1080);
-  grad.addColorStop(0,'#22C55E');grad.addColorStop(1,'#A855F7');
+  grad.addColorStop(0,_sig('--accent'));grad.addColorStop(1,'#A855F7');
   c.fillStyle=grad;c.fillRect(0,0,1080,1080);
   // Subtle pattern
   c.globalAlpha=0.10;c.fillStyle='#fff';
@@ -1253,9 +1256,12 @@ async function renderHeatmap(){
     colHtml+='</div>';
     html+=colHtml;
   }
+  var total=Object.keys(counts).length;
   grid.className='hm-grid';
-  grid.innerHTML=html;
-  if(count){var total=Object.keys(counts).length;count.textContent=total+' active day'+(total===1?'':'s');}
+  grid.innerHTML=total?html:'<div class="bp bp-sm" style="grid-column:1/-1"><span class="bp-l">Nothing logged in the last six months</span><button type="button" class="empty-cta" onclick="startW()">Start a session</button></div>';
+  // The legend starts hidden in the markup so it never floats above an unrendered grid.
+  var legend=grid.nextElementSibling;if(legend)legend.style.display=total?'flex':'none';
+  if(count)count.textContent=total+' active day'+(total===1?'':'s');
 }
 
 /* ── MUSCLE BROWSER ────────────────────────── */

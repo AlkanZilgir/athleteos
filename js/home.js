@@ -289,7 +289,7 @@ function rotateCoachTip(){
   if(idx>=COACH_TIPS.length)idx=0;
   localStorage.setItem('coach_tip_idx',String(idx));
   var t=COACH_TIPS[idx];
-  _coachResolved(t.t,t.b,'Readout');
+  _coachResolved(t.t,t.b,'Coach');
   // On every tap also try to refresh the personalized insight first thing tomorrow.
   generateCoachInsight();
 }
@@ -467,6 +467,14 @@ async function renderHero(){
   // Sparkline (oldest → today)
   var labels=[],values=[];
   Object.keys(byDay).sort().forEach(function(k){labels.push(k.slice(5));values.push(Math.round(byDay[k]));});
+  // First run: the week has no sessions, so the bars would all be track colour.
+  // Show the starting line instead of a flat chart.
+  var first=document.getElementById('tr-first'),sparkWrap=document.querySelector('#p-home .hero-spark');
+  if(first)first.style.display=sessions?'none':'';
+  if(sparkWrap)sparkWrap.style.display=sessions?'':'none';
+  // "0 kg" above "No sessions this week" says the same thing twice.
+  document.querySelectorAll('#p-home .tr-caption,#p-home .tr-vol').forEach(function(el){el.style.display=sessions?'':'none';});
+  if(!sessions){if(heroSparkChart){heroSparkChart.destroy();heroSparkChart=null;}return;}
   var ctx=document.getElementById('hero-spark');if(!ctx)return;
   await _ensureChart();
   if(heroSparkChart)heroSparkChart.destroy();
@@ -557,7 +565,8 @@ async function calcStreak(){
   var n=0;
   for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);var ds=d.toISOString().split('T')[0];if(dates.has(ds))n++;else if(i>0)break;}
   _streakCount=n;_streakDoneToday=dates.has(today());
-  document.getElementById('streak').innerHTML=ICO('flame')+n+'d';
+  var sEl=document.getElementById('streak');
+  if(sEl){sEl.innerHTML=ICO('flame')+n+'d';sEl.classList.toggle('by',n>0);sEl.classList.toggle('bn',n===0);}
   document.getElementById('sb-streak').innerHTML=ICO('flame')+n+' day run';
   scheduleReminders();
   updateFreezeUI();

@@ -70,7 +70,7 @@ function _maybeShowConsent(){
   b.style.cssText='position:fixed;bottom:14px;left:14px;right:14px;max-width:560px;margin:0 auto;background:#0A0A0A;color:#fff;border-radius:18px;padding:16px 18px;z-index:1200;box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:Inter,sans-serif;font-size:13.5px;line-height:1.55;display:flex;flex-wrap:wrap;align-items:center;gap:12px;animation:fadeUp .3s ease both';
   b.innerHTML='<div style="flex:1;min-width:220px">We use privacy-respecting product analytics (PostHog) to understand how the app is used — anonymous unless you sign in. <a href="#privacy" onclick="document.getElementById(\'consent-banner\').remove();openLegal(\'privacy\')" style="color:#22C55E;text-decoration:underline">Learn more</a></div>'+
     '<div style="display:flex;gap:8px"><button type="button" onclick="_setConsent(\'no\')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit">Decline</button>'+
-    '<button type="button" onclick="_setConsent(\'yes\')" style="background:#22C55E;color:#fff;border:none;padding:8px 18px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Accept</button></div>';
+    '<button type="button" onclick="_setConsent(\'yes\')" style="background:var(--accent);color:var(--accent-ink);border:none;padding:8px 18px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Accept</button></div>';
   document.body.appendChild(b);
 }
 function _setConsent(v){

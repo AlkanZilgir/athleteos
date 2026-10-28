@@ -189,7 +189,7 @@ async function saveGoals(){
   var bgw=document.getElementById('b-gw');
   if(bgw)bgw.innerHTML=G.weight+'<span class="su">kg</span>';
   renderCalibrations();
-  toast('Calibrations committed');
+  toast('Targets saved');
   await sb.from('profiles').update({protein_goal:G.protein,weight_goal:G.weight,water_goal:G.water,calorie_goal:G.calories}).eq('id',CU.id);
 }
 
@@ -375,7 +375,7 @@ async function sendMsg(){
     // than one "unreachable" that sends people to check their connection.
     var help;
     if(!navigator.onLine){
-      help='Offline. The engine needs a connection; logging still works locally.';
+      help='Offline. The coach needs a connection; logging still works locally.';
     }else if(lastErr==='engine_not_configured'){
       help='Engine offline: no model key is configured on the server. Set GEMINI_API_KEY in the Supabase function secrets — the function reads it per request, so no redeploy is needed.';
     }else if(lastErr==='engine_key_rejected'){
@@ -429,7 +429,7 @@ function addMsg(role,text){
         // state the result rather than leaving an empty card.
         if(!text){
           var td=plan.days.filter(function(d){return !d.rest;}).length;
-          text=plan.name+' compiled. '+td+' training day'+(td===1?'':'s')+'. Open Train to run it.';
+          text=plan.name+' is ready. '+td+' training day'+(td===1?'':'s')+'. Open Train to run it.';
         }
       }
     }
@@ -653,7 +653,10 @@ function _renderEngineBody(el,text){
 }
 function _engStamp(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
 function addTyping(){var el=document.getElementById('chat-msgs');var d=document.createElement('div');d.className='eng-out eng-ty';d.innerHTML='<div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Computing<span class="eng-out-ts">'+_engStamp()+'</span></div><div class="eng-out-b"><div class="dots"><span></span><span></span><span></span></div></div>';el.appendChild(d);el.scrollTop=el.scrollHeight;return d;}
-function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML='<div class="eng-out"><div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Engine ready</div><div class="eng-out-b">Session history, macro log and bodyweight series are loaded. Issue a command.</div></div>';}
+// The empty thread is one quiet line, not an instrument panel. CSS hides it the
+// moment a real message lands beside it (.chat-empty:not(:only-child)).
+var CHAT_EMPTY='<p class="chat-empty">Ask about your last session, the gap to today\'s protein target, or a plan for the week.</p>';
+function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML=CHAT_EMPTY;}
 // One-shot helper for the quick-action chips: paste the prompt into the chat input and send.
 function askAI(prompt){var ta=document.getElementById('chat-in');if(!ta)return;ta.value=prompt;if(typeof autoH==='function')autoH(ta);sendMsg();}
 

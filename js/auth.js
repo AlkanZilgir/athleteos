@@ -103,7 +103,7 @@ async function bootApp(){
     return;
   }
   var n=CU._name||CU.user_metadata?.name||CU.email.split('@')[0];
-  document.getElementById('ava').textContent=n.charAt(0).toUpperCase();
+  var av=document.getElementById('ava');if(av){av.textContent=n.charAt(0).toUpperCase();av.classList.add('on');}
   document.getElementById('sb-ava').textContent=n.charAt(0).toUpperCase();
   document.getElementById('sb-name').textContent=n;
   renderCalibrations();

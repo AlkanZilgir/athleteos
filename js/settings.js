@@ -108,6 +108,7 @@ function applyAccent(name){
   root.style.setProperty('--accent-d',fillD);
   root.style.setProperty('--accent-ink',ink);
   root.style.setProperty('--adim','rgba('+p.rgb+',.10)');
+  root.style.setProperty('--accent-rgb',p.rgb);
   document.querySelectorAll('.acc-pick').forEach(function(b){b.classList.toggle('on',b.dataset.acc===name);});
   var sub=document.getElementById('accent-sub');if(sub)sub.textContent=name.charAt(0).toUpperCase()+name.slice(1);
 }

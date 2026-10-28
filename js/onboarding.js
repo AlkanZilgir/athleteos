@@ -1,9 +1,16 @@
 /* ── ONBOARDING WIZARD ────────────────────── */
 var OB_STEPS=17;
-// Steps that exist in the DOM but are auto-skipped (kept for backward compat, friction-reducing).
-// 5 = prior tracking, 11 = muscle map (now on Body Stats card), 16 = reminders (discover in Settings).
-var OB_SKIP={3:1,5:1,11:1,16:1};
+// Five screens show. The rest stay in the DOM so ob_finish can still read
+// every input by id, but they are never presented:
+//   0 welcome (the marketing page did that job), 1 motivations, 3 blueprint,
+//   5 prior tracking, 7 train style, 8 follow plan, 9 logging style
+//   (preference questions nobody needs answered before their first log),
+//   10 weekly days and 14 goal weight (folded into steps 4 and 13),
+//   11 muscle map (lives on Body Stats), 12 units (asked on step 6),
+//   16 reminders (Settings).
+var OB_SKIP={0:1,1:1,3:1,5:1,7:1,8:1,9:1,10:1,11:1,12:1,14:1,16:1};
 var OB_VISIBLE_COUNT=(function(){var n=0;for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])n++;return n;})();
+function _obFirstVisible(){for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])return i;return 0;}
 function _obLastVisible(){for(var i=OB_STEPS-1;i>=0;i--)if(!OB_SKIP[i])return i;return 0;}
 function _obVisibleIndex(i){var v=0;for(var k=0;k<=i;k++)if(!OB_SKIP[k])v++;return v;}
 var _ob={step:0,gender:'male',units:'metric',motivations:[],main_goal:'muscle',experience:'beginner',prior_tracking:'none',train_style:'solo',follow_plan:'flexible',logging_style:'balanced',weekly_days:3,muscle_grow:[],muscle_define:[],muscle_exclude:[],mm_mode:'grow'};
@@ -45,7 +52,7 @@ function ob_goto(i){
   var fill=document.getElementById('ob-prog');if(fill)fill.style.width=Math.round((_obVisibleIndex(i)/OB_VISIBLE_COUNT)*100)+'%';
   _obRenderRail(i);
   _setOnbEyebrow();
-  var back=document.getElementById('ob-back-btn');if(back)back.classList.toggle('hidden',i===0);
+  var back=document.getElementById('ob-back-btn');if(back)back.classList.toggle('hidden',i===_obFirstVisible());
   var lastVis=_obLastVisible();
   var skip=document.getElementById('ob-skip-btn');if(skip)skip.classList.toggle('hidden',!OB_OPTIONAL_STEPS[i]||i===lastVis);
   var next=document.getElementById('ob-next-btn');
@@ -57,7 +64,7 @@ function ob_goto(i){
   if(i===1)_obSyncMulti('ob-mot',_ob.motivations);
   if(i===2)_obSyncList('ob-goal-list',_ob.main_goal);
   if(i===3)ob_renderBlueprint();
-  if(i===4)_obSyncList('ob-exp-list',_ob.experience);
+  if(i===4){_obSyncList('ob-exp-list',_ob.experience);_obSyncList('ob-week-list',String(_ob.weekly_days));}
   if(i===5)_obSyncList('ob-prior-list',_ob.prior_tracking);
   if(i===7)_obSyncList('ob-train-list',_ob.train_style);
   if(i===8)_obSyncList('ob-plan-list',_ob.follow_plan);
@@ -65,8 +72,7 @@ function ob_goto(i){
   if(i===10)_obSyncList('ob-week-list',String(_ob.weekly_days));
   if(i===11)mm_render();
   if(i===12)_obSyncList('ob-unit-list',_ob.units);
-  if(i===13||i===14)ob_units(_ob.units);
-  if(i===14)setTimeout(ob_renderProjection,30);
+  if(i===13){ob_units(_ob.units);setTimeout(ob_renderProjection,30);}
   if(i===15)ob_applyGoalDefaults();
   // Body-wrap scroll to top
   var bw=document.querySelector('.onb-body-wrap');if(bw)bw.scrollTop=0;
@@ -97,30 +103,30 @@ function ob_renderBlueprint(){
   var bp={
     strength:{title:'Your Strength Blueprint',sub:'Force production needs heavy weight, low fatigue, and full recovery between sets.',items:[
       {ico:ICO('barbell'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'1–6 reps, big lifts',b:'Squat, bench, deadlift, overhead press. Compound first, always.'},
-      {ico:ICO('timer'),c:'rgba(34,197,94,.12)',col:'#16A34A',t:'Rest 3–5 minutes',b:'Long rests = better lifts. Quality over density.'},
+      {ico:ICO('timer'),c:'var(--adim)',col:'var(--accent)',t:'Rest 3–5 minutes',b:'Long rests = better lifts. Quality over density.'},
       {ico:ICO('trend'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Add weight weekly',b:'Small jumps each session beat occasional huge ones.'},
       {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'Eat in surplus',b:'Strength gains demand calories and protein (1.6–2.2 g/kg).'}
     ]},
     muscle:{title:'Your Muscle Blueprint',sub:'Muscle grows across a wide rep range — volume, effort, and protein drive it.',items:[
       {ico:ICO('layers'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'6–12 reps, close to failure',b:'Effort matters more than the exact number.'},
-      {ico:ICO('timer'),c:'rgba(34,197,94,.12)',col:'#16A34A',t:'Rest 60–120 seconds',b:'Enough recovery to keep sets productive without dragging on.'},
+      {ico:ICO('timer'),c:'var(--adim)',col:'var(--accent)',t:'Rest 60–120 seconds',b:'Enough recovery to keep sets productive without dragging on.'},
       {ico:ICO('repeat'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'10+ sets per muscle / week',b:'Total weekly volume is the strongest predictor of growth.'},
       {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'1.6–2.2 g/kg protein',b:'Spread across 3–5 meals for steady muscle protein synthesis.'}
     ]},
     lean:{title:'Your Recomp Blueprint',sub:'Build muscle and shed fat at the same time — slow but the most sustainable path.',items:[
       {ico:ICO('scale'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'Small deficit, big protein',b:'~200 kcal under maintenance, 2 g/kg protein minimum.'},
-      {ico:ICO('barbell'),c:'rgba(34,197,94,.12)',col:'#16A34A',t:'Heavy lifting stays',b:'Lifting heavy signals your body to keep the muscle you have.'},
+      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Heavy lifting stays',b:'Lifting heavy signals your body to keep the muscle you have.'},
       {ico:ICO('run'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'8k–10k steps daily',b:'Daily movement does more for fat loss than extra cardio sessions.'},
       {ico:ICO('moon'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'7+ hours of sleep',b:'Recovery and appetite control depend on it.'}
     ]},
     lose:{title:'Your Fat Loss Blueprint',sub:'A modest deficit, enough protein, and consistent movement beats extreme diets every time.',items:[
       {ico:ICO('scale'),c:'rgba(239,68,68,.12)',col:'#DC2626',t:'300–500 kcal deficit',b:'Aim for ~0.5% bodyweight lost per week.'},
       {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'High protein',b:'2 g/kg protects muscle and keeps you full.'},
-      {ico:ICO('barbell'),c:'rgba(34,197,94,.12)',col:'#16A34A',t:'Lift 3+ days a week',b:'Keep the muscle you have so the scale loss is fat, not lean tissue.'},
+      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Lift 3+ days a week',b:'Keep the muscle you have so the scale loss is fat, not lean tissue.'},
       {ico:ICO('run'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Move daily',b:'Walks compound. 8k–12k steps per day is the sweet spot.'}
     ]},
     general:{title:'Your Fitness Blueprint',sub:'The basics done consistently beat any complicated program.',items:[
-      {ico:ICO('barbell'),c:'rgba(34,197,94,.12)',col:'#16A34A',t:'Strength 2–3x / week',b:'Squat, hinge, push, pull, carry. Hit every pattern.'},
+      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Strength 2–3x / week',b:'Squat, hinge, push, pull, carry. Hit every pattern.'},
       {ico:ICO('run'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'150 min cardio / week',b:'Mix of moderate (walks, cycling) and a sprinkle of intense.'},
       {ico:ICO('utensils'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Eat mostly real food',b:'Protein at every meal, plants on every plate.'},
       {ico:ICO('moon'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'Sleep 7–9 hours',b:'Recovery is when everything actually changes.'}
@@ -166,8 +172,11 @@ function ob_renderProjection(){
     if(rangeEl)rangeEl.textContent='Enter a goal weight to see your timeline.';
     if(bestEl)bestEl.textContent='—';if(realEl)realEl.textContent='—';
     var c=document.getElementById('wp-canvas');if(c){var ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);}
+    // No projection to draw yet, so no panel reserving space for one.
+    var wpOff=document.getElementById('ob-wp');if(wpOff)wpOff.style.display='none';
     return;
   }
+  var wpOn=document.getElementById('ob-wp');if(wpOn)wpOn.style.display='';
   if(goalV)goalV.textContent=gw;
   var loss=cw>gw; // losing or gaining
   var diff=Math.abs(cw-gw);
@@ -251,7 +260,7 @@ async function saveMuscleMap(){
   updateMuscleSummary();
   renderBodyMuscleMap();
   renderVDM();
-  toast('Allocation committed');
+  toast('Muscle focus saved');
 }
 function updateMuscleSummary(){
   var el=document.getElementById('set-mm-sub');if(!el)return;
