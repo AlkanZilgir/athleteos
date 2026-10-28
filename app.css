@@ -2735,9 +2735,9 @@ body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
 body.dark .band{background:var(--card)}
 .badge.bg{background:var(--surface-2);color:var(--t2);border:1px solid var(--bdr2)}
 
-/* 3. Sections, not a stack of boxes. Only a few things earn a frame. */
-.panel>.card{background:transparent;border:0;border-radius:0;padding:22px 0 24px;margin:0;border-bottom:1px solid var(--bdr);box-shadow:none}
-.panel>.card:last-child{border-bottom:0}
+/* 3. Cards with real insets. Content never touches the screen edge; the frame
+   is quiet (one hairline, one radius) and the inner gutter matches the bands. */
+.panel>.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:18px 16px 20px;margin:0 0 12px;box-shadow:none}
 .panel>.card>.ctitle,.panel>.card>.fb .ctitle{font-size:17px}
 .panel>.coach-card,.panel>.invite-card,.panel>.card.boxed,.panel>#set-pro-card,.panel>#plan-tweak-banner{
   background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin:0 0 12px}
@@ -2790,3 +2790,24 @@ body.dark .band{background:var(--card)}
 .setrow.warm .setin{opacity:.72}
 .ss-chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;color:var(--t2);background:var(--surface-2);border:1px solid var(--bdr2);border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
 .hud-meta{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px;font-weight:500}
+
+/* Empty states: a soft tile, not a surveyed plot. The crosshair grid ran through
+   the text and the subtitle sat below contrast. */
+.bp,.empty-state{border:1px solid var(--bdr);background:var(--surface);border-radius:var(--r-sm);padding:26px 18px}
+.bp::before,.empty-state::before{display:none}
+.bp-sm{padding:18px 14px}
+.empty-sub,body.dark .empty-sub{color:var(--t2)}
+.empty-ico,body.dark .empty-ico{color:var(--t2);background:var(--surface-2);border-color:var(--bdr2)}
+
+/* Plan card (Train tab): dark chips, labels that fit, no quote stripe. */
+.pday,body.dark .pday{background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r-sm);width:86px;padding:10px 8px 9px;box-shadow:none}
+.pday.on,body.dark .pday.on{border-color:var(--accent);background:var(--adim)}
+.pday.rd{opacity:.6}
+.pday-n{text-transform:none;letter-spacing:0}
+.pday-s{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px}
+.pday-c{font-size:11px}
+.plan-why,body.dark .plan-why{border-left:0;padding-left:0;background:none;font-size:13px;line-height:1.55;color:var(--t2);margin:0 0 14px;max-width:46ch;text-wrap:pretty}
+.plan-sel{display:flex;align-items:baseline;gap:8px;margin:6px 0 10px}
+.plan-sel-n{font-size:16px;font-weight:600;color:var(--t)}
+.plan-sel-f{font-size:12.5px;color:var(--t3)}
+.prow-n{font-weight:500}

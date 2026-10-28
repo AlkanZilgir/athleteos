@@ -481,7 +481,8 @@ async function renderHero(){
   if(dur){var hh=Math.floor(totalSecs/3600),mm=Math.round((totalSecs%3600)/60);dur.textContent=hh>0?hh+'h '+mm+'m':mm+'m';}
   // Sparkline (oldest → today)
   var labels=[],values=[];
-  Object.keys(byDay).sort().forEach(function(k){labels.push(k.slice(5));values.push(Math.round(byDay[k]));});
+  // Day initials under the bars, oldest to today.
+  Object.keys(byDay).sort().forEach(function(k){labels.push(['S','M','T','W','T','F','S'][new Date(k+'T12:00:00').getDay()]);values.push(Math.round(byDay[k]));});
   // First run: the week has no sessions, so the bars would all be track colour.
   // Show the starting line instead of a flat chart.
   var first=document.getElementById('tr-first'),sparkWrap=document.querySelector('#p-home .hero-spark');
@@ -831,6 +832,27 @@ async function openDay(ds){
    Reads the routines loadTemplates() fetched; re-rendered when they land. */
 function renderNextSession(){
   var el=document.getElementById('next-body');if(!el)return;
+  // A coach-written plan outranks saved routines: if today is in it, that is the session.
+  var plan=(typeof AI_PLAN!=='undefined'&&AI_PLAN&&AI_PLAN.days&&AI_PLAN.days.length)?AI_PLAN:null;
+  if(plan){
+    var dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var todayName=dayNames[new Date().getDay()];
+    var ti=-1;for(var i=0;i<plan.days.length;i++){if(plan.days[i].day===todayName){ti=i;break;}}
+    var d=ti>=0?plan.days[ti]:null;
+    if(d&&!d.rest&&d.exercises&&d.exercises.length){
+      var pn=d.exercises.slice(0,3).map(function(e){return e.name;}).join(', ')+(d.exercises.length>3?' and '+(d.exercises.length-3)+' more':'');
+      el.innerHTML='<div class="next-name">'+_nsEsc(d.name||todayName)+'</div>'+
+        '<p class="next-sub">Today in '+_nsEsc(plan.name||'your plan')+'. '+d.exercises.length+' exercise'+(d.exercises.length===1?'':'s')+'. '+_nsEsc(pn)+'.</p>'+
+        '<div class="next-cta"><button type="button" class="btn" onclick="planDayIdx='+ti+';goTab(\'workout\');startPlanSession()">Start today\'s session</button><button type="button" class="btn-g" onclick="startSession()">Empty session</button></div>';
+      return;
+    }
+    if(d){
+      el.innerHTML='<div class="next-name">Rest day</div>'+
+        '<p class="next-sub">Nothing scheduled today in '+_nsEsc(plan.name||'your plan')+'. A walk, a meal or a night of sleep still counts.</p>'+
+        '<div class="next-cta"><button type="button" class="btn-g" onclick="startSession()">Train anyway</button></div>';
+      return;
+    }
+  }
   var list=(typeof templates!=='undefined'&&templates)?templates:[];
   if(!list.length){
     el.innerHTML='<p class="next-sub">No routine saved yet. Start an empty session, or have the coach write a block around your week.</p>'+

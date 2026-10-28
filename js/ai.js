@@ -2,6 +2,8 @@
 function renderPlan(){
   var sec=document.getElementById('plan-sec');
   if(!sec)return;
+  // Home's Next session block reads the plan too; keep it in step.
+  if(typeof renderNextSession==='function')setTimeout(renderNextSession,0);
   if(!AI_PLAN||!AI_PLAN.days||!AI_PLAN.days.length){
     sec.innerHTML='<div class="card" style="margin-bottom:10px"><div class="fb" style="margin-bottom:10px"><div class="ctitle" style="margin:0">Your Plan</div></div><div style="text-align:center;padding:10px 0 4px"><p class="tm" style="margin-bottom:16px;line-height:1.75">Tell your coach your goal and the days you can train. You get a week back, built to your numbers.</p><button type="button" class="btn-o" style="width:100%" onclick="startPlanChat()">Build my week</button></div></div>';
     return;
@@ -17,26 +19,26 @@ function renderPlan(){
     var cls='pday'+(i===planDayIdx?' on':'')+(isRest?' rd':'');
     var short=d.day?d.day.substring(0,3):'Day';
     var label=d.name||(isRest?'Rest':'Train');
-    var cnt=isRest?'Rest':(d.exercises.length+' ex');
+    var cnt=isRest?'':(d.exercises.length+' exercise'+(d.exercises.length===1?'':'s'));
     return '<div class="'+cls+'" onclick="selectPlanDay('+i+')" style="'+(isToday&&i!==planDayIdx?'box-shadow:0 0 0 1px var(--accent)':'')+'"><div class="pday-n">'+short+'</div><div class="pday-s">'+label+'</div><div class="pday-c">'+cnt+'</div></div>';
   }).join('');
   var sel=AI_PLAN.days[planDayIdx];
   var isRest=sel.rest||!sel.exercises||!sel.exercises.length;
   var sessHtml='';
   if(isRest){
-    sessHtml='<div class="psesh" style="text-align:center;padding:20px 12px"><p class="tm">Rest day — recovery is where growth happens</p></div>';
+    sessHtml='<div class="psesh" style="text-align:center;padding:16px 12px 4px"><p class="tm">Rest day. Nothing scheduled.</p></div>';
   }else{
     var exHtml=sel.exercises.map(function(ex){
       var safeName=(ex.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return '<div class="prow"><div class="prow-n" onclick="openExInfo(\''+safeName+'\')">'+ex.name+'</div><div class="prow-m">'+(ex.sets||3)+'×'+(ex.reps||'8-12')+'</div><button class="pinfo" onclick="openExInfo(\''+safeName+'\')" title="Exercise guide"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button></div>';
     }).join('');
-    sessHtml='<div class="psesh">'+exHtml+'</div><button type="button" class="btn" style="width:100%;margin-top:10px" onclick="startPlanSession()">Start This Session</button>';
+    sessHtml='<div class="psesh">'+exHtml+'</div><button type="button" class="btn" style="width:100%;margin-top:10px" onclick="startPlanSession()">Start this session</button>';
   }
   var focusStr=sel.focus?'<span class="tm" style="font-size:11px;font-weight:400"> — '+sel.focus+'</span>':'';
   // meta.rationale is generated per block; showing it is the difference
   // between a schedule and a programming decision the athlete can read.
   var why=AI_PLAN.rationale?'<p class="plan-why">'+_esc(AI_PLAN.rationale)+'</p>':'';
-  sec.innerHTML='<div class="card" style="margin-bottom:10px"><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">'+(AI_PLAN.name||'Training Plan')+'</div><button type="button" class="btn-g" onclick="clearPlan()">Change</button></div>'+why+'<div class="plan-days">'+daysHtml+'</div><div><div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:6px">'+(sel.name||'Rest')+focusStr+'</div>'+sessHtml+'</div></div>';
+  sec.innerHTML='<div class="card plan-card"><div class="fb" style="margin-bottom:8px;align-items:flex-start;gap:12px"><div class="ctitle" style="margin:0">'+_esc(AI_PLAN.name||'Training plan')+'</div><button type="button" class="btn-g" style="flex-shrink:0" onclick="clearPlan()">Change</button></div>'+why+'<div class="plan-days">'+daysHtml+'</div>'+(isRest?'':'<div class="plan-sel"><span class="plan-sel-n">'+_esc(sel.name||sel.day||'')+'</span>'+(sel.focus?'<span class="plan-sel-f">'+_esc(sel.focus)+'</span>':'')+'</div>')+sessHtml+'</div>';
 }
 function selectPlanDay(i){planDayIdx=i;renderPlan();}
 function startPlanChat(){

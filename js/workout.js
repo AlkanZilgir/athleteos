@@ -846,7 +846,11 @@ async function finishW(){
     }
   }
   var wo={id:workoutId};
-  var newPRs=savePRs(_workingOnly(wExs));
+  // Snapshot the working sets once: savePRs and persistPRs both need the set
+  // arrays, and summary.exs below carries only counts. Passing the summary
+  // to persistPRs is what threw "ex.sets.forEach is not a function" in prod.
+  var prExs=_workingOnly(wExs);
+  var newPRs=savePRs(prExs);
   // Snapshot summary data BEFORE we wipe wExs.
   var summary={
     dur:dur,
@@ -868,7 +872,7 @@ async function finishW(){
   renderDailySummary();
   if(newPRs.length){
     setTimeout(function(){celebratePRs(newPRs);},1200);
-    persistPRs(wo?wo.id:null,summary.exs,newPRs);
+    persistPRs(wo?wo.id:null,prExs,newPRs).catch(function(e){console.warn('persistPRs',e);});
   }
   loadRecentPRs();
 }
@@ -1073,7 +1077,7 @@ async function persistPRs(workoutId,allExs,newPRNames){
     var ex=allExs[i];
     if(newPRNames.indexOf(ex.name)<0)continue;
     var bestSet=null,bestVal=0;
-    ex.sets.forEach(function(s){
+    (Array.isArray(ex.sets)?ex.sets:[]).forEach(function(s){
       var w=parseFloat(s.weight)||0,r=parseInt(s.reps)||0;
       var oneRm=_epley1rm(w,r);
       if(oneRm>bestVal){bestVal=oneRm;bestSet={w:w,r:r,oneRm:oneRm};}
