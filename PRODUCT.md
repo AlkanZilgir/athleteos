@@ -23,7 +23,7 @@ Direct, grounded, expert. The voice is a coach who has read your log and tells y
 - The "AI command console" aesthetic: diagnostics panels, "System: Operational", "engine calibrations", "distribution matrix", status LEDs. It reads as a prop, and it makes a fitness app sound like a spaceship.
 - Generic SaaS dashboard scaffolding: the hero metric with a gradient accent, identical icon-heading-text card grids, uppercase tracked eyebrows over every section.
 - Neon as wallpaper: bright accents on borders, glows and decoration until they no longer signal anything.
-- The chat identifier: a message thread with bubbles, a floating input bar and prompt-suggestion chips. The Coach is a report form with a dropdown and a list of dated reports.
+- Chat as decoration: glassy bubbles, floating pill inputs, sparkle icons, icon-chip prompt rows. The Coach is a plain conversation: flat bordered messages, a bordered message box, a few starter questions written as sentences.
 - Interrogation onboarding: a dozen single-question screens before the person has logged anything.
 - Empty screens that are just blank: a chart frame with nothing in it, a wall of zeros on first open.
 

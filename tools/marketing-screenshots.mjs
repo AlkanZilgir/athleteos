@@ -70,15 +70,16 @@ const showCoach = () => {
   const ai = document.getElementById('p-ai'); if (ai) ai.classList.add('on');
   document.querySelectorAll('.nv,.sb-item').forEach(n => n.classList.remove('on'));
   const nav = document.getElementById('n-ai'); if (nav) nav.classList.add('on');
-  const sub = document.getElementById('ai-page-sub'); if (sub) sub.textContent = 'Pro · unlimited reports';
+  const sub = document.getElementById('ai-page-sub'); if (sub) sub.textContent = 'Pro · unlimited messages';
   const m = document.getElementById('chat-msgs');
   if (m) m.innerHTML =
-    '<section class="rp"><div class="rp-h"><span>Bench stuck at 82.5 kg for three weeks</span><time>18:04</time></div><div class="rp-b">' +
-    '<div class="eng-txt">Three weeks at the same top set is a stall, not a plateau. Chest volume dropped to 11 sets last week, down from 16.</div>' +
+    '<div class="cm u">Bench has been stuck at 82.5 for three weeks. What do I do?</div>' +
+    '<div class="cm a"><div class="eng-txt">Three weeks at the same top set is a stall, not a plateau. Chest volume dropped to 11 sets last week, down from 16.</div>' +
     '<div class="eng-grid-wrap"><table class="eng-grid"><thead><tr><th>Week</th><th>Top set</th><th>Chest sets</th></tr></thead><tbody>' +
     '<tr><td>Wk 1</td><td>82.5 × 3</td><td>16</td></tr><tr><td>Wk 2</td><td>82.5 × 3</td><td>14</td></tr><tr><td>Wk 3</td><td>82.5 × 3</td><td>11</td></tr></tbody></table></div>' +
-    '<ul class="eng-log"><li>Add a back-off set at 70 kg after the top triple, push it to 8 reps</li><li>If the bar still will not move in two weeks, drop to 75 kg for a fortnight and build back</li></ul>' +
-    '</div></section>';
+    '<ul class="eng-log"><li>Add a back-off set at 70 kg after the top triple, push it to 8 reps</li><li>If the bar still will not move in two weeks, drop to 75 kg for a fortnight and build back</li></ul></div>' +
+    '<div class="cm u">And protein? I keep landing around 120.</div>' +
+    '<div class="cm a"><div class="eng-txt">You are 50 g short most days, and it is always dinner that is light. Add 200 g Greek yoghurt after training and move one chicken portion to the evening; that alone closes the gap.</div></div>';
 };
 
 async function grab(name, { dark, prep }) {
