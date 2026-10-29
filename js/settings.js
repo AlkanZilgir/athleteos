@@ -89,10 +89,12 @@ var ACCENTS={
   // a/d = the fill and its hover on the slate dark theme (light enough to
   // clear 4.5:1 on #1E293B); lt/ltd = the ink-dark fill for the white theme.
   // ink = what sits ON the dark fill; the light fill always takes white.
-  slate: {a:'#8FAEDC',d:'#A9C1E6',rgb:'58,90,140',rgbd:'143,174,220',  ink:'#0F172A',lt:'#3A5A8C',ltd:'#2E4A75'},
-  forest:{a:'#6DBB8F',d:'#8CCBA6',rgb:'47,107,79',rgbd:'109,187,143',  ink:'#0F172A',lt:'#2F6B4F',ltd:'#255740'},
-  clay:  {a:'#E09A72',d:'#E8B091',rgb:'176,83,46',rgbd:'224,154,114',  ink:'#0F172A',lt:'#B0532E',ltd:'#944525'},
-  plum:  {a:'#B3A5D8',d:'#C4B9E2',rgb:'107,91,149',rgbd:'179,165,216', ink:'#0F172A',lt:'#6B5B95',ltd:'#584B7C'}
+  // a/d = muted text accent on the dark theme; fill/filld = the matte dark
+  // button fill; lt/ltd = fill and text on the white theme. Ink is always white.
+  slate: {a:'#8BA4C8',d:'#9DB4D4',fill:'#3E5F93',filld:'#4A6CA3',rgb:'58,90,140', rgbd:'139,164,200',lt:'#3A5A8C',ltd:'#2E4A75'},
+  forest:{a:'#7FAE93',d:'#92BCA4',fill:'#2F6B4F',filld:'#3A7D5E',rgb:'47,107,79', rgbd:'127,174,147',lt:'#2F6B4F',ltd:'#255740'},
+  clay:  {a:'#C99A80',d:'#D4AB94',fill:'#9E4E2E',filld:'#B05E3B',rgb:'176,83,46', rgbd:'201,154,128',lt:'#B0532E',ltd:'#944525'},
+  plum:  {a:'#A79CC4',d:'#B6ADCF',fill:'#625486',filld:'#71639A',rgb:'107,91,149',rgbd:'167,156,196',lt:'#6B5B95',ltd:'#584B7C'}
 };
 var ACCENT_LEGACY={volt:'slate',green:'forest',forge:'clay',cool:'slate',purple:'plum',pink:'plum'};
 function applyAccent(name){
@@ -102,12 +104,11 @@ function applyAccent(name){
   var dark=document.body.classList.contains('dark');
   // On the light ground a near-white accent has nowhere to go: swap to the
   // declared stand-in and put white back on top of it.
-  var fill=(!dark&&p.lt)?p.lt:p.a;
-  var fillD=(!dark&&p.ltd)?p.ltd:p.d;
-  var ink=(!dark&&p.lt)?'#FFFFFF':(p.ink||'#FFFFFF');
-  root.style.setProperty('--accent',fill);
-  root.style.setProperty('--accent-d',fillD);
-  root.style.setProperty('--accent-ink',ink);
+  root.style.setProperty('--accent',dark?p.a:p.lt);
+  root.style.setProperty('--accent-d',dark?p.d:p.ltd);
+  root.style.setProperty('--accent-fill',dark?p.fill:p.lt);
+  root.style.setProperty('--accent-fill-d',dark?p.filld:p.ltd);
+  root.style.setProperty('--accent-ink','#FFFFFF');
   root.style.setProperty('--adim',dark?'rgba('+p.rgbd+',.14)':'rgba('+p.rgb+',.10)');
   root.style.setProperty('--accent-rgb',p.rgb);
   document.querySelectorAll('.acc-pick').forEach(function(b){b.classList.toggle('on',b.dataset.acc===name);});

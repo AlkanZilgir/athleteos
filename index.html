@@ -23,18 +23,20 @@
   var m=localStorage.getItem('athleteos_theme')||'dark';
   var dark=m==='dark'||(m==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   if(dark)document.documentElement.classList.add('dark');
-  /* [dark fill, dark hover, ink on dark fill, light fill, light hover] */
-  var A={slate:['#8FAEDC','#A9C1E6','#0F172A','#3A5A8C','#2E4A75'],
-         forest:['#6DBB8F','#8CCBA6','#0F172A','#2F6B4F','#255740'],
-         clay:['#E09A72','#E8B091','#0F172A','#B0532E','#944525'],
-         plum:['#B3A5D8','#C4B9E2','#0F172A','#6B5B95','#584B7C']};
+  /* [dark text accent, dark text hover, dark fill, light fill, light hover, dark fill hover] */
+  var A={slate:['#8BA4C8','#9DB4D4','#3E5F93','#3A5A8C','#2E4A75','#4A6CA3'],
+         forest:['#7FAE93','#92BCA4','#2F6B4F','#2F6B4F','#255740','#3A7D5E'],
+         clay:['#C99A80','#D4AB94','#9E4E2E','#B0532E','#944525','#B05E3B'],
+         plum:['#A79CC4','#B6ADCF','#625486','#6B5B95','#584B7C','#71639A']};
   var LEGACY={volt:'slate',green:'forest',forge:'clay',cool:'slate',purple:'plum',pink:'plum'};
   var key=localStorage.getItem('athleteos_accent')||'slate';key=LEGACY[key]||key;
   var a=A[key]||A.slate;
   var st=document.documentElement.style;
-  st.setProperty('--accent',(!dark&&a[3])?a[3]:a[0]);
-  st.setProperty('--accent-d',(!dark&&a[4])?a[4]:a[1]);
-  st.setProperty('--accent-ink',(!dark&&a[3])?'#FFFFFF':a[2]);
+  st.setProperty('--accent',dark?a[0]:a[3]);
+  st.setProperty('--accent-d',dark?a[1]:a[4]);
+  st.setProperty('--accent-fill',dark?a[2]:a[3]);
+  st.setProperty('--accent-fill-d',dark?a[5]:a[4]);
+  st.setProperty('--accent-ink','#FFFFFF');
 }catch(e){}})();
 </script>
 <link rel="stylesheet" href="app.css">

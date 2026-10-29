@@ -70,12 +70,15 @@ const showCoach = () => {
   const ai = document.getElementById('p-ai'); if (ai) ai.classList.add('on');
   document.querySelectorAll('.nv,.sb-item').forEach(n => n.classList.remove('on'));
   const nav = document.getElementById('n-ai'); if (nav) nav.classList.add('on');
-  const sub = document.getElementById('ai-page-sub'); if (sub) sub.textContent = 'Pro · unlimited messages';
+  const sub = document.getElementById('ai-page-sub'); if (sub) sub.textContent = 'Pro · unlimited reports';
   const m = document.getElementById('chat-msgs');
   if (m) m.innerHTML =
-    '<div class="msg a">I\'ve got your numbers in front of me. What do you want to work on?</div>' +
-    '<div class="msg u">Bench has been stuck at 82.5 for three weeks. What do I do?</div>' +
-    '<div class="msg a">Three weeks at the same top set is a stall, not a plateau. Your volume on chest dropped to 11 sets last week, down from 16.<br><br>Add a back-off set at 70 kg after your top triple and push it to 8 reps. If the bar still will not move in two weeks, drop to 75 for a fortnight and build back.</div>';
+    '<section class="rp"><div class="rp-h"><span>Bench stuck at 82.5 kg for three weeks</span><time>18:04</time></div><div class="rp-b">' +
+    '<div class="eng-txt">Three weeks at the same top set is a stall, not a plateau. Chest volume dropped to 11 sets last week, down from 16.</div>' +
+    '<div class="eng-grid-wrap"><table class="eng-grid"><thead><tr><th>Week</th><th>Top set</th><th>Chest sets</th></tr></thead><tbody>' +
+    '<tr><td>Wk 1</td><td>82.5 × 3</td><td>16</td></tr><tr><td>Wk 2</td><td>82.5 × 3</td><td>14</td></tr><tr><td>Wk 3</td><td>82.5 × 3</td><td>11</td></tr></tbody></table></div>' +
+    '<ul class="eng-log"><li>Add a back-off set at 70 kg after the top triple, push it to 8 reps</li><li>If the bar still will not move in two weeks, drop to 75 kg for a fortnight and build back</li></ul>' +
+    '</div></section>';
 };
 
 async function grab(name, { dark, prep }) {

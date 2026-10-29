@@ -20,61 +20,40 @@
 <link rel="apple-touch-icon" href="icon-192.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* Ledger tokens: the same system as the app. Light by default, slate dark
+   when the device asks for it. No glow, no gradient, no shadow. */
 :root{
-  /* surfaces */
-  --bg:#0A0A0C;
-  --surface:#141417;
-  --surface-2:#1A1A1F;
-  --card:#141417;
-  --ink:#FFFFFF;
-  --bdr:#1C1C20;
-  --bdr-2:#27272C;
-  /* text — white is titles only; body sits on the soft grey step */
-  --t:#FFFFFF;
-  --t2:#A1A1AA;
-  --t3:#8C8C96;
-  /* brand — volt, with the ink that has to sit on top of it */
-  --accent:#CCFF00;
-  --accent-d:#B4E600;
-  --accent-h:#9FCC00;
-  --accent-ink:#0A0A0C;
-  --adim:rgba(204,255,0,.10);
-  --accent-glow:rgba(204,255,0,.28);
-  /* rhythm */
-  --r-sm:3px;--r-md:4px;--r-lg:6px;--r-xl:8px;
+  --bg:#FFFFFF;--surface:#F6F8FA;--surface-2:#EAEEF2;--card:#FFFFFF;--ink:#1F2328;
+  --bdr:#E3E8EE;--bdr-2:#D0D7DE;
+  --t:#1F2328;--t2:#57606A;--t3:#6E7781;
+  --accent:#3A5A8C;--accent-d:#2E4A75;--accent-h:#2E4A75;--accent-ink:#FFFFFF;
+  --accent-fill:#3A5A8C;--accent-fill-d:#2E4A75;
+  --adim:rgba(58,90,140,.10);--accent-glow:transparent;
+  --sig-train:#2F6B4F;
+  --r-sm:6px;--r-md:6px;--r-lg:6px;--r-xl:8px;
   --sp-1:8px;--sp-2:14px;--sp-3:22px;--sp-4:36px;--sp-5:60px;--sp-6:96px;
-  --shadow-lift:none;
-  --shadow-deep:0 30px 80px -30px rgba(0,0,0,.9);
+  --shadow-lift:none;--shadow-deep:none;
   --ease:cubic-bezier(.2,.7,.2,1);
-  /* z-scale */
   --z-nav:50;--z-overlay:80;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --bg:#0A0B0F;
-    --surface:#13151B;
-    --surface-2:#1A1D25;
-    --card:#13151B;
-    --ink:#F5F7FA;
-    --bdr:rgba(255,255,255,.08);
-    --bdr-2:rgba(255,255,255,.14);
-    --t:#F5F7FA;
-    --t2:#C2CAD6;
-    --t3:#8A93A6;
-    --adim:rgba(204,255,0,.12);
-    --accent-glow:rgba(204,255,0,.30);
-    --shadow-lift:0 12px 40px -16px rgba(0,0,0,.6),0 2px 8px -2px rgba(0,0,0,.4);
-    --shadow-deep:0 32px 80px -24px rgba(0,0,0,.8),0 4px 16px -4px rgba(0,0,0,.5);
+    --bg:#0F172A;--surface:#172033;--surface-2:#253249;--card:#1E293B;--ink:#E6EDF3;
+    --bdr:#283651;--bdr-2:#334155;
+    --t:#E6EDF3;--t2:#A3B1C2;--t3:#8593A6;
+    --accent:#8BA4C8;--accent-d:#9DB4D4;--accent-h:#9DB4D4;--accent-ink:#FFFFFF;
+    --accent-fill:#3E5F93;--accent-fill-d:#4A6CA3;
+    --adim:rgba(139,164,200,.12);
+    --sig-train:#5E9C7C;
   }
 }
 
-html,body{margin:0;padding:0;background:var(--bg);color:var(--t);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.55;font-feature-settings:"ss01","cv11";text-rendering:optimizeLegibility}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.55;font-feature-settings:"ss01","cv11";text-rendering:optimizeLegibility}
 img,svg{display:block;max-width:100%}
-::selection{background:var(--adim);color:var(--accent-h)}
+::selection{background:var(--adim)}
 a{color:inherit}
 
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
@@ -83,27 +62,27 @@ a{color:inherit}
 .topbar{position:sticky;top:0;z-index:var(--z-nav);transition:background .25s var(--ease),border-color .25s var(--ease),backdrop-filter .25s var(--ease)}
 .topbar.scrolled{background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--bdr)}
 nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:18px}
-.brand{font-weight:900;font-size:22px;letter-spacing:-.6px;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:9px}
-.brand-dot{width:10px;height:10px;border-radius:3px;background:var(--accent);box-shadow:0 0 0 3px var(--adim)}
+.brand{font-weight:600;font-size:22px;letter-spacing:-.2px;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:9px}
+.brand-dot{display:none}
 .brand span{color:var(--accent)}
 .nav-r{display:flex;align-items:center;gap:6px}
-.nav-link{color:var(--t2);font-weight:600;font-size:14px;text-decoration:none;padding:8px 12px;border-radius:999px;transition:color .15s var(--ease),background .15s var(--ease)}
+.nav-link{color:var(--t2);font-weight:600;font-size:14px;text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s var(--ease),background .15s var(--ease)}
 .nav-link:hover{color:var(--ink);background:var(--surface)}
-.cta{background:var(--accent);color:var(--accent-ink);text-decoration:none;padding:12px 20px;border-radius:var(--r-sm);font-family:'Oswald',Inter,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.13em;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);box-shadow:4px 4px 0 #3F3F46}
-.cta:hover{background:var(--accent-d);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 10px 24px -8px var(--accent-glow);transform:translateY(-1px)}
+.cta{background:var(--accent);color:var(--accent-ink);text-decoration:none;padding:12px 20px;border-radius:var(--r-sm);font-weight:600;text-transform:none;letter-spacing:0;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);box-shadow:none}
+.cta:hover{background:var(--accent-fill-d);box-shadow:none;transform:none}
 .cta:active{transform:translateY(0) scale(.98)}
-.cta.lg{padding:16px 26px;font-size:15.5px;letter-spacing:-.2px;border-radius:999px}
+.cta.lg{padding:16px 26px;font-size:15.5px;letter-spacing:-.2px;border-radius:6px}
 .cta.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--bdr-2);box-shadow:none}
 .cta.ghost:hover{background:var(--surface);border-color:var(--ink);box-shadow:none}
 
 /* ── HERO ──────────────────────────────────── */
 .hero{padding:64px 0 28px;text-align:center;position:relative;isolation:isolate}
-.hero::before{content:"";position:absolute;inset:-40px -10% 0;background:radial-gradient(60% 50% at 50% 0%,var(--adim),transparent 70%);z-index:-1;pointer-events:none}
-.eyebrow-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bdr);border-radius:999px;padding:6px 14px 6px 6px;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:28px;box-shadow:var(--shadow-lift)}
-.eyebrow-chip .pill{background:var(--adim);color:var(--accent-h);padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.4px}
-.hero h1{font-size:clamp(44px,7.6vw,86px);font-weight:900;letter-spacing:-.045em;line-height:1.02;margin:0 0 22px;max-width:14ch;margin-left:auto;margin-right:auto;text-wrap:balance}
-.hero h1 .mark{color:var(--accent);position:relative;white-space:nowrap}
-.hero h1 .mark::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.04em;height:.28em;background:var(--accent);opacity:.18;border-radius:6px;z-index:-1}
+.hero::before{content:none}
+.eyebrow-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:6px 14px 6px 6px;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:28px;box-shadow:var(--shadow-lift)}
+.eyebrow-chip .pill{background:var(--adim);color:var(--accent-h);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.4px}
+.hero h1{font-size:clamp(44px,7.6vw,86px);font-weight:600;letter-spacing:-.02em;line-height:1.02;margin:0 0 22px;max-width:14ch;margin-left:auto;margin-right:auto;text-wrap:balance}
+.hero h1 .mark{white-space:nowrap}
+.hero h1 .mark::after{content:none}
 .hero .sub{font-size:clamp(17px,1.6vw,20px);color:var(--t2);max-width:60ch;margin:0 auto 36px;line-height:1.5;text-wrap:pretty}
 .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
 .proof{font-size:13.5px;color:var(--t3);display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-weight:500}
@@ -111,7 +90,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .proof svg{flex-shrink:0;color:var(--accent)}
 
 .screens{display:flex;gap:22px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin:60px auto 0;max-width:1080px;perspective:1400px}
-.screens img{width:260px;height:auto;border-radius:36px;box-shadow:var(--shadow-deep),0 0 0 1px var(--bdr);transition:transform .5s var(--ease)}
+.screens img{width:260px;height:auto;border-radius:12px;border:1px solid var(--bdr-2);transition:transform .5s var(--ease)}
 .screens img:nth-child(1){transform:translateY(8px) rotate(-2.5deg)}
 .screens img:nth-child(2){transform:translateY(-12px)}
 .screens img:nth-child(3){transform:translateY(8px) rotate(2.5deg)}
@@ -124,8 +103,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 
 /* ── SECTION HEAD ──────────────────────────── */
 .section{padding:var(--sp-6) 0;position:relative}
-.section h2{font-size:clamp(30px,3.6vw,48px);font-weight:900;letter-spacing:-.035em;margin:0 0 14px;text-wrap:balance;line-height:1.05}
-.section h2 em{font-style:normal;color:var(--accent)}
+.section h2{font-size:clamp(30px,3.6vw,48px);font-weight:600;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance;line-height:1.05}
+.section h2 em{font-style:normal}
 .section .lead{color:var(--t2);font-size:17.5px;max-width:58ch;margin:0 0 var(--sp-5);line-height:1.55;text-wrap:pretty}
 .section.center{text-align:center}
 .section.center .lead{margin-left:auto;margin-right:auto}
@@ -133,7 +112,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 /* ── FEATURES (asymmetric grid) ────────────── */
 .features{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
 .feat{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r-lg);padding:28px;position:relative;overflow:hidden;transition:transform .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
-.feat:hover{transform:translateY(-3px);border-color:var(--bdr-2);box-shadow:var(--shadow-lift)}
+.feat:hover{border-color:var(--bdr-2)}
 .feat.x4{grid-column:span 4}
 .feat.x3{grid-column:span 3}
 .feat.x2{grid-column:span 2}
@@ -144,12 +123,12 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .feat-ico.orange{background:rgba(245,158,11,.14);color:#FF6B35}
 .feat-ico.pink{background:rgba(236,72,153,.14);color:#EC4899}
 .feat-ico svg{width:22px;height:22px}
-.feat h3{font-size:19px;font-weight:800;letter-spacing:-.018em;margin:0 0 6px;color:var(--ink)}
+.feat h3{font-size:19px;font-weight:600;letter-spacing:-.018em;margin:0 0 6px;color:var(--ink)}
 .feat p{margin:0;font-size:15px;color:var(--t2);line-height:1.55;max-width:48ch}
 .feat.x4 h3,.feat.x6 h3{font-size:22px}
 .feat.x4 p,.feat.x6 p{font-size:15.5px}
-.feat.featured{background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--accent) 4%,var(--card)));border-color:color-mix(in srgb,var(--accent) 28%,var(--bdr))}
-.feat-tag{position:absolute;top:18px;right:18px;font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--accent-h);background:var(--adim);padding:4px 10px;border-radius:999px}
+.feat.featured{background:var(--card);border-color:color-mix(in srgb,var(--accent) 28%,var(--bdr))}
+.feat-tag{position:absolute;top:18px;right:18px;font-size:11px;font-weight:600;letter-spacing:.4px;color:var(--accent-h);background:var(--adim);padding:4px 10px;border-radius:6px}
 @media(max-width:780px){
   .features{grid-template-columns:1fr;gap:12px}
   .feat.x2,.feat.x3,.feat.x4,.feat.x6{grid-column:span 1}
@@ -162,7 +141,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .bento-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(0,1fr);gap:14px;margin-top:36px}
 .bento-cell{background:var(--card);border-radius:var(--r-lg);padding:24px;border:1px solid var(--bdr);display:flex;flex-direction:column;gap:10px;min-height:170px;transition:transform .3s var(--ease)}
 .bento-cell:hover{transform:translateY(-2px)}
-.bento-cell h3{margin:0;font-size:18px;font-weight:800;letter-spacing:-.018em;color:var(--ink)}
+.bento-cell h3{margin:0;font-size:18px;font-weight:600;letter-spacing:-.018em;color:var(--ink)}
 .bento-cell p{margin:0;color:var(--t2);font-size:14.5px;line-height:1.55}
 .bento-cell.tall{grid-column:span 3;grid-row:span 2;min-height:340px;justify-content:space-between}
 .bento-cell.wide{grid-column:span 3}
@@ -170,17 +149,17 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .bento-cell.mid{grid-column:span 4}
 /* Mini bar chart — pure CSS, replaces the cliché big-number metric */
 .spark{display:flex;align-items:flex-end;gap:10px;height:140px;margin-top:8px}
-.spark-bar{flex:1;background:linear-gradient(180deg,var(--accent) 0%,var(--accent-d) 100%);border-radius:8px 8px 4px 4px;position:relative;opacity:.55;transition:opacity .4s var(--ease),transform .4s var(--ease)}
-.spark-bar.now{opacity:1;box-shadow:0 6px 20px -4px var(--accent-glow)}
+.spark-bar{flex:1;background:var(--sig-train);border-radius:8px 8px 4px 4px;position:relative;opacity:.55;transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.spark-bar.now{opacity:1}
 .spark-bar:hover{opacity:1;transform:translateY(-3px)}
-.spark-bar span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--t3)}
+.spark-bar span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--t3)}
 .spark-bar.now span{color:var(--ink)}
 .spark-axis{display:flex;gap:10px;margin-top:8px;font-size:11px;color:var(--t3);font-weight:600}
 .spark-axis div{flex:1;text-align:center}
 .stat-row{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
-.stat-chip{font-size:12px;font-weight:700;color:var(--t2);background:var(--surface-2);border-radius:999px;padding:5px 10px}
+.stat-chip{font-size:12px;font-weight:600;color:var(--t2);background:var(--surface-2);border-radius:6px;padding:5px 10px}
 .stat-chip b{color:var(--accent-h)}
-.streak-flame{font-size:34px;font-weight:900;letter-spacing:-.04em;color:var(--ink);display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.streak-flame{font-size:34px;font-weight:600;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:baseline;gap:8px;margin-top:4px}
 .streak-flame .u{font-size:13px;font-weight:600;color:var(--t3);letter-spacing:0}
 .streak-dots{display:flex;gap:5px;margin-top:14px}
 .streak-dots i{width:18px;height:18px;border-radius:6px;background:var(--surface-2);display:inline-block}
@@ -195,7 +174,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 /* ── QUOTE ─────────────────────────────────── */
 .quotes{padding:var(--sp-5) 0}
 .quote{max-width:720px;margin:0 auto;text-align:center;position:relative;padding:0 24px}
-.quote-mark{font-family:Georgia,serif;font-size:120px;line-height:.6;color:var(--accent);opacity:.18;font-weight:900;margin-bottom:-30px;display:block;pointer-events:none}
+.quote-mark{font-family:Georgia,serif;font-size:120px;line-height:.6;color:var(--accent);opacity:.18;font-weight:600;margin-bottom:-30px;display:block;pointer-events:none}
 .quote-body{font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-.02em;line-height:1.35;margin:0 0 22px;color:var(--ink);text-wrap:balance}
 .quote-by{color:var(--t3);font-size:14px;font-weight:600}
 
@@ -203,7 +182,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 .faq-list{max-width:760px;margin:0 auto}
 .faq-item{border-top:1px solid var(--bdr);padding:0}
 .faq-item:last-child{border-bottom:1px solid var(--bdr)}
-.faq-item summary{font-weight:700;font-size:17.5px;cursor:pointer;list-style:none;padding:22px 48px 22px 0;position:relative;color:var(--ink);transition:color .15s var(--ease)}
+.faq-item summary{font-weight:600;font-size:17.5px;cursor:pointer;list-style:none;padding:22px 48px 22px 0;position:relative;color:var(--ink);transition:color .15s var(--ease)}
 .faq-item summary:hover{color:var(--accent-h)}
 .faq-item summary::-webkit-details-marker{display:none}
 .faq-item summary::after{content:"";position:absolute;right:4px;top:50%;width:14px;height:14px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F6B85' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-size:contain;background-position:center;background-repeat:no-repeat;transform:translateY(-50%);transition:transform .25s var(--ease)}
@@ -213,9 +192,9 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0
 /* ── FINAL CTA (inverted, confident — no purple/green gradient) ──── */
 .final-cta{background:var(--surface);color:var(--t);border:1px solid var(--bdr-2);border-radius:var(--r-xl);padding:80px 40px;text-align:center;margin:var(--sp-5) 0 var(--sp-6);position:relative;overflow:hidden;isolation:isolate}
 @media (prefers-color-scheme:dark){.final-cta{background:#141417;border:1px solid var(--bdr)}}
-.final-cta::before{content:"";position:absolute;left:50%;top:-30%;width:120%;height:160%;background:radial-gradient(50% 50% at 50% 50%,var(--accent-glow),transparent 60%);transform:translateX(-50%);z-index:-1;opacity:.6;pointer-events:none}
-.final-cta h2{color:var(--t);font-size:clamp(30px,4vw,52px);font-weight:900;letter-spacing:-.035em;margin:0 0 14px;line-height:1.05;text-wrap:balance}
-.final-cta h2 em{font-style:normal;color:var(--accent)}
+.final-cta::before{content:none}
+.final-cta h2{color:var(--t);font-size:clamp(30px,4vw,52px);font-weight:600;letter-spacing:-.02em;margin:0 0 14px;line-height:1.05;text-wrap:balance}
+.final-cta h2 em{font-style:normal}
 .final-cta p{color:rgba(255,255,255,.74);font-size:17px;margin:0 auto 32px;max-width:50ch;line-height:1.55;text-wrap:pretty}
 .final-cta .cta{background:var(--accent);color:var(--accent-ink)}
 .final-cta .cta:hover{background:var(--accent-d);color:var(--accent-ink)}
@@ -228,7 +207,9 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
 .foot-links a:hover{color:var(--ink);background:var(--surface)}
 
 /* ── REVEAL ON SCROLL ──────────────────────── */
-.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+/* Content is visible by default; the reveal only softens the entrance when JS is running. */
+.reveal{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.js .reveal:not(.in){opacity:0;transform:translateY(12px)}
 .reveal.in{opacity:1;transform:none}
 .reveal.d1{transition-delay:60ms}
 .reveal.d2{transition-delay:120ms}
@@ -246,7 +227,7 @@ footer{padding:48px 0 56px;color:var(--t3);font-size:13.5px;border-top:1px solid
    Inter for everything you actually read at body size. */
 :root{--font-display:'Oswald','Inter',system-ui,sans-serif}
 h1,h2,h3,.h1,.h2,.logo,.price-v{font-family:var(--font-display);font-weight:600;
-  letter-spacing:.2px;text-transform:uppercase;text-wrap:balance}
+  letter-spacing:.2px;text-transform:none;text-wrap:balance}
 h1,.h1{line-height:.95}
 /* Oswald is condensed, so `ch` is narrower than the Inter measure these
    headings were tuned against: the 14ch cap plus a 44px floor pushed the
@@ -268,10 +249,36 @@ h1,h2,h3{overflow-wrap:break-word}
   .brand{font-size:17px;gap:7px}
   .nav-link{font-size:12.5px;padding:7px 6px}
   .nav-r{gap:2px;min-width:0}
-  .nav-r .cta{padding:9px 10px;letter-spacing:.05em;font-size:11px;gap:5px;
+  .nav-r .cta{padding:9px 10px;letter-spacing:0;font-size:11px;gap:5px;
     box-shadow:3px 3px 0 #3F3F46;margin-right:4px}
   .nav-r .cta svg{width:12px;height:10px}
 }
+
+/* ── Ledger overrides ─────────────────────── */
+:root{--font-display:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3,.h1,.h2,.logo,.price-v{font-family:var(--font-display);font-weight:600;letter-spacing:-.02em;text-transform:none}
+h1,.h1{line-height:1.05}
+.hero h1{max-width:18ch;font-size:clamp(32px,6.4vw,64px);letter-spacing:-.02em}
+.section h2{font-size:clamp(26px,3.2vw,40px)}
+.final-cta h2{font-size:clamp(24px,4vw,40px);letter-spacing:-.02em}
+.cta{background:var(--accent-fill);color:#FFFFFF;border-radius:6px;font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;box-shadow:none}
+.cta.lg{border-radius:6px;font-size:15px}
+.cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--bdr-2)}
+.cta.ghost:hover{background:var(--surface);border-color:var(--ink)}
+.cta:active{transform:none}
+.nav-link{border-radius:6px;font-weight:500}
+.eyebrow-chip,.eyebrow-chip .pill,.feat-tag,.stat-chip{border-radius:4px;box-shadow:none;letter-spacing:0;font-weight:500}
+.eyebrow-chip .pill{background:var(--adim);color:var(--accent)}
+.feat-tag{color:var(--accent);background:var(--adim)}
+.feat,.bento-cell,.faq-item,.quote{box-shadow:none;border:1px solid var(--bdr-2);border-radius:6px;background:var(--card)}
+.feat.featured{border-color:var(--bdr-2)}
+.quote-mark{opacity:.12}
+.spark-bar{border-radius:2px;opacity:.5}
+.spark-bar.now{opacity:1}
+.screens img{border-radius:12px;border:1px solid var(--bdr-2);box-shadow:none;transform:none}
+.screens img:nth-child(1),.screens img:nth-child(3){transform:none}
+.brand{font-weight:600;letter-spacing:-.01em}
+b,strong{font-weight:600}
 </style>
 </head>
 <body>
@@ -294,7 +301,7 @@ h1,h2,h3{overflow-wrap:break-word}
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow-chip reveal"><span class="pill">NEW</span> Plans now build off your last 6 weeks</div>
+    <div class="eyebrow-chip reveal"><span class="pill">New</span> Plans now build off your last 6 weeks</div>
     <h1 class="reveal d1">Your personal <span class="mark">fitness OS</span>. Built around your life.</h1>
     <p class="sub reveal d2">Workouts, nutrition, sleep, body composition, and a coach that has read every session you logged. Installs to your home screen. Works offline.</p>
     <div class="hero-actions reveal d3">
@@ -311,7 +318,7 @@ h1,h2,h3{overflow-wrap:break-word}
     <div class="screens reveal d5" aria-label="App screenshots">
       <picture><source srcset="screen-home.webp" type="image/webp"><img src="screen-home.png" alt="AthleteOS Home dashboard with weekly volume and stats" onerror="this.style.display='none'" loading="eager"></picture>
       <picture><source srcset="screen-workout.webp" type="image/webp"><img src="screen-workout.png" alt="AthleteOS Workout tab with active session and exercise list" onerror="this.style.display='none'" loading="eager"></picture>
-      <picture><source srcset="screen-ai.webp" type="image/webp"><img src="screen-ai.png" alt="AthleteOS Coach chat conversation" onerror="this.style.display='none'" loading="eager"></picture>
+      <picture><source srcset="screen-ai.webp" type="image/webp"><img src="screen-ai.png" alt="AthleteOS Coach tab with a report form and a volume report" onerror="this.style.display='none'" loading="eager"></picture>
     </div>
   </header>
 
@@ -320,7 +327,7 @@ h1,h2,h3{overflow-wrap:break-word}
     <p class="lead reveal d1">Most fitness apps make you choose: training, or nutrition, or sleep. AthleteOS holds the whole picture, so the coaching you get actually fits your week.</p>
     <div class="features">
       <div class="feat featured x4 reveal">
-        <div class="feat-tag">FLAGSHIP</div>
+        <div class="feat-tag">Flagship</div>
         <div class="feat-ico orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
         <h3>A coach that has read your log</h3>
         <p>Knows every set, meal, and sleep night. Generates plans, parses voice input, suggests deloads, answers form questions in plain language.</p>
@@ -338,12 +345,12 @@ h1,h2,h3{overflow-wrap:break-word}
       <div class="feat x2 reveal d3">
         <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L8 6h8l-4-4zM6 6h12v14H6z"/><line x1="6" y1="10" x2="18" y2="10"/></svg></div>
         <h3>Nutrition tracking</h3>
-        <p>Barcode scan via your camera. Free-text meals parsed by AI. Macros and calories in one tap.</p>
+        <p>Barcode scan via your camera. Free-text meals parsed into macros. Macros and calories in one tap.</p>
       </div>
       <div class="feat x2 reveal d4">
         <div class="feat-ico purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
         <h3>Sleep + recovery</h3>
-        <p>Bedtime and wake. Mood, energy, soreness check-ins. Feeds the AI's recommendations.</p>
+        <p>Bedtime and wake. Mood, energy, soreness check-ins. Feeds the coach reports.</p>
       </div>
       <div class="feat x6 reveal d5">
         <div class="feat-ico pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div>
@@ -357,7 +364,7 @@ h1,h2,h3{overflow-wrap:break-word}
     <div class="wrap" style="padding:0">
       <div class="bento reveal">
         <h2>The numbers that drive the picture.</h2>
-        <p class="lead">Every metric is connected. The AI sees them all.</p>
+        <p class="lead">Every metric is connected. The coach reads them all.</p>
         <div class="bento-grid">
           <div class="bento-cell tall reveal d1">
             <div>
@@ -395,7 +402,7 @@ h1,h2,h3{overflow-wrap:break-word}
           </div>
           <div class="bento-cell mid reveal d4">
             <h3>Plan-aware reminders</h3>
-            <p>Push notifications that know what your AI plan says you're doing tomorrow, not generic "go to gym" pings.</p>
+            <p>Push notifications that know what your plan says you're doing tomorrow, not generic "go to gym" pings.</p>
           </div>
           <div class="bento-cell sq reveal d5">
             <h3>Offline-first</h3>
