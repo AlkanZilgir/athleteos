@@ -1,7 +1,7 @@
 /* ── EXERCISE DATABASE ────────────────────── */
 // Canvas cannot read CSS custom properties, so the share image asks the
 // live accent for its rgb triple and builds the alpha variant itself.
-function _accentRgba(a){var rgb='';try{rgb=getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim();}catch(e){}return 'rgba('+(rgb||'204,255,0')+','+a+')';}
+function _accentRgba(a){var rgb='';try{rgb=getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim();}catch(e){}return 'rgba('+(rgb||'169,171,227')+','+a+')';}
 var EX_DB={
   'Bench Press':{an:'push_h',pri:['Chest'],sec:['Front Delts','Triceps'],desc:'The cornerstone of upper body pushing strength. Lying flat, you lower a barbell to the lower chest and drive it back up, building raw chest mass and power.',tips:['Retract and depress shoulder blades throughout the lift','Maintain a slight arch — keep your feet flat on the floor','Bar touches lower chest, not your neck']},
   'Incline Press':{an:'push_h',pri:['Upper Chest'],sec:['Front Delts','Triceps'],desc:'Shifts emphasis to the clavicular head of the chest — the upper portion that creates a full, complete chest from top to bottom.',tips:['Set bench at 30–45 degrees','Avoid excessive elbow flare','Feel the deep stretch at the bottom of each rep']},

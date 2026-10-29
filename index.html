@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AthleteOS">
-<meta name="theme-color" content="#0A0A0C">
+<meta name="theme-color" content="#1F1E22">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>AthleteOS</title>
@@ -23,22 +23,10 @@
   var m=localStorage.getItem('athleteos_theme')||'dark';
   var dark=m==='dark'||(m==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   if(dark)document.documentElement.classList.add('dark');
-  /* [dark text accent, dark text hover, dark fill, light fill, light hover, dark fill hover] */
-  var A={moss:['#8DBB9A','#A0C9AC','#3F6F52','#3E6B4C','#325A3E','#4A7F5F'],
-         clay:['#D9A07F','#E2B194','#9E5330','#B35A33','#964A28','#B06040'],
-         ochre:['#D4B46A','#DEC283','#8A6A1E','#8A6718','#735514','#9A7A2A'],
-         slate:['#93ACC9','#A5BBD4','#3F5A7A','#4A6480','#3B5068','#4B6A8E']};
-  var LEGACY={volt:'moss',green:'moss',forest:'moss',forge:'clay',cool:'slate',purple:'slate',pink:'clay',plum:'slate'};
-  var key=localStorage.getItem('athleteos_accent')||'moss';key=LEGACY[key]||key;
-  var a=A[key]||A.moss;
-  var st=document.documentElement.style;
-  st.setProperty('--accent',dark?a[0]:a[3]);
-  st.setProperty('--accent-d',dark?a[1]:a[4]);
-  st.setProperty('--accent-fill',dark?a[2]:a[3]);
-  st.setProperty('--accent-fill-d',dark?a[5]:a[4]);
-  st.setProperty('--accent-ink','#FFFFFF');
+  /* Iron: one accent per theme lives in app.css; nothing is set inline. */
 }catch(e){}})();
 </script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..700&display=swap">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -826,15 +814,6 @@
               <button type="button" class="gpill" id="thm-light" onclick="setThemeMode('light')">Light</button>
               <button type="button" class="gpill on" id="thm-dark" onclick="setThemeMode('dark')">Dark</button>
               <button type="button" class="gpill" id="thm-system" onclick="setThemeMode('system')">System</button>
-            </div>
-          </div>
-          <div class="set-field set-field-last">
-            <div class="set-field-h"><span>Accent</span><span class="tm" id="accent-sub">Moss</span></div>
-            <div class="acc-row">
-              <button type="button" class="acc-pick on" data-acc="moss" onclick="setAccent('moss')" style="--c:#3E6B4C" aria-label="Moss"></button>
-              <button type="button" class="acc-pick" data-acc="clay" onclick="setAccent('clay')" style="--c:#B35A33" aria-label="Clay"></button>
-              <button type="button" class="acc-pick" data-acc="ochre" onclick="setAccent('ochre')" style="--c:#8A6718" aria-label="Ochre"></button>
-              <button type="button" class="acc-pick" data-acc="slate" onclick="setAccent('slate')" style="--c:#4A6480" aria-label="Slate"></button>
             </div>
           </div>
         </div>

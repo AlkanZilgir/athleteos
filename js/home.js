@@ -77,7 +77,7 @@ function _chartAxes(opts){
     y:Object.assign({grid:{display:false},border:{display:false},ticks:Object.assign({maxTicksLimit:4},tick,opts.yTick||{})},opts.y||{})
   };
 }
-function _sig(n){try{return getComputedStyle(document.body).getPropertyValue(n).trim()||'#22C55E';}catch(e){return '#22C55E';}}
+function _sig(n){try{return getComputedStyle(document.body).getPropertyValue(n).trim()||'#A9ABE3';}catch(e){return '#A9ABE3';}}
 var RING_LG=295.31, RING_SM=138.23; // circumferences for r=47 and r=22
 function setRing(id,pctVal,circ){
   var el=document.getElementById(id);if(!el)return;

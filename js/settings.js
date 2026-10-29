@@ -98,21 +98,9 @@ var ACCENTS={
 };
 var ACCENT_LEGACY={volt:'moss',green:'moss',forest:'moss',forge:'clay',cool:'moss',purple:'moss',pink:'clay',plum:'moss'};
 function applyAccent(name){
-  name=ACCENT_LEGACY[name]||name;
-  var p=ACCENTS[name]||ACCENTS.moss;
+  // Iron has a single accent per theme; clear anything an older build wrote inline.
   var root=document.documentElement;
-  var dark=document.body.classList.contains('dark');
-  // On the light ground a near-white accent has nowhere to go: swap to the
-  // declared stand-in and put white back on top of it.
-  root.style.setProperty('--accent',dark?p.a:p.lt);
-  root.style.setProperty('--accent-d',dark?p.d:p.ltd);
-  root.style.setProperty('--accent-fill',dark?p.fill:p.lt);
-  root.style.setProperty('--accent-fill-d',dark?p.filld:p.ltd);
-  root.style.setProperty('--accent-ink','#FFFFFF');
-  root.style.setProperty('--adim',dark?'rgba('+p.rgbd+',.14)':'rgba('+p.rgb+',.10)');
-  root.style.setProperty('--accent-rgb',p.rgb);
-  document.querySelectorAll('.acc-pick').forEach(function(b){b.classList.toggle('on',b.dataset.acc===name);});
-  var sub=document.getElementById('accent-sub');if(sub)sub.textContent=name.charAt(0).toUpperCase()+name.slice(1);
+  ['--accent','--accent-d','--accent-fill','--accent-fill-d','--accent-ink','--adim','--accent-rgb'].forEach(function(p){root.style.removeProperty(p);});
 }
 function setAccent(name){
   try{localStorage.setItem('athleteos_accent',name);}catch(e){}
