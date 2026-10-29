@@ -43,9 +43,8 @@ function renderPlan(){
 function selectPlanDay(i){planDayIdx=i;renderPlan();}
 function startPlanChat(){
   goTab('ai');
-  var inp=document.getElementById('chat-in');
-  inp.value='Create me a complete personalized training plan based on my goals and stats.';
-  inp.focus();autoH(inp);
+  var k=document.getElementById('rp-kind');if(k){k.value='block';rpKindChanged();}
+  var inp=document.getElementById('chat-in');if(inp)inp.focus();
 }
 function startPlanSession(){
   var day=AI_PLAN&&AI_PLAN.days&&AI_PLAN.days[planDayIdx];
@@ -321,12 +320,44 @@ function _aiRateOk(){
   try{localStorage.setItem('ai_rate_log',JSON.stringify(log));}catch(e){}
   return true;
 }
-async function sendMsg(){
+/* The Coach page is a form, not a thread. Each run produces one report:
+   a heading (what was asked), a timestamp, and a body. */
+var _rpTitle='';
+var RP_KINDS={
+  block:{t:'Training block, next 4 weeks',p:'Generate a 4-day powerbuilding block based on my goal, experience and weekly availability. Output the plan as [PLAN]{json}[/PLAN].'},
+  meals:{t:'Meals to close the protein gap',p:'Suggest high-protein meals that close the gap to my daily protein target. Emit each as an addMeal action.'},
+  volume:{t:'Volume by muscle group, 14 days',p:'Report my volume allocation per muscle group over the last 14 days as a table and name the undertrained group.'},
+  loads:{t:'Load review',p:'Review my current block against my logged RPE and bodyweight trend, and adjust the loading. Present changes as a table.'},
+  week:{t:'This week',p:'Summarise this week: sessions, volume, protein and sleep against targets, in a table, then two sentences on what to change next week.'},
+  custom:{t:'',p:''}
+};
+function rpKindChanged(){
+  var k=document.getElementById('rp-kind'),lbl=document.getElementById('rp-details-lbl'),ta=document.getElementById('chat-in');
+  if(!k||!lbl||!ta)return;
+  var custom=k.value==='custom';
+  lbl.textContent=custom?'Question':'Details (optional)';
+  ta.placeholder=custom?'What do you want to know about your training, food, sleep or weight?':'Days available, equipment, anything the report should account for';
+}
+function runCoachReport(){
+  var k=document.getElementById('rp-kind'),ta=document.getElementById('chat-in');
+  if(!k||!ta)return;
+  var kind=RP_KINDS[k.value]||RP_KINDS.custom,details=ta.value.trim();
+  if(k.value==='custom'){
+    if(!details){ta.focus();return;}
+    sendMsg(details,details.length>64?details.slice(0,61)+'\u2026':details);
+    return;
+  }
+  sendMsg(kind.p+(details?'\nDetails from the athlete: '+details:''),kind.t);
+}
+async function sendMsg(prompt,title){
   if(_vRec)stopVoice();
-  var inp=document.getElementById('chat-in'),msg=inp.value.trim();
+  var inp=document.getElementById('chat-in');
+  var msg=(typeof prompt==='string'&&prompt.trim())||(inp?inp.value.trim():'');
   if(!msg)return;
   if(!_aiRateOk())return;
-  inp.value='';inp.style.height='auto';
+  if(inp){inp.value='';inp.style.height='auto';}
+  _rpTitle=title||(msg.length>64?msg.slice(0,61)+'\u2026':msg);
+  var runBtn=document.getElementById('rp-run');if(runBtn)runBtn.disabled=true;
   addMsg('u',msg);chatH.push({role:'user',content:msg});
   var tdiv=addTyping();
   // The persona, safety rules, routine-generation spec and action protocol are
@@ -343,8 +374,8 @@ async function sendMsg(){
   var session=null;
   try{var sres=await sb.auth.getSession();session=sres&&sres.data&&sres.data.session;}catch(e){}
   if(!session){
-    tdiv.remove();
-    addMsg('a','Session expired. Sign in again and re-issue the command.');
+    tdiv.remove();if(runBtn)runBtn.disabled=false;
+    addMsg('a','Session expired. Sign in again and run the report again.');
     return;
   }
   var payload=JSON.stringify({ctx:ctx,messages:chatH.slice(-12)});
@@ -367,7 +398,7 @@ async function sendMsg(){
     finally{if(timer)clearTimeout(timer);}
     if(attempt<2)await new Promise(function(r){setTimeout(r,700*Math.pow(2,attempt)+Math.random()*300);});
   }
-  tdiv.remove();
+  tdiv.remove();if(runBtn)runBtn.disabled=false;
   if(reply){
     addMsg('a',reply);chatH.push({role:'assistant',content:reply});
   }else{
@@ -377,25 +408,25 @@ async function sendMsg(){
     if(!navigator.onLine){
       help='Offline. The coach needs a connection; logging still works locally.';
     }else if(lastErr==='engine_not_configured'){
-      help='Engine offline: no model key is configured on the server. Set GEMINI_API_KEY in the Supabase function secrets — the function reads it per request, so no redeploy is needed.';
+      help='Coach offline: no model key is configured on the server. Set GEMINI_API_KEY in the Supabase function secrets — the function reads it per request, so no redeploy is needed.';
     }else if(lastErr==='engine_key_rejected'){
-      help='Engine offline: the configured model key was rejected. Check GEMINI_API_KEY in the Supabase function secrets.';
+      help='Coach offline: the configured model key was rejected. Check GEMINI_API_KEY in the Supabase function secrets.';
     }else if(lastErr==='refused'){
       help='That request was declined by the model safety layer. Rephrase it, or ask a clinician if it concerns pain, injury or medication.';
     }else if(lastStatus===429||lastErr==='rate_limited'){
-      help='Rate limited. Wait a moment and re-issue the command.';
+      help='Rate limited. Wait a moment and run the report again.';
     }else if(lastStatus===401||lastStatus===403){
-      help='Session rejected. Sign out and back in, then re-issue the command.';
+      help='Session rejected. Sign out and back in, then run the report again.';
     }else if(lastErr==='quota_exceeded'){
       // The server, not localStorage, is the authority on the daily allowance.
       help='Daily coach allowance used up. It resets at midnight.';
     }else if(lastErr==='payload_too_large'){
-      help='This conversation is too long to send. Reset the session and re-issue the command.';
+      help='Too many reports in this session to send. Clear reports and run it again.';
     }else{
-      help='No output returned. Re-issue the command; your logs are untouched.';
+      help='No report returned. Run it again; your logs are untouched.';
     }
     addMsg('a',help);
-    if(window.Sentry)Sentry.captureMessage('Coach engine failed: '+lastErr,{level:'warning'});
+    if(window.Sentry)Sentry.captureMessage('Coach report failed: '+lastErr,{level:'warning'});
   }
 }
 function buildCtx(){
@@ -440,24 +471,11 @@ function addMsg(role,text){
     if(!text&&pendingActs)text='Want me to run '+(pendingActs.length===1?'this':'these')+'?';
   }
   var el=document.getElementById('chat-msgs');
-  var d=document.createElement('div');
-  if(role==='a'){
-    // Engine output is a data card, not a speech bubble: a labelled header
-    // rule, then the body. The body keeps pre-wrap so aligned value lines
-    // from the model survive.
-    d.className='eng-out fu';
-    var h=document.createElement('div');h.className='eng-out-h';
-    h.innerHTML='<svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Coach'+
-      '<span class="eng-out-ts">'+_engStamp()+'</span>';
-    var bd=document.createElement('div');bd.className='eng-out-b';
-    _renderEngineBody(bd,text||'');
-    d.appendChild(h);d.appendChild(bd);
-  }else{
-    d.className='eng-cmd fu';
-    d.innerHTML='<span class="eng-cmd-k" aria-hidden="true">\u25b8</span>';
-    var t=document.createElement('span');t.className='eng-cmd-t';t.textContent=text||'';
-    d.appendChild(t);
-  }
+  // The request is the report's heading, so the user turn has no element of
+  // its own; it is kept in chatH for the model and shown once, on the report.
+  if(role!=='a')return null;
+  var d=_rpCard(_rpTitle||'Report');
+  _renderEngineBody(d.querySelector('.rp-b'),text||'');
   el.appendChild(d);
   if(pendingActs)addActionCard(pendingActs);
   el.scrollTop=el.scrollHeight;
@@ -482,10 +500,11 @@ function _actLabel(a){
 }
 function addActionCard(actions){
   var id='act'+(++_actSeq);_actMap[id]=actions;
-  var rows=actions.map(function(a){return '<div class="act-row" style="padding:8px 10px;background:var(--bg2);border-radius:9px;margin-top:6px;font-size:13.5px;line-height:1.45">'+_actLabel(a)+'</div>';}).join('');
+  var rows=actions.map(function(a){return '<div class="rp-confirm-row">'+_actLabel(a)+'</div>';}).join('');
   var el=document.getElementById('chat-msgs');
-  var d=document.createElement('div');d.className='msg a';d.style.maxWidth='94%';
-  d.innerHTML='<div style="font-weight:600;margin-bottom:4px;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">AI wants to:</div>'+rows+'<div style="display:flex;gap:8px;margin-top:12px"><button type="button" class="btn" style="flex:1;padding:10px;font-size:13.5px" onclick="runActions(\''+id+'\',this)">Run</button><button type="button" class="btn-o" style="flex:1;padding:10px;font-size:13.5px" onclick="cancelActions(\''+id+'\',this)">Cancel</button></div>';
+  var d=_rpCard(actions.length===1?'Proposed change':'Proposed changes ('+actions.length+')');
+  d.classList.add('rp-confirm');
+  d.querySelector('.rp-b').innerHTML=rows+'<div class="rp-confirm-actions"><button type="button" class="btn" onclick="runActions(\''+id+'\',this)">Apply</button><button type="button" class="btn-o" onclick="cancelActions(\''+id+'\',this)">Discard</button></div>';
   el.appendChild(d);el.scrollTop=el.scrollHeight;
 }
 async function runActions(id,btn){
@@ -495,15 +514,15 @@ async function runActions(id,btn){
   var results=[];
   for(var i=0;i<acts.length;i++){var r=await executeAction(acts[i]);results.push(r);}
   delete _actMap[id];
-  card.querySelector('div[style*="gap:8px"]').outerHTML=
-    '<div style="margin-top:10px;font-size:12.5px;color:var(--t2)">'+
+  card.querySelector('.rp-confirm-actions').outerHTML=
+    '<div class="rp-result">'+
     results.map(function(r){return (r.ok?ICO('check','13px'):ICO('x','13px'))+r.msg;}).join('<br>')+
     '</div>';
 }
 function cancelActions(id,btn){
   delete _actMap[id];
   var card=btn.parentNode.parentNode;
-  card.querySelector('div[style*="gap:8px"]').outerHTML='<div style="margin-top:10px;font-size:12.5px;color:var(--t3)">Cancelled</div>';
+  card.querySelector('.rp-confirm-actions').outerHTML='<div class="rp-result">Discarded</div>';
 }
 async function executeAction(act){
   try{
@@ -650,13 +669,28 @@ function _renderEngineBody(el,text){
   el.innerHTML=out||'<div class="eng-txt">'+_esc(text||'')+'</div>';
 }
 function _engStamp(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
-function addTyping(){var el=document.getElementById('chat-msgs');var d=document.createElement('div');d.className='eng-out eng-ty';d.innerHTML='<div class="eng-out-h"><svg class="eng-out-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-activity"/></svg>Computing<span class="eng-out-ts">'+_engStamp()+'</span></div><div class="eng-out-b"><div class="dots"><span></span><span></span><span></span></div></div>';el.appendChild(d);el.scrollTop=el.scrollHeight;return d;}
+function _rpCard(title){
+  var d=document.createElement('section');d.className='rp';
+  var h=document.createElement('div');h.className='rp-h';
+  var s=document.createElement('span');s.textContent=title;
+  var tm=document.createElement('time');tm.textContent=_engStamp();
+  h.appendChild(s);h.appendChild(tm);
+  var b=document.createElement('div');b.className='rp-b';
+  d.appendChild(h);d.appendChild(b);
+  return d;
+}
+function addTyping(){
+  var el=document.getElementById('chat-msgs');
+  var d=_rpCard(_rpTitle||'Report');d.classList.add('rp-working-card');
+  d.querySelector('.rp-b').innerHTML='<div class="rp-working"><span class="sync-bar" aria-hidden="true"></span>Building the report from your log</div>';
+  el.appendChild(d);el.scrollTop=el.scrollHeight;return d;
+}
 // The empty thread is one quiet line, not an instrument panel. CSS hides it the
 // moment a real message lands beside it (.chat-empty:not(:only-child)).
-var CHAT_EMPTY='<p class="chat-empty">Ask about your last session, the gap to today\'s protein target, or a plan for the week.</p>';
+var CHAT_EMPTY='<p class="rp-empty">Reports appear here. Pick one above and run it; each is built from your own log.</p>';
 function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML=CHAT_EMPTY;}
 // One-shot helper for the quick-action chips: paste the prompt into the chat input and send.
-function askAI(prompt){var ta=document.getElementById('chat-in');if(!ta)return;ta.value=prompt;if(typeof autoH==='function')autoH(ta);sendMsg();}
+function askAI(prompt,title){sendMsg(prompt,title);}
 
 // ── Adaptive plan: weekly refine prompt ──
 // Banner appears when: AI_PLAN exists, ≥3 workouts in last 7 days, and ≥7 days since last refine.
@@ -699,5 +733,5 @@ async function refinePlanWithAI(){
     'Adjust exercise selection and rep targets to match my current strength. Bump weights/reps where I am clearly ready; ease back where I missed sessions. '+
     'Keep the day-of-week structure unless a change is obviously better. Output the revised plan as [PLAN]{json}[/PLAN] so it auto-saves.';
   goTab('ai');
-  askAI(prompt);
+  askAI(prompt,'Plan rewrite from the last 14 days');
 }
