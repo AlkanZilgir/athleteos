@@ -894,9 +894,9 @@
         <!-- HELP -->
         <div class="card">
           <div class="ctitle">Help</div>
-          <div class="sit" onclick="window.open('mailto:support@athleteos.app?subject=AthleteOS%20support%20request')">
+          <div class="sit" onclick="openSupport()">
             <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span class="sit-t"><span class="sit-l">Contact support</span><span class="sit-s">We reply within 24 hours</span></span>
+            <span class="sit-t"><span class="sit-l">Contact support</span><span class="sit-s">alkanzilgir@gmail.com · we reply within 24 hours</span></span>
             <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
           <div class="sit" onclick="openFeedback()">
@@ -938,7 +938,7 @@
         <div class="card">
           <div class="ctitle">About</div>
           <div class="set-meta">
-            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.0</span></span>
+            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.1</span></span>
           </div>
           <div class="set-meta">
             <span>Website</span><span class="lnk" onclick="window.open('https://athleteos.app','_blank')">athleteos.app</span>
@@ -1438,18 +1438,19 @@
 
 <!-- FEEDBACK FORM -->
 <div class="modal" id="m-feedback"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
-  <div class="ctitle">Send feedback</div>
+  <div class="ctitle" id="fb-title">Send feedback</div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">We read every one. Tell us what's broken, missing, or great.</p>
   <div class="f"><label>Category</label>
     <div class="gpills" style="margin-top:8px">
       <button type="button" class="gpill on" id="fb-cat-bug" onclick="fb_cat('bug')">Bug</button>
       <button type="button" class="gpill" id="fb-cat-idea" onclick="fb_cat('idea')">Idea</button>
       <button type="button" class="gpill" id="fb-cat-love" onclick="fb_cat('love')">Praise</button>
+      <button type="button" class="gpill" id="fb-cat-support" onclick="fb_cat('support')">Support</button>
       <button type="button" class="gpill" id="fb-cat-other" onclick="fb_cat('other')">Other</button>
     </div>
   </div>
   <div class="f"><label>Your message</label><textarea id="fb-msg" placeholder="What's on your mind?" style="width:100%;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:12px 14px;color:var(--t);font-family:inherit;font-size:14.5px;outline:none;resize:vertical;min-height:120px;font-weight:500"></textarea></div>
-  <p class="tm" style="font-size:11px;margin-bottom:14px;color:var(--t3)">We'll attach your account email and app version. No other data is sent.</p>
+  <p class="tm" style="font-size:11px;margin-bottom:14px;color:var(--t3)">We'll attach your account email and app version. No other data is sent. Prefer email? <a class="lnk" href="mailto:alkanzilgir@gmail.com?subject=AthleteOS%20support">alkanzilgir@gmail.com</a></p>
   <div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-feedback')">Cancel</button><button type="button" class="btn" id="fb-send" onclick="sendFeedback()">Send</button></div>
 </div></div>
 <!-- (legacy plate calc removed — visual version is the m-plate above) -->

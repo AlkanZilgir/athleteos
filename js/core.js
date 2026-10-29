@@ -1,4 +1,4 @@
-const APP_VERSION='v1.2.0';
+const APP_VERSION='v1.2.1';
 
 /* ── ERROR TRACKING (Sentry) ──────────────────
    The Sentry Loader Script is in index.html <head>. It lazily injects the SDK
@@ -280,7 +280,27 @@ async function init(){
     // Supabase fires this when the user lands back via a password-reset email link.
     // Prompt for a new password immediately so they don't stay in this special session.
     if(event==='PASSWORD_RECOVERY'){promptNewPassword();}
+    if(event==='USER_UPDATED'&&sess&&sess.user){
+      if(CU&&CU.email!==sess.user.email)toast('Email changed to '+sess.user.email);
+      CU=sess.user;var se=document.getElementById('set-email');if(se)se.textContent=CU.email||'';
+    }
   });
+  _consumeAuthHash();
+}
+// Supabase appends #message=… or #error_description=… when the user lands back
+// from an email link (email change, recovery). Show it, then clean the URL.
+function _consumeAuthHash(){
+  try{
+    var h=location.hash||'';if(!h||h.indexOf('share=')!==-1)return;
+    var q=new URLSearchParams(h.replace(/^#/,''));
+    var msg=q.get('error_description')||q.get('message');
+    if(msg){
+      msg=msg.replace(/\+/g,' ');
+      if(/confirmation link accepted/i.test(msg))msg='First link accepted — now open the link in your other inbox';
+      toast(msg);
+    }
+    if(msg||q.get('access_token')||q.get('type'))history.replaceState(null,'',location.pathname+location.search);
+  }catch(e){}
 }
 function promptNewPassword(){
   // Reuse the in-app change-password modal so we don't rely on the browser's prompt()

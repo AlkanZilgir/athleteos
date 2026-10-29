@@ -115,27 +115,33 @@ function initAccent(){
 
 /* ── FEEDBACK / FAQ stubs ─────────────────── */
 var _fbCat='bug';
-function openFeedback(){
-  _fbCat='bug';fb_cat('bug');
+function openFeedback(cat){
+  _fbCat=cat||'bug';fb_cat(_fbCat);
   var ta=document.getElementById('fb-msg');if(ta)ta.value='';
+  var tt=document.getElementById('fb-title');if(tt)tt.textContent=cat==='support'?'Contact support':'Send feedback';
   oModal('m-feedback');
   setTimeout(function(){var ta2=document.getElementById('fb-msg');if(ta2)ta2.focus();},120);
 }
 function fb_cat(c){
   _fbCat=c;
-  ['bug','idea','love','other'].forEach(function(x){var el=document.getElementById('fb-cat-'+x);if(el)el.classList.toggle('on',x===c);});
+  ['bug','idea','love','support','other'].forEach(function(x){var el=document.getElementById('fb-cat-'+x);if(el)el.classList.toggle('on',x===c);});
 }
+var SUPPORT_EMAIL='alkanzilgir@gmail.com';
+// Support lands in the feedback table (always works, even in a standalone PWA
+// where mailto: popups are blocked) with a mailto link as the fallback.
+function openSupport(){openFeedback('support');}
 async function sendFeedback(){
   var msg=(document.getElementById('fb-msg').value||'').trim();
   if(msg.length<3){toast('Add a bit more detail');return;}
+  if(!sb){toast('Still loading — try again in a second');return;}
   var btn=document.getElementById('fb-send');btn.disabled=true;btn.textContent='Sending…';
   var rec={category:_fbCat,message:msg,app_version:APP_VERSION,user_agent:navigator.userAgent.slice(0,200)};
   if(CU){rec.user_id=CU.id;rec.email=CU.email;}
   var{error}=await sb.from('feedback').insert(rec);
   btn.disabled=false;btn.textContent='Send';
-  if(error){toast('Could not send — try again');console.warn(error);return;}
+  if(error){console.warn(error);toast('Could not send — email '+SUPPORT_EMAIL+' instead');return;}
   cModal('m-feedback');
-  toast('Got it. Thanks.');
+  toast(_fbCat==='support'?'Sent. We reply to '+(CU&&CU.email?CU.email:'your email')+' within 24 hours.':'Got it. Thanks.');
 }
 
 /* ── ACCOUNT (email / password) ───────────── */
@@ -144,23 +150,60 @@ function openChangePasswordM(){['chpw-new','chpw-conf'].forEach(function(id){var
 async function saveChangeEmail(){
   var newEmail=(document.getElementById('chmail-new').value||'').trim();
   if(!newEmail||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){toast('Enter a valid email');return;}
+  if(CU&&CU.email&&newEmail.toLowerCase()===CU.email.toLowerCase()){toast('That is already your email');return;}
   var btn=document.getElementById('chmail-btn');btn.disabled=true;btn.textContent='Sending…';
-  var{error}=await sb.auth.updateUser({email:newEmail});
+  var{error}=await sb.auth.updateUser({email:newEmail},{emailRedirectTo:window.location.origin+window.location.pathname});
   btn.disabled=false;btn.textContent='Send link';
-  if(error){toast(error.message||'Could not update email');console.warn(error);return;}
+  if(error){console.warn(error);toast(_authErr(error,'Could not update email'));return;}
   cModal('m-chmail');
-  toast('Confirmation link sent — check '+newEmail);
+  toast('Check '+newEmail+' and your current inbox — both links must be clicked');
 }
 async function saveChangePassword(){
   var p1=document.getElementById('chpw-new').value||'',p2=document.getElementById('chpw-conf').value||'';
   if(p1.length<8){toast('Password must be at least 8 characters');return;}
   if(p1!==p2){toast('Passwords do not match');return;}
   var btn=document.getElementById('chpw-btn');btn.disabled=true;btn.textContent='Updating…';
-  var{error}=await sb.auth.updateUser({password:p1});
+  var nonce=document.getElementById('chpw-nonce');
+  var args={password:p1};
+  if(nonce&&nonce.value.trim())args.nonce=nonce.value.trim();
+  var{error}=await sb.auth.updateUser(args);
   btn.disabled=false;btn.textContent='Update password';
-  if(error){toast(error.message||'Could not update password');console.warn(error);return;}
+  if(error){
+    console.warn(error);
+    // "Secure password change" is on: Supabase wants a code it emails to the user.
+    if(/reauthenticat|nonce/i.test(error.message||'')){
+      var r=await sb.auth.reauthenticate();
+      if(r&&r.error){toast(_authErr(r.error,'Could not send the code'));return;}
+      _showPwNonce();toast('We emailed you a 6-digit code — enter it below');return;
+    }
+    toast(_authErr(error,'Could not update password'));return;
+  }
   cModal('m-chpw');
+  _showPwNonce(false);
   toast('Password updated');
+}
+function _showPwNonce(show){
+  var f=document.getElementById('chpw-nonce-f');
+  if(!f){
+    if(show===false)return;
+    var conf=document.getElementById('chpw-conf');if(!conf)return;
+    f=document.createElement('div');f.className='f';f.id='chpw-nonce-f';
+    f.innerHTML='<label>Code from your email</label><input type="text" id="chpw-nonce" inputmode="numeric" autocomplete="one-time-code" placeholder="123456">';
+    conf.parentNode.parentNode.insertBefore(f,conf.parentNode.nextSibling);
+  }
+  f.style.display=show===false?'none':'block';
+  if(show!==false){var i=document.getElementById('chpw-nonce');if(i){i.value='';i.focus();}}
+}
+// Turn Supabase auth errors into something a person can act on.
+function _authErr(err,fallback){
+  var m=(err&&err.message)||'';
+  if(/rate limit|too many/i.test(m))return 'Too many emails sent — wait an hour and try again';
+  if(/smtp|sending|email provider/i.test(m))return 'Email delivery failed on our side — contact '+SUPPORT_EMAIL;
+  if(/already registered|already exists|already been registered/i.test(m))return 'That email already has an account';
+  if(/same password|different from the old/i.test(m))return 'Choose a password you have not used before';
+  if(/weak|at least|characters/i.test(m))return m;
+  if(/network|fetch/i.test(m))return 'No connection — try again when you are online';
+  return m||fallback;
 }
 
 /* ── CROSS-DEVICE PREFS ───────────────────── */
@@ -293,12 +336,19 @@ async function pushIsSubscribed(){
   }catch(e){return false;}
 }
 async function pushSubscribe(){
-  if(!('serviceWorker' in navigator)||!('PushManager' in window)){
-    toast('Push not supported on this device');return false;
+  var ua=navigator.userAgent||'';
+  var isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(isIOS&&typeof _isStandalone==='function'&&!_isStandalone()){
+    toast('On iPhone, add AthleteOS to your Home Screen first (Share → Add to Home Screen), then turn this on');return false;
   }
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||typeof Notification==='undefined'){
+    toast('Push is not supported in this browser');return false;
+  }
+  if(!sb||!CU){toast('Sign in first');return false;}
   try{
     var perm=await Notification.requestPermission();
-    if(perm!=='granted'){toast('Notifications denied');return false;}
+    if(perm==='denied'){toast('Notifications are blocked for this site — allow them in your browser or phone settings');return false;}
+    if(perm!=='granted'){toast('Notifications not allowed');return false;}
     var reg=await navigator.serviceWorker.ready;
     var sub=await reg.pushManager.getSubscription();
     if(!sub){
@@ -316,15 +366,31 @@ async function pushSubscribe(){
       user_agent:navigator.userAgent.slice(0,300),
       last_seen_at:new Date().toISOString()
     };
-    await sb.from('push_subscriptions').upsert(row,{onConflict:'user_id,endpoint'});
-    toast('Push notifications on');
+    var up=await sb.from('push_subscriptions').upsert(row,{onConflict:'user_id,endpoint'});
+    if(up&&up.error)throw up.error;
+    toast('Push notifications on — sending a test…');
     try{track('push_subscribed',{ua:navigator.userAgent.slice(0,60)});}catch(e){}
+    _sendTestPush();
     return true;
   }catch(e){
     console.warn('pushSubscribe',e);
-    toast('Could not enable push — '+(e.message||'unknown'));
+    var m=(e&&e.message)||'';
+    if(/permission denied|not allowed/i.test(m))m='the browser refused — check notification settings';
+    else if(/incognito|private/i.test(m))m='private browsing does not support push';
+    toast('Could not enable push — '+(m||'unknown error'));
     return false;
   }
+}
+// Proves the whole chain (subscription → server → device) right after enabling.
+async function _sendTestPush(){
+  try{
+    var r=await sb.auth.getSession();var session=r&&r.data&&r.data.session;if(!session)return;
+    var res=await fetch(SUPA_URL+'/functions/v1/send-push',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPA_KEY},
+      body:JSON.stringify({title:'AthleteOS',body:'Notifications are on. Rest timers and reminders will arrive here.',tag:'aos-test',url:'/'})});
+    var jr=null;try{jr=await res.json();}catch(e){}
+    if(!res.ok||!jr||!jr.sent){console.warn('test push',res.status,jr);toast('Subscribed, but the test notification did not send — contact '+SUPPORT_EMAIL);}
+  }catch(e){console.warn('test push',e);}
 }
 async function pushUnsubscribe(){
   try{
@@ -735,6 +801,7 @@ function _loadJSZip(){
   });
 }
 async function exportData(){
+  if(!sb||!CU){toast('Sign in first');return;}
   toast('Bundling your data…');
   var JSZip;
   try{JSZip=await _loadJSZip();}catch(e){
