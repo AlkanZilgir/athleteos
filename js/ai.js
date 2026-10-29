@@ -224,7 +224,10 @@ function toggleVoice(targetId,btn){
   if(btn)btn.classList.add('on');
 }
 function stopVoice(){
-  if(_vRec){try{_vRec.stop();}catch(e){}}
+  // Detach before stopping: a recogniser still fires a final onresult after
+  // stop(), which used to paste the transcript back into a box that had just
+  // been cleared by sendMsg(). abort() drops that pending result as well.
+  if(_vRec){var r=_vRec;r.onresult=null;r.onend=null;r.onerror=null;try{r.abort();}catch(e){try{r.stop();}catch(e2){}}}
   if(_vBtn)_vBtn.classList.remove('on');
   _vRec=null;_vTarget=null;_vBtn=null;
 }
@@ -328,7 +331,7 @@ async function sendMsg(prompt,title){
   var msg=(typeof prompt==='string'&&prompt.trim())||(inp?inp.value.trim():'');
   if(!msg)return;
   if(!_aiRateOk())return;
-  if(inp){inp.value='';inp.style.height='auto';}
+  if(inp){inp.value='';inp.style.height='auto';setTimeout(function(){if(inp.value===msg){inp.value='';inp.style.height='auto';}},250);}
   _rpTitle=title||'';
   var runBtn=document.getElementById('rp-run');if(runBtn)runBtn.disabled=true;
   addMsg('u',msg);chatH.push({role:'user',content:msg});
