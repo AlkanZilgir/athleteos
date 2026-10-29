@@ -1,6 +1,6 @@
 {
   "name": "athleteos",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "AthleteOS fitness PWA \u2014 workouts, nutrition, sleep, body, AI coach",
   "scripts": {
