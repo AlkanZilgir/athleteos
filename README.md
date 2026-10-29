@@ -22,7 +22,7 @@ python -m http.server 5173
 npm run dev
 ```
 
-Visit `http://localhost:5173/` for the app, `http://localhost:5173/marketing.html` for the landing page.
+Visit `http://localhost:5173/` for the app.
 
 ## Deploy
 
@@ -42,12 +42,11 @@ npx playwright install      # downloads chromium
 npm test                    # runs the smoke spec
 ```
 
-Smoke test verifies the marketing page loads and the auth screen renders without console errors. The sign-in test is skipped unless you set `TEST_EMAIL` / `TEST_PASSWORD` env vars to a pre-existing Supabase test account.
+Smoke test verifies the privacy/terms pages and the auth screen render without console errors. The sign-in test is skipped unless you set `TEST_EMAIL` / `TEST_PASSWORD` env vars to a pre-existing Supabase test account.
 
 ## Ship checklist — what's wired vs what needs your config
 
 Code-level — already wired:
-- [x] Marketing landing page (`marketing.html`)
 - [x] Light/Dark theme + Forge/Cool/Purple/Pink accent variants
 - [x] Empty-state SVG illustrations
 - [x] Password reset (email link + recovery flow)
@@ -75,7 +74,6 @@ Needs your config (free):
 | Paste PostHog project key | `app.js` → `POSTHOG_KEY` | 5 min — sign up at [posthog.com](https://posthog.com) (free 1M events/mo), create a project, copy the Project API Key (starts with `phc_`). If you picked the US region, also set `POSTHOG_HOST` to `https://us.i.posthog.com`. |
 | Enable Google OAuth | Supabase Dashboard → Authentication → Providers → Google | 10 min — needs a Google Cloud OAuth client (free) |
 | Add Stripe keys | Supabase Dashboard → Functions → Secrets | 5 min — `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, price IDs |
-| Add real screenshots | drop `screen-home.png`, `screen-workout.png`, `screen-ai.png` into the folder | 5 min |
 | Set Supabase Auth redirect URL | Supabase Dashboard → Auth → URL Configuration | 2 min after deploy |
 | Configure email templates | Supabase Dashboard → Auth → Email Templates | 10 min — at least replace the password-reset template subject |
 
@@ -95,7 +93,6 @@ Not done (out of scope, multi-session):
 ```
 .
 ├── index.html          # the app
-├── marketing.html      # public landing page
 ├── app.css             # all styles
 ├── app.js              # all JS — ~5,500 lines
 ├── sw.js               # service worker (caching, notifications, sync)

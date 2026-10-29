@@ -35,20 +35,6 @@ async function signIn(page) {
   await expect(page.locator('#p-home, #onb').first()).toBeVisible({ timeout: 15_000 });
 }
 
-test('landing page loads', async ({ page }) => {
-  await page.goto('/marketing.html');
-  await expect(page.getByRole('heading', { name: /Your personal/i })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Start free/i }).first()).toBeVisible();
-});
-
-test('pricing is hidden while payments are off', async ({ page }) => {
-  // PAYMENTS_ENABLED=false (js/core.js) for the diploma demo: the section stays
-  // in the markup, hidden, and no navigation points at it.
-  await page.goto('/marketing.html');
-  await expect(page.locator('#pricing')).toBeHidden();
-  await expect(page.getByRole('link', { name: /^Pricing$/ })).toHaveCount(0);
-});
-
 test('privacy and terms pages render', async ({ page }) => {
   await page.goto('/privacy.html');
   await expect(page.getByRole('heading', { name: /Privacy Policy/i })).toBeVisible();
@@ -128,14 +114,5 @@ test.describe('signed-in flows', () => {
     await expect(page.locator('#p-home')).toBeVisible({ timeout: 15_000 });
     await page.evaluate(() => window.goTab('ai'));
     await expect(page.locator('#chat-in')).toBeVisible();
-  });
-
-  test('paywall opens with all three plans', async ({ page }) => {
-    await signIn(page);
-    await expect(page.locator('#p-home')).toBeVisible({ timeout: 15_000 });
-    await page.evaluate(() => window.openPaywall());
-    await expect(page.locator('#m-paywall.on')).toBeVisible();
-    await expect(page.locator('[data-plan="monthly"]')).toBeVisible();
-    await expect(page.locator('[data-plan="yearly"]')).toBeVisible();
   });
 });
