@@ -658,7 +658,6 @@ function renderBiometrics(){
   var t=document.getElementById('bio-state');
   if(t){t.textContent='Synced';t.classList.remove('warn');}
 }
-function openGoalsM(){renderCalibrations();_revealSection('sec-calibrations');}
 function openProfileM(){_revealSection('sec-biometrics','input');}
 
 /* ── ONBOARDING TOOLTIPS ──────────────────── */

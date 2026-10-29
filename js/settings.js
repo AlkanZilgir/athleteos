@@ -61,12 +61,7 @@ function applyTheme(mode){
   var sub=document.getElementById('theme-sub');
   if(sub)sub.textContent=mode==='system'?'Following system ('+effective+')':'Currently '+effective;
   var meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.setAttribute('content',isDark?'#0A0A0C':'#FFFFFF');
-  // Volt resolves differently per theme, so the accent has to follow the flip.
-  if(typeof applyAccent==='function'){
-    var acc='moss';try{acc=localStorage.getItem('athleteos_accent')||'moss';}catch(e){}
-    applyAccent(acc);
-  }
+  if(meta)meta.setAttribute('content',isDark?'#1F1E22':'#E9E8EC');
 }
 function setThemeMode(mode){
   localStorage.setItem('athleteos_theme',mode);
@@ -81,36 +76,6 @@ function setThemeMode(mode){
 function initTheme(){
   var saved=localStorage.getItem('athleteos_theme')||'dark';
   setThemeMode(saved);
-  initAccent();
-}
-
-/* ── ACCENT COLOR ─────────────────────────── */
-var ACCENTS={
-  // a/d = the fill and its hover on the slate dark theme (light enough to
-  // clear 4.5:1 on #1E293B); lt/ltd = the ink-dark fill for the white theme.
-  // ink = what sits ON the dark fill; the light fill always takes white.
-  // a/d = muted text accent on the dark theme; fill/filld = the matte dark
-  // button fill; lt/ltd = fill and text on the white theme. Ink is always white.
-  moss:  {a:'#8DBB9A',d:'#A0C9AC',fill:'#3F6F52',filld:'#4A7F5F',rgb:'62,107,76',  rgbd:'141,187,154',lt:'#3E6B4C',ltd:'#325A3E'},
-  clay:  {a:'#D9A07F',d:'#E2B194',fill:'#9E5330',filld:'#B06040',rgb:'179,90,51',  rgbd:'217,160,127',lt:'#B35A33',ltd:'#964A28'},
-  ochre: {a:'#D4B46A',d:'#DEC283',fill:'#8A6A1E',filld:'#9A7A2A',rgb:'138,103,24', rgbd:'212,180,106',lt:'#8A6718',ltd:'#735514'},
-  slate: {a:'#93ACC9',d:'#A5BBD4',fill:'#3F5A7A',filld:'#4B6A8E',rgb:'74,100,128', rgbd:'147,172,201',lt:'#4A6480',ltd:'#3B5068'}
-};
-var ACCENT_LEGACY={volt:'moss',green:'moss',forest:'moss',forge:'clay',cool:'moss',purple:'moss',pink:'clay',plum:'moss'};
-function applyAccent(name){
-  // Iron has a single accent per theme; clear anything an older build wrote inline.
-  var root=document.documentElement;
-  ['--accent','--accent-d','--accent-fill','--accent-fill-d','--accent-ink','--adim','--accent-rgb'].forEach(function(p){root.style.removeProperty(p);});
-}
-function setAccent(name){
-  try{localStorage.setItem('athleteos_accent',name);}catch(e){}
-  applyAccent(name);
-  _syncPref('accent',name);
-}
-function initAccent(){
-  var saved='moss';
-  try{saved=localStorage.getItem('athleteos_accent')||'moss';}catch(e){}
-  applyAccent(saved);
 }
 
 /* ── FEEDBACK / FAQ stubs ─────────────────── */
@@ -234,9 +199,6 @@ async function loadUserPrefs(){
     if(data.theme&&data.theme!==localStorage.getItem('athleteos_theme')){
       localStorage.setItem('athleteos_theme',data.theme);applyTheme(data.theme);
     }
-    if(data.accent&&data.accent!==localStorage.getItem('athleteos_accent')){
-      localStorage.setItem('athleteos_accent',data.accent);applyAccent(data.accent);
-    }
     if(data.pinned_exercises&&data.pinned_exercises.length){
       try{localStorage.setItem(_pinKey(),JSON.stringify(data.pinned_exercises.slice(0,6)));}catch(e){}
     }
@@ -262,7 +224,6 @@ async function exportMyData(){
   }
   // Local-only data the user might want too: prefs, AI plan, custom exercises cache.
   bundle.local={
-    accent:localStorage.getItem('athleteos_accent'),
     theme:localStorage.getItem('athleteos_theme'),
     pinned:getPinnedEx(),
     ai_plan:JSON.parse(localStorage.getItem('athleteos_plan_'+CU.id)||'null'),

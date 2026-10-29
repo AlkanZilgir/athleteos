@@ -1,4 +1,4 @@
-const APP_VERSION='v1.2.1';
+const APP_VERSION='v1.2.2';
 
 /* ── ERROR TRACKING (Sentry) ──────────────────
    The Sentry Loader Script is in index.html <head>. It lazily injects the SDK

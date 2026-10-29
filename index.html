@@ -938,7 +938,7 @@
         <div class="card">
           <div class="ctitle">About</div>
           <div class="set-meta">
-            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.1</span></span>
+            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.2</span></span>
           </div>
           <div class="set-meta">
             <span>Website</span><span class="lnk" onclick="window.open('https://athleteos.app','_blank')">athleteos.app</span>
@@ -1206,29 +1206,6 @@
 
 <!-- 1RM CALCULATOR -->
 <div class="modal" id="m-1rm"><div class="msheet"><div class="mhandle"></div><div class="ctitle">1-Rep Max Calculator</div><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="rm-w" step="0.5" placeholder="100" oninput="calc1RM()"></div><div class="f"><label>Reps</label><input type="number" id="rm-r" placeholder="5" min="1" max="20" oninput="calc1RM()"></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);text-align:center;padding:18px;margin:6px 0 14px"><div class="sl" style="margin-bottom:6px">Estimated 1RM</div><div id="rm-out" style="font-family:var(--font-body);font-weight:700;font-size:42px;color:var(--accent);line-height:1">–</div></div><div id="rm-pct" style="font-size:12.5px;color:var(--t2);line-height:1.8"></div><button type="button" class="btn-o" style="width:100%;margin-top:12px" onclick="cModal('m-1rm')">Close</button></div></div>
-
-<!-- QUICK SET LOG -->
-<div class="modal" id="m-quickset">
-  <div class="msheet" style="overflow-y:auto;max-height:90vh">
-    <div class="mhandle"></div>
-    <div class="fb" style="margin-bottom:8px">
-      <div>
-        <div class="ctitle" style="margin:0" id="qs-ex">Exercise</div>
-        <div class="tm" style="font-size:12px;margin-top:2px" id="qs-prev"></div>
-      </div>
-      <span class="tag" id="qs-num">Set 1</span>
-    </div>
-    <div class="g2">
-      <div class="f"><label>Weight (kg) <span class="tm" style="font-weight:500;font-size:11px">— leave 0 for bodyweight</span></label><input type="number" id="qs-w" placeholder="0" step="0.5" inputmode="decimal" autofocus></div>
-      <div class="f"><label>Reps</label><input type="number" id="qs-r" placeholder="0" inputmode="numeric"></div>
-    </div>
-    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);margin:4px 0 12px;cursor:pointer"><input type="checkbox" id="qs-rest" checked style="width:18px;height:18px;accent-color:var(--accent)"> Start rest timer after saving</label>
-    <div class="g2">
-      <button type="button" class="btn-o" style="width:100%" onclick="cModal('m-quickset')">Cancel</button>
-      <button type="button" class="btn" onclick="saveQuickSet()">Save Set</button>
-    </div>
-  </div>
-</div>
 
 <!-- POST-WORKOUT REPORT CARD -->
 <div class="modal" id="m-summary">

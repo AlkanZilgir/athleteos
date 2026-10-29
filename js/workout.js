@@ -773,51 +773,6 @@ async function _mountInlineDemo(el,name){
 }
 
 /* ── QUICK SET LOG ─────────────────────────── */
-var _qsIdx=-1;
-function openQuickSet(idx){
-  var ex=wExs[idx];if(!ex)return;
-  _qsIdx=idx;
-  document.getElementById('qs-ex').textContent=ex.name;
-  document.getElementById('qs-num').textContent='Set '+((ex.sets||[]).length+1);
-  // Pre-fill from this session's last set, falling back to last session's matching set.
-  var last=(ex.sets&&ex.sets.length)?ex.sets[ex.sets.length-1]:null;
-  var ls=_lastSessByEx[(ex.name||'').toLowerCase()];
-  var lastSessSet=null;
-  if(!last&&ls&&ls.sets&&ls.sets.length){
-    var setNum=(ex.sets||[]).length;
-    lastSessSet=ls.sets[setNum]||ls.sets[ls.sets.length-1];
-    if(lastSessSet)last={weight:lastSessSet.w,reps:lastSessSet.r};
-  }
-  document.getElementById('qs-w').value=last?(last.weight||''):'';
-  document.getElementById('qs-r').value=last?(last.reps||''):'';
-  var prev=document.getElementById('qs-prev');
-  if(last){
-    var lbl=lastSessSet?'Last time: ':'Previous: ';
-    prev.textContent=lbl+fmtSet(last.weight,last.reps);
-    prev.style.display='block';
-  }
-  else{prev.textContent='';prev.style.display='none';}
-  oModal('m-quickset');
-  setTimeout(function(){var w=document.getElementById('qs-w');if(w){w.focus();w.select&&w.select();}},120);
-}
-function saveQuickSet(){
-  if(_qsIdx<0||!wExs[_qsIdx])return;
-  var w=parseFloat(document.getElementById('qs-w').value)||0;
-  var r=parseInt(document.getElementById('qs-r').value)||0;
-  if(r<=0){toast('Enter reps');return;}
-  wExs[_qsIdx].sets=wExs[_qsIdx].sets||[];
-  wExs[_qsIdx].sets.push({weight:w,reps:r});
-  var exName=wExs[_qsIdx].name;
-  var startRest=document.getElementById('qs-rest').checked;
-  cModal('m-quickset');
-  renderExList();
-  toast('Set logged: '+fmtSet(w,r));
-  if(startRest){
-    _restForExName=exName;
-    var s=getRestPref(exName);
-    openRest();setRest(s);
-  }
-}
 function toggleExNote(i,btn){
   var ta=document.querySelector('textarea[data-ex-note="'+i+'"]');if(!ta)return;
   var shown=ta.style.display!=='none';
