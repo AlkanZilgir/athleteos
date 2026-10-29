@@ -24,13 +24,13 @@
   var dark=m==='dark'||(m==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   if(dark)document.documentElement.classList.add('dark');
   /* [dark text accent, dark text hover, dark fill, light fill, light hover, dark fill hover] */
-  var A={slate:['#8BA4C8','#9DB4D4','#3E5F93','#3A5A8C','#2E4A75','#4A6CA3'],
-         forest:['#7FAE93','#92BCA4','#2F6B4F','#2F6B4F','#255740','#3A7D5E'],
-         clay:['#C99A80','#D4AB94','#9E4E2E','#B0532E','#944525','#B05E3B'],
-         plum:['#A79CC4','#B6ADCF','#625486','#6B5B95','#584B7C','#71639A']};
-  var LEGACY={volt:'slate',green:'forest',forge:'clay',cool:'slate',purple:'plum',pink:'plum'};
-  var key=localStorage.getItem('athleteos_accent')||'slate';key=LEGACY[key]||key;
-  var a=A[key]||A.slate;
+  var A={moss:['#8DBB9A','#A0C9AC','#3F6F52','#3E6B4C','#325A3E','#4A7F5F'],
+         clay:['#D9A07F','#E2B194','#9E5330','#B35A33','#964A28','#B06040'],
+         ochre:['#D4B46A','#DEC283','#8A6A1E','#8A6718','#735514','#9A7A2A'],
+         slate:['#93ACC9','#A5BBD4','#3F5A7A','#4A6480','#3B5068','#4B6A8E']};
+  var LEGACY={volt:'moss',green:'moss',forest:'moss',forge:'clay',cool:'slate',purple:'slate',pink:'clay',plum:'slate'};
+  var key=localStorage.getItem('athleteos_accent')||'moss';key=LEGACY[key]||key;
+  var a=A[key]||A.moss;
   var st=document.documentElement.style;
   st.setProperty('--accent',dark?a[0]:a[3]);
   st.setProperty('--accent-d',dark?a[1]:a[4]);
@@ -829,12 +829,12 @@
             </div>
           </div>
           <div class="set-field set-field-last">
-            <div class="set-field-h"><span>Accent</span><span class="tm" id="accent-sub">Slate</span></div>
+            <div class="set-field-h"><span>Accent</span><span class="tm" id="accent-sub">Moss</span></div>
             <div class="acc-row">
-              <button type="button" class="acc-pick on" data-acc="slate" onclick="setAccent('slate')" style="--c:#3A5A8C" aria-label="Slate"></button>
-              <button type="button" class="acc-pick" data-acc="forest" onclick="setAccent('forest')" style="--c:#2F6B4F" aria-label="Forest"></button>
-              <button type="button" class="acc-pick" data-acc="clay" onclick="setAccent('clay')" style="--c:#B0532E" aria-label="Clay"></button>
-              <button type="button" class="acc-pick" data-acc="plum" onclick="setAccent('plum')" style="--c:#6B5B95" aria-label="Plum"></button>
+              <button type="button" class="acc-pick on" data-acc="moss" onclick="setAccent('moss')" style="--c:#3E6B4C" aria-label="Moss"></button>
+              <button type="button" class="acc-pick" data-acc="clay" onclick="setAccent('clay')" style="--c:#B35A33" aria-label="Clay"></button>
+              <button type="button" class="acc-pick" data-acc="ochre" onclick="setAccent('ochre')" style="--c:#8A6718" aria-label="Ochre"></button>
+              <button type="button" class="acc-pick" data-acc="slate" onclick="setAccent('slate')" style="--c:#4A6480" aria-label="Slate"></button>
             </div>
           </div>
         </div>

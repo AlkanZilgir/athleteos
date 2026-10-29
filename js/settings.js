@@ -64,7 +64,7 @@ function applyTheme(mode){
   if(meta)meta.setAttribute('content',isDark?'#0A0A0C':'#FFFFFF');
   // Volt resolves differently per theme, so the accent has to follow the flip.
   if(typeof applyAccent==='function'){
-    var acc='slate';try{acc=localStorage.getItem('athleteos_accent')||'slate';}catch(e){}
+    var acc='moss';try{acc=localStorage.getItem('athleteos_accent')||'moss';}catch(e){}
     applyAccent(acc);
   }
 }
@@ -91,15 +91,15 @@ var ACCENTS={
   // ink = what sits ON the dark fill; the light fill always takes white.
   // a/d = muted text accent on the dark theme; fill/filld = the matte dark
   // button fill; lt/ltd = fill and text on the white theme. Ink is always white.
-  slate: {a:'#8BA4C8',d:'#9DB4D4',fill:'#3E5F93',filld:'#4A6CA3',rgb:'58,90,140', rgbd:'139,164,200',lt:'#3A5A8C',ltd:'#2E4A75'},
-  forest:{a:'#7FAE93',d:'#92BCA4',fill:'#2F6B4F',filld:'#3A7D5E',rgb:'47,107,79', rgbd:'127,174,147',lt:'#2F6B4F',ltd:'#255740'},
-  clay:  {a:'#C99A80',d:'#D4AB94',fill:'#9E4E2E',filld:'#B05E3B',rgb:'176,83,46', rgbd:'201,154,128',lt:'#B0532E',ltd:'#944525'},
-  plum:  {a:'#A79CC4',d:'#B6ADCF',fill:'#625486',filld:'#71639A',rgb:'107,91,149',rgbd:'167,156,196',lt:'#6B5B95',ltd:'#584B7C'}
+  moss:  {a:'#8DBB9A',d:'#A0C9AC',fill:'#3F6F52',filld:'#4A7F5F',rgb:'62,107,76',  rgbd:'141,187,154',lt:'#3E6B4C',ltd:'#325A3E'},
+  clay:  {a:'#D9A07F',d:'#E2B194',fill:'#9E5330',filld:'#B06040',rgb:'179,90,51',  rgbd:'217,160,127',lt:'#B35A33',ltd:'#964A28'},
+  ochre: {a:'#D4B46A',d:'#DEC283',fill:'#8A6A1E',filld:'#9A7A2A',rgb:'138,103,24', rgbd:'212,180,106',lt:'#8A6718',ltd:'#735514'},
+  slate: {a:'#93ACC9',d:'#A5BBD4',fill:'#3F5A7A',filld:'#4B6A8E',rgb:'74,100,128', rgbd:'147,172,201',lt:'#4A6480',ltd:'#3B5068'}
 };
-var ACCENT_LEGACY={volt:'slate',green:'forest',forge:'clay',cool:'slate',purple:'plum',pink:'plum'};
+var ACCENT_LEGACY={volt:'moss',green:'moss',forest:'moss',forge:'clay',cool:'moss',purple:'moss',pink:'clay',plum:'moss'};
 function applyAccent(name){
   name=ACCENT_LEGACY[name]||name;
-  var p=ACCENTS[name]||ACCENTS.slate;
+  var p=ACCENTS[name]||ACCENTS.moss;
   var root=document.documentElement;
   var dark=document.body.classList.contains('dark');
   // On the light ground a near-white accent has nowhere to go: swap to the
@@ -120,8 +120,8 @@ function setAccent(name){
   _syncPref('accent',name);
 }
 function initAccent(){
-  var saved='slate';
-  try{saved=localStorage.getItem('athleteos_accent')||'slate';}catch(e){}
+  var saved='moss';
+  try{saved=localStorage.getItem('athleteos_accent')||'moss';}catch(e){}
   applyAccent(saved);
 }
 
