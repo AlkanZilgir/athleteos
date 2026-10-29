@@ -1,4 +1,5 @@
-/* ── TIME PICKER ─────────────────────────── */
+/* sleep.js — Regjistrimi i gjumit dhe zgjedhësi i orës. */
+/* ── ZGJEDHËSI I ORËS ─────────────────────── */
 var _tpTarget=null;
 function fmt12(val){var p=val.split(':');var h=parseInt(p[0]);var m=p[1];var ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+m+' '+ap;}
 function openTimePicker(target){
@@ -23,7 +24,7 @@ function confirmTime(){
   cModal('m-timepick');
 }
 
-/* ── SLEEP ────────────────────────────────── */
+/* ── GJUMI ────────────────────────────────── */
 async function logSleep(){
   var bed=document.getElementById('s-bed').value,wk=document.getElementById('s-wk').value;
   if(!bed||!wk){toast('Enter times');return;}

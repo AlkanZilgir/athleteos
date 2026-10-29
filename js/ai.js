@@ -1,8 +1,11 @@
-/* ── TRAINING PLAN ────────────────────────── */
+/* ai.js — Trajneri (Coach): biseda me modelin përmes funksionit edge "coach",
+   plani i stërvitjes, veprimet me konfirmim, hyrja me zë dhe vizatimi i
+   përgjigjeve (tabela, lista). */
+/* ── PLANI I STËRVITJES ───────────────────── */
 function renderPlan(){
   var sec=document.getElementById('plan-sec');
   if(!sec)return;
-  // Home's Next session block reads the plan too; keep it in step.
+  // Edhe karta "Seanca tjetër" e lexon planin; mbaji të sinkronizuara.
   if(typeof renderNextSession==='function')setTimeout(renderNextSession,0);
   if(!AI_PLAN||!AI_PLAN.days||!AI_PLAN.days.length){
     sec.innerHTML='<div class="card" style="margin-bottom:10px"><div class="fb" style="margin-bottom:10px"><div class="ctitle" style="margin:0">Your Plan</div></div><div style="text-align:center;padding:10px 0 4px"><p class="tm" style="margin-bottom:16px;line-height:1.75">Tell your coach your goal and the days you can train. You get a week back, built to your numbers.</p><button type="button" class="btn-o" style="width:100%" onclick="startPlanChat()">Build my week</button></div></div>';
@@ -10,7 +13,7 @@ function renderPlan(){
   }
   var dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var todayName=dayNames[new Date().getDay()];
-  // Auto-select today if plan has today
+  // Zgjidh automatikisht sot nëse plani e ka
   var todayIdx=AI_PLAN.days.findIndex(function(d){return d.day===todayName;});
   if(planDayIdx===0&&todayIdx>0)planDayIdx=todayIdx;
   var daysHtml=AI_PLAN.days.map(function(d,i){
@@ -35,8 +38,8 @@ function renderPlan(){
     sessHtml='<div class="psesh">'+exHtml+'</div><button type="button" class="btn" style="width:100%;margin-top:10px" onclick="startPlanSession()">Start this session</button>';
   }
   var focusStr=sel.focus?'<span class="tm" style="font-size:11px;font-weight:400"> — '+sel.focus+'</span>':'';
-  // meta.rationale is generated per block; showing it is the difference
-  // between a schedule and a programming decision the athlete can read.
+  // meta.rationale është arsyetimi i planit; duke e shfaqur, plani lexohet
+  // si një vendim programimi, jo thjesht si orar.
   var why=AI_PLAN.rationale?'<p class="plan-why">'+_esc(AI_PLAN.rationale)+'</p>':'';
   sec.innerHTML='<div class="card plan-card"><div class="fb" style="margin-bottom:8px;align-items:flex-start;gap:12px"><div class="ctitle" style="margin:0">'+_esc(AI_PLAN.name||'Training plan')+'</div><button type="button" class="btn-g" style="flex-shrink:0" onclick="clearPlan()">Change</button></div>'+why+'<div class="plan-days">'+daysHtml+'</div>'+(isRest?'':'<div class="plan-sel"><span class="plan-sel-n">'+_esc(sel.name||sel.day||'')+'</span>'+(sel.focus?'<span class="plan-sel-f">'+_esc(sel.focus)+'</span>':'')+'</div>')+sessHtml+'</div>';
 }
@@ -53,21 +56,20 @@ function startPlanSession(){
   startW();
   wExs=day.exercises.map(function(ex){return{name:ex.name,muscle:'other',sets:[{weight:0,reps:0}]};});
   renderExList();
-  // Prefetch last-session targets for each exercise in the loaded day, then re-render.
+  // Merr paraprakisht objektivat e seancës së kaluar për çdo ushtrim të ditës, pastaj rivizato.
   Promise.all(wExs.map(function(e){return ensureLastSession(e.name);})).then(function(){renderExList();});
   toast('Session started — '+day.exercises.length+' exercises loaded');
 }
 function clearPlan(){AI_PLAN=null;planDayIdx=0;localStorage.removeItem('athleteos_plan_'+CU.id);renderPlan();}
-/* ── PLAN PAYLOAD ────────────────────────────
-   The engine emits {action, meta:{block_name, rationale}, days:[{day_number,
-   focus, exercises}]}. The renderer wants {name, days:[{day, name, focus,
-   exercises, rest}]} and plans persisted by earlier builds are already in that
-   older shape, so everything funnels through one normaliser rather than
-   teaching the renderer two vocabularies. */
+/* ── FORMATI I PLANIT ────────────────────────
+   Trajneri dërgon {action, meta:{block_name, rationale}, days:[{day_number,
+   focus, exercises}]}. Vizatuesi pret {name, days:[{day, name, focus,
+   exercises, rest}]}, i njëjti format me planet e ruajtura më herët, prandaj
+   gjithçka kalon nga një normalizues i vetëm. */
 var _PLAN_DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-// [PLAN]…[/PLAN] is the contract, but a dropped delimiter should not cost the
-// user their block: fall back to the first balanced object carrying "days".
+// [PLAN]…[/PLAN] është marrëveshja, por nëse mungon një kufi, mos ia humb
+// planin përdoruesit: merr objektin e parë të balancuar që ka "days".
 function _parsePlanPayload(text){
   var m=text.match(/\[PLAN\]([\s\S]*?)\[\/PLAN\]/);
   if(m){
@@ -104,8 +106,8 @@ function _normalizePlan(raw){
   if(!raw||!Array.isArray(raw.days)||!raw.days.length)return null;
   var meta=raw.meta||{};
   var days=raw.days.map(function(d,i){
-    // day_number is 1-7 Monday-first; fall back to position, then to any
-    // weekday name an older payload already carried.
+    // day_number është 1-7 duke nisur nga e hëna; përndryshe pozicioni, pastaj
+    // emri i ditës nga formatet e vjetra.
     var n=parseInt(d.day_number,10);
     var name=(!isNaN(n)&&n>=1&&n<=7)?_PLAN_DAYS[n-1]:(d.day||_PLAN_DAYS[i%7]);
     var ex=Array.isArray(d.exercises)?d.exercises:[];
@@ -123,10 +125,10 @@ function _normalizePlan(raw){
 
 function applyPlan(plan){AI_PLAN=plan;planDayIdx=0;localStorage.setItem('athleteos_plan_'+CU.id,JSON.stringify(plan));renderPlan();toast('Plan saved — check the Train tab!');}
 
-/* ── ENGINE CALIBRATIONS ─────────────────────
-   Four targets, each as a meter against today's actual. The input carries the
-   id the rest of the app already writes to (applyMacros fills g-p and g-k), so
-   moving the field out of the sheet changed where it lives, not what owns it. */
+/* ── OBJEKTIVAT DITORE NË CILËSIME ───────────
+   Katër objektiva, secili si shirit kundrejt vlerës së sotme. Fushat kanë
+   të njëjtat id që përdor pjesa tjetër e aplikacionit (applyMacros mbush g-p
+   dhe g-k). */
 function _calPct(a,b){if(!b)return 0;return Math.max(0,Math.min(100,(a/b)*100));}
 function renderCalibrations(){
   var box=document.getElementById('cal-rows');if(!box)return;
@@ -140,8 +142,8 @@ function renderCalibrations(){
     {id:'g-w',  l:'Bodyweight',u:'kg target',v:G.weight, now:wNow,             hue:'var(--sig-sleep)', step:'0.5'}
   ];
   box.innerHTML=rows.map(function(r){
-    // Bodyweight is a target to converge on, not a quantity to accumulate, so
-    // it reports proximity rather than a fill.
+    // Pesha është objektiv drejt të cilit afrohesh, jo sasi që mblidhet,
+    // prandaj tregon afërsinë, jo mbushjen.
     var isW=r.id==='g-w';
     var pct=isW?(r.now?Math.max(0,100-Math.min(100,Math.abs(r.now-r.v)/Math.max(r.v,1)*100*4)):0):_calPct(r.now,r.v);
     var actual=isW?(r.now?r.now+' kg now':'no weight logged'):(r.now+' today');
@@ -161,9 +163,9 @@ function _bioDirty(){
   if(t){t.textContent='Uncommitted';t.classList.add('warn');}
 }
 
-/* ── VOLUME DISTRIBUTION MATRIX ──────────────
-   The muscle map read as an allocation table. grow/def/exc are the stored
-   states; Build / Maintenance / Cut is what they mean to the athlete. */
+/* ── FOKUSI I MUSKUJVE ───────────────────────
+   Harta e muskujve si tabelë. grow/def/exc janë gjendjet e ruajtura;
+   Ndërto / Mbaj / Prit është kuptimi i tyre për atletin. */
 var VDM_STATE={grow:{k:'build',l:'Build'},def:{k:'maintain',l:'Maintenance'},exc:{k:'cut',l:'Cut'}};
 function renderVDM(){
   var box=document.getElementById('vdm-list');if(!box)return;
@@ -194,7 +196,7 @@ async function saveGoals(){
   await sb.from('profiles').update({protein_goal:G.protein,weight_goal:G.weight,water_goal:G.water,calorie_goal:G.calories}).eq('id',CU.id);
 }
 
-/* ── VOICE INPUT ──────────────────────────── */
+/* ── HYRJA ME ZË ──────────────────────────── */
 var _vRec=null,_vTarget=null,_vBtn=null;
 function _voiceSupported(){return !!(window.SpeechRecognition||window.webkitSpeechRecognition);}
 function toggleVoice(targetId,btn){
@@ -224,23 +226,23 @@ function toggleVoice(targetId,btn){
   if(btn)btn.classList.add('on');
 }
 function stopVoice(){
-  // Detach before stopping: a recogniser still fires a final onresult after
-  // stop(), which used to paste the transcript back into a box that had just
-  // been cleared by sendMsg(). abort() drops that pending result as well.
+  // Shkëpute para se ta ndalosh: njohësi i zërit lëshon një onresult të fundit
+  // pas stop(), që e ngjiste tekstin përsëri në fushën e sapopastruar.
+  // abort() e hedh edhe atë rezultat.
   if(_vRec){var r=_vRec;r.onresult=null;r.onend=null;r.onerror=null;try{r.abort();}catch(e){try{r.stop();}catch(e2){}}}
   if(_vBtn)_vBtn.classList.remove('on');
   _vRec=null;_vTarget=null;_vBtn=null;
 }
-// ── Voice workout logging ─────────────────
-// Parses spoken phrases like:
-//   "eighty by eight on bench"  → 80 kg × 8 reps for the closest exercise matching "bench"
+// ── Regjistrimi i serive me zë ─────────────
+// Kupton fraza si:
+//   "eighty by eight on bench"  → 80 kg × 8 përsëritje për ushtrimin më të afërt me "bench"
 //   "80 kilos 8 reps bench press"
-//   "10 reps" (uses last active exercise, bodyweight)
+//   "10 reps" (ushtrimi i fundit aktiv, me peshë trupi)
 //   "log 100 by 5 squat"
 var _voiceLogRec=null;
 var _NUM_WORDS={zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90,hundred:100};
 function _wordsToNumbers(text){
-  // Replace "ninety five" → "95", "one hundred" → "100", etc.
+  // Kthe "ninety five" → "95", "one hundred" → "100", etj.
   var t=' '+text.toLowerCase()+' ';
   t=t.replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)[\s-]+(one|two|three|four|five|six|seven|eight|nine)\b/g,function(_,a,b){return(_NUM_WORDS[a]+_NUM_WORDS[b]);});
   t=t.replace(/\b(one|two|three|four|five|six|seven|eight|nine)[\s-]+hundred\b/g,function(_,a){return(_NUM_WORDS[a]*100);});
@@ -251,25 +253,25 @@ function _wordsToNumbers(text){
 function _parseVoiceLog(transcript){
   if(!transcript)return null;
   var t=_wordsToNumbers(transcript.toLowerCase());
-  // Pattern A: <weight> by/x/times <reps> [on <name>]
+  // Modeli A: <pesha> by/x/times <përsëritjet> [on <emri>]
   var m=t.match(/(\d+(?:\.\d+)?)\s*(?:kg|kilos?|lbs?|pounds?)?\s*(?:by|x|×|times|for)\s*(\d+)\s*(?:reps?)?(?:\s+on\s+(.+?))?$/i);
   if(m)return{w:parseFloat(m[1]),r:parseInt(m[2]),name:(m[3]||'').trim()};
-  // Pattern B: <weight> <reps> [on <name>]
+  // Modeli B: <pesha> <përsëritjet> [on <emri>]
   m=t.match(/^(?:log\s+|logged\s+)?(\d+(?:\.\d+)?)\s*(?:kg|kilos?|lbs?|pounds?)?\s+(\d+)\s*(?:reps?)?(?:\s+(?:on|for)?\s*(.+?))?$/i);
   if(m){var name=(m[3]||'').replace(/^reps?\s+/,'').trim();return{w:parseFloat(m[1]),r:parseInt(m[2]),name:name};}
-  // Pattern C: <reps> reps only (bodyweight)
+  // Modeli C: vetëm <përsëritjet> reps (peshë trupi)
   m=t.match(/^(\d+)\s*reps?(?:\s+on\s+(.+?))?$/i);
   if(m)return{w:0,r:parseInt(m[1]),name:(m[2]||'').trim()};
   return null;
 }
 function _findVoiceExercise(name){
   if(!wExs.length)return -1;
-  if(!name)return wExs.length-1; // default to last-added
+  if(!name)return wExs.length-1; // parazgjedhja: i fundit i shtuar
   var lc=name.toLowerCase().replace(/\s+/g,' ').trim();
-  // Exact match first, then includes match.
+  // Së pari përputhje e saktë, pastaj përmbajtje.
   for(var i=0;i<wExs.length;i++)if(wExs[i].name.toLowerCase()===lc)return i;
   for(var j=0;j<wExs.length;j++){var n=wExs[j].name.toLowerCase();if(n.indexOf(lc)>=0||lc.indexOf(n)>=0)return j;}
-  // Token overlap
+  // Mbivendosje fjalësh
   var toks=lc.split(' ').filter(function(x){return x.length>2;});
   for(var k=0;k<wExs.length;k++){var nn=wExs[k].name.toLowerCase();for(var ti=0;ti<toks.length;ti++){if(nn.indexOf(toks[ti])>=0)return k;}}
   return -1;
@@ -302,11 +304,10 @@ function voiceLogSet(btn){
   _voiceLogRec=rec;
 }
 
-/* ── AI ───────────────────────────────────── */
-// Client-side rate limit on AI requests — sliding 10-minute window, max 20
-// messages. Prevents runaway loops and blunts abuse if the app is shared. Not a
-// security boundary (anyone can edit localStorage), but it stops good-faith
-// over-use and keeps the free Pollinations endpoint from being hammered.
+/* ── BISEDA ME TRAJNERIN ──────────────────── */
+// Kufi në klient: maksimum 20 mesazhe në 10 minuta. Nuk është masë sigurie
+// (localStorage mund të ndryshohet), por ndalon përdorimin e tepruar pa dashje.
+// Kufiri i vërtetë ditor zbatohet në server.
 var _AI_RATE_MAX=20,_AI_RATE_WIN=10*60*1000;
 function _aiRateOk(){
   var now=Date.now();
@@ -323,7 +324,7 @@ function _aiRateOk(){
   try{localStorage.setItem('ai_rate_log',JSON.stringify(log));}catch(e){}
   return true;
 }
-/* The user's turn is shown as typed; a starter or plan rebuild passes a short label for its long prompt. */
+/* Mesazhi i përdoruesit shfaqet siç u shkrua; pyetjet e gatshme japin një etiketë të shkurtër për kërkesën e gjatë. */
 var _rpTitle='';
 async function sendMsg(prompt,title){
   if(_vRec)stopVoice();
@@ -332,10 +333,9 @@ async function sendMsg(prompt,title){
   if(!msg)return;
   if(!_aiRateOk())return;
   if(inp){
-    // Blur first: the phone keyboard's own dictation (iOS / Gboard) keeps its
-    // session open and re-inserts the transcript after a plain value='' —
-    // losing focus is what ends it. Clear again over the next half second in
-    // case a late insert still lands, then hand focus back.
+    // Hiq fokusin së pari: diktimi i tastierës së telefonit (iOS / Gboard) e
+    // rifut tekstin pas një value='' të thjeshtë; humbja e fokusit e mbyll.
+    // Pastro përsëri për gjysmë sekonde, pastaj ktheje fokusin.
     var hadFocus=document.activeElement===inp;
     inp.blur();inp.value='';inp.style.height='auto';
     [120,300,600].forEach(function(ms){setTimeout(function(){inp.value='';inp.style.height='auto';},ms);});
@@ -345,16 +345,15 @@ async function sendMsg(prompt,title){
   var runBtn=document.getElementById('rp-run');if(runBtn)runBtn.disabled=true;
   addMsg('u',msg);chatH.push({role:'user',content:msg});
   var tdiv=addTyping();
-  // The persona, safety rules, routine-generation spec and action protocol are
-  // all owned by the coach edge function now. Sending them from here would put
-  // the safety block under the caller's control and make the endpoint a
-  // general-purpose model proxy on our key. We send only the athlete's own
-  // figures; the server interpolates them into its own prompt.
+  // Personaliteti, rregullat e sigurisë dhe protokolli i veprimeve jetojnë në
+  // funksionin edge "coach" në server. Nga këtu dërgohen vetëm të dhënat e
+  // atletit; serveri i fut në prompt-in e vet. Kështu askush nuk mund ta
+  // përdorë çelësin tonë si proxy të përgjithshëm.
   var ctx=buildCtx();
-  // Retry with exponential backoff + per-attempt timeout. The engine runs
-  // behind a Supabase edge function so the API key never reaches the browser;
-  // adaptive thinking means a considered answer can take 10-20s, so each
-  // attempt gets 45s and a cold function start is not mistaken for a failure.
+  // Riprovim me pritje në rritje dhe kohë maksimale për përpjekje. Modeli
+  // qëndron pas një funksioni edge të Supabase, kështu çelësi i API-t nuk arrin
+  // kurrë në shfletues. Një përgjigje e menduar mund të zgjasë 10-20s, prandaj
+  // çdo përpjekje ka 45s.
   var reply=null,lastErr=null,lastStatus=0;
   var session=null;
   try{var sres=await sb.auth.getSession();session=sres&&sres.data&&sres.data.session;}catch(e){}
@@ -377,7 +376,7 @@ async function sendMsg(prompt,title){
       var j=null;try{j=await res.json();}catch(e){}
       if(res.ok&&j&&j.text){reply=j.text.trim();break;}
       lastErr=(j&&j.error)||('HTTP '+res.status);
-      // 4xx other than rate-limit will not improve on a retry.
+      // Gabimet 4xx (përveç kufirit) nuk përmirësohen me riprovim.
       if(res.status>=400&&res.status<500&&res.status!==429)break;
     }catch(e){lastErr=(e&&e.name==='AbortError')?'timeout':((e&&e.message)||'network');}
     finally{if(timer)clearTimeout(timer);}
@@ -387,8 +386,7 @@ async function sendMsg(prompt,title){
   if(reply){
     addMsg('a',reply);chatH.push({role:'assistant',content:reply});
   }else{
-    // Each failure has a different answer, so each gets its own line rather
-    // than one "unreachable" that sends people to check their connection.
+    // Çdo dështim ka shkak të ndryshëm, prandaj secili merr mesazhin e vet.
     var help;
     if(!navigator.onLine){
       help='Offline. The coach needs a connection; logging still works locally.';
@@ -403,7 +401,7 @@ async function sendMsg(prompt,title){
     }else if(lastStatus===401||lastStatus===403){
       help='Session rejected. Sign out and back in, then send it again.';
     }else if(lastErr==='quota_exceeded'){
-      // The server, not localStorage, is the authority on the daily allowance.
+      // Serveri, jo localStorage, vendos për kufirin ditor të mesazheve.
       help='Daily coach allowance used up. It resets at midnight.';
     }else if(lastErr==='payload_too_large'){
       help='Too many reports in this session to send. Start a new chat and ask again.';
@@ -439,8 +437,8 @@ function addMsg(role,text){
       if(plan){
         applyPlan(plan);
         text=text.split(parsed.raw).join('').trim();
-        // The confirmation sentence is the model's job. If it omitted one,
-        // state the result rather than leaving an empty card.
+        // Fjalinë e konfirmimit e shkruan modeli. Nëse mungon, trego rezultatin
+        // në vend të një karte boshe.
         if(!text){
           var td=plan.days.filter(function(d){return !d.rest;}).length;
           text=plan.name+' is ready. '+td+' training day'+(td===1?'':'s')+'. Open Train to run it.';
@@ -471,7 +469,7 @@ function addMsg(role,text){
   return d;
 }
 
-/* ── AI ACTIONS ──────────────────────────── */
+/* ── VEPRIMET E TRAJNERIT (me konfirmim) ──── */
 var _actSeq=0,_actMap={};
 function _actLabel(a){
   var t=a.type,x=a.args||{};
@@ -595,19 +593,18 @@ async function executeAction(act){
     return{ok:false,msg:'Unknown action: '+t};
   }catch(err){return{ok:false,msg:'Error: '+(err.message||'failed')};}
 }
-/* ── ENGINE OUTPUT RENDERER ──────────────────
-   The engine is instructed to answer in markdown grids, so the card has to
-   render them. Anything not a table or a bullet run stays plain text with its
-   line breaks intact — the aligned value columns depend on that. Every cell
-   goes through _esc: this is model output being written into innerHTML. */
+/* ── VIZATIMI I PËRGJIGJEVE ──────────────────
+   Trajneri përgjigjet me tabela dhe lista markdown, prandaj karta duhet t'i
+   vizatojë. Gjithçka tjetër mbetet tekst i thjeshtë me thyerjet e rreshtave.
+   Çdo qelizë kalon nga _esc, sepse është tekst modeli që shkruhet në innerHTML. */
 function _isGridRow(l){return /^\s*\|.*\|\s*$/.test(l);}
 function _isGridRule(l){return /^\s*\|[\s:|-]*\|\s*$/.test(l)&&l.indexOf('-')>=0;}
 function _gridCells(l){
   var t=l.trim().replace(/^\|/,'').replace(/\|$/,'');
   return t.split('|').map(function(c){return c.trim();});
 }
-// Markdown emphasis is the one inline form worth keeping: the engine uses it
-// to mark the operative figure in a cell. Everything else stays literal.
+// Teksti i trashë (**…**) është e vetmja formë inline që mbahet: modeli e
+// përdor për numrin kryesor. Gjithçka tjetër mbetet siç është.
 function _engInline(t){
   return _esc(t)
     .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
@@ -623,8 +620,7 @@ function _renderEngineBody(el,text){
     buf=[];
   }
   for(var i=0;i<lines.length;i++){
-    // A grid needs a header row and a rule under it; anything less is prose
-    // that happens to contain a pipe.
+    // Një tabelë ka rresht titulli dhe vijë nën të; përndryshe është tekst me "|".
     if(_isGridRow(lines[i])&&i+1<lines.length&&_isGridRule(lines[i+1])){
       flushText();
       var head=_gridCells(lines[i]);
@@ -641,7 +637,7 @@ function _renderEngineBody(el,text){
       '</tbody></table></div>';
       continue;
     }
-    // Bulleted diagnostic log.
+    // Listë me pika.
     if(/^\s*[-*\u2022]\s+\S/.test(lines[i])){
       flushText();
       var items=[];
@@ -674,22 +670,21 @@ function addTyping(){
   d.innerHTML='<span class="dots" aria-label="The coach is typing"><span></span><span></span><span></span></span>';
   el.appendChild(d);el.scrollTop=el.scrollHeight;return d;
 }
-// The empty thread is one quiet line, not an instrument panel. CSS hides it the
-// moment a real message lands beside it (.chat-empty:not(:only-child)).
+// Biseda bosh është një rresht i qetë; CSS e fsheh sapo vjen një mesazh i vërtetë.
 var CHAT_EMPTY=(function(){var e=document.querySelector('#chat-msgs .cv-empty');return e?e.outerHTML:'';})();
 function clearChat(){chatH=[];document.getElementById('chat-msgs').innerHTML=CHAT_EMPTY;}
-// One-shot helper for the quick-action chips: paste the prompt into the chat input and send.
+// Ndihmës për pyetjet e gatshme: vendos tekstin në fushë dhe dërgoje.
 function askAI(prompt,title){sendMsg(prompt,title);}
 
-// ── Adaptive plan: weekly refine prompt ──
-// Banner appears when: AI_PLAN exists, ≥3 workouts in last 7 days, and ≥7 days since last refine.
+// ── Plani adaptiv: rishikimi javor ──
+// Banderola shfaqet kur: ka plan, ≥3 stërvitje në 7 ditët e fundit, dhe ≥7 ditë nga rishikimi i fundit.
 async function maybeShowPlanTweak(){
   var el=document.getElementById('plan-tweak-banner');if(!el||!CU)return;
   if(!AI_PLAN||!AI_PLAN.days||!AI_PLAN.days.length){el.style.display='none';return;}
   var lastRefine=parseInt(localStorage.getItem('plan_refine_at_'+CU.id)||'0');
   var dismissed=parseInt(localStorage.getItem('plan_refine_dismissed_'+CU.id)||'0');
   var ageDays=Math.min((Date.now()-lastRefine)/86400000,(Date.now()-dismissed)/86400000);
-  if(lastRefine===0&&dismissed===0)ageDays=8; // first run — allowed
+  if(lastRefine===0&&dismissed===0)ageDays=8; // hera e parë, lejohet
   if(ageDays<7){el.style.display='none';return;}
   try{
     var since=new Date();since.setDate(since.getDate()-7);
@@ -712,7 +707,7 @@ async function refinePlanWithAI(){
   if(!CU)return;
   try{localStorage.setItem('plan_refine_at_'+CU.id,String(Date.now()));}catch(e){}
   var el=document.getElementById('plan-tweak-banner');if(el)el.style.display='none';
-  // Gather context: last 7 days' workouts + current plan, ask AI to propose a tweaked plan.
+  // Mblidh kontekstin: stërvitjet e 7 ditëve dhe plani aktual, kërko një plan të përshtatur.
   var since=new Date();since.setDate(since.getDate()-14);
   var{data:wos}=await sb.from('workouts').select('started_at,duration_seconds,exercises(name,muscle_group,sets(weight_kg,reps))').eq('user_id',CU.id).gte('started_at',since.toISOString()).order('started_at',{ascending:false}).limit(12);
   var sessions=(wos||[]).map(function(w){return{date:(w.started_at||'').slice(0,10),dur:Math.round((w.duration_seconds||0)/60),exs:(w.exercises||[]).map(function(ex){return{name:ex.name,muscle:ex.muscle_group,topSet:(ex.sets||[]).reduce(function(a,s){var w=+s.weight_kg||0,r=+s.reps||0;var o=(r<=1?w:w*(1+r/30));return o>a.o?{w:w,r:r,o:o}:a;},{w:0,r:0,o:0})};})};});

@@ -1,4 +1,6 @@
-/* ── GOALS ────────────────────────────────── */
+/* home.js — Faqja kryesore (Sot): objektivat, statistikat e javës, seria e
+   ditëve, kontrolli ditor, kalendari, arritjet dhe karta "Seanca tjetër". */
+/* ── OBJEKTIVAT (proteina, kaloritë, uji, pesha) ─ */
 async function loadGoals(){
   var{data}=await sb.from('profiles').select('*').eq('id',CU.id).maybeSingle();
   if(data){
@@ -30,14 +32,14 @@ async function loadGoals(){
   }
 }
 
-/* ── NAVIGATION ───────────────────────────── */
+/* ── NAVIGIMI MES SKEDAVE ─────────────────── */
 function goTab(t){
-  // Sleep lives on the Progress tab now; older callers still say 'sleep'.
+  // Gjumi tani është në skedën Progresi; thirrjet e vjetra ende thonë 'sleep'.
   var toSleep=(t==='sleep');if(toSleep)t='body';
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');p.classList.add('hidden');});
   document.querySelectorAll('.nv,.sb-item').forEach(function(n){n.classList.remove('on');});
   var ai=document.getElementById('p-ai');ai.classList.remove('on');
-  // Reset scroll on every tab change so the new page always starts at the top.
+  // Kthe skrollin në krye sa herë ndërrohet skeda.
   var content=document.querySelector('.content');if(content)content.scrollTop=0;
   if(t==='ai'){
     ai.classList.add('on');
@@ -49,9 +51,9 @@ function goTab(t){
   var sb2=document.getElementById('s-'+t);if(sb2)sb2.classList.add('on');
   if(t==='home')setTimeout(function(){renderHero();renderNextSession();renderActivityFeed();loadRecentPRs();maybeShowIosInstall();renderGettingStarted();},60);
   if(t==='body'){setTimeout(function(){
-    // initChart is normally called by the background loader chain after boot,
-    // but a user can hit the Body tab before that finishes — kick it off now
-    // so the weight chart paints. The promise resolves when Chart.js is ready.
+    // initChart thirret normalisht nga ngarkimi në sfond pas nisjes, por
+    // përdoruesi mund ta hapë skedën Trupi para se të mbarojë; nise tani që
+    // grafiku i peshës të vizatohet.
     if(!wChart)initChart();else renderChart();
     renderMeasure();renderPhotos();loadVolumeChart();renderBfChart();renderWeightProjection();renderBodyMuscleMap();renderAchievements();
   },60);}
@@ -64,11 +66,11 @@ function goTab(t){
   if(t==='settings')setTimeout(function(){loadReminderUI();loadAutoRestUI();refreshInstallUI();updateMuscleSummary();renderBiometrics();renderCalibrations();renderVDM();},60);
 }
 
-/* HOME DATA VISUALS
-   The dashboard reads its state through rings and accent bars rather than
-   grey text blocks. Every setter is null-safe so panels can be absent. */
-/* Charts follow the theme and drop their furniture: no gridlines, no axis
-   borders, mono tick labels. The data is the only thing drawn. */
+/* VIZUALET E FAQES KRYESORE
+   Unazat dhe shiritat e progresit. Çdo funksion kontrollon nëse elementi
+   ekziston, që një panel të mund të mungojë pa shkaktuar gabim. */
+/* Grafikët ndjekin temën dhe janë të pastër: pa vija rrjeti, pa korniza
+   boshtesh. Vizatohen vetëm të dhënat. */
 function _chartAxes(opts){
   opts=opts||{};
   var tick={color:_sig('--t3'),font:{size:9.5,weight:'600',family:'JetBrains Mono, monospace'}};
@@ -78,7 +80,7 @@ function _chartAxes(opts){
   };
 }
 function _sig(n){try{return getComputedStyle(document.body).getPropertyValue(n).trim()||'#A9ABE3';}catch(e){return '#A9ABE3';}}
-var RING_LG=295.31, RING_SM=138.23; // circumferences for r=47 and r=22
+var RING_LG=295.31, RING_SM=138.23; // perimetrat për r=47 dhe r=22
 function setRing(id,pctVal,circ){
   var el=document.getElementById(id);if(!el)return;
   var p=Math.max(0,Math.min(100,+pctVal||0));
@@ -94,10 +96,10 @@ function setHomeDate(){
   el.textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
 }
 
-/* Inline icon for JS-rendered markup. Mirrors the sprite in index.html. */
+/* Ikonë inline për HTML-në e krijuar nga JS; i njëjti sprite si në index.html. */
 function ICO(n,size){return '<svg class="ic"'+(size?' style="font-size:'+size+'"':'')+' aria-hidden="true"><use href="#i-'+n+'"/></svg>';}
 
-/* ── TODAY ────────────────────────────────── */
+/* ── SOT ──────────────────────────────────── */
 async function loadToday(){
   var td=today();
   var[{data:mealsData},{data:waterData},{data:sleepData},{data:woDone}]=await Promise.all([
@@ -134,7 +136,7 @@ function refresh(){
   var pRem=Math.max(0,G.protein-Math.round(t.p));
   var re=document.getElementById('p-rem');if(re)re.textContent=pRem>0?pRem+'g to go':'Protein hit.';
   _set('n-p',Math.round(t.p));_set('n-c',Math.round(t.c));_set('n-f',Math.round(t.f));
-  // One bar split by each macro's share of the day's calories (4/4/9 kcal per g).
+  // Një shirit i ndarë sipas pjesës së çdo makroje në kaloritë e ditës (4/4/9 kcal për gram).
   var kP=t.p*4,kC=t.c*4,kF=t.f*9,kT=kP+kC+kF;
   var seg=function(id,v){var el=document.getElementById(id);if(el)el.style.flex='0 0 '+(kT?(v/kT*100):0)+'%';};
   seg('nb-p',kP);seg('nb-c',kC);seg('nb-f',kF);
@@ -145,10 +147,10 @@ function refresh(){
   if(document.getElementById('p-nutrition').classList.contains('on'))renderMacroPie();
 }
 
-/* ── ACHIEVEMENTS ──────────────────────────── */
-// Custom achievements (user-defined milestones). Loaded from public.custom_achievements
-// and merged into the rendering. Each row has {id, name, icon, metric, target} — the
-// metric must match a key in the `ctx` object built by renderAchievements().
+/* ── ARRITJET ─────────────────────────────── */
+// Arritjet e personalizuara (objektiva që i vendos vetë përdoruesi). Ngarkohen nga
+// tabela custom_achievements dhe bashkohen me ato standarde. Çdo rresht ka
+// {id, name, icon, metric, target}; metric duhet të jetë një çelës i objektit ctx.
 var CUSTOM_ACH=[];
 var ACH_METRIC_LABEL={workouts:'workouts',streak:'-day streak',maxPR:'kg PR',sleepCount:'sleep logs',photos:'photos',meals:'meals',weightLogs:'weight logs',longestMin:'min session',maxVol:'kg in a session'};
 async function loadCustomAch(){
@@ -223,7 +225,7 @@ var ACHIEVEMENTS=[
 async function renderAchievements(){
   var grid=document.getElementById('ach-grid'),count=document.getElementById('ach-count');
   if(!grid||!CU)return;
-  // Aggregate context — single round of parallel queries.
+  // Mblidh kontekstin me një raund pyetjesh paralele.
   var since=new Date();since.setDate(since.getDate()-365);
   var[wos,prs,sleeps,phs,meals,wts]=await Promise.all([
     sb.from('workouts').select('id,duration_seconds,exercises(sets(weight_kg,reps))').eq('user_id',CU.id),
@@ -262,7 +264,7 @@ async function renderAchievements(){
   if(count)count.textContent=unlocked+'/'+all.length;
 }
 
-/* ── HOME DASHBOARD ──────────────────────── */
+/* ── PANELI I FAQES KRYESORE ──────────────── */
 var heroSparkChart=null;
 var COACH_TIPS=[
   {t:'Consistency over intensity',b:'Showing up regularly matters more than going all-out once in a while. Three consistent days a week will outperform six sporadic ones every time.'},
@@ -274,9 +276,8 @@ var COACH_TIPS=[
   {t:'Log it or it did not happen',b:'A month of half-logged sessions tells you nothing. Log every set, even the throwaway ones, and the trend becomes real.'},
   {t:'Six hours costs you a set',b:'Under seven hours and your top sets drop before you notice. Sleep is the cheapest performance gain on the list.'}
 ];
-// The card boots as a synchronisation skeleton. The first thing that resolves —
-// a rotated tip or a computed insight — takes the card over and the skeleton
-// goes for good; it is a loading state, not a thing to flash back to.
+// Karta nis si skelet ngarkimi. Gjëja e parë që arrin, një këshillë ose një
+// vëzhgim i llogaritur nga të dhënat, e zëvendëson skeletin përgjithmonë.
 function _coachResolved(title,body,badge){
   var sync=document.getElementById('coach-sync');
   if(sync){sync.hidden=true;sync.setAttribute('aria-busy','false');}
@@ -292,10 +293,10 @@ function rotateCoachTip(){
   localStorage.setItem('coach_tip_idx',String(idx));
   var t=COACH_TIPS[idx];
   _coachResolved(t.t,t.b,'Coach');
-  // On every tap also try to refresh the personalized insight first thing tomorrow.
+  // Në çdo prekje provo të rifreskosh vëzhgimin e personalizuar.
   generateCoachInsight();
 }
-// Proactive coach insight pulled from logged data. Cached daily so we don't refetch on every home render.
+// Vëzhgim i trajnerit nga të dhënat e regjistruara. Ruhet për një ditë që të mos rillogaritet në çdo hapje.
 async function generateCoachInsight(){
   if(!CU)return;
   var cacheKey='coach_insight_'+CU.id+'_'+today();
@@ -310,21 +311,21 @@ async function generateCoachInsight(){
       sb.from('weight_logs').select('logged_date,weight_kg').eq('user_id',CU.id).order('logged_date',{ascending:false}).limit(8)
     ]);
     var insights=[];
-    // First-3-days new-user nudges (highest weight — override generic tips during onboarding window).
+    // Mesazhet për 3 ditët e para të përdoruesit të ri kanë përparësi mbi këshillat e përgjithshme.
     var fd=_firstDaysInsight(wos.data,sleep.data);
     if(fd)insights.push(fd);
-    // Insight 1: neglected muscle group (no work in 7+ days)
+    // Vëzhgimi 1: grup muskujsh i lënë pas dore (pa punë për 7+ ditë)
     var byMuscle={};(wos.data||[]).forEach(function(w){var ts=new Date(w.started_at).getTime();(w.exercises||[]).forEach(function(ex){var m=ex.muscle_group;if(!m||m==='other')return;if(!byMuscle[m]||byMuscle[m]<ts)byMuscle[m]=ts;});});
     var nowT=Date.now(),MUSCLES=['chest','back','legs','shoulders','arms','core'];
     var stale=MUSCLES.filter(function(m){return byMuscle[m]&&(nowT-byMuscle[m])>7*86400000;}).map(function(m){return{name:m,days:Math.floor((nowT-byMuscle[m])/86400000)};}).sort(function(a,b){return b.days-a.days;});
     if(stale[0])insights.push({t:stale[0].name.charAt(0).toUpperCase()+stale[0].name.slice(1)+' is going stale',b:stale[0].days+' days since you trained '+stale[0].name+'. Get one short session in this week before the gap starts costing you.',w:5});
-    // Insight 2: streak of PRs
+    // Vëzhgimi 2: seri rekordesh
     if(prs.data&&prs.data.length>=2)insights.push({t:'The bar keeps moving',b:prs.data.length+' PRs this month. Small jumps, taken often, is exactly how this is supposed to look. Keep the increments boring.',w:4});
-    // Insight 3: sleep average
+    // Vëzhgimi 3: mesatarja e gjumit
     if(sleep.data&&sleep.data.length>=3){var avg=sleep.data.reduce(function(a,s){return a+(+s.duration_hours||0);},0)/sleep.data.length;if(avg<6.8)insights.push({t:'Sleep is your ceiling right now',b:avg.toFixed(1)+'h across your last '+sleep.data.length+' nights. Under seven and recovery, appetite and top sets all take the hit. Lights out 30 minutes earlier this week.',w:6});}
-    // Insight 4: weight trend
+    // Vëzhgimi 4: trendi i peshës
     if(wts.data&&wts.data.length>=4){var sorted=wts.data.slice().sort(function(a,b){return a.logged_date.localeCompare(b.logged_date);});var first=sorted[0].weight_kg,last=sorted[sorted.length-1].weight_kg;var diff=+last-+first;if(Math.abs(diff)>=0.5){var dir=diff>0?'up':'down';insights.push({t:'Weight trending '+dir,b:'You\'re '+Math.abs(diff).toFixed(1)+' kg '+dir+' over your last '+sorted.length+' weigh-ins. '+(diff<0?'Make sure protein stays high so the loss is fat, not muscle.':'Check this matches your goal — recompositioning is slow, bulking should be steady.'),w:3});}}
-    // Insight 5: weekly frequency
+    // Vëzhgimi 5: frekuenca javore
     var thisWeekStart=new Date();thisWeekStart.setDate(thisWeekStart.getDate()-thisWeekStart.getDay());thisWeekStart.setHours(0,0,0,0);
     var thisWeekCount=(wos.data||[]).filter(function(w){return new Date(w.started_at)>=thisWeekStart;}).length;
     if(thisWeekCount===0&&new Date().getDay()>=4)insights.push({t:'Nothing logged this week',b:'It is '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()]+' and the week is empty. Twenty minutes today still counts.',w:7});
@@ -354,8 +355,8 @@ function _firstDaysInsight(workouts,sleeps){
 function _applyCoachInsight(ins){
   _coachResolved(ins.t,ins.b,'Insight');
 }
-// Today's recap card: pulls today's workout + cardio + meals + sleep and compares the strength session
-// against the user's prior session that hit the same muscle group(s).
+// Përmbledhja e sotme: merr stërvitjen, kardion, vaktet dhe gjumin e sotëm dhe e
+// krahason seancën e forcës me seancën e kaluar për të njëjtët muskuj.
 async function renderDailySummary(){
   var card=document.getElementById('daily-sum-card'),body=document.getElementById('daily-sum-body'),dateEl=document.getElementById('daily-sum-date');
   if(!card||!body||!CU)return;
@@ -374,7 +375,7 @@ async function renderDailySummary(){
     if(!any){card.style.display='none';return;}
     if(dateEl)dateEl.textContent=fdate(td);
     var sections=[];
-    // ── Strength session(s)
+    // ── Seancat e forcës
     for(var i=0;i<wList.length;i++){
       var w=wList[i];
       var sets=0,vol=0,muscles={};
@@ -409,7 +410,7 @@ async function renderDailySummary(){
         '</div>'
       );
     }
-    // ── Cardio
+    // ── Kardio
     if(cList.length){
       var totalMin=cList.reduce(function(a,c){return a+(+c.duration_minutes||0);},0);
       var totalKm=cList.reduce(function(a,c){return a+(+c.distance_km||0);},0);
@@ -417,7 +418,7 @@ async function renderDailySummary(){
       var line='Total '+totalMin+' min'+(totalKm?' · '+(Math.round(totalKm*10)/10)+' km':'');
       sections.push('<div style="padding:10px 12px;background:var(--surface);border-radius:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font-weight:700;font-size:14px;text-transform:capitalize;display:flex;align-items:center;gap:7px">'+ICO('run','15px')+top.activity+(cList.length>1?' + '+(cList.length-1)+' more':'')+'</div><div style="font-size:12px;color:var(--t2);font-weight:600">'+totalMin+' min</div></div><div style="font-size:12.5px;color:var(--t2);margin-top:3px">'+line+'</div></div>');
     }
-    // ── Nutrition + sleep tally
+    // ── Ushqimi dhe gjumi
     var miniBits=[];
     if(mList.length){var kcal=mList.reduce(function(a,m){return a+(+m.calories||0);},0);var prot=mList.reduce(function(a,m){return a+(+m.protein_g||0);},0);miniBits.push(ICO('utensils','13px')+mList.length+' meal'+(mList.length===1?'':'s')+' · '+Math.round(kcal)+' kcal · '+Math.round(prot)+'g protein');}
     if(sl.data&&sl.data.duration_hours)miniBits.push(ICO('moon','13px')+sl.data.duration_hours+' h sleep');
@@ -435,14 +436,14 @@ function _greeting(){
 async function renderHero(){
   var g=document.getElementById('hero-greet');if(g)g.textContent=_greeting();
   setHomeDate();
-  // Weekly stats from the last 7 days of workouts (incl. exercises/sets for volume).
+  // Statistikat e 7 ditëve të fundit (me ushtrimet dhe seritë për volumin).
   var since=new Date();since.setDate(since.getDate()-6);since.setHours(0,0,0,0);
   var{data}=await sb.from('workouts')
     .select('id,started_at,duration_seconds,exercises(sets(weight_kg,reps))')
     .eq('user_id',CU.id).gte('started_at',since.toISOString())
     .order('started_at',{ascending:true});
   data=data||[];
-  // Bucket by local day for the last 7 days
+  // Grupo sipas ditës lokale për 7 ditët e fundit
   var byDay={};for(var i=0;i<7;i++){var d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);byDay[d.toISOString().split('T')[0]]=0;}
   var totalVol=0,totalSets=0,sessions=data.length,totalSecs=0;
   data.forEach(function(w){
@@ -454,7 +455,7 @@ async function renderHero(){
     if(key in byDay)byDay[key]+=vol;
     totalVol+=vol;
   });
-  // The subline says what the log says, not a slogan.
+  // Nëntitulli thotë çfarë tregojnë të dhënat, jo një slogan.
   var sub=document.getElementById('hero-sub');
   if(sub){
     var goalDays=3;try{var pr=JSON.parse(localStorage.getItem('prefs_'+CU.id)||'null');if(pr&&+pr.weekly)goalDays=+pr.weekly;}catch(e){}
@@ -467,7 +468,7 @@ async function renderHero(){
       sub.textContent='Last session '+dayName+', '+Math.round(lastVol).toLocaleString()+' kg. '+sessions+' of '+goalDays+' this week.';
     }
   }
-  // Render stat
+  // Vizato statistikën
   var stat=document.getElementById('hero-stat'),statU=document.getElementById('hero-stat-unit');
   if(stat){
     var heavy=totalVol>=1000;
@@ -479,16 +480,16 @@ async function renderHero(){
   _tickerTo(document.getElementById('hero-streak'),(_streakCount||0),500,function(v){return Math.round(v)+'d';});
   var dur=document.getElementById('hero-duration');
   if(dur){var hh=Math.floor(totalSecs/3600),mm=Math.round((totalSecs%3600)/60);dur.textContent=hh>0?hh+'h '+mm+'m':mm+'m';}
-  // Sparkline (oldest → today)
+  // Grafiku i vogël (nga më e vjetra te sot)
   var labels=[],values=[];
-  // Day initials under the bars, oldest to today.
+  // Inicialet e ditëve nën shtylla.
   Object.keys(byDay).sort().forEach(function(k){labels.push(['S','M','T','W','T','F','S'][new Date(k+'T12:00:00').getDay()]);values.push(Math.round(byDay[k]));});
-  // First run: the week has no sessions, so the bars would all be track colour.
-  // Show the starting line instead of a flat chart.
+  // Hera e parë: java s'ka seanca, shtyllat do të ishin të gjitha bosh.
+  // Shfaq "vijën e nisjes" në vend të një grafiku të sheshtë.
   var first=document.getElementById('tr-first'),sparkWrap=document.querySelector('#p-home .hero-spark');
   if(first)first.style.display=sessions?'none':'';
   if(sparkWrap)sparkWrap.style.display=sessions?'':'none';
-  // "0 kg" above "No sessions this week" says the same thing twice.
+  // "0 kg" mbi "Asnjë seancë këtë javë" do ta thoshte dy herë të njëjtën gjë.
   document.querySelectorAll('#p-home .tr-caption,#p-home .tr-vol').forEach(function(el){el.style.display=sessions?'':'none';});
   if(!sessions){if(heroSparkChart){heroSparkChart.destroy();heroSparkChart=null;}return;}
   var ctx=document.getElementById('hero-spark');if(!ctx)return;
@@ -563,7 +564,7 @@ function _relTime(ts){
   return Math.floor(d/86400)+'d ago';
 }
 
-/* ── STREAK ───────────────────────────────── */
+/* ── SERIA E DITËVE (streak) ──────────────── */
 var _streakCount=0,_streakDoneToday=false;
 async function calcStreak(){
   var since=new Date();since.setDate(since.getDate()-30);
@@ -573,9 +574,9 @@ async function calcStreak(){
     sb.from('daily_checkins').select('logged_date').eq('user_id',CU.id).gte('logged_date',sinceDate)
   ]);
   var dates=new Set((woData||[]).map(function(w){return w.started_at.split('T')[0];}));
-  // Rest days (any daily check-in) also count toward the streak.
+  // Edhe ditët e pushimit (me kontroll ditor) numërohen në seri.
   (ckData||[]).forEach(function(c){dates.add(c.logged_date);});
-  // Streak shield: include any dates the user "froze" this month.
+  // Mburoja e serisë: përfshi ditët që përdoruesi i "ngriu" këtë muaj.
   var freezes=(P._freezesUsedDates||[]).map(function(d){return d.split('T')[0];});
   freezes.forEach(function(d){dates.add(d);});
   var n=0;
@@ -594,7 +595,7 @@ function updateRestDayUI(){
 }
 async function markRestDay(){
   if(_streakDoneToday){toast('Today is already counted');return;}
-  // Use a minimal daily_checkin marker (neutral mood) to preserve the streak.
+  // Një kontroll ditor minimal (humor neutral) e ruan serinë.
   var rec={user_id:CU.id,logged_date:today(),mood:3};
   var res=await sbQueueUpsert('daily_checkins',rec,{onConflict:'user_id,logged_date'});
   if(res.queued&&!navigator.onLine)toast('Saved offline. It syncs when you reconnect.');
@@ -603,9 +604,9 @@ async function markRestDay(){
   await loadCheckin();
 }
 
-/* ── STREAK SHIELD ────────────────────────── */
-// One streak-freeze per calendar month. Lets the user mark "yesterday" as completed
-// so a missed day doesn't reset their streak.
+/* ── MBUROJA E SERISË ─────────────────────── */
+// Një "ngrirje" në muaj: përdoruesi e shënon "dje" si të kryer që një ditë e
+// humbur të mos ia zerojë serinë.
 function _currentMonth(){return today().slice(0,7);}
 function freezeRemaining(){
   var m=_currentMonth();
@@ -633,9 +634,9 @@ async function useStreakFreeze(){
   await calcStreak();
 }
 
-/* ── GOALS MODAL ──────────────────────────── */
-// The editors are sections on the profile page now, so "open" means bring the
-// section into view. Callers elsewhere in the app keep working unchanged.
+/* ── HAPJA E SEKSIONEVE TË PROFILIT ───────── */
+// Redaktuesit janë seksione në faqen e cilësimeve, kështu "hap" do të thotë
+// skrollo deri te seksioni.
 function _revealSection(id,focusSel){
   if(!document.getElementById('p-settings').classList.contains('on'))goTab('settings');
   setTimeout(function(){
@@ -660,10 +661,9 @@ function renderBiometrics(){
 }
 function openProfileM(){_revealSection('sec-biometrics','input');}
 
-/* ── ONBOARDING TOOLTIPS ──────────────────── */
-// Lightweight spotlight tooltip — first-visit hint on a target button. Keyed by
-// id so each tooltip fires exactly once per user/device. Dismissed on first OK
-// or skip; never reappears.
+/* ── KËSHILLAT E PARA (tooltips) ──────────── */
+// Këshillë me "prozhektor" mbi një buton, vetëm në vizitën e parë. Çdo këshillë
+// shfaqet saktësisht një herë për pajisje.
 function _tipSeen(key){try{return localStorage.getItem('tip_'+key)==='1';}catch(e){return true;}}
 function _markTip(key){try{localStorage.setItem('tip_'+key,'1');}catch(e){}}
 function showTooltip(key,opts){
@@ -690,7 +690,7 @@ function showTooltip(key,opts){
   ov.onclick=close;
 }
 
-/* ── DAILY CHECK-IN ───────────────────────── */
+/* ── KONTROLLI DITOR ──────────────────────── */
 var ckin=null,_ckinSel={mood:null,energy:null,soreness:null};
 function openCheckin(){
   _ckinSel={mood:ckin&&ckin.mood||null,energy:ckin&&ckin.energy||null,soreness:ckin&&ckin.soreness||null};
@@ -729,7 +729,7 @@ function renderCheckin(){
   if(btn)btn.textContent='Edit';
 }
 
-/* ── CALENDAR HEATMAP ─────────────────────── */
+/* ── KALENDARI I STËRVITJEVE ──────────────── */
 var _calOffset=0,_calTrainedDays={};
 function calNav(d){_calOffset+=d;renderCalendar();}
 async function loadCalendarData(){
@@ -763,7 +763,7 @@ function renderCalendar(){
   grid.innerHTML=html;
 }
 
-/* ── DAY DETAIL ───────────────────────────── */
+/* ── DETAJET E NJË DITE ───────────────────── */
 async function openDay(ds){
   document.getElementById('day-title').textContent=new Date(ds+'T12:00:00').toLocaleDateString('en',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
   document.getElementById('day-body').innerHTML='<div class="skel" style="height:80px"></div>';
@@ -779,7 +779,7 @@ async function openDay(ds){
     sb.from('water_logs').select('cups').eq('user_id',CU.id).eq('logged_date',ds).maybeSingle()
   ]);
   var html='';
-  // Strength workouts
+  // Stërvitjet e forcës
   if(wos&&wos.length){
     html+='<div class="ctitle" style="margin-bottom:8px">Strength</div>';
     wos.forEach(function(w){
@@ -795,7 +795,7 @@ async function openDay(ds){
       html+='<div class="card" style="background:var(--card2);margin-bottom:10px"><div class="fb" style="margin-bottom:10px"><div style="font-weight:600;display:flex;align-items:center;gap:8px">'+ICO('barbell','15px')+time+'</div><span class="tag">'+dur+' min</span></div>'+exHtml+'</div>';
     });
   }
-  // Cardio
+  // Kardio
   if(cds&&cds.length){
     html+='<div class="ctitle" style="margin:14px 0 8px">Cardio</div>';
     cds.forEach(function(c){
@@ -806,7 +806,7 @@ async function openDay(ds){
       html+='<div class="exi"><div class="fb"><div style="font-weight:600;display:flex;align-items:center;gap:8px">'+ICO('run','15px')+c.activity.charAt(0).toUpperCase()+c.activity.slice(1)+'</div></div><div style="font-size:12.5px;color:var(--t2);margin-top:5px">'+parts.join(' · ')+'</div></div>';
     });
   }
-  // Recovery
+  // Rikuperimi
   var rec=[];
   if(sl)rec.push(ICO('moon','14px')+'Sleep: <b>'+parseFloat(sl.duration_hours).toFixed(1)+'h</b> · '+sl.bedtime+' → '+sl.wake_time);
   if(wt&&wt.length)rec.push(ICO('scale','14px')+'Weight: <b>'+wt[0].weight_kg+' kg</b>');
@@ -814,7 +814,7 @@ async function openDay(ds){
   if(rec.length){
     html+='<div class="ctitle" style="margin:14px 0 8px">Recovery</div><div class="card" style="background:var(--card2);font-size:13px;line-height:2">'+rec.join('<br>')+'</div>';
   }
-  // Nutrition
+  // Ushqimi
   if((ml&&ml.length)||(wa&&wa.cups)){
     var tot=(ml||[]).reduce(function(a,m){return{p:a.p+(+m.protein_g||0),c:a.c+(+m.carbs_g||0),f:a.f+(+m.fat_g||0),k:a.k+(+m.calories||0)};},{p:0,c:0,f:0,k:0});
     html+='<div class="ctitle" style="margin:14px 0 8px">Nutrition</div><div class="card" style="background:var(--card2);font-size:13px;line-height:2">';
@@ -826,12 +826,12 @@ async function openDay(ds){
   document.getElementById('day-body').innerHTML=html;
 }
 
-/* ── NEXT SESSION ───────────────────────────
-   The workout is the spine of Home. Everything under it is a consequence.
-   Reads the routines loadTemplates() fetched; re-rendered when they land. */
+/* ── SEANCA TJETËR ──────────────────────────
+   Karta e parë e faqes kryesore. Lexon rutinat që solli loadTemplates()
+   dhe rivizatohet kur ato arrijnë. */
 function renderNextSession(){
   var el=document.getElementById('next-body');if(!el)return;
-  // A coach-written plan outranks saved routines: if today is in it, that is the session.
+  // Plani i trajnerit ka përparësi mbi rutinat: nëse sot është në plan, ajo është seanca.
   var plan=(typeof AI_PLAN!=='undefined'&&AI_PLAN&&AI_PLAN.days&&AI_PLAN.days.length)?AI_PLAN:null;
   if(plan){
     var dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];

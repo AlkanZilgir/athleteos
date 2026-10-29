@@ -1,4 +1,5 @@
-/* ── AUTH ─────────────────────────────────── */
+/* auth.js — Hyrja, regjistrimi, dalja dhe nisja e aplikacionit pas hyrjes. */
+/* ── HYRJA / REGJISTRIMI ──────────────────── */
 function aTab(t){
   document.getElementById('tl').classList.toggle('on',t==='l');
   document.getElementById('tr2').classList.toggle('on',t==='r');
@@ -55,8 +56,8 @@ async function doLogout(){
   await sb.auth.signOut();
 }
 
-// OAuth — requires Google provider to be enabled in Supabase Dashboard →
-// Authentication → Providers. Set the redirect URL to this page's origin.
+// Hyrja me Google: kërkon që ofruesi Google të jetë aktiv në Supabase
+// (Authentication → Providers) dhe URL-ja e kthimit të jetë kjo faqe.
 async function oauthGoogle(){
   try{await _sbReady();}catch(e){showErr('Failed to connect — check your internet.');return;}
   track('oauth_attempt',{provider:'google'});
@@ -82,7 +83,7 @@ function welcomeContinue(tab){
 function showErr(msg){var e=document.getElementById('aerr');e.textContent=msg;e.style.display='block';}
 function setBtnLoad(id,on){var b=document.getElementById(id);if(!b)return;if(on){b.textContent='…';return;}b.innerHTML=(id==='reg-btn'?'Create account':'Sign in')+ICO('arrow-right','16px');}
 
-/* ── BOOT ─────────────────────────────────── */
+/* ── NISJA PAS HYRJES ─────────────────────── */
 async function bootApp(){
   document.getElementById('auth').style.display='none';
   var w=document.getElementById('welcome');if(w)w.classList.add('hidden');
@@ -90,13 +91,12 @@ async function bootApp(){
   _updateOfflineBadge();flushWriteQueue();
   if(!_voiceSupported()){var mb=document.getElementById('chat-mic-btn');if(mb)mb.style.display='none';}
   await loadGoals();
-  // Fire-and-forget: keep server-side timezone fresh so push-cron fires at the
-  // user's local reminder time. Cheap, runs at most once per session change.
+  // Përditëso zonën kohore në server që kujtesat push të vijnë në orën lokale.
   try{
     var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
     if(tz&&tz!==P._timezone){sb.from('profiles').update({timezone:tz}).eq('id',CU.id).then(function(){P._timezone=tz;});}
   }catch(e){}
-  // First-run? Show onboarding wizard instead of app.
+  // Hera e parë? Shfaq onboarding-un në vend të aplikacionit.
   if(!P._onboardingDone){
     document.getElementById('app').style.display='none';
     showOnboarding();
@@ -109,22 +109,22 @@ async function bootApp(){
   renderCalibrations();
   document.getElementById('b-gw').innerHTML=G.weight+'<span class="su">kg</span>';
   showInitialSkeletons();
-  // Critical path for Home: just today's row + check-in + streak. Everything
-  // else (history, charts, other-tab data) is kicked off in the background
-  // below so Home paints fast on cold start.
+  // Vetëm të dhënat e sotme, kontrolli ditor dhe seria ngarkohen para se të
+  // shfaqet faqja kryesore. Gjithçka tjetër (historiku, grafikët, skedat e tjera)
+  // ngarkohet në sfond, që faqja të hapet shpejt.
   await loadToday();
   initWGrid();renderPRs();
   AI_PLAN=JSON.parse(localStorage.getItem('athleteos_plan_'+CU.id)||'null');
   renderPlan();loadProfile();initTheme();refreshInstallUI();
   await Promise.all([calcStreak(),loadCheckin()]);
   rotateCoachTip();
-  // Fire-and-forget: render Home cards (each queries supabase directly).
+  // Vizato kartat e faqes kryesore (secila bën pyetjen e vet në Supabase).
   renderHero();renderActivityFeed();renderDailySummary();renderGettingStarted();
   loadReminderUI();
   goTab('home');
   _consumeShareHash();
-  // Secondary loaders for Workout / Body / Sleep tabs. Each populates module
-  // vars + re-renders its own UI on completion, so deferring is safe.
+  // Ngarkuesit dytësorë për skedat Stërvitja / Trupi / Gjumi. Secili vizaton
+  // pamjen e vet kur mbaron, prandaj mund të vonohen pa problem.
   Promise.all([
     loadWHist(),loadWtLog(),loadSleepHist(),
     loadCardio(),loadMeasure(),loadPhotos(),
@@ -135,7 +135,7 @@ async function bootApp(){
   }).catch(function(e){console.warn('background loaders',e);});
 }
 
-/* ── FORGOT PASSWORD / RESEND ─────────────── */
+/* ── HARROVA FJALËKALIMIN / RIDËRGO EMAILIN ─ */
 function openForgot(){
   var em=document.getElementById('l-u').value.trim();
   document.getElementById('fp-email').value=em||'';

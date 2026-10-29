@@ -1,20 +1,20 @@
-/* ── ONBOARDING WIZARD ────────────────────── */
+/* onboarding.js — Hapat e para pas regjistrimit dhe harta e muskujve. */
+/* ── MAGJISTARI I REGJISTRIMIT ────────────── */
 var OB_STEPS=17;
-// Five screens show. The rest stay in the DOM so ob_finish can still read
-// every input by id, but they are never presented:
-//   0 welcome (the marketing page did that job), 1 motivations, 3 blueprint,
-//   5 prior tracking, 7 train style, 8 follow plan, 9 logging style
-//   (preference questions nobody needs answered before their first log),
-//   10 weekly days and 14 goal weight (folded into steps 4 and 13),
-//   11 muscle map (lives on Body Stats), 12 units (asked on step 6),
-//   16 reminders (Settings).
+// Shfaqen vetëm pesë ekrane. Të tjerët mbeten në DOM që ob_finish të lexojë
+// çdo fushë sipas id-së, por nuk shfaqen kurrë:
+//   0 mirëseardhja, 1 motivimet, 3 plani, 5 gjurmimi i mëparshëm,
+//   7 stili i stërvitjes, 8 ndjekja e planit, 9 stili i regjistrimit,
+//   10 ditët javore dhe 14 pesha e synuar (të bashkuara me hapat 4 dhe 13),
+//   11 harta e muskujve (është te Progresi), 12 njësitë (pyetet në hapin 6),
+//   16 kujtesat (janë te Cilësimet).
 var OB_SKIP={0:1,1:1,3:1,5:1,7:1,8:1,9:1,10:1,11:1,12:1,14:1,16:1};
 var OB_VISIBLE_COUNT=(function(){var n=0;for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])n++;return n;})();
 function _obFirstVisible(){for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])return i;return 0;}
 function _obLastVisible(){for(var i=OB_STEPS-1;i>=0;i--)if(!OB_SKIP[i])return i;return 0;}
 function _obVisibleIndex(i){var v=0;for(var k=0;k<=i;k++)if(!OB_SKIP[k])v++;return v;}
 var _ob={step:0,gender:'male',units:'metric',motivations:[],main_goal:'muscle',experience:'beginner',prior_tracking:'none',train_style:'solo',follow_plan:'flexible',logging_style:'balanced',weekly_days:3,muscle_grow:[],muscle_define:[],muscle_exclude:[],mm_mode:'grow'};
-// Steps that are optional (Skip button shown, Continue allowed without selection)
+// Hapat opsionalë (shfaqet "Kalo", lejohet "Vazhdo" pa zgjedhje)
 var OB_OPTIONAL_STEPS={};
 function ob_gender(g){_ob.gender=g;['male','female'].forEach(function(x){var el=document.getElementById('ob-g-'+x);if(el)el.classList.toggle('on',x===g);});}
 function ob_units(u){_ob.units=u;['metric','imperial'].forEach(function(x){var el=document.getElementById('ob-u-'+x);if(el)el.classList.toggle('on',x===u);});var unitLbl=u==='metric'?'kg':'lb';var cwu=document.getElementById('ob-cw-u'),gwu=document.getElementById('ob-gw-u');if(cwu)cwu.textContent=unitLbl;if(gwu)gwu.textContent=unitLbl;}
@@ -30,11 +30,11 @@ function ob_mot_toggle(el){
   else{_ob.motivations.push(v);el.classList.add('on');}
 }
 function _setOnbEyebrow(){
-  // Inject "Step X of Y" eyebrow above the active step's title to match the Welcome/Paywall visual language.
+  // Vendos "Hapi X nga Y" mbi titullin e hapit aktiv.
   var step=document.querySelector('#onb .onb-step.on');
   if(!step)return;
   var old=step.querySelector('.onb-eyebrow');if(old)old.remove();
-  if(step.id==='os-0')return; // Welcome step uses its own hero
+  if(step.id==='os-0')return; // Hapi i mirëseardhjes ka titullin e vet
   var h=step.querySelector('.onb-h');
   if(!h)return;
   var visIdx=_obVisibleIndex(_ob.step);
@@ -45,7 +45,7 @@ function _setOnbEyebrow(){
 }
 function ob_goto(i){
   if(i<0||i>=OB_STEPS)return;
-  // Auto-jump past skipped steps
+  // Kapërce automatikisht hapat që nuk shfaqen
   while(OB_SKIP[i]&&i<OB_STEPS-1)i++;
   _ob.step=i;
   for(var k=0;k<OB_STEPS;k++){var s=document.getElementById('os-'+k);if(s)s.classList.toggle('on',k===i&&!OB_SKIP[k]);}
@@ -60,7 +60,7 @@ function ob_goto(i){
     next.textContent=i===lastVis?'Finish setup':'Continue';
     next.onclick=i===lastVis?ob_finish:ob_next;
   }
-  // Sync selections / render dynamic content per step
+  // Sinkronizo zgjedhjet dhe vizato përmbajtjen dinamike të hapit
   if(i===1)_obSyncMulti('ob-mot',_ob.motivations);
   if(i===2)_obSyncList('ob-goal-list',_ob.main_goal);
   if(i===3)ob_renderBlueprint();
@@ -74,13 +74,13 @@ function ob_goto(i){
   if(i===12)_obSyncList('ob-unit-list',_ob.units);
   if(i===13){ob_units(_ob.units);setTimeout(ob_renderProjection,30);}
   if(i===15)ob_applyGoalDefaults();
-  // Body-wrap scroll to top
+  // Skrollo në krye
   var bw=document.querySelector('.onb-body-wrap');if(bw)bw.scrollTop=0;
 }
-// Sequence index + tick rail. Reads as an instrument, not a loading bar.
+// Numri i hapit dhe shiriti me segmente.
 function _obRenderRail(i){
   var pos=_obVisibleIndex(i),total=OB_VISIBLE_COUNT;
-  var pad=function(n){return String(n);};  // 'Step 2 of 5', not '02 // 05'
+  var pad=function(n){return String(n);};  // 'Hapi 2 nga 5', jo '02 // 05'
   var n=document.getElementById('ob-idx-n');if(n)n.textContent=pad(pos);
   var t=document.getElementById('ob-idx-t');if(t)t.textContent=pad(total);
   var ticks=document.getElementById('ob-ticks');if(!ticks)return;
@@ -97,7 +97,7 @@ function _obSyncMulti(containerId,values){var c=document.getElementById(containe
 function ob_next(){var i=_ob.step+1;while(OB_SKIP[i]&&i<OB_STEPS)i++;if(i<OB_STEPS)ob_goto(i);}
 function ob_back(){var i=_ob.step-1;while(OB_SKIP[i]&&i>0)i--;if(i>=0)ob_goto(i);}
 
-// Dynamic Blueprint (step 3) based on chosen goal
+// Plani dinamik (hapi 3) sipas qëllimit të zgjedhur
 function ob_renderBlueprint(){
   var goal=_ob.main_goal;
   var bp={
@@ -140,11 +140,11 @@ function ob_renderBlueprint(){
   }).join('');
 }
 
-// Apply sensible defaults for daily targets based on goal/profile (step 15)
+// Vendos objektiva ditore të arsyeshme sipas qëllimit dhe profilit (hapi 15)
 function ob_applyGoalDefaults(){
   var p=document.getElementById('ob-p'),k=document.getElementById('ob-k'),w=document.getElementById('ob-wt');
   if(!p||!k||!w)return;
-  if(p.value&&k.value&&w.value)return; // user already set
+  if(p.value&&k.value&&w.value)return; // përdoruesi e ka vendosur vetë
   var wt=parseFloat(document.getElementById('ob-cw').value)||75;
   var prot,cal;
   switch(_ob.main_goal){
@@ -159,7 +159,7 @@ function ob_applyGoalDefaults(){
   if(!w.value)w.value=8;
 }
 
-// Weight projection mini-chart (step 14)
+// Grafiku i vogël i parashikimit të peshës (hapi 14)
 function ob_renderProjection(){
   var cw=parseFloat(document.getElementById('ob-cw').value);
   var gw=parseFloat(document.getElementById('ob-gw').value);
@@ -172,15 +172,15 @@ function ob_renderProjection(){
     if(rangeEl)rangeEl.textContent='Enter a goal weight to see your timeline.';
     if(bestEl)bestEl.textContent='—';if(realEl)realEl.textContent='—';
     var c=document.getElementById('wp-canvas');if(c){var ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);}
-    // No projection to draw yet, so no panel reserving space for one.
+    // Ende s'ka parashikim për të vizatuar; mos rezervo hapësirë.
     var wpOff=document.getElementById('ob-wp');if(wpOff)wpOff.style.display='none';
     return;
   }
   var wpOn=document.getElementById('ob-wp');if(wpOn)wpOn.style.display='';
   if(goalV)goalV.textContent=gw;
-  var loss=cw>gw; // losing or gaining
+  var loss=cw>gw; // humbje apo shtim
   var diff=Math.abs(cw-gw);
-  // Best case ~0.7% bodyweight per week change; realistic 0.4%
+  // Rasti më i mirë ~0.7% e peshës në javë; realist 0.4%
   var bestPerWk=cw*0.007,realPerWk=cw*0.004;
   var bestWks=Math.max(2,Math.ceil(diff/bestPerWk));
   var realWks=Math.max(bestWks+1,Math.ceil(diff/realPerWk));
@@ -188,60 +188,60 @@ function ob_renderProjection(){
   if(bestEl)bestEl.textContent=bestMo+(bestMo===1?' month':' months');
   if(realEl)realEl.textContent=realMo+(realMo===1?' month':' months');
   if(rangeEl)rangeEl.textContent=(loss?'Losing ':'Gaining ')+diff.toFixed(1)+' '+unit+' — realistic in '+realMo+' months.';
-  // Draw chart
+  // Vizato grafikun
   var canvas=document.getElementById('wp-canvas');if(!canvas)return;
   var dpr=window.devicePixelRatio||1;
   var W=canvas.parentNode.clientWidth,H=canvas.parentNode.clientHeight;
   canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
   var g=canvas.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,W,H);
-  // padding
+  // hapësira anësore
   var pl=28,pr=12,pt=12,pb=24;
   var weeks=realWks;var n=weeks+1;
   var ys=[];
   var yMin=Math.min(cw,gw)-1,yMax=Math.max(cw,gw)+1;
   function xOf(i){return pl+(i/(n-1))*(W-pl-pr);}
   function yOf(v){return pt+(1-(v-yMin)/(yMax-yMin))*(H-pt-pb);}
-  // Gridlines
+  // Vijat e rrjetit
   g.strokeStyle='rgba(0,0,0,.06)';g.lineWidth=1;
   for(var yy=0;yy<=3;yy++){var yp=pt+yy/3*(H-pt-pb);g.beginPath();g.moveTo(pl,yp);g.lineTo(W-pr,yp);g.stroke();}
-  // Realistic line (solid)
+  // Vija realiste (e plotë)
   g.strokeStyle='#A855F7';g.lineWidth=2.2;g.beginPath();
   for(var i=0;i<n;i++){var v=cw+(gw-cw)*(i/(n-1));var px=xOf(i),py=yOf(v);if(i===0)g.moveTo(px,py);else g.lineTo(px,py);}
   g.stroke();
-  // Best case shaded triangle
+  // Trekëndëshi i hijezuar i rastit më të mirë
   var bestN=Math.min(bestWks,weeks)+1;
   g.fillStyle='rgba(168,85,247,.16)';g.beginPath();
   g.moveTo(xOf(0),yOf(cw));
   for(var j=0;j<bestN;j++){var v2=cw+(gw-cw)*(j/(bestN-1));g.lineTo(xOf(j),yOf(v2));}
   g.lineTo(xOf(bestN-1),yOf(cw));g.closePath();g.fill();
-  // Best case dashed line
+  // Vija e ndërprerë e rastit më të mirë
   g.strokeStyle='#A855F7';g.lineWidth=1.5;g.setLineDash([3,3]);g.beginPath();
   for(var k2=0;k2<bestN;k2++){var v3=cw+(gw-cw)*(k2/(bestN-1));var px2=xOf(k2),py2=yOf(v3);if(k2===0)g.moveTo(px2,py2);else g.lineTo(px2,py2);}
   g.stroke();g.setLineDash([]);
-  // Start dot
+  // Pika e fillimit
   g.fillStyle='#A855F7';g.beginPath();g.arc(xOf(0),yOf(cw),5,0,Math.PI*2);g.fill();
-  // Axis labels
+  // Etiketat e boshteve
   g.fillStyle='rgba(0,0,0,.45)';g.font='600 10px Inter,system-ui';
   g.fillText('Now',pl,H-6);
   g.textAlign='right';g.fillText(realMo+'mo',W-pr,H-6);
   g.textAlign='left';
 }
 
-/* ── ONBOARDING & MUSCLE-MAP HELPERS ─────── */
+/* ── NDIHMËS PËR ONBOARDING DHE HARTËN E MUSKUJVE ─ */
 function replayOnboarding(){
-  // Pull saved prefs back into _ob if available so the wizard reflects the user's current state.
+  // Merr preferencat e ruajtura në _ob që magjistari të pasqyrojë gjendjen aktuale.
   try{
     var pr=JSON.parse(localStorage.getItem('prefs_'+CU.id)||'null');
     if(pr){_ob.main_goal=pr.goal||_ob.main_goal;_ob.experience=pr.experience||_ob.experience;_ob.weekly_days=+pr.weekly||_ob.weekly_days;}
   }catch(e){}
-  // Pull muscle prefs from the profile if loaded
+  // Merr preferencat e muskujve nga profili nëse është ngarkuar
   if(P._muscle_grow)_ob.muscle_grow=P._muscle_grow.slice();
   if(P._muscle_define)_ob.muscle_define=P._muscle_define.slice();
   if(P._muscle_exclude)_ob.muscle_exclude=P._muscle_exclude.slice();
   showOnboarding();
 }
 function openMuscleEditor(){
-  // Load current map into _ob so mm_render reflects existing state
+  // Ngarko hartën aktuale në _ob që mm_render të tregojë gjendjen ekzistuese
   if(P._muscle_grow)_ob.muscle_grow=P._muscle_grow.slice();else _ob.muscle_grow=_ob.muscle_grow||[];
   if(P._muscle_define)_ob.muscle_define=P._muscle_define.slice();else _ob.muscle_define=_ob.muscle_define||[];
   if(P._muscle_exclude)_ob.muscle_exclude=P._muscle_exclude.slice();else _ob.muscle_exclude=_ob.muscle_exclude||[];
@@ -269,7 +269,7 @@ function updateMuscleSummary(){
 function renderBodyMuscleMap(){
   var wrap=document.getElementById('body-mm-wrap');if(!wrap)return;
   var g=P._muscle_grow||[],d=P._muscle_define||[],x=P._muscle_exclude||[];
-  // Build a read-only chip view using the saved profile selections (independent of _ob state).
+  // Pamje vetëm për lexim me çipa, nga zgjedhjet e ruajtura në profil.
   wrap.innerHTML=MM_GROUPS.map(function(grp){
     return '<div class="mm-group"><div class="mm-group-h">'+grp.h+'</div><div class="mm-chips">'+
       grp.keys.map(function(k){
@@ -289,9 +289,9 @@ function renderBodyMuscleMap(){
   sum.innerHTML=parts.join(' · ');
 }
 
-/* ── MUSCLE MAP ─────────────────────────── */
-// Clean grouped chip list: Upper body / Core / Lower body. Each chip has 4 states:
-// off → grow (purple) → define (amber) → exclude (pink) — controlled by the mode buttons.
+/* ── HARTA E MUSKUJVE ─────────────────────── */
+// Listë çipash të grupuara: Pjesa e sipërme / Bërthama / Pjesa e poshtme. Çdo çip ka
+// 4 gjendje: asnjë → rrit → përcakto → përjashto, të kontrolluara nga butonat e mënyrës.
 var MM_LABELS={chest:'Chest',front_delts:'Front Delts',rear_delts:'Rear Delts',traps:'Traps',lats:'Lats',biceps:'Biceps',triceps:'Triceps',forearms:'Forearms',abs:'Abs',obliques:'Obliques',lower_back:'Lower Back',quads:'Quads',hamstrings:'Hamstrings',glutes:'Glutes',calves:'Calves',adductors:'Adductors'};
 var MM_GROUPS=[
   {h:'Upper Body',keys:['chest','front_delts','rear_delts','lats','traps','biceps','triceps','forearms']},
@@ -363,10 +363,10 @@ function mm_quick(kind){
 function showOnboarding(){
   document.getElementById('app').style.display='none';
   document.getElementById('onb').classList.add('on');
-  // Reset step
+  // Rikthe hapin
   _ob.step=0;
   ob_goto(0);
-  // Prefill defaults
+  // Mbush vlerat e parazgjedhura
   var ageEl=document.getElementById('ob-age');if(ageEl)ageEl.value=P.age||'';
   var htEl=document.getElementById('ob-ht');if(htEl)htEl.value=P.height||'';
   var cwEl=document.getElementById('ob-cw');if(cwEl)cwEl.value=(P._currentWeight!=null?P._currentWeight:(wtLog&&wtLog.length?wtLog[wtLog.length-1].weight:''));
@@ -377,7 +377,7 @@ function showOnboarding(){
 function _splashStep(text,pct){var s=document.getElementById('spl-step'),f=document.getElementById('spl-fill');if(s){s.style.opacity='0';setTimeout(function(){s.textContent=text;s.style.opacity='1';},120);}if(f)f.style.width=pct+'%';}
 async function ob_finish(){
   var btn=document.getElementById('ob-next-btn');btn.disabled=true;btn.textContent='Saving…';
-  // Show splash and hide wizard
+  // Shfaq ekranin e ngarkimit dhe fshih magjistarin
   document.getElementById('onb').classList.remove('on');
   var splash=document.getElementById('onb-splash');splash.classList.add('on');
   _splashStep('Reading your answers…',12);

@@ -1,4 +1,5 @@
-/* ── WEIGHT ───────────────────────────────── */
+/* body.js — Skeda Progresi: pesha, matjet e trupit, fotot e progresit dhe grafikët. */
+/* ── PESHA ────────────────────────────────── */
 function openWtM(){oModal('m-wt');}
 async function saveWt(){
   var v=parseFloat(document.getElementById('wt-in').value);
@@ -32,15 +33,15 @@ async function initChart(){
   renderChart();
 }
 function renderChart(){
-  // One point is not a trend. The Log card below carries the first-entry prompt.
+  // Një pikë e vetme nuk është trend; karta poshtë fton për regjistrimin e parë.
   var card=document.getElementById('w-chart-card');if(card)card.style.display=(wtLog&&wtLog.length>=2)?'':'none';
   if(!wChart)return;var d=wtLog.slice(-21);wChart.data.labels=d.map(function(w){return w.date.slice(5);});wChart.data.datasets[0].data=d.map(function(w){return w.weight;});wChart.update();}
 
-/* ── WEEKLY VOLUME CHART ──────────────────── */
+/* ── GRAFIKU I VOLUMIT JAVOR ──────────────── */
 var volChart=null;
 var MUSCLE_COLORS={chest:'#22C55E',back:'#3B82F6',legs:'#A855F7',shoulders:'#F59E0B',arms:'#EC4899',core:'#06B6D4',other:'#9CA3AF'};
 function _weekKey(d){
-  // ISO-week-ish: Monday-start week key as 'YYYY-MM-DD' (Monday)
+  // Çelësi i javës: data e së hënës si 'YYYY-MM-DD\'
   var x=new Date(d);var day=x.getDay();var diff=day===0?6:day-1;
   x.setDate(x.getDate()-diff);x.setHours(0,0,0,0);
   return x.toISOString().split('T')[0];
@@ -61,7 +62,7 @@ async function loadVolumeChart(){
       });
     });
   });
-  // Build the last 6 week buckets even when empty so the axis is continuous.
+  // Krijo 6 javët e fundit edhe kur janë bosh, që boshti të jetë i vazhdueshëm.
   var labels=[];var today0=new Date();today0.setHours(0,0,0,0);
   for(var i=5;i>=0;i--){var d=new Date(today0);d.setDate(d.getDate()-i*7);labels.push(_weekKey(d));}
   var muscles=['chest','back','legs','shoulders','arms','core','other'];
@@ -85,7 +86,7 @@ async function loadVolumeChart(){
   });
 }
 
-/* ── WEIGHT PROJECTION CHART ─────────────── */
+/* ── GRAFIKU I PARASHIKIMIT TË PESHËS ─────── */
 var wprojChart=null;
 async function renderWeightProjection(){
   var card=document.getElementById('wproj-card');if(!card)return;
@@ -94,7 +95,7 @@ async function renderWeightProjection(){
   if(!cur||!goal||Math.abs(cur-goal)<0.5){card.style.display='none';if(wprojChart){wprojChart.destroy();wprojChart=null;}return;}
   card.style.display='block';
   var direction=goal>cur?1:-1;
-  // Healthy weekly rate as % of body weight; best ~1%/wk, worst ~0.25%/wk.
+  // Ritmi i shëndetshëm javor si % e peshës: më i miri ~1%/javë, më i ngadalti ~0.25%/javë.
   var bestRate=cur*0.01,worstRate=cur*0.0025;
   var weeksBest=Math.ceil(Math.abs(goal-cur)/bestRate);
   var weeksWorst=Math.ceil(Math.abs(goal-cur)/worstRate);
@@ -130,7 +131,7 @@ async function renderWeightProjection(){
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:0},plugins:{legend:{display:false}},scales:_chartAxes({yTick:{callback:function(v){return v+'kg';}}})}});
 }
 
-/* ── BODY-FAT TREND CHART ─────────────────── */
+/* ── GRAFIKU I YNDYRËS TRUPORE ────────────── */
 var bfChart=null;
 async function renderBfChart(){
   var card=document.getElementById('bf-card');if(!card)return;
@@ -149,7 +150,7 @@ async function renderBfChart(){
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:0},plugins:{legend:{display:false}},scales:_chartAxes({yTick:{callback:function(v){return v+'%';}}})}});
 }
 
-/* ── BODY MEASUREMENTS ────────────────────── */
+/* ── MATJET E TRUPIT ──────────────────────── */
 var mesLog=[];
 function openMeasure(){
   if(mesLog.length){var last=mesLog[0];['waist','chest','hips','neck','arm','thigh','bf'].forEach(function(k){
@@ -173,8 +174,8 @@ async function loadMeasure(){
   var{data}=await sb.from('body_measurements').select('*').eq('user_id',CU.id).order('logged_date',{ascending:false}).limit(30);
   mesLog=data||[];renderMeasure();
 }
-// Body measurements: clean tile grid (waist, chest, arm, hips, thigh, neck)
-// with deltas vs the previous entry, plus a summary bar (body fat / last log / count).
+// Matjet e trupit si rrjet pllakash (bel, gjoks, krah, vithe, kofshë, qafë)
+// me ndryshimin nga matja e kaluar, plus një përmbledhje (yndyra / matja e fundit / numri).
 var MES_KEYS=[
   {f:'waist_cm',l:'Waist'},
   {f:'chest_cm',l:'Chest'},
@@ -219,7 +220,7 @@ function renderMeasure(){
   }
 }
 
-/* ── PROGRESS PHOTOS ──────────────────────── */
+/* ── FOTOT E PROGRESIT ────────────────────── */
 var photoList=[],_phFile=null;
 document.addEventListener('change',function(e){
   if(e.target&&e.target.id==='ph-file'&&e.target.files&&e.target.files[0]){
@@ -255,7 +256,7 @@ async function renderPhotos(){
   var g=document.getElementById('ph-grid');if(!g)return;
   var addBtn='<div class="ph-add" onclick="oModal(\'m-photo\')">+</div>';
   if(!photoList.length){g.innerHTML=addBtn;return;}
-  // Get signed URLs in parallel
+  // Merr URL-të e nënshkruara paralelisht
   var urls=await Promise.all(photoList.slice(0,11).map(function(p){
     return sb.storage.from('progress-photos').createSignedUrl(p.storage_path,3600).then(function(r){return r.data&&r.data.signedUrl;});
   }));
@@ -286,15 +287,15 @@ async function deletePhoto(){
   _viewingPhoto=null;cModal('m-photoview');await renderPhotos();toast('Deleted');
 }
 
-/* ── PHOTO COMPARE ─────────────────────────── */
+/* ── KRAHASIMI I FOTOVE ───────────────────── */
 function openPhotoCompare(){
   if(!_viewingPhoto){toast('Open a photo first');return;}
   if(photoList.length<2){toast('Need at least 2 photos to compare');return;}
   var sel=document.getElementById('pc-pick');
-  // Populate options — exclude the current photo
+  // Mbush opsionet, pa foton aktuale
   var opts=photoList.filter(function(p){return p.id!==_viewingPhoto.id;}).map(function(p){var d=p.taken_at?p.taken_at.split('T')[0]:'';return '<option value="'+p.id+'">'+fdate(d)+(p.pose?' · '+p.pose:'')+'</option>';}).join('');
   sel.innerHTML=opts;
-  // Default to oldest (last in list)
+  // Parazgjedhja: më e vjetra (e fundit në listë)
   var oldest=photoList.slice().reverse().find(function(p){return p.id!==_viewingPhoto.id;});
   if(oldest)sel.value=oldest.id;
   cModal('m-photoview');
@@ -307,7 +308,7 @@ async function renderPhotoCompare(){
   var sel=document.getElementById('pc-pick');
   var otherId=sel.value;
   var other=photoList.find(function(p){return p.id===otherId;});if(!other)return;
-  // Order: older → left ("Before"), newer → right ("After")
+  // Renditja: e vjetra majtas ("Para"), e reja djathtas ("Pas")
   var a=_viewingPhoto,b=other;
   var aTs=new Date(a.taken_at).getTime(),bTs=new Date(b.taken_at).getTime();
   var older=aTs<bTs?a:b,newer=aTs<bTs?b:a;

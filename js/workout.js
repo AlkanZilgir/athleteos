@@ -1,6 +1,10 @@
-/* ── EXERCISE DATABASE ────────────────────── */
-// Canvas cannot read CSS custom properties, so the share image asks the
-// live accent for its rgb triple and builds the alpha variant itself.
+/* workout.js — Skeda Stërvitja: baza e ushtrimeve, seanca aktive me seritë,
+   ngrohja dhe superseritë, kohëmatësi i pushimit, raporti pas seancës,
+   rekordet personale, kardio, llogaritësit (disqe, 1RM), rutinat, biblioteka
+   e planeve dhe ndarja e rutinave. */
+/* ── BAZA E USHTRIMEVE ────────────────────── */
+// Canvas-i nuk lexon variablat CSS, prandaj imazhi për ndarje e merr ngjyrën
+// e theksit si rgb dhe e ndërton vetë variantin me transparencë.
 function _accentRgba(a){var rgb='';try{rgb=getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim();}catch(e){}return 'rgba('+(rgb||'169,171,227')+','+a+')';}
 var EX_DB={
   'Bench Press':{an:'push_h',pri:['Chest'],sec:['Front Delts','Triceps'],desc:'The cornerstone of upper body pushing strength. Lying flat, you lower a barbell to the lower chest and drive it back up, building raw chest mass and power.',tips:['Retract and depress shoulder blades throughout the lift','Maintain a slight arch — keep your feet flat on the floor','Bar touches lower chest, not your neck']},
@@ -44,10 +48,10 @@ var EX_DB={
   'Ab Wheel':{an:'extend',pri:['Abs','Transverse Abdominis'],sec:['Lats','Triceps','Shoulders'],desc:'Brutally effective anti-extension core training. One of the hardest and most rewarding ab exercises for building genuine core strength.',tips:['Keep your hips level — do not let them drop or raise','Only roll out as far as you can without losing lumbar position','Start with short range and build outward over weeks']}
 };
 
-/* ── CUSTOM EXERCISES ─────────────────────── */
-// Custom exercises now persist in the public.custom_exercises table (RLS-scoped).
-// localStorage is kept as a hot cache so getCustomEx() is sync and offline-safe;
-// loadCustomExFromServer() pulls the canonical list on boot and on writes.
+/* ── USHTRIMET E PERSONALIZUARA ───────────── */
+// Ushtrimet e personalizuara ruhen në tabelën custom_exercises (me RLS).
+// localStorage mbahet si cache që getCustomEx() të punojë sinkron dhe offline;
+// loadCustomExFromServer() sjell listën nga serveri në nisje dhe pas çdo ruajtjeje.
 function _cuexKey(){return 'customex_'+(CU&&CU.id||'anon');}
 function getCustomEx(){try{return JSON.parse(localStorage.getItem(_cuexKey())||'[]');}catch(e){return [];}}
 function setCustomExList(list){try{localStorage.setItem(_cuexKey(),JSON.stringify(list));}catch(e){}}
@@ -62,11 +66,11 @@ async function loadCustomExFromServer(){
   }catch(e){console.warn('loadCustomExFromServer',e);}
 }
 
-/* ── EXERCISE INFO ────────────────────────── */
+/* ── INFORMACIONI I USHTRIMIT ─────────────── */
 function findExInfo(name){
   if(!name)return null;
   var n=name.toLowerCase().trim();
-  // Custom exercises take precedence — exact match only.
+  // Ushtrimet e personalizuara kanë përparësi, vetëm me përputhje të saktë.
   var cust=getCustomEx();
   for(var ci=0;ci<cust.length;ci++){if((cust[ci].name||'').toLowerCase()===n)return cust[ci];}
   var keys=Object.keys(EX_DB);
@@ -91,14 +95,14 @@ function findExInfo(name){
   if(n.indexOf('pushdown')!==-1||n.indexOf('push-down')!==-1)return EX_DB['Tricep Pushdown'];
   if(n.indexOf('plank')!==-1)return EX_DB['Plank'];
   if(n.indexOf('crunch')!==-1)return EX_DB['Crunches'];
-  // Generic fallback by pattern keyword
+  // Rezervë e përgjithshme sipas fjalës kyçe
   if(n.indexOf('press')!==-1)return{an:'push_h',pri:['Chest/Shoulders'],sec:['Triceps'],desc:'A pressing movement that builds upper body pushing strength.',tips:['Control the weight','Full range of motion','Progressive overload over time']};
   if(n.indexOf('pull')!==-1||n.indexOf('row')!==-1)return{an:'pull_h',pri:['Back'],sec:['Biceps'],desc:'A pulling movement that builds back strength and width.',tips:['Feel the muscle stretch at the start','Pull with your elbows','Control the return']};
   if(n.indexOf('leg')!==-1||n.indexOf('quad')!==-1||n.indexOf('glute')!==-1)return{an:'squat',pri:['Quads','Glutes'],sec:['Hamstrings'],desc:'A lower body movement for leg development.',tips:['Maintain proper form','Control the descent','Drive through your heels']};
   return{an:'extend',pri:['Multiple muscle groups'],sec:[],desc:'Perform this exercise with control and focus on the target muscle.',tips:['Warm up properly','Focus on feeling the muscle work','Add weight gradually over time']};
 }
-/* ── EXERCISE DEMO (free-exercise-db via jsdelivr) ── */
-// Hand-curated mapping from our EX_DB names → free-exercise-db ids (verified).
+/* ── DEMONSTRIMI I USHTRIMIT (free-exercise-db nga jsdelivr) ── */
+// Lidhje e bërë me dorë nga emrat tanë në EX_DB → id-të e free-exercise-db (të verifikuara).
 var EX_GIF_MAP={
   'Bench Press':'Barbell_Bench_Press_-_Medium_Grip',
   'Incline Press':'Barbell_Incline_Bench_Press_-_Medium_Grip',
@@ -155,9 +159,9 @@ async function _loadExDb(){
   }catch(e){return null;}
 }
 function _findExGif(name){
-  // 1. Curated map (canonical, accurate).
+  // 1. Harta e bërë me dorë (e saktë).
   if(EX_GIF_MAP[name])return EX_GIF_MAP[name];
-  // 2. Fuzzy fallback against the catalog.
+  // 2. Kërkim i përafërt në katalog si rezervë.
   if(!_exDb)return null;
   var n=_exDbNorm(name);
   if(!n)return null;
@@ -253,7 +257,7 @@ async function _loadExHistory(name){
   }catch(e){console.warn('_loadExHistory',e);}
 }
 
-/* ── WORKOUT ──────────────────────────────── */
+/* ── SEANCA E STËRVITJES ──────────────────── */
 var wNote='';
 function toggleSessNote(btn){
   var ta=document.getElementById('wn-text');if(!ta)return;
@@ -262,8 +266,8 @@ function toggleSessNote(btn){
   if(!shown){setTimeout(function(){ta.focus();},10);}
   if(btn)btn.textContent=ICO('notebook','13px')+(wNote?'Edit session note':(shown?'Add session note':'Hide note'));
 }
-// Anything outside the Workout tab that starts a session goes through here, so
-// the active-session panel is actually on screen when it opens.
+// Çdo nisje seance nga jashtë skedës Stërvitja kalon këtu, që paneli i
+// seancës aktive të jetë vërtet në ekran kur hapet.
 function startSession(){goTab('workout');startW();}
 function startFromTemplate(id){
   goTab('workout');
@@ -338,9 +342,9 @@ function saveEx(){
     toast('Rest started — '+s+'s');
   }
 }
-/* ── SESSION MUSCLE MAP ────────────────────── */
-// Highlights the muscle groups hit by the exercises in the active session.
-// Front + back stylised figures; app muscle groups map onto these regions:
+/* ── HARTA E MUSKUJVE TË SEANCËS ──────────── */
+// Ndriçon grupet e muskujve që punohen nga ushtrimet e seancës aktive.
+// Figura e stilizuar para dhe pas; grupet e aplikacionit lidhen me zonat:
 //   chest→ch, back→ba, shoulders→sh, arms→ar, legs→le, core→co.
 function renderBodyMap(){
   var el=document.getElementById('sess-bodymap');if(!el)return;
@@ -445,7 +449,7 @@ function removeEx(i){
   if(!confirm('Remove "'+(wExs[i]&&wExs[i].name)+'" from this session?'))return;
   wExs.splice(i,1);renderExList();
 }
-// Apply the auto-progression target as the first set of an exercise.
+// Vendos objektivin e progresionit automatik si serinë e parë të ushtrimit.
 function applyProgressionTarget(i){
   var ex=wExs[i];if(!ex)return;
   var t=_progressionTarget(ex.name);if(!t)return;
@@ -459,8 +463,8 @@ function applyProgressionTarget(i){
   toast('Target set: '+(t.w>0?t.w+' kg × '+t.r:t.r+' reps'));
 }
 
-/* ── INLINE SET GRID ───────────────────────── */
-// Colour for the RIR effort dot: low RIR (near failure) = red, high = green.
+/* ── TABELA E SERIVE ──────────────────────── */
+// Ngjyra e pikës RIR: RIR i ulët (afër dështimit) = e kuqe, i lartë = e gjelbër.
 function rirColor(v){
   if(v===''||v==null)return 'var(--t4)';
   var n=parseInt(v);if(isNaN(n))return 'var(--t4)';
@@ -468,22 +472,22 @@ function rirColor(v){
   if(n<=3)return '#F59E0B';
   return _sig('--sig-train-pure');
 }
-// Write an edited cell straight back to the in-memory session model.
-/* ── RAPID-FIRE SET LOGGING ────────────────
-   Three rules: never open a keyboard you did not have to, never make the
-   user retype what they just lifted, and keep the running totals honest. */
+// Shkruaj qelizën e ndryshuar drejt në modelin e seancës në memorie.
+/* ── REGJISTRIMI I SHPEJTË I SERIVE ────────
+   Tri rregulla: mos hap tastierën pa nevojë, mos e detyro përdoruesin të
+   rishkruajë atë që sapo ngriti, dhe mbaj totalet e sakta. */
 
-// 2.5 kg is the smallest plate pair most gyms have; 5 lb is its imperial twin.
+// 2.5 kg është çifti më i vogël i disqeve në shumicën e palestrave; 5 lb në sistemin imperial.
 function _wStep(){return (P&&P.units==='imperial')?5:2.5;}
 function _wUnit(){return (P&&P.units==='imperial')?'lb':'kg';}
 
-// What this set most likely is: the set above it, else the matching set from
-// the last time this lift was trained. Shown as a ghost, not a value, so an
-// untouched row never silently logs numbers the user did not choose.
+// Çfarë ka gjasa të jetë kjo seri: seria sipër saj, ose seria përkatëse nga
+// hera e fundit. Shfaqet si "hije", jo si vlerë, që një rresht i paprekur
+// të mos regjistrojë kurrë numra që përdoruesi nuk i zgjodhi.
 function _setSuggest(ex,si){
   for(var k=si-1;k>=0;k--){
     var p=ex.sets[k];
-    if(p&&p.warm)continue;  // a 40% ramp set must not ghost into the first working set
+    if(p&&p.warm)continue;  // një seri ngrohjeje 40% nuk duhet të bëhet hije e serisë së parë të punës
     if(p&&(p.weight!==''&&p.weight!=null)||(p&&p.reps!==''&&p.reps!=null))
       return{weight:p.weight,reps:p.reps};
   }
@@ -505,7 +509,7 @@ function _stepper(idx,si,field,val,sug,step,label){
   '</div>';
 }
 
-// Tapping a stepper on an empty cell commits the ghost first, then moves it.
+// Prekja e +/- në qelizë boshe së pari e pranon hijen, pastaj e ndryshon.
 function stepSet(idx,si,field,delta){
   var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
   var s=ex.sets[si],cur=s[field];
@@ -530,7 +534,7 @@ function stepSet(idx,si,field,delta){
   updateSessionHUD();
 }
 
-// Live HUD — volume of completed sets only, so the number means something.
+// Treguesi live: vetëm volumi i serive të kryera, që numri të ketë kuptim.
 function updateSessionHUD(){
   var vol=0,sets=0;
   wExs.forEach(function(ex){(ex.sets||[]).forEach(function(s){
@@ -558,19 +562,19 @@ function setField(idx,si,field,val){
   }
   else if(field==='rir'){
     ex.sets[si].rir=val===''?null:Math.max(0,Math.min(10,parseInt(val)||0));
-    // Recolour the effort dot live without a full re-render (keeps focus in the input).
+    // Ndrysho ngjyrën e pikës RIR pa rivizatuar gjithçka (fokusi mbetet në fushë).
     var row=document.querySelectorAll('#ex-list .exi')[idx];
     if(row){var dots=row.querySelectorAll('.rir-dot');if(dots[si])dots[si].style.background=rirColor(ex.sets[si].rir==null?'':ex.sets[si].rir);}
   }
 }
-// Tick a set complete — fires haptics and (if auto-rest is on) starts the rest timer.
+// Shëno serinë si të kryer: dridhje dhe, nëse është aktiv, nis kohëmatësin e pushimit.
 function toggleSetDone(idx,si,btn){
   var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
   var s=ex.sets[si];
   var nowDone=!s.done;
   if(nowDone){
-    // Ticking a row you never typed in means "I did what it says" — commit the
-    // ghost rather than saving an empty set.
+    // Shënimi i një rreshti pa shkruar asgjë do të thotë "bëra atë që thotë":
+    // pranohet hija në vend që të ruhet një seri boshe.
     var sug=_setSuggest(ex,si);
     if(s.weight===''||s.weight==null)s.weight=(sug.weight===''||sug.weight==null)?0:parseFloat(sug.weight)||0;
     if(s.reps===''||s.reps==null)s.reps=(sug.reps===''||sug.reps==null)?0:parseInt(sug.reps)||0;
@@ -590,16 +594,16 @@ function toggleSetDone(idx,si,btn){
   updateSessionHUD();
   if(nowDone){
     if(navigator.vibrate)try{navigator.vibrate(35);}catch(e){}
-    // In a superset the rest comes after the round: only the last exercise in the group starts the timer.
+    // Në superseri pushimi vjen pas raundit: vetëm ushtrimi i fundit i grupit e nis kohëmatësin.
     if(P._autoRest&&_isLastInGroup(idx))restForEx(idx);
   }
 }
-// Add a blank set row, pre-filling weight/reps from this session's last set,
-// falling back to the matching set from the previous session.
+// Shto një rresht serie bosh, me peshën dhe përsëritjet nga seria e fundit e
+// kësaj seance, ose nga seanca e kaluar.
 function addInlineSet(idx){
   var ex=wExs[idx];if(!ex)return;
   ex.sets=ex.sets||[];
-  // The row arrives empty; _setSuggest paints the ghost. No keyboard opens.
+  // Rreshti vjen bosh; _setSuggest vizaton hijen. Tastiera nuk hapet.
   ex.sets.push({weight:'',reps:'',rir:null,done:false});
   renderExList();
   updateSessionHUD();
@@ -610,16 +614,16 @@ function removeSet(idx,si){
   renderExList();updateSessionHUD();
 }
 
-/* ── WARM-UP SETS ──────────────────────────
-   A warm-up is logged like any set but is not working volume: it never counts
-   toward the HUD, the summary or a record. Tap the set number to switch. */
+/* ── SERITË E NGROHJES ─────────────────────
+   Ngrohja regjistrohet si çdo seri, por nuk është volum pune: nuk numërohet
+   në tregues, në përmbledhje apo në rekorde. Preke numrin e serisë për ta ndërruar. */
 function toggleWarm(idx,si){
   var ex=wExs[idx];if(!ex||!ex.sets||!ex.sets[si])return;
   ex.sets[si].warm=!ex.sets[si].warm;
   renderExList();updateSessionHUD();
 }
-// Three ramp sets from the first working weight (40%, 60%, 80%), rounded to the
-// plate step. With no working weight known yet, one empty warm-up row.
+// Tri seri ngrohjeje nga pesha e parë e punës (40%, 60%, 80%), të rrumbullakuara
+// sipas disqeve. Pa peshë pune, një rresht ngrohjeje bosh.
 function addWarmups(idx){
   var ex=wExs[idx];if(!ex)return;
   ex.sets=ex.sets||[];
@@ -638,9 +642,9 @@ function _workingOnly(exs){
   return exs.map(function(ex){return{name:ex.name,muscle:ex.muscle,note:ex.note,ss:ex.ss,sets:(ex.sets||[]).filter(function(s){return !s.warm;})};});
 }
 
-/* ── SUPERSETS ─────────────────────────────
-   Consecutive exercises sharing a group number are one superset: alternate
-   them, rest after the round. The group is persisted on the exercise row. */
+/* ── SUPERSERITË ───────────────────────────
+   Ushtrimet e njëpasnjëshme me të njëjtin numër grupi janë një superseri:
+   alternohen, pushimi vjen pas raundit. Grupi ruhet në rreshtin e ushtrimit. */
 function toggleSuperset(idx){
   var ex=wExs[idx];if(!ex)return;
   if(ex.ss){
@@ -659,9 +663,9 @@ function _isLastInGroup(idx){
   return true;
 }
 
-/* ── INLINE QUICK-ADD ──────────────────────
-   Search, tap, the card lands at the end of the list. No modal, and the
-   page never jumps: we scroll the new card into view instead. */
+/* ── SHTIMI I SHPEJTË I USHTRIMIT ──────────
+   Kërko, prek, karta shtohet në fund të listës. Pa modal; faqja skrollon
+   deri te karta e re. */
 var _qaSel=-1;
 function _qaCatalog(){
   var cust=getCustomEx().map(function(c){return{name:c.name,info:c};});
@@ -722,7 +726,7 @@ function qaAdd(name,isNew){
   if(card&&card.scrollIntoView)card.scrollIntoView({block:'nearest',behavior:'smooth'});
   if(navigator.vibrate)try{navigator.vibrate(12);}catch(e){}
 }
-// Map a catalogue entry to one of the app's seven muscle buckets.
+// Lidh një ushtrim të katalogut me një nga shtatë grupet e muskujve të aplikacionit.
 function _muscleOf(name,info){
   var pri=((info&&info.pri)||[]).join(' ').toLowerCase();
   var n=(name||'').toLowerCase();
@@ -745,7 +749,7 @@ function saveCustomExNamed(name){
   }catch(e){}
 }
 
-/* ── INLINE EXERCISE DEMO ──────────────────── */
+/* ── DEMONSTRIMI BRENDA KARTËS ────────────── */
 var _inlineDemoTimers={};
 function _stopInlineDemo(el){if(el&&el._demoTimer){clearInterval(el._demoTimer);el._demoTimer=null;}}
 function toggleExDemo(idx,name,btn){
@@ -772,7 +776,7 @@ async function _mountInlineDemo(el,name){
   img0.src=base+'0.jpg';img1.src=base+'1.jpg';
 }
 
-/* ── QUICK SET LOG ─────────────────────────── */
+/* ── PËRFUNDIMI I SEANCËS ─────────────────── */
 function toggleExNote(i,btn){
   var ta=document.querySelector('textarea[data-ex-note="'+i+'"]');if(!ta)return;
   var shown=ta.style.display!=='none';
@@ -784,7 +788,7 @@ async function finishW(){
   if(!wExs.length){toast('Add exercises first');return;}
   clearInterval(wTmr);
   var dur=Math.floor((Date.now()-wStart)/1000/60);
-  // Generate ids client-side so workouts/exercises/sets stay linked even when queued offline.
+  // Krijo id-të në klient që workouts/exercises/sets të mbeten të lidhura edhe offline.
   var workoutId=_genId();
   var woPayload={id:workoutId,user_id:CU.id,started_at:new Date(wStart).toISOString(),finished_at:new Date().toISOString(),duration_seconds:dur*60};
   if(wNote&&wNote.trim())woPayload.notes=wNote.trim();
@@ -801,12 +805,11 @@ async function finishW(){
     }
   }
   var wo={id:workoutId};
-  // Snapshot the working sets once: savePRs and persistPRs both need the set
-  // arrays, and summary.exs below carries only counts. Passing the summary
-  // to persistPRs is what threw "ex.sets.forEach is not a function" in prod.
+  // Ruaj një kopje të serive të punës: savePRs dhe persistPRs i duan vargjet
+  // e serive, ndërsa summary.exs mban vetëm numërime.
   var prExs=_workingOnly(wExs);
   var newPRs=savePRs(prExs);
-  // Snapshot summary data BEFORE we wipe wExs.
+  // Ruaj përmbledhjen PARA se të fshihet wExs.
   var summary={
     dur:dur,
     kcal:estKcal(dur*60),
@@ -818,7 +821,7 @@ async function finishW(){
   };
   document.getElementById('active-sess').classList.add('hidden');
   setTrainChip(true);
-  // Keep a global snapshot for sharing.
+  // Mbaj një kopje globale për ndarjen.
   _lastSummary=summary;
   wExs=[];renderExList();renderPRs();
   try{await loadWHist();}catch(e){}
@@ -838,34 +841,34 @@ async function shareWorkout(){
     var canvas=document.createElement('canvas');
     var W=1080,H=1350;canvas.width=W;canvas.height=H;
     var ctx=canvas.getContext('2d');
-    // Background gradient
+    // Sfondi me gradient
     var grad=ctx.createLinearGradient(0,0,0,H);
     grad.addColorStop(0,'#0E0E12');grad.addColorStop(1,'#1A2820');
     ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-    // Subtle green halo
+    // Një shkëlqim i lehtë
     var halo=ctx.createRadialGradient(W/2,260,40,W/2,260,500);
     halo.addColorStop(0,_accentRgba(.28));halo.addColorStop(1,_accentRgba(0));
     ctx.fillStyle=halo;ctx.fillRect(0,0,W,H);
-    // Brand
+    // Emri i aplikacionit
     ctx.font='900 50px Inter,system-ui,sans-serif';
     ctx.textBaseline='top';
     ctx.fillStyle='#FFFFFF';ctx.fillText('Athlete',70,80);
     var aw=ctx.measureText('Athlete').width;
     ctx.fillStyle=_sig('--accent');ctx.fillText('OS',70+aw,80);
-    // Date
+    // Data
     ctx.font='600 22px Inter,system-ui,sans-serif';
     ctx.fillStyle='rgba(255,255,255,.5)';
     ctx.textAlign='right';
     ctx.fillText(new Date().toLocaleDateString('en',{weekday:'long',month:'short',day:'numeric'}),W-70,100);
     ctx.textAlign='left';
-    // Main headline
+    // Titulli kryesor
     ctx.font='900 80px Inter,system-ui,sans-serif';
     ctx.fillStyle='#FFFFFF';
     ctx.fillText('Session complete',70,200);
     ctx.font='600 28px Inter,system-ui,sans-serif';
     ctx.fillStyle='rgba(255,255,255,.6)';
     ctx.fillText(s.exs.length+' exercises · '+s.sets+' sets',70,310);
-    // Stats grid 2×2
+    // Rrjeti i statistikave 2×2
     var statBoxes=[
       {label:'DURATION',value:s.dur+' min',color:'#FFFFFF'},
       {label:'VOLUME',value:(s.vol>=1000?(s.vol/1000).toFixed(1)+'t':s.vol+'kg'),color:_sig('--accent')},
@@ -884,7 +887,7 @@ async function shareWorkout(){
       ctx.fillStyle=b.color;
       ctx.fillText(b.value,x+24,y+60);
     });
-    // Exercises (up to 6)
+    // Ushtrimet (deri në 6)
     var ey=gy+2*(gh+20)+30;
     ctx.font='700 22px Inter,system-ui,sans-serif';
     ctx.fillStyle='rgba(255,255,255,.5)';
@@ -910,7 +913,7 @@ async function shareWorkout(){
       ctx.fillStyle='rgba(255,255,255,.45)';
       ctx.fillText('+ '+(s.exs.length-maxShow)+' more',70,ey);
     }
-    // PRs callout
+    // Rekordet
     if(s.newPRs&&s.newPRs.length){
       var py=H-220;
       ctx.fillStyle='rgba(245,158,11,.16)';
@@ -919,13 +922,13 @@ async function shareWorkout(){
       ctx.fillStyle='#F59E0B';
       ctx.fillText(s.newPRs.length+' NEW PR'+(s.newPRs.length===1?'':'s')+'!',96,py+28);
     }
-    // Footer
+    // Fundi
     ctx.font='600 22px Inter,system-ui,sans-serif';
     ctx.fillStyle='rgba(255,255,255,.4)';
     ctx.textAlign='center';
     ctx.fillText('Tracked with AthleteOS',W/2,H-70);
     ctx.textAlign='left';
-    // Export
+    // Eksporti
     canvas.toBlob(async function(blob){
       if(!blob){toast('Could not generate image');return;}
       var file=new File([blob],'athleteos-workout.png',{type:'image/png'});
@@ -947,8 +950,8 @@ function _roundRect(ctx,x,y,w,h,r){
   ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
   ctx.closePath();
 }
-/* Report card, not a congratulations screen. Volume leads, deltas say
-   whether the session actually moved anything, PRs get their own badges. */
+/* Raporti pas seancës: volumi në krye, ndryshimet nga seanca e kaluar,
+   rekordet si etiketa. */
 function showWorkoutSummary(s){
   if(!s)return;
   var set=function(id,html){var el=document.getElementById(id);if(el)el.innerHTML=html;};
@@ -985,21 +988,21 @@ function showWorkoutSummary(s){
   }
   oModal('m-summary');
 }
-// Epley formula 1RM estimate
+// Vlerësimi i 1RM me formulën Epley
 function _epley1rm(w,r){return r<=1?w:w*(1+r/30);}
-// vs-last-session: query the user's previous workout (before the one just saved) and diff vol/sets/dur.
+// Krahasimi me seancën e kaluar: merr stërvitjen e mëparshme dhe llogarit ndryshimin e volumit, serive, kohës.
 async function _renderSummaryVs(s){
   var wrap=document.getElementById('sum-vs'),rows=document.getElementById('sum-vs-rows');
   if(!wrap||!rows||!CU){if(wrap)wrap.style.display='none';return;}
   try{
     var{data}=await sb.from('workouts').select('id,duration_seconds,exercises(sets(weight_kg,reps))').eq('user_id',CU.id).order('started_at',{ascending:false}).limit(2);
     if(!data||data.length<2){wrap.style.display='none';return;}
-    var prev=data[1]; // [0] is the workout we just saved
+    var prev=data[1]; // [0] është stërvitja që sapo ruajtëm
     var prevSets=0,prevVol=0;
     (prev.exercises||[]).forEach(function(ex){(ex.sets||[]).forEach(function(st){prevSets++;prevVol+=(+st.weight_kg||0)*(+st.reps||0);});});
     var prevDur=Math.round((+prev.duration_seconds||0)/60);
-    // A percentage says more than a raw delta, and the volume line gets the
-    // spike treatment when the jump is worth calling out.
+    // Përqindja thotë më shumë se ndryshimi i thjeshtë; rreshti i volumit
+    // theksohet kur rritja ia vlen.
     var mk=function(label,now,then,unit,spike){
       var d=now-then;
       var pctD=then>0?Math.round((d/then)*100):(now>0?100:0);
@@ -1019,14 +1022,14 @@ async function _renderSummaryVs(s){
     wrap.style.display='block';
   }catch(e){console.warn('vs-last diff',e);wrap.style.display='none';}
 }
-// Rough strength-training calorie burn (MET ≈ 5.0).
-// kcal ≈ MET × bodyweight_kg × hours. Falls back to 75kg if no weight logged.
+// Kaloritë e djegura, përafërsisht (MET ≈ 5.0).
+// kcal ≈ MET × pesha_kg × orë. Nëse s'ka peshë, përdor 75kg.
 function estKcal(durationSeconds){
   if(!durationSeconds||durationSeconds<=0)return 0;
   var bw=(wtLog&&wtLog.length)?wtLog[wtLog.length-1].weight:75;
   return Math.round(5.0*bw*(durationSeconds/3600));
 }
-// Persist each new PR to personal_records. Best-effort; failures are logged.
+// Ruaj çdo rekord të ri në personal_records; dështimet vetëm regjistrohen.
 async function persistPRs(workoutId,allExs,newPRNames){
   for(var i=0;i<allExs.length;i++){
     var ex=allExs[i];
@@ -1054,8 +1057,8 @@ function celebratePRs(names){
   var n=names.length;
   _fxPRArpeggio();
   try{navigator.vibrate&&navigator.vibrate([60,40,60,40,120]);}catch(e){}
-  // The lift and the number are the hero. No gradient, no trophy wall, no
-  // slogan: a record is a fact, and the dialog states it the way the log does.
+  // Ushtrimi dhe numri janë kryesorët. Pa gradient, pa trofe, pa slogan:
+  // rekordi është fakt dhe dritarja e thotë ashtu.
   var KIND_LBL={weight:'Heavier than before',reps:'More reps at this weight','1rm':'New estimated 1RM',new:'First entry'};
   var rows=names.slice(0,4).map(function(name){
     var p=allPRs[name]||{};
@@ -1096,15 +1099,13 @@ function celebratePRs(names){
       +'</div>'
     +'</div>'
   +'</div>';
-  // Focus the dialog, not the button: screen readers announce it, and no focus
-  // ring lands on the volt surface for pointer users.
+  // Fokuso dritaren, jo butonin: lexuesit e ekranit e njoftojnë.
   var dlg=el.querySelector('.prc');if(dlg){dlg.setAttribute('tabindex','-1');setTimeout(function(){try{dlg.focus({preventScroll:true});}catch(e){}},50);}
 }
-// Renders the named PR onto a 1080×1080 canvas, brands it, and opens the
-// native share sheet. Falls back to a download link when Web Share isn't
-// available (e.g. desktop Safari).
+// Vizaton rekordin në një canvas 1080×1080 dhe hap fletën e ndarjes së
+// sistemit. Kur Web Share mungon (p.sh. Safari në desktop), e shkarkon.
 function sharePRRecord(name,weight,reps,prev){
-  // Temporarily populate allPRs entry so sharePRImage can render from cache.
+  // Mbush përkohësisht allPRs që sharePRImage të vizatojë nga cache-i.
   allPRs[name]={name:name,weight:+weight||0,reps:+reps||0,prevWeight:+prev||0,oneRm:_epley1rm(+weight||0,+reps||0)};
   sharePRImage(name);
 }
@@ -1115,31 +1116,31 @@ async function sharePRImage(name){
   var oneRm=Number(p.oneRm||0)||_epley1rm(w,r);
   var canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1080;
   var c=canvas.getContext('2d');
-  // Gradient background
+  // Sfondi me gradient
   var grad=c.createLinearGradient(0,0,1080,1080);
   grad.addColorStop(0,_sig('--accent'));grad.addColorStop(1,'#A855F7');
   c.fillStyle=grad;c.fillRect(0,0,1080,1080);
-  // Subtle pattern
+  // Një model i lehtë
   c.globalAlpha=0.10;c.fillStyle='#fff';
   for(var i=0;i<14;i++){c.beginPath();c.arc(Math.random()*1080,Math.random()*1080,Math.random()*180+60,0,2*Math.PI);c.fill();}
   c.globalAlpha=1;
-  // Trophy
+  // Trofeu
   c.font='180px serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';
   c.fillText('PR',540,260);
-  // Headline
+  // Titulli
   c.font='900 80px Inter, sans-serif';c.fillStyle='#fff';
   c.fillText('NEW PR',540,420);
-  // Exercise name
+  // Emri i ushtrimit
   c.font='800 70px Inter, sans-serif';c.fillStyle='rgba(255,255,255,.95)';
   var safeName=(name||'').slice(0,28);
   c.fillText(safeName,540,540);
-  // Main lift figure
+  // Numri kryesor
   c.font='900 220px Inter, sans-serif';c.fillStyle='#fff';
   c.fillText(w+' kg × '+r,540,720);
-  // Delta + 1RM
+  // Ndryshimi dhe 1RM
   c.font='700 50px Inter, sans-serif';c.fillStyle='rgba(255,255,255,.92)';
   c.fillText(deltaTxt+(oneRm?'  ·  est. 1RM '+oneRm.toFixed(0)+' kg':''),540,830);
-  // Branding
+  // Emri i aplikacionit
   c.font='800 44px Inter, sans-serif';c.fillStyle='rgba(255,255,255,.88)';
   c.fillText('Athlete'+'OS',540,980);
   c.font='500 26px Inter, sans-serif';c.fillStyle='rgba(255,255,255,.72)';
@@ -1159,7 +1160,7 @@ async function sharePRImage(name){
     }
   },'image/png');
 }
-// Pull recent PRs from DB for the Home feed.
+// Merr rekordet e fundit nga baza për faqen kryesore.
 var recentPRs=[];
 async function loadRecentPRs(){
   try{
@@ -1196,11 +1197,11 @@ function renderRecentPRs(){
 function savePRs(exs){
   var wk=weekStr(),newPRs=[];
   exs.forEach(function(ex){
-    // Top set by weight (with best reps at that weight) and best estimated 1RM across the session.
+    // Seria më e rëndë (me përsëritjet më të mira në atë peshë) dhe 1RM më i mirë i seancës.
     var maxW=0;ex.sets.forEach(function(s){if((+s.weight||0)>maxW)maxW=+s.weight||0;});
     var maxR=0;ex.sets.forEach(function(s){if((+s.weight||0)===maxW&&(+s.reps||0)>maxR)maxR=+s.reps||0;});
     var maxOneRm=0;ex.sets.forEach(function(s){var w=+s.weight||0,r=+s.reps||0;if(!r)return;var o=_epley1rm(w,r);if(o>maxOneRm)maxOneRm=o;});
-    if(!maxW&&!maxR)return; // no logged work
+    if(!maxW&&!maxR)return; // asnjë punë e regjistruar
     var cur=allPRs[ex.name];
     var oneRmRounded=Math.round(maxOneRm*10)/10;
     if(!cur){
@@ -1208,7 +1209,7 @@ function savePRs(exs){
       newPRs.push(ex.name);
       return;
     }
-    // Roll the previous-week pointer once per ISO week.
+    // Kalo treguesin e javës së kaluar një herë në javë.
     if(cur.week!==wk){
       allPRs[ex.name].prevWeight=cur.weight;
       allPRs[ex.name].prevReps=cur.reps;
@@ -1225,7 +1226,7 @@ function savePRs(exs){
       allPRs[ex.name].oneRm=Math.max(cur.oneRm||0,oneRmRounded);
       allPRs[ex.name].muscle=ex.muscle||cur.muscle;
       allPRs[ex.name].date=today();
-      allPRs[ex.name].kind=kinds[0]; // primary kind for the celebration label
+      allPRs[ex.name].kind=kinds[0]; // lloji kryesor për etiketën e festimit
       newPRs.push(ex.name);
     }
   });
@@ -1240,16 +1241,16 @@ function showPRs(){
   if(!list.length){el.innerHTML='<div class="empty-state"><div class="empty-ico" style="background:rgba(245,158,11,.12);color:#F59E0B"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14h24v12c0 7-5 12-12 12s-12-5-12-12V14z"/><path d="M20 18H12v4c0 4 3 7 8 8M44 18h8v4c0 4-3 7-8 8"/><path d="M32 38v8M24 52h16l-2-6H26l-2 6z"/></svg></div><div class="empty-h">No personal records yet</div><div class="empty-sub">Log a workout — every top set, rep PR, and estimated 1RM is tracked automatically.</div><button type="button" class="empty-cta" onclick="goTab(\'workout\')">Start a workout</button></div>';return;}
   el.innerHTML=list.map(function(pr){var d=pr.weight-(pr.prevWeight||0);var cls=d>0?'dup':d<0?'ddn':'deq';var lbl=d>0?'+'+d+'kg':d<0?d+'kg':'–';var safe=pr.name.replace(/'/g,"\\'");return '<div class="pri" style="cursor:pointer" onclick="openExChart(\''+safe+'\')"><div><div class="prn">'+pr.name+'</div><div class="prs">'+pr.muscle+' · '+pr.reps+' reps</div></div><div style="display:flex;align-items:center;gap:9px"><div><div class="prv">'+pr.weight+'kg</div>'+(pr.prevWeight?'<div style="font-size:10.5px;color:var(--t3)">prev: '+pr.prevWeight+'kg</div>':'')+'</div><span class="prd '+cls+'">'+lbl+'</span></div></div>';}).join('');
 }
-// BEST: top-pick ordering for the Exercise Library muscle browse (no separate "Best Lifts" card).
+// BEST: renditja e ushtrimeve kryesore në bibliotekën e ushtrimeve.
 var BEST={chest:['Bench Press','Incline Press','Dumbbell Fly'],back:['Deadlift','Barbell Row','Pull-up','Lat Pulldown'],legs:['Squat','Romanian Deadlift','Hip Thrust','Leg Press'],shoulders:['Overhead Press','Lateral Raise','Face Pull'],arms:['Barbell Curl','Tricep Pushdown','Hammer Curl'],core:['Plank','Ab Wheel','Hanging Leg Raise']};
 
-/* ── HEATMAP ──────────────────────────────── */
+/* ── KALENDARI I STËRVITJEVE ──────────────── */
 async function renderHeatmap(){
   var grid=document.getElementById('hm-grid'),count=document.getElementById('hm-count');
   if(!grid||!CU)return;
   var WEEKS=26;
   var now=new Date();var endDay=new Date(now);endDay.setHours(23,59,59,999);
-  // Find Monday of the current week
+  // Gjej të hënën e javës aktuale
   var dow=now.getDay();var diff=dow===0?6:dow-1;
   var endMon=new Date(now);endMon.setDate(now.getDate()-diff);endMon.setHours(0,0,0,0);
   var startMon=new Date(endMon);startMon.setDate(endMon.getDate()-(WEEKS-1)*7);
@@ -1274,12 +1275,12 @@ async function renderHeatmap(){
   var total=Object.keys(counts).length;
   grid.className='hm-grid';
   grid.innerHTML=total?html:'<div class="bp bp-sm quiet" style="grid-column:1/-1"><span class="bp-l">Nothing logged in the last six months</span><button type="button" class="empty-cta" onclick="startSession()">Start a session</button></div>';
-  // The legend starts hidden in the markup so it never floats above an unrendered grid.
+  // Legjenda nis e fshehur që të mos shfaqet mbi një rrjet të pavizatuar.
   var legend=grid.nextElementSibling;if(legend)legend.style.display=total?'flex':'none';
   if(count)count.textContent=total+' active day'+(total===1?'':'s');
 }
 
-/* ── MUSCLE BROWSER ────────────────────────── */
+/* ── SHFLETUESI I MUSKUJVE ────────────────── */
 var MUSCLE_GROUPS={
   chest:{label:'Chest exercises',muscles:['Chest','Upper Chest','Lower Chest']},
   back:{label:'Back exercises',muscles:['Lats','Upper Back','Mid Back']},
@@ -1334,7 +1335,7 @@ function filterMusc(groupKey){
   document.getElementById('musc-rest-section').style.display=r.rest.length?'block':'none';
   bestList.innerHTML=r.best.map(function(row){return _muscRowHtml(row,true);}).join('');
   restList.innerHTML=r.rest.map(function(row){return _muscRowHtml(row,false);}).join('');
-  // Scroll the modal sheet back to top when switching
+  // Kthe skrollin në krye kur ndërrohet grupi
   var sheet=document.querySelector('#m-musc .msheet');if(sheet)sheet.scrollTop=0;
 }
 function getWeekRange(offsetWeeks){
@@ -1404,28 +1405,27 @@ async function loadWHist(){
   filterWHist(document.getElementById('wh-search')?document.getElementById('wh-search').value:'');
 }
 
-/* ── REST TIMER (wall-clock, drift-free) ─── */
+/* ── KOHËMATËSI I PUSHIMIT (sipas orës, pa zhvendosje) ─ */
 var _rSecs=90,_rTotal=90,_rEnd=0,_rInterval=null,_rDone=false,_rLastNotifSec=-1;
 function _rLeft(){return _rEnd?Math.max(0,Math.ceil((_rEnd-Date.now())/1000)):_rSecs;}
-// Post to the active SW. Prefer .controller, fall back to the ready registration's
-// active worker (controller can be null right after first registration).
+// Dërgo mesazh te service worker-i aktiv (.controller mund të jetë null
+// menjëherë pas regjistrimit të parë).
 function _swPost(msg){
   try{
     if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage(msg);return;}
     if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(function(reg){if(reg&&reg.active)reg.active.postMessage(msg);}).catch(function(){});}
   }catch(e){}
 }
-// Durable server-side backstop. The page/SW timers both die when the OS reaps
-// the app with the screen off, so we also park a row in scheduled_pushes that
-// rest-push-cron delivers (~60s granularity) if nothing else fired. On normal
-// completion (and cancel) we delete the row, so it only ever reaches users
-// whose device was actually asleep. All best-effort — never blocks the timer.
+// Rezerva në server. Kohëmatësit e faqes dhe të SW vdesin kur sistemi e
+// mbyll aplikacionin me ekran të fikur, prandaj ruajmë edhe një rresht në
+// scheduled_pushes që rest-push-cron e dërgon (çdo ~60s) nëse asgjë tjetër
+// nuk u aktivizua. Në përfundim normal rreshti fshihet.
 async function _schedRestPush(endAt){
   try{
     if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
     if(typeof sb==='undefined'||!sb||typeof CU==='undefined'||!CU||!CU.id)return;
     if(!(await pushIsSubscribed()))return;
-    // One pending rest push per user — clear any stale one before parking this.
+    // Një njoftim pushimi në pritje për përdorues; fshi të vjetrin para se të ruash të riun.
     await sb.from('scheduled_pushes').delete().eq('user_id',CU.id).eq('tag','rest');
     await sb.from('scheduled_pushes').insert({
       user_id:CU.id,
@@ -1471,7 +1471,7 @@ function setRest(s){
   if(_restForExName)setRestPref(_restForExName,s);
   document.querySelectorAll('.rest-preset').forEach(function(p){p.classList.toggle('on',+p.dataset.s===s);});
   updateRestUI();
-  // Request permission, then kick off the SW countdown notification once granted.
+  // Kërko lejen, pastaj nis njoftimin e numërimit mbrapsht në SW.
   if(typeof Notification!=='undefined'&&Notification.permission==='default'){
     Notification.requestPermission().then(function(p){
       var b=document.getElementById('notif-btn');
@@ -1486,13 +1486,13 @@ function setRest(s){
 function _rTick(){
   updateRestUI();
   var left=_rLeft();
-  // Refresh the live countdown notification once per whole second. This also
-  // wakes the SW, keeping its completion timer alive while the page is running.
+  // Rifresko njoftimin çdo sekondë. Kjo e zgjon edhe SW-në dhe e mban gjallë
+  // kohëmatësin e tij.
   if(left>0&&left!==_rLastNotifSec&&_rEnd&&!_rDone&&typeof Notification!=='undefined'&&Notification.permission==='granted'){
     _rLastNotifSec=left;
     _swPost({type:'REST_TICK',endAt:_rEnd});
   }
-  // Soft tick at last 3 seconds (haptics + tiny WebAudio beep).
+  // Tik i lehtë në 3 sekondat e fundit (dridhje dhe një bip i vogël).
   if(left>0&&left<=3&&left!==_rLastTick&&!_rMuted()){
     _rLastTick=left;
     try{navigator.vibrate&&navigator.vibrate(35);}catch(e){}
@@ -1501,8 +1501,8 @@ function _rTick(){
   if(left<=0&&!_rDone){
     _rDone=true;
     clearInterval(_rInterval);_rInterval=null;
-    // Replace the ongoing notification with the loud "complete" alert, and drop
-    // the server backstop row — the page is alive, so the cron must not re-fire.
+    // Zëvendëso njoftimin e heshtur me alarmin "pushimi mbaroi" dhe fshi rreshtin
+    // rezervë në server, se faqja është gjallë dhe cron-i s'duhet ta ridërgojë.
     if(typeof Notification!=='undefined'&&Notification.permission==='granted')_swPost({type:'REST_DONE'});
     _cancelRestPush();
     if(!_rMuted()){
@@ -1521,7 +1521,7 @@ function toggleRestMute(btn){
   if(btn)btn.innerHTML=ICO('bell','13px')+(muted?'Sound on':'Sound off');
   toast(muted?'Rest sound on':'Rest sound muted');
 }
-// Tiny WebAudio beep — no MP3 asset needed. Cached AudioContext.
+// Bip i vogël me WebAudio, pa skedar MP3.
 var _audCtx=null;
 function _restBeep(freq,ms){
   try{
@@ -1536,20 +1536,20 @@ function _restBeep(freq,ms){
     o.start();o.stop(_audCtx.currentTime+ms/1000+0.02);
   }catch(e){}
 }
-// Premium feedback: short blip + light vibe whenever a set lands. Quieter than
-// the rest-timer beep so it doesn't fatigue. Honours the same mute toggle.
+// Tingull i shkurtër dhe dridhje e lehtë sa herë ruhet një seri. Më i qetë se
+// bipi i pushimit. Respekton të njëjtin çelës të heshtjes.
 function _fxSetSaved(){
   if(!localStorage.getItem('rest_muted'))_restBeep(440,90);
   try{navigator.vibrate&&navigator.vibrate(25);}catch(e){}
 }
-// PR celebration arpeggio — C5 → E5 → G5 → C6. Slightly louder, single tone train.
+// Melodia e rekordit: C5 → E5 → G5 → C6.
 function _fxPRArpeggio(){
   if(localStorage.getItem('rest_muted'))return;
   var notes=[523.25,659.25,783.99,1046.50];
   notes.forEach(function(f,i){setTimeout(function(){_restBeep(f,140);},i*110);});
 }
-// Number ticker — animates `el.textContent` from its current numeric value to
-// `to` over `ms`. Used on Home stat tiles. Honours prefers-reduced-motion.
+// Numëruesi: animon tekstin e elementit nga vlera aktuale deri te `to` për `ms`
+// milisekonda. Respekton prefers-reduced-motion.
 function _tickerTo(el,to,ms,fmt){
   if(!el)return;
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -1593,7 +1593,7 @@ function reqNotifPerm(){
   });
 }
 
-/* ── AUTO REST TIMER ──────────────────────── */
+/* ── PUSHIMI AUTOMATIK ────────────────────── */
 function loadAutoRestUI(){
   var t=document.getElementById('ar-tog'),lbl=document.getElementById('ar-time');
   if(t)t.checked=!!P._autoRest;
@@ -1612,9 +1612,9 @@ function pickRestDefault(){
   });
 }
 
-/* ── CARDIO: show-all toggle ────────────── */
+/* ── KARDIO: "shfaq të gjitha" ────────────── */
 function cardio_loadMore(sel){
-  // Replace the "show all" pseudo-option with the full set of activities, then re-open the dropdown.
+  // Zëvendëso opsionin "shfaq të gjitha" me listën e plotë të aktiviteteve.
   if(sel._expanded){sel.value='run';return;}
   sel._expanded=true;
   var moreGroups=[
@@ -1628,7 +1628,7 @@ function cardio_loadMore(sel){
     {h:'Outdoor',items:[['climbing','Climbing'],['skating','Skating'],['golf','Golf']]},
     {h:'Other',items:[['dance','Dance'],['other','Other']]}
   ];
-  // Remove the placeholder optgroup and append the real ones
+  // Hiq grupin vendmbajtës dhe shto grupet e vërteta
   var grp=document.getElementById('cd-act-more-grp');if(grp)grp.remove();
   moreGroups.forEach(function(g){
     var og=document.createElement('optgroup');og.label=g.h;
@@ -1638,10 +1638,10 @@ function cardio_loadMore(sel){
   sel.value='run';
 }
 
-/* ── PLATE CALCULATOR ─────────────────────── */
+/* ── LLOGARITËSI I DISQEVE ────────────────── */
 var PLATES_KG=[25,20,15,10,5,2.5,1.25,0.5];
 var PLATES_LB=[45,35,25,10,5,2.5];
-// Per-plate color + display width (px) — larger plates look bigger.
+// Ngjyra dhe gjerësia (px) për çdo disk; disqet më të rënda duken më të mëdha.
 var PLATE_STYLE={
   25:{c:'#DC2626',w:18,h:78},   20:{c:'#1E40AF',w:16,h:72},
   15:{c:'#F59E0B',w:14,h:64},   10:{c:'#16A34A',w:12,h:56},
@@ -1672,12 +1672,12 @@ function pc_calc(){
   var out=document.getElementById('pc-out');
   if(!target||target<=0){out.innerHTML='<div class="pc-empty">Enter a target weight to see plate loading.</div>';return;}
   if(target<bar){out.innerHTML='<div class="pc-empty">Target weight is less than the bar itself.</div>';return;}
-  // Convert target to the unit of plates if user picked imperial plates with kg target (or vice versa).
+  // Kthe objektivin në njësinë e disqeve nëse përdoruesi ka disqe imperiale me objektiv në kg (ose anasjelltas).
   var plateUnit=setKind==='metric'?'kg':'lb';
   var disp=target;
   var dispBar=bar;
   if(plateUnit!==unit){
-    // Convert target to plateUnit
+    // Kthe objektivin në plateUnit
     if(plateUnit==='lb'&&unit==='kg'){disp=target*2.20462;dispBar=bar*2.20462;}
     else if(plateUnit==='kg'&&unit==='lb'){disp=target/2.20462;dispBar=bar/2.20462;}
   }
@@ -1689,14 +1689,14 @@ function pc_calc(){
     out.innerHTML='<div class="pc-empty">Just the bar — '+(dispBar.toFixed(1))+' '+plateUnit+'</div>';
     return;
   }
-  // Build visual: bar with plates each side
+  // Vizato shufrën me disqe në të dyja anët
   var sideHtml=split.plates.map(function(p){
     var st=PLATE_STYLE[p]||{c:'#94A3B8',w:10,h:50};
     var border=st.b?'border:1px solid '+st.b+';':'';
     var color=st.t||'#FFFFFF';
     return '<div class="pc-plate" style="width:'+st.w+'px;height:'+st.h+'px;background:'+st.c+';color:'+color+';font-size:'+(p>=10?'10px':'9px')+';'+border+'">'+p+'</div>';
   }).join('');
-  // Plates closest to the collar are heaviest; reverse for right side to mirror.
+  // Disqet më afër shufrës janë më të rëndat; ana e djathtë pasqyrohet.
   var leftHtml='<div class="pc-side l">'+sideHtml+'</div>';
   var rightHtml='<div class="pc-side r">'+split.plates.slice().reverse().map(function(p){
     var st=PLATE_STYLE[p]||{c:'#94A3B8',w:10,h:50};
@@ -1716,7 +1716,7 @@ function pc_calc(){
     (rem>0.01?'<div class="pc-empty" style="padding:6px 0 0;font-size:11px">Cannot reach exact weight — '+rem.toFixed(2)+' '+plateUnit+' short per side</div>':'');
 }
 
-/* ── CARDIO ───────────────────────────────── */
+/* ── KARDIO ───────────────────────────────── */
 var cardioLog=[];
 function openCardio(){oModal('m-cardio');}
 async function saveCardio(){
@@ -1733,11 +1733,11 @@ async function saveCardio(){
   cardioLog.unshift(row);renderCardio();
   toast(dur+' min '+act+' logged');
   await sbQueueInsert('cardio_sessions',row);
-  // PR detection only when online (it needs to query prior sessions).
+  // Rekordet zbulohen vetëm online (duhen seancat e mëparshme).
   if(navigator.onLine)_checkCardioPRs(row).catch(function(e){console.warn('cardio PR check',e);});
 }
-// Detect cardio PRs by comparing this session against prior sessions of the same activity.
-// Stores into personal_records with pr_type:'cardio_distance' or 'cardio_pace'. Triggers celebration toast.
+// Zbulo rekordet e kardios duke e krahasuar seancën me të mëparshmet e të njëjtit aktivitet.
+// Ruhen në personal_records me pr_type 'cardio_distance' ose 'cardio_pace'.
 async function _checkCardioPRs(session){
   if(!session||!CU)return;
   try{
@@ -1753,7 +1753,7 @@ async function _checkCardioPRs(session){
         newPRs.push({type:'cardio_distance',label:'Longest '+session.activity+': '+session.distance_km+' km',prev:bestDist});
       }
     }
-    // Pace = minutes per km. Lower is better. Require ≥1 km to be meaningful.
+    // Ritmi = minuta për km; më i ulëti është më i miri. Kërkohet ≥1 km.
     if(session.distance_km&&+session.distance_km>=1&&session.duration_minutes>0){
       var newPace=session.duration_minutes/session.distance_km;
       var bestPace=rows.reduce(function(m,r){if(!r.distance_km||+r.distance_km<1||!r.duration_minutes)return m;var p=r.duration_minutes/r.distance_km;return(m==null||p<m)?p:m;},null);
@@ -1762,7 +1762,7 @@ async function _checkCardioPRs(session){
       }
     }
     if(!newPRs.length)return;
-    // Persist to personal_records (best-effort).
+    // Ruaj në personal_records.
     for(var i=0;i<newPRs.length;i++){
       try{
         await sb.from('personal_records').insert({
@@ -1790,23 +1790,23 @@ function renderCardio(){
   }).join('');
 }
 
-/* ── 1RM / PLATE CALC ─────────────────────── */
+/* ── LLOGARITËSI I 1RM ────────────────────── */
 function open1RM(){oModal('m-1rm');calc1RM();}
 function calc1RM(){
   var w=parseFloat(document.getElementById('rm-w').value)||0;
   var r=parseInt(document.getElementById('rm-r').value)||0;
   var out=document.getElementById('rm-out'),pct=document.getElementById('rm-pct');
   if(!w||!r){out.textContent='–';pct.innerHTML='';return;}
-  // Epley formula
+  // Formula Epley
   var oneRM=Math.round(w*(1+r/30));
   out.textContent=oneRM+' kg';
   var rows=[[95,'1RM'],[90,'2-3 reps'],[85,'4-6 reps'],[80,'7-8 reps'],[75,'9-10 reps'],[70,'11-12 reps'],[65,'13-15 reps']];
   pct.innerHTML='<div style="font-weight:600;color:var(--t);margin-bottom:6px">Training percentages</div>'+
     rows.map(function(p){return '<div class="fb"><span>'+p[1]+'</span><b style="font-family:\'Barlow Condensed\',sans-serif;color:var(--t)">'+Math.round(oneRM*p[0]/100)+' kg</b></div>';}).join('');
 }
-/* Legacy plate calc removed — see openPlate / pc_calc above for the visual version. */
 
-/* ── EXERCISE PROGRESSION CHART ───────────── */
+
+/* ── GRAFIKU I PROGRESIT TË USHTRIMIT ─────── */
 var excChart=null;
 async function openExChart(name){
   oModal('m-exchart');
@@ -1832,15 +1832,14 @@ async function openExChart(name){
     rows.slice().reverse().slice(0,10).map(function(r){return '<div class="fb" style="padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px"><span class="tm">'+fdate(r.date)+'</span><b>'+fmtSet(r.w,r.r)+'</b></div>';}).join('');
 }
 
-/* ── EXERCISE PICKER (search) ─────────────── */
+/* ── ZGJEDHËSI I USHTRIMEVE (kërkimi) ─────── */
 function openExPicker(){
   document.getElementById('expk-q').value='';
   filterExPk();
   oModal('m-expk');
 }
-/* Pinned exercises — per-user list of favourite lifts, shown at the top of the
-   picker for one-tap access. Stored client-side in localStorage; no Supabase
-   round-trip needed because it's UX preference, not user data. Cap at 6. */
+/* Ushtrimet e fiksuara: lista e ushtrimeve të preferuara, në krye të
+   zgjedhësit për qasje me një prekje. Ruhen në localStorage; maksimumi 6. */
 function _pinKey(){return 'pinned_ex_'+(CU&&CU.id||'anon');}
 function getPinnedEx(){try{return JSON.parse(localStorage.getItem(_pinKey())||'[]');}catch(e){return [];}}
 function setPinnedEx(list){
@@ -1869,9 +1868,8 @@ function filterExPk(){
   });
   var list=document.getElementById('expk-list');
   var header='<div class="expk-row" onclick="openCustomEx()" style="border-bottom:1px solid var(--bdr)"><div class="expk-n" style="color:var(--accent)">+ Create custom exercise</div><div class="expk-m">your own</div></div>';
-  // Build "Pinned" section — only when there's no active search filter so it
-  // doesn't crowd out matches. Pinned items are also kept in the main list so
-  // searching for them still works.
+  // Seksioni "Të fiksuara" vetëm kur nuk ka kërkim aktiv. Ushtrimet e fiksuara
+  // mbeten edhe në listën kryesore që kërkimi të punojë.
   var pinnedHtml='';
   if(!q){
     var pins=getPinnedEx();
@@ -1910,7 +1908,7 @@ async function saveCustomEx(){
   var demoEl=document.getElementById('cuex-demo');
   var demo=demoEl?(demoEl.value||'').trim():'';
   var priMap={chest:['Chest'],back:['Back'],legs:['Quads','Glutes'],shoulders:['Delts'],arms:['Biceps','Triceps'],core:['Abs'],cardio:['Cardio'],other:['Other']};
-  // Optimistic local update first so the picker re-renders instantly.
+  // Përditësim lokal i menjëhershëm që zgjedhësi të rivizatohet pa pritur.
   var cust=getCustomEx();
   cust=cust.filter(function(c){return (c.name||'').toLowerCase()!==name.toLowerCase();});
   cust.unshift({name:name,muscle:muscle,pri:priMap[muscle]||['Other'],sec:[],desc:'Your custom exercise.',demo:demo,tips:tips,custom:true});
@@ -1919,17 +1917,17 @@ async function saveCustomEx(){
   filterExPk();
   pickEx(name);
   toast('Custom exercise saved');
-  // Server upsert — keys on (user_id, lower(name)). On conflict, we delete + insert
-  // because lower() index can't be a target of `on conflict`.
+  // Ruajtja në server sipas (user_id, lower(name)). Në konflikt fshihet dhe
+  // rishtohet, sepse indeksi lower() nuk mund të përdoret me `on conflict`.
   if(sb&&CU){
     try{
       await sb.from('custom_exercises').delete().eq('user_id',CU.id).ilike('name',name);
       await sb.from('custom_exercises').insert({user_id:CU.id,name:name,muscle:muscle,demo_url:demo||null,tips:tips});
-      // Re-sync from server so the local cache picks up the row id for future deletes.
+      // Risinkronizo nga serveri që cache-i lokal të marrë id-në e rreshtit.
       loadCustomExFromServer();
     }catch(e){
       console.warn('saveCustomEx server',e);
-      // Queue for retry when online — uses existing offline write queue.
+      // Vendose në radhë për riprovim kur të ketë internet.
       _wqPush({op:'insert',table:'custom_exercises',row:{user_id:CU.id,name:name,muscle:muscle,demo_url:demo||null,tips:tips}});
     }
   }
@@ -1965,7 +1963,7 @@ function pickEx(name){
   cModal('m-expk');
 }
 
-/* ── WORKOUT TEMPLATES ────────────────────── */
+/* ── RUTINAT (shabllonet e stërvitjes) ────── */
 var templates=[];
 async function loadTemplates(){
   var{data}=await sb.from('workout_templates').select('*').eq('user_id',CU.id).order('created_at',{ascending:false});
@@ -1993,8 +1991,8 @@ function saveTemplateOpen(){
   document.getElementById('tpl-n').value='';
   oModal('m-tplsave');
 }
-/* ── PLAN LIBRARY (pre-built templates) ───── */
-// Each plan is a multi-day split. "templates" inside become individual workout_templates rows.
+/* ── BIBLIOTEKA E PLANEVE (të gatshme) ────── */
+// Çdo plan ka disa ditë; çdo "template" bëhet një rresht në workout_templates.
 var PLAN_LIBRARY=[
   {id:'ppl',name:'Push / Pull / Legs',days:3,goal:'Hypertrophy · 4–6 days/wk',desc:'Classic bodybuilder split. Train each muscle 2× per week if you go 6 days.',templates:[
     {name:'PPL — Push',exercises:[
@@ -2126,7 +2124,7 @@ async function saveTemplate(){
   cModal('m-tplsave');toast('Template saved');await loadTemplates();
 }
 async function _lastLoggedSets(name){
-  // Fetch the user's most recent logged copy of this exercise (by workout start).
+  // Merr regjistrimin më të fundit të këtij ushtrimi nga përdoruesi.
   try{
     var{data}=await sb.from('exercises')
       .select('id,name,muscle_group,workouts!inner(started_at,user_id),sets(set_number,weight_kg,reps,is_warmup)')
@@ -2145,17 +2143,17 @@ async function loadTemplate(id){
   if(!document.getElementById('active-sess').classList.contains('hidden')){if(!confirm('Replace current session with this template?'))return;}
   startW();
   var raw=t.exercises||[];
-  // Resolve each exercise to last-logged load when available; fall back to template snapshot.
+  // Për çdo ushtrim merr peshën e fundit të regjistruar; përndryshe vlerat e shabllonit.
   var resolved=await Promise.all(raw.map(async function(e){
     var last=await _lastLoggedSets(e.name);
     var sets;
     if(last&&last.sets.length){
       sets=last.sets.map(function(s){return{weight:s.weight,reps:s.reps,warm:!!s.warm};});
     }else if(Array.isArray(e.sets)){
-      // New-format snapshot (array of {weight,reps})
+      // Formati i ri (varg me {weight,reps})
       sets=e.sets.map(function(s){return{weight:+s.weight||0,reps:+s.reps||0,warm:!!s.warm};});
     }else{
-      // Legacy snapshot — just a count
+      // Formati i vjetër: vetëm numri i serive
       var n=+e.sets||3;sets=[];for(var i=0;i<n;i++)sets.push({weight:0,reps:0});
     }
     if(!sets.length)sets=[{weight:0,reps:0}];
@@ -2170,9 +2168,9 @@ async function deleteTemplate(id){
   templates=templates.filter(function(x){return x.id!==id;});renderTemplates();
 }
 
-/* ── ROUTINE SHARING ─────────────────────── */
+/* ── NDARJA E RUTINAVE (me lidhje) ────────── */
 function _b64UrlEncode(str){
-  // UTF-8 safe encoding
+  // Kodim i sigurt për UTF-8
   return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function _b64UrlDecode(s){
@@ -2222,8 +2220,8 @@ function _consumeShareHash(){
     var sets=data.e.reduce(function(a,e){return a+(Array.isArray(e.s)?e.s.length:+e.s||0);},0);
     info.innerHTML='<b>'+data.n+'</b><div class="tm" style="font-size:12.5px;margin-top:4px">'+data.e.length+' exercises · '+sets+' sets</div><div class="tm" style="font-size:11.5px;margin-top:8px;line-height:1.6">'+data.e.map(function(e){return '• '+e.n+(Array.isArray(e.s)?' ('+e.s.length+' sets)':'');}).join('<br>')+'</div>';
     oModal('m-import');
-  }catch(e){/* ignore malformed share link */}
-  // Strip hash so reload doesn't re-open prompt
+  }catch(e){/* injoro lidhjen e dëmtuar */}
+  // Hiq hash-in që rifreskimi të mos e rihapë pyetjen
   history.replaceState(null,'',location.pathname+location.search);
 }
 async function acceptShare(){

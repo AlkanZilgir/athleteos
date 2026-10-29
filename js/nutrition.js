@@ -1,4 +1,5 @@
-/* ── WATER ────────────────────────────────── */
+/* nutrition.js — Skeda Ushqimi: uji, vaktet, llogaritësi i makrove, skaneri i barkodit. */
+/* ── UJI ──────────────────────────────────── */
 function initWGrid(){
   var g=document.getElementById('w-grid');g.innerHTML='';
   for(var i=0;i<G.water;i++){
@@ -15,12 +16,12 @@ async function syncWater(){
   await sbQueueUpsert('water_logs',{user_id:CU.id,logged_date:today(),cups:waterCups,updated_at:new Date().toISOString()},{onConflict:'user_id,logged_date'});
 }
 
-/* ── MEALS ────────────────────────────────── */
+/* ── VAKTET ───────────────────────────────── */
 function openMealM(){oModal('m-meal');}
 async function saveMeal(){
   var m={name:document.getElementById('mn').value||'Meal',protein:parseFloat(document.getElementById('m-p').value)||0,carbs:parseFloat(document.getElementById('m-c').value)||0,fat:parseFloat(document.getElementById('m-f').value)||0,calories:parseFloat(document.getElementById('m-k').value)||0};
   var mealId=_genId();m.id=mealId;
-  // Close modal + show toast FIRST so the UI always responds even if a downstream refresh throws.
+  // Mbyll modalin dhe shfaq njoftimin SË PARI, që UI të përgjigjet edhe nëse rifreskimi dështon.
   cModal('m-meal');
   ['mn','m-p','m-c','m-f','m-k'].forEach(function(fid){var el=document.getElementById(fid);if(el)el.value='';});
   toast('Meal logged');
@@ -102,7 +103,7 @@ async function quickAdd(i){
   await sbQueueInsert('meals',{id:id,user_id:CU.id,logged_date:today(),name:m.name,protein_g:m.protein,carbs_g:m.carbs,fat_g:m.fat,calories:m.calories});
 }
 
-/* ── MACRO CALCULATOR ─────────────────────── */
+/* ── LLOGARITËSI I MAKROVE (TDEE) ─────────── */
 var _mcGoal='maintain';
 function selMacroGoal(g){
   _mcGoal=g;
@@ -115,7 +116,7 @@ function openMacroCalc(){
   document.getElementById('mc-h').value=P.height||'';
   document.getElementById('mc-age').value=P.age||'';
   document.getElementById('mc-gen').value=P.gender||'male';
-  // Carry over the user's previously chosen goal if it exists.
+  // Merr qëllimin e zgjedhur më parë, nëse ekziston.
   selMacroGoal(_mcGoal||'maintain');
   recalcMacros();
   oModal('m-macro');
@@ -127,15 +128,15 @@ function _macroTargets(){
   var gen=document.getElementById('mc-gen').value;
   var act=parseFloat(document.getElementById('mc-act').value)||1.55;
   if(!w||!h||!a)return null;
-  // Mifflin-St Jeor BMR
+  // Metabolizmi bazal me formulën Mifflin-St Jeor
   var bmr=10*w+6.25*h-5*a+(gen==='female'?-161:5);
   var tdee=bmr*act;
   var goalMult=_mcGoal==='cut'?0.8:_mcGoal==='bulk'?1.1:1.0;
   var kcal=Math.round(tdee*goalMult/10)*10;
-  // Protein: 2 g/kg (cut/maintain), 1.8 g/kg (bulk to leave room for carbs)
+  // Proteina: 2 g/kg (dobësim/mbajtje), 1.8 g/kg (shtim mase, që të mbetet vend për karbohidrate)
   var pgPerKg=_mcGoal==='bulk'?1.8:2.0;
   var p=Math.round(w*pgPerKg);
-  // Fat: 25% kcal
+  // Yndyra: 25% e kalorive
   var f=Math.round((kcal*0.25)/9);
   var c=Math.max(0,Math.round((kcal-p*4-f*9)/4));
   return{w:w,kcal:kcal,p:p,c:c,f:f,tdee:Math.round(tdee)};
@@ -163,20 +164,17 @@ function applyMacros(){
   toast('Derived from Mifflin-St Jeor — review and commit');
 }
 
-/* ── BARCODE ──────────────────────────────────
-   One scanner. The Scan button opens #m-bc. Detection prefers the platform
-   BarcodeDetector (Chrome on Android) and falls back to ZXing, lazy-loaded
-   from jsdelivr, everywhere else: desktop Chrome exposes the class without a
-   detection service, and Safari on iOS has no class at all. Every failure
-   lands in the status line, and typing the number always works.
-   bcStream and sfood are declared in core.js. */
+/* ── SKANERI I BARKODIT ───────────────────────
+   Butoni "Scan" hap #m-bc. Përdor BarcodeDetector-in e sistemit (Chrome në
+   Android) dhe kudo tjetër bibliotekën ZXing, e ngarkuar nga jsdelivr kur
+   nevojitet. Çdo dështim shfaqet në rreshtin e gjendjes, dhe shkrimi i numrit
+   me dorë punon gjithmonë. bcStream dhe sfood deklarohen në core.js. */
 var _bcTimer=0,_bcRun=0;
 function _loadZXing(){
   if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)return Promise.resolve(window.ZXing);
   return new Promise(function(resolve,reject){
     var s=document.createElement('script');
-    // @zxing/library's UMD exposes window.ZXing. (@zxing/browser has no UMD
-    // build on the CDN; that 404 is why scanning never started before.)
+    // @zxing/library ekspozon window.ZXing (versioni @zxing/browser nuk ka build UMD në CDN).
     s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
     s.onload=function(){if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)resolve(window.ZXing);else reject(new Error('ZXing missing'));};
     s.onerror=function(){reject(new Error('Could not load barcode scanner'));};
@@ -205,7 +203,7 @@ async function startBc(){
   var v=document.getElementById('bc-vid');
   if(!window.isSecureContext){_bcStatus('The camera only works over https. Type the number below.');return;}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){_bcStatus('This browser cannot open the camera. Type the number below.');return;}
-  // A lookup only pauses detection; the stream stays up so a retry is instant.
+  // Kërkimi vetëm e ndal përkohësisht leximin; kamera mbetet e hapur për riprovim të shpejtë.
   var stream=(bcStream&&bcStream.active)?bcStream:null;
   if(!stream){
     _bcStatus('Opening the camera\u2026');
@@ -216,7 +214,7 @@ async function startBc(){
       if(run===_bcRun)_bcStatus(_bcCamError(e));
       return;
     }
-    // The sheet was closed while the permission prompt was up.
+    // Fleta u mbyll ndërsa kërkohej leja e kamerës.
     if(run!==_bcRun){try{stream.getTracks().forEach(function(t){t.stop();});}catch(e){}return;}
     bcStream=stream;
   }
@@ -228,7 +226,7 @@ async function startBc(){
   if(det){_bcNativeLoop(det,v,run);return;}
   _bcZXing(v,run);
 }
-// The platform detector, only where it can really decode a retail barcode.
+// Detektori i sistemit, vetëm aty ku vërtet lexon barkode produktesh.
 async function _bcNativeDetector(){
   if(!('BarcodeDetector' in window))return null;
   try{
@@ -250,8 +248,7 @@ function _bcNativeLoop(det,v,run){
         if(codes&&codes.length&&codes[0].rawValue){_onBcCode(codes[0].rawValue);return;}
       }
     }catch(e){
-      // "Barcode detection service unavailable": the class exists, the
-      // service does not (some Android builds). ZXing takes over.
+      // Klasa ekziston por shërbimi jo (disa versione Android): kalon te ZXing.
       if(++fails>=3){console.warn('BarcodeDetector.detect',e);_bcZXing(v,run);return;}
     }
     _bcTimer=setTimeout(scan,200);
@@ -271,10 +268,9 @@ async function _bcZXing(v,run){
     var cv=document.createElement('canvas');
     var cx=cv.getContext('2d',{willReadFrequently:true})||cv.getContext('2d');
     _bcStatus('Point the camera at the barcode.');
-    // Our own loop over a plain canvas, not ZXing's video reader: that one
-    // flips the luminance on alternate frames and, with TRY_HARDER, flips it
-    // again on the rotation retry, so every frame is read inverted and a
-    // clean barcode never decodes (0.21.x). A canvas source is never flipped.
+    // Lexim me ciklin tonë mbi një canvas, jo me lexuesin video të ZXing: ai
+    // i kthen ngjyrat përmbys në kuadrot e alternuara dhe barkodi nuk lexohet
+    // kurrë (versioni 0.21.x). Canvas-i nuk kthehet përmbys.
     var tick=function(){
       if(run!==_bcRun||!bcStream)return;
       try{
@@ -287,7 +283,7 @@ async function _bcZXing(v,run){
           var txt=res&&res.getText&&res.getText();
           if(txt){_onBcCode(txt);return;}
         }
-      }catch(e){/* NotFoundException on most frames */}
+      }catch(e){/* NotFoundException në shumicën e kuadrove, normale */}
       _bcTimer=setTimeout(tick,120);
     };
     _bcTimer=setTimeout(tick,100);
@@ -323,7 +319,7 @@ async function lookupCode(code){
     if(!p||(d.status!==1&&!p.product_name)){_bcRetry('No product found for '+code+'. Try again, or type the number below.');return;}
     var n=p.nutriments||{};
     var kcal=n['energy-kcal_100g'];
-    if(kcal==null&&n['energy_100g']!=null)kcal=n['energy_100g']/4.184; // some entries only carry kJ
+    if(kcal==null&&n['energy_100g']!=null)kcal=n['energy_100g']/4.184; // disa produkte kanë vetëm kJ
     var brand=p.brands?p.brands.split(',')[0].trim():'';
     var name=(p.product_name||'').trim()||'Unnamed product';
     if(brand&&name.toLowerCase().indexOf(brand.toLowerCase())<0)name=brand+' '+name;
@@ -339,7 +335,7 @@ async function lookupCode(code){
     _bcRetry('The lookup failed. Check your connection and try again.');
   }
 }
-// After a miss, detection resumes on its own; the status line explains why.
+// Pas një dështimi leximi vazhdon vetë; rreshti i gjendjes shpjegon pse.
 function _bcRetry(msg){
   _bcStatus(msg);
   _bcTimer=setTimeout(function(){
@@ -354,7 +350,7 @@ async function addScanned(){
   meals.push(m);refresh();closeBc();toast('Food added');
   await sbQueueInsert('meals',{id:id,user_id:CU.id,logged_date:today(),name:sfood.name,protein_g:sfood.protein,carbs_g:sfood.carbs,fat_g:sfood.fat,calories:sfood.calories});
 }
-function closeBc(){cModal('m-bc');} // cModal stops the camera for m-bc
+function closeBc(){cModal('m-bc');} // cModal e ndal kamerën për m-bc
 function _bcPause(){_bcRun++;if(_bcTimer){clearTimeout(_bcTimer);_bcTimer=0;}}
 function stopBc(){
   _bcPause();
@@ -363,12 +359,12 @@ function stopBc(){
   if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(function(t){t.stop();});}catch(e){}v.srcObject=null;}
 }
 
-/* ── MACRO PIE ────────────────────────────── */
+/* ── GRAFIKU RRETHOR I MAKROVE ────────────── */
 var macroPieChart=null;
 async function renderMacroPie(){
   var canvas=document.getElementById('macro-pie');if(!canvas)return;
-  // A doughnut of three zeros is a 170px hole. The 'No food logged' bar above
-  // already says it; the chart appears with the first meal.
+  // Një grafik me tre zero është një vrimë 170px. Shiriti "Asgjë e regjistruar"
+  // e thotë tashmë; grafiku shfaqet me vaktin e parë.
   var hasFood=(typeof meals!=='undefined'&&meals&&meals.length>0);
   canvas.parentNode.style.display=hasFood?'':'none';
   if(!hasFood)return;

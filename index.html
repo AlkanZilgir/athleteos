@@ -16,14 +16,14 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <script src="https://js-de.sentry-cdn.com/1a3054a66d6e176bbe70397d5fe7d1bb.min.js" crossorigin="anonymous"></script>
 <script>
-/* Theme bootstrap. initTheme() only runs after sign-in, so without this the
-   welcome, auth and onboarding screens paint white and then flip. Runs before
-   the stylesheet so there is no flash. */
+/* Nisja e temës. initTheme() ekzekutohet vetëm pas hyrjes, prandaj pa këtë
+   ekranet e mirëseardhjes dhe të hyrjes do të shfaqeshin të bardha dhe pastaj
+   do të ndryshonin. Ekzekutohet para stileve që të mos ketë dridhje. */
 (function(){try{
   var m=localStorage.getItem('athleteos_theme')||'dark';
   var dark=m==='dark'||(m==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   if(dark)document.documentElement.classList.add('dark');
-  /* Iron: one accent per theme lives in app.css; nothing is set inline. */
+  /* Ngjyra e theksit jeton në app.css; këtu nuk vendoset asgjë inline. */
 }catch(e){}})();
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..700&display=swap">
@@ -31,9 +31,9 @@
 </head>
 <body>
 
-<!-- ICON SPRITE — one 24×24 stroke set for the whole app.
-     Reference with <svg class="ic"><use href="#i-name"/></svg>; the icon
-     inherits currentColor and sizes from the parent's font-size. -->
+<!-- IKONAT: një set ikonash 24×24 për gjithë aplikacionin.
+     Përdoren me <svg class="ic"><use href="#i-emri"/></svg>; ikona merr
+     ngjyrën nga currentColor dhe madhësinë nga font-size i prindit. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-barbell" viewBox="0 0 24 24"><path d="M6.5 6.5v11M3.5 9v5M17.5 6.5v11M20.5 9v5M6.5 12h11"/></symbol>
 <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></symbol>
@@ -93,12 +93,12 @@
 </defs></svg>
 
 
-<!-- WELCOME (first-launch intro) -->
+<!-- MIRËSEVINI (ekrani i parë) -->
 <div id="welcome" class="hidden">
   <div class="wc-inner">
     <div class="wc-hero" aria-hidden="true">
       <svg width="280" height="230" viewBox="0 0 280 230" fill="none">
-        <!-- Surveyed plot: slate rules, volt trace, one live node. -->
+        <!-- Ilustrimi i mirëseardhjes -->
         <defs>
           <linearGradient id="wcFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="var(--accent)" stop-opacity=".20"/>
@@ -140,7 +140,7 @@
 </div>
 
 
-<!-- AUTH -->
+<!-- HYRJA / REGJISTRIMI -->
 <div id="auth">
   <div class="alogo">Athlete<span>OS</span></div>
   <div class="asub">Train smart. Track everything.</div>
@@ -180,10 +180,10 @@
   </div>
 </div>
 
-<!-- APP -->
+<!-- APLIKACIONI (pas hyrjes) -->
 <div id="app">
 
-  <!-- SIDEBAR (desktop) -->
+  <!-- MENUJA ANËSORE (desktop) -->
   <aside class="sidebar">
     <div class="sb-head" onclick="goTab('home')">
       <div class="sb-logo">Athlete<span>OS</span></div>
@@ -209,10 +209,10 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- ZONA KRYESORE -->
   <div class="app-main">
 
-    <!-- TOPBAR (mobile only) -->
+    <!-- SHIRITI I SIPËRM (vetëm telefon) -->
     <header class="topbar">
       <div class="tlogo" onclick="goTab('home')">Athlete<span>OS</span></div>
       <div class="tright">
@@ -222,27 +222,27 @@
       </div>
     </header>
 
-    <!-- SCROLLABLE CONTENT -->
+    <!-- PËRMBAJTJA QË SKROLLOHET -->
     <div class="content">
 
-      <!-- HOME -->
+      <!-- FAQJA KRYESORE (Sot) -->
       <div class="panel on" id="p-home">
 
-        <!-- Header: date rule, display greeting, one line of state -->
+        <!-- Koka: data, përshëndetja, një rresht gjendjeje -->
         <header class="home-head">
           <div class="home-date" id="home-date"></div>
           <h1 class="hero-title" id="hero-greet">Today</h1>
           <p class="home-sub" id="hero-sub">Reading your log.</p>
         </header>
 
-        <!-- Next session. The workout is the spine of Home; the numbers below are its consequences. -->
+        <!-- Seanca tjetër: karta e parë e faqes kryesore -->
         <section class="next" id="next-sess" aria-labelledby="next-t">
           <div class="next-head"><h2 class="next-t" id="next-t">Next session</h2><button type="button" class="lnk" onclick="goTab('workout');openTemplates()">Routines</button></div>
           <div class="next-body" id="next-body"></div>
         </section>
 
-        <!-- ── PRIMARY 1 · TRAINING ──────────────────────────────
-             Full-width band. Volume headline, 7-day bars, four-slot readout. -->
+        <!-- ── STËRVITJA ─────────────────────────────────────────
+             Volumi i javës, shtyllat e 7 ditëve dhe tabela me statistika. -->
         <section class="band band-train" aria-labelledby="band-train-t">
           <div class="band-head">
             <div class="band-kicker" id="band-train-t">Training</div>
@@ -261,9 +261,8 @@
           </table>
         </section>
 
-        <!-- ── PRIMARY 2 · FUEL ──────────────────────────────────
-             Full-width band. Calorie ring carries the headline; protein and
-             calorie accent bars sit beside it. -->
+        <!-- ── USHQIMI ───────────────────────────────────────────
+             Kaloritë dhe proteinat e ditës si shirita progresi. -->
         <section class="band band-fuel" aria-labelledby="band-fuel-t">
           <div class="band-head">
             <div class="band-kicker" id="band-fuel-t">Fuel</div>
@@ -284,9 +283,8 @@
           </div>
         </section>
 
-        <!-- ── UTILITY STRIP · WATER + SLEEP ─────────────────────
-             Deliberately minor next to the two bands above: a value, a
-             thin fill line, and one tap that does the thing. -->
+        <!-- ── UJI + GJUMI ───────────────────────────────────────
+             Dy qeliza të vogla: vlera, vija e mbushjes, një prekje. -->
         <div class="util">
           <button type="button" class="util-cell" onclick="qWater()" aria-label="Add a cup of water">
             <span class="util-top">
@@ -310,7 +308,7 @@
           </button>
         </div>
 
-        <!-- Daily targets: a checklist, not an instruction box -->
+        <!-- Objektivat ditore: një listë me shenja -->
         <section class="targets hidden" id="gs-card" aria-labelledby="targets-t">
           <div class="targets-head">
             <span class="targets-t" id="targets-t">Daily targets</span>
@@ -336,7 +334,7 @@
           </button>
         </section>
 
-        <!-- Adaptive plan refinement banner -->
+        <!-- Banderola për rishikimin javor të planit -->
         <div class="card" id="plan-tweak-banner" style="display:none;border-color:color-mix(in srgb,var(--sig-train) 32%,var(--bdr))">
           <div style="display:flex;align-items:flex-start;gap:13px">
             <div class="coach-mark"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></div>
@@ -351,8 +349,7 @@
           </div>
         </div>
 
-        <!-- Readout. Shows the synchronisation skeleton until an insight
-             resolves, then swaps the whole block for the insight. -->
+        <!-- Karta e trajnerit: skelet ngarkimi derisa të vijë vëzhgimi -->
         <div class="card coach-card" onclick="rotateCoachTip()">
           <div class="fb" style="align-items:flex-start">
             <div class="coach-mark"><svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg></div>
@@ -370,7 +367,7 @@
           <div class="coach-body" id="coach-body" hidden></div>
         </div>
 
-        <!-- Daily summary (today's activity + vs-last-session comparison) -->
+        <!-- Përmbledhja e sotme (aktiviteti dhe krahasimi me seancën e kaluar) -->
         <div class="card" id="daily-sum-card" style="display:none">
           <div class="fb" style="margin-bottom:10px">
             <div class="ctitle" style="margin:0">Today's recap</div>
@@ -379,7 +376,7 @@
           <div id="daily-sum-body"></div>
         </div>
 
-        <!-- Recent activity feed -->
+        <!-- Aktiviteti i fundit -->
         <div class="card">
           <div class="fb" style="margin-bottom:12px">
             <div class="ctitle" style="margin:0">Recent activity</div>
@@ -388,7 +385,7 @@
           <div id="activity-feed"></div>
         </div>
 
-        <!-- Recent PRs -->
+        <!-- Rekordet e fundit -->
         <div class="card" id="pr-feed-card">
           <div class="fb" style="margin-bottom:8px">
             <div class="ctitle" style="margin:0;display:inline-flex;align-items:center;gap:8px"><svg class="ic" style="font-size:16px;color:var(--sig-fuel)" aria-hidden="true"><use href="#i-trophy"/></svg>Personal records</div>
@@ -397,7 +394,7 @@
           <div id="pr-feed"></div>
         </div>
 
-        <!-- Check-in -->
+        <!-- Kontrolli ditor -->
         <div class="card" id="ckin-card">
           <div class="fb" style="margin-bottom:10px">
             <div class="ctitle" style="margin:0">Check in</div>
@@ -407,7 +404,7 @@
           <button type="button" id="restday-btn" onclick="markRestDay()" style="display:none;align-items:center;gap:7px;background:none;border:none;color:var(--sig-train);font-family:inherit;font-size:13px;font-weight:700;padding:10px 0 0;cursor:pointer;letter-spacing:-.1px"><svg class="ic" style="font-size:15px" aria-hidden="true"><use href="#i-moon"/></svg>Resting today, keep my streak</button>
         </div>
 
-        <!-- Quick add -->
+        <!-- Shtimi i shpejtë -->
         <div class="card">
           <div class="ctitle">Quick actions</div>
           <div class="g2">
@@ -421,7 +418,7 @@
         </div>
       </div>
 
-      <!-- WORKOUT -->
+      <!-- STËRVITJA -->
       <div class="panel hidden" id="p-workout">
         <div class="fb" style="margin-bottom:15px">
           <div class="ptitle" style="margin:0">Workout</div>
@@ -429,7 +426,7 @@
         </div>
         <div id="active-sess" class="hidden">
           <div class="card" style="border-color:var(--accent)">
-            <!-- Live HUD: clock and completed volume, both updating as you tick sets. -->
+            <!-- Treguesi live: ora dhe volumi i serive të kryera -->
             <div class="hud">
               <div class="hud-meta">Session running</div>
               <div class="hud-main">
@@ -446,7 +443,7 @@
             </div>
             <div id="sess-bodymap" class="bm-card" style="display:none"></div>
             <div id="ex-list"></div>
-            <!-- Quick-add: type, tap, the card lands in place. No modal. -->
+            <!-- Shtimi i shpejtë i ushtrimit: shkruaj, prek, karta shtohet -->
             <div class="qa" id="qa-wrap">
               <div class="qa-bar">
                 <svg class="ic" style="font-size:15px;color:var(--t3)" aria-hidden="true"><use href="#i-search"/></svg>
@@ -473,10 +470,10 @@
             </div>
           </div>
         </div>
-        <!-- AI TRAINING PLAN -->
+        <!-- PLANI I STËRVITJES NGA TRAJNERI -->
         <div id="plan-sec"></div>
 
-        <!-- CARDIO -->
+        <!-- KARDIO -->
         <div class="card">
           <div class="fb" style="margin-bottom:12px">
             <div class="ctitle" style="margin:0">Cardio</div>
@@ -485,14 +482,14 @@
           <div id="cd-list"><div class="bp quiet"><span class="bp-l">No cardio yet</span><button type="button" class="empty-cta" onclick="openCardio()">Log one</button></div></div>
         </div>
 
-        <!-- HEATMAP -->
+        <!-- AKTIVITETI (6 muajt e fundit) -->
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Activity (last 6 months)</div><span class="tm" style="font-size:12px" id="hm-count">0 workouts</span></div>
           <div id="hm-grid"></div>
           <div style="display:none;align-items:center;gap:6px;justify-content:flex-end;margin-top:8px;font-size:10.5px;color:var(--t3);font-weight:500">Less<span class="hm-c0"></span><span class="hm-c1"></span><span class="hm-c2"></span><span class="hm-c3"></span>More</div>
         </div>
 
-        <!-- CALENDAR -->
+        <!-- KALENDARI I STËRVITJEVE -->
         <div class="card">
           <div class="cal-head">
             <div class="ctitle" style="margin:0">Training Calendar</div>
@@ -506,7 +503,7 @@
           <div class="cal-grid" id="cal-grid"></div>
         </div>
 
-        <!-- EXERCISE LIBRARY -->
+        <!-- BIBLIOTEKA E USHTRIMEVE -->
         <div class="card">
           <div class="ctitle">Exercise Library</div>
           <p class="tm" style="font-size:13px;margin-bottom:14px">Pick a muscle group to see all exercises with demos and tips, top picks first.</p>
@@ -520,7 +517,7 @@
           </div>
         </div>
 
-        <!-- TOOLS -->
+        <!-- MJETET (disqet, 1RM, kohëmatësi) -->
         <div class="card">
           <div class="ctitle">Tools &amp; Templates</div>
           <div class="g2">
@@ -556,7 +553,7 @@
         </div>
       </div>
 
-      <!-- NUTRITION -->
+      <!-- USHQIMI -->
       <div class="panel hidden" id="p-nutrition">
         <div class="ptitle">Nutrition</div>
         <div class="card">
@@ -567,7 +564,7 @@
               <button type="button" class="btn-o" style="padding:7px 12px;font-size:12px" onclick="openMealM()">+ Add</button>
             </div>
           </div>
-          <!-- One bar, split by each macro's share of the day's calories. -->
+          <!-- Një shirit i ndarë sipas makrove të ditës -->
           <div class="split" id="macro-split" role="img" aria-label="Macro split">
             <div class="split-seg s-p" id="nb-p" style="flex:0 0 0%"><span>P</span></div>
             <div class="split-seg s-c" id="nb-c" style="flex:0 0 0%"><span>C</span></div>
@@ -600,7 +597,7 @@
         </div>
       </div>
 
-      <!-- BODY -->
+      <!-- PROGRESI (pesha, matjet, fotot, gjumi) -->
       <div class="panel hidden" id="p-body">
         <div class="ptitle">Progress</div>
         <div class="sg" style="margin-bottom:12px">
@@ -678,7 +675,7 @@
           <div id="ph-grid" class="ph-grid"></div>
           <p class="tm" style="font-size:11px;text-align:center;margin-top:8px">Stored privately. Only you can see them.</p>
         </div>
-        <!-- Achievements (moved to bottom — celebratory, not load-bearing) -->
+        <!-- Arritjet (në fund, se janë për festim, jo thelbësore) -->
         <div class="card">
           <div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Achievements</div><div style="display:flex;align-items:center;gap:10px"><span class="tm" style="font-size:12px" id="ach-count">0/0</span><button type="button" class="btn-g" style="font-size:12px;padding:4px 10px" onclick="openCustomAch()">+ Add</button></div></div>
           <div class="ach-grid" id="ach-grid"></div>
@@ -726,12 +723,11 @@
         <div class="card"><div class="ctitle">History</div><div id="s-hist"><div class="bp quiet"><span class="bp-l">No nights logged</span></div></div></div>
       </div>
 
-      <!-- SETTINGS -->
+      <!-- CILËSIMET -->
       <div class="panel hidden" id="p-settings">
         <div class="ptitle">Settings</div>
 
-        <!-- Identity. The whole row is the affordance; no centred hero, no
-             separate Edit button competing with it. -->
+        <!-- Identiteti: gjithë rreshti hap redaktimin e profilit -->
         <button type="button" class="set-id" onclick="openProfileM()">
           <span class="set-ava" id="set-ava">?</span>
           <span class="set-id-t">
@@ -741,10 +737,9 @@
           <svg class="sit-x" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
 
-        <!-- ══ YOUR DETAILS ═════════════════════════════════════════
-             The inputs used to live behind a modal. They are the smallest
-             set of values every calculation on the platform derives from,
-             so they sit on the page in one grid instead. -->
+        <!-- ══ TË DHËNAT E TUA ══════════════════════════════════════
+             Vlerat bazë nga të cilat llogaritet gjithçka (emri, mosha,
+             gjatësia, gjinia, njësitë). -->
         <div class="card" id="sec-biometrics">
           <div class="fb" style="margin-bottom:4px">
             <div class="ctitle" style="margin:0">Your details</div>
@@ -761,9 +756,8 @@
           <button type="button" class="btn" style="width:100%" onclick="saveProfile()">Save details</button>
         </div>
 
-        <!-- ══ DAILY TARGETS ═════════════════════════════════════════
-             Each target reads as a meter against today's actual, so the
-             number being set and the number being hit sit on one line. -->
+        <!-- ══ OBJEKTIVAT DITORE ═════════════════════════════════════
+             Çdo objektiv si shirit kundrejt vlerës së sotme. -->
         <div class="card" id="sec-calibrations">
           <div class="fb" style="margin-bottom:4px">
             <div class="ctitle" style="margin:0">Daily targets</div>
@@ -774,7 +768,7 @@
           <button type="button" class="btn" style="width:100%;margin-top:14px" onclick="saveGoals()">Save targets</button>
         </div>
 
-        <!-- ══ TARGET MUSCLE FOCUS ══════════════════════════════════ -->
+        <!-- ══ FOKUSI I MUSKUJVE ════════════════════════════════════ -->
         <div class="card" id="sec-matrix">
           <div class="fb" style="margin-bottom:4px">
             <div class="ctitle" style="margin:0">Target muscle focus</div>
@@ -789,7 +783,7 @@
           <div class="vdm" id="vdm-list"></div>
         </div>
 
-        <!-- PERSONALISATION -->
+        <!-- PERSONALIZIMI -->
         <div class="card">
           <div class="ctitle">Personalisation</div>
           <div class="sit" onclick="openMuscleEditor()">
@@ -805,7 +799,7 @@
         </div>
 
 
-        <!-- APPEARANCE -->
+        <!-- PAMJA (tema) -->
         <div class="card">
           <div class="ctitle">Appearance</div>
           <div class="set-field">
@@ -818,7 +812,7 @@
           </div>
         </div>
 
-        <!-- REMINDERS -->
+        <!-- KUJTESAT DHE NJOFTIMET -->
         <div class="card">
           <div class="ctitle">Reminders</div>
           <div class="tog-row">
@@ -848,7 +842,7 @@
           </div>
         </div>
 
-        <!-- ACCOUNT -->
+        <!-- LLOGARIA -->
         <div class="card">
           <div class="ctitle">Account</div>
           <div class="sit" onclick="openChangeEmailM()">
@@ -863,7 +857,7 @@
           </div>
         </div>
 
-        <!-- YOUR DATA -->
+        <!-- TË DHËNAT E TUA (import, eksport, privatësia) -->
         <div class="card">
           <div class="ctitle">Your data</div>
           <div class="sit" onclick="openImport()">
@@ -891,7 +885,7 @@
           </div>
         </div>
 
-        <!-- HELP -->
+        <!-- NDIHMA (mbështetja, feedback, fto një mik) -->
         <div class="card">
           <div class="ctitle">Help</div>
           <div class="sit" onclick="openSupport()">
@@ -911,7 +905,7 @@
           </div>
         </div>
 
-        <!-- Get on phone (desktop + tablet only) -->
+        <!-- Merre në telefon (vetëm desktop dhe tablet) -->
         <div class="card" id="install-card">
           <div class="ctitle">Get AthleteOS on your phone</div>
           <p class="tm" style="margin-bottom:14px;line-height:1.6;font-size:13px">Scan the QR code with your phone camera, or download from your app store.</p>
@@ -934,7 +928,7 @@
           </div>
         </div>
 
-        <!-- ABOUT -->
+        <!-- RRETH APLIKACIONIT -->
         <div class="card">
           <div class="ctitle">About</div>
           <div class="set-meta">
@@ -948,7 +942,7 @@
           </div>
         </div>
 
-        <!-- Leaving. Kept apart from everything else on purpose. -->
+        <!-- Dalja dhe fshirja e llogarisë, të ndara me qëllim nga pjesa tjetër -->
         <div class="card set-danger">
           <div class="sit" onclick="doLogout()">
             <svg class="sic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -961,9 +955,9 @@
         </div>
       </div>
 
-    </div><!-- /content -->
+    </div><!-- /përmbajtja -->
 
-    <!-- COACH PANEL: a conversation with the coach. Thread above, message box below. -->
+    <!-- TRAJNERI: biseda me trajnerin. Mesazhet sipër, fusha e shkrimit poshtë. -->
     <div id="p-ai">
       <div class="eng-head">
         <div class="eng-head-t">
@@ -992,7 +986,7 @@
       </form>
     </div>
 
-    <!-- BOTTOM NAV (mobile) -->
+    <!-- NAVIGIMI I POSHTËM (telefon) -->
     <nav class="navbar">
       <div class="nv on" id="n-home" onclick="goTab('home')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
       <div class="nv" id="n-workout" onclick="goTab('workout')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-barbell"/></svg><span>Train</span></div>
@@ -1005,11 +999,11 @@
 
 </div><!-- /app -->
 
-<!-- MODALS -->
-<!-- PROFILE -->
+<!-- DRITARET MODALE (fletët që hapen nga poshtë) -->
+<!-- PROFILI -->
 
 
-<!-- EXERCISE INFO -->
+<!-- INFORMACIONI I USHTRIMIT -->
 <div class="modal" id="m-exi">
   <div class="msheet" style="overflow-y:auto;max-height:90vh">
     <div class="mhandle"></div>
@@ -1047,11 +1041,11 @@
 
 <div class="modal" id="m-meal"><div class="msheet"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Log Meal</div><button type="button" class="btn-g" style="font-size:12px;padding:7px 12px;display:flex;align-items:center;gap:6px" onclick="cModal('m-meal');openBcM()" aria-label="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="6" x2="6" y2="18"/><line x1="10" y1="6" x2="10" y2="18"/><line x1="14" y1="6" x2="14" y2="18"/><line x1="18" y1="6" x2="18" y2="18"/></svg>Scan</button></div><div class="f"><label>Meal name</label><input type="text" id="mn" placeholder="e.g. Chicken & Rice"></div><div class="g2"><div class="f"><label>Protein (g)</label><input type="number" id="m-p" placeholder="0" min="0"></div><div class="f"><label>Carbs (g)</label><input type="number" id="m-c" placeholder="0" min="0"></div><div class="f"><label>Fat (g)</label><input type="number" id="m-f" placeholder="0" min="0"></div><div class="f"><label>Calories</label><input type="number" id="m-k" placeholder="0" min="0"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-meal')">Cancel</button><button type="button" class="btn" onclick="saveMeal()">Log Meal</button></div></div></div>
 
-<!-- BARCODE SCANNER -->
+<!-- SKANERI I BARKODIT -->
 
 <div class="modal" id="m-wt"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Log Weight</div><div class="f"><label>Weight (kg)</label><input type="number" id="wt-in" placeholder="e.g. 82.5" step="0.1" min="30" max="300"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-wt')">Cancel</button><button type="button" class="btn" onclick="saveWt()">Log Weight</button></div></div></div>
 
-<!-- REST TIMER -->
+<!-- KOHËMATËSI I PUSHIMIT -->
 <div class="modal" id="m-rest">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -1083,7 +1077,7 @@
   </div>
 </div>
 
-<!-- TIME PICKER -->
+<!-- ZGJEDHËSI I ORËS -->
 <div class="modal" id="m-timepick">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -1103,15 +1097,15 @@
 
 
 
-<!-- MACRO CALCULATOR -->
+<!-- LLOGARITËSI I MAKROVE -->
 <div class="modal" id="m-macro"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="ctitle">Macro Calculator</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Estimates daily calories &amp; macros from your stats. Tap Apply to fill your goals.</p><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="mc-w" placeholder="80" step="0.1" oninput="recalcMacros()"></div><div class="f"><label>Height (cm)</label><input type="number" id="mc-h" placeholder="175" oninput="recalcMacros()"></div><div class="f"><label>Age</label><input type="number" id="mc-age" placeholder="25" oninput="recalcMacros()"></div><div class="f"><label>Gender</label><select id="mc-gen" onchange="recalcMacros()"><option value="male">Male</option><option value="female">Female</option></select></div></div><div class="f"><label>Activity level</label><select id="mc-act" onchange="recalcMacros()"><option value="1.2">Sedentary (desk job, no exercise)</option><option value="1.375">Light (1–3 workouts/wk)</option><option value="1.55" selected>Moderate (3–5 workouts/wk)</option><option value="1.725">Active (6–7 workouts/wk)</option><option value="1.9">Very active (athlete, physical job)</option></select></div><div class="f"><label>Goal</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill" id="mc-goal-cut" onclick="selMacroGoal('cut')">Cut</button><button type="button" class="gpill on" id="mc-goal-maintain" onclick="selMacroGoal('maintain')">Maintain</button><button type="button" class="gpill" id="mc-goal-bulk" onclick="selMacroGoal('bulk')">Bulk</button></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);padding:16px;margin:10px 0 14px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div class="sv ta" id="mc-kcal">–</div><div class="sl">kcal/day</div></div><div><div class="sv" id="mc-p" style="color:var(--accent)">–</div><div class="sl">Protein g</div></div><div><div class="sv" id="mc-c" style="color:var(--blue)">–</div><div class="sl">Carbs g</div></div><div><div class="sv ty" id="mc-f">–</div><div class="sl">Fat g</div></div></div></div><div id="mc-note" class="tm" style="font-size:11.5px;line-height:1.55;margin-bottom:12px"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-macro')">Cancel</button><button type="button" class="btn" onclick="applyMacros()">Apply to Goals</button></div></div></div>
 
 <div class="modal" id="m-bc"><div class="msheet" style="max-height:92vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:10px"><div class="ctitle" style="margin:0">Scan a barcode</div><button type="button" class="btn-g" onclick="closeBc()">Close</button></div><div id="bc-stage" class="bc-stage"><video id="bc-vid" autoplay muted playsinline></video><div class="bc-frame" aria-hidden="true"></div></div><div id="bc-status" class="bc-status" role="status" aria-live="polite">Opening the camera…</div><div id="bc-result" class="hidden" style="margin-top:12px"><div class="mc" style="margin-bottom:0"><div class="mcn" id="bc-name">–</div><div class="mcm" id="bc-macros">–</div></div><button type="button" class="btn" style="margin-top:10px" onclick="addScanned()">Add to today</button><button type="button" class="btn-g" style="width:100%;margin-top:8px" onclick="openBcM()">Scan another</button></div><div id="bc-manual" style="margin-top:14px"><label for="bc-manual-in" class="tm" style="display:block;margin-bottom:8px;font-size:12.5px">Or type the number printed under the barcode</label><div style="display:flex;gap:8px"><input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="bc-manual-in" placeholder="e.g. 5000159407236" onkeydown="if(event.key==='Enter'){event.preventDefault();manualBarcode();}" style="flex:1;min-width:0;background:var(--surface);border:1.5px solid transparent;border-radius:14px;padding:13px;color:var(--t);font-size:16px;outline:none;font-weight:600"><button type="button" class="btn" style="width:auto;padding:12px 16px;flex-shrink:0" onclick="manualBarcode()">Look up</button></div></div></div></div>
 
-<!-- FORGOT PASSWORD -->
+<!-- HARROVA FJALËKALIMIN -->
 <div class="modal" id="m-forgot"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Reset Password</div><p class="tm" style="margin-bottom:14px">Enter your email and we'll send you a reset link.</p><div class="f"><label>Email</label><input type="email" id="fp-email" placeholder="you@email.com" autocomplete="email"></div><div id="fp-msg" style="font-size:12.5px;margin-top:4px;margin-bottom:8px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-forgot')">Cancel</button><button type="button" class="btn" id="fp-btn" onclick="sendReset()">Send Link</button></div></div></div>
 
-<!-- LOG CARDIO -->
+<!-- REGJISTRO KARDIO -->
 <div class="modal" id="m-cardio"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Log Activity</div>
 <div class="f"><label>Activity</label>
 <select id="cd-act" onchange="if(this.value==='__more'){cardio_loadMore(this);}">
@@ -1133,7 +1127,7 @@
 </select></div>
 <div class="g2"><div class="f"><label>Duration (min)</label><input type="number" id="cd-dur" placeholder="30" min="1"></div><div class="f"><label>Distance (km)</label><input type="number" id="cd-dist" placeholder="5" step="0.1" min="0"></div><div class="f"><label>Calories</label><input type="number" id="cd-cal" placeholder="300" min="0"></div><div class="f"><label>Avg HR (opt.)</label><input type="number" id="cd-hr" placeholder="140" min="40" max="220"></div></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cardio')">Cancel</button><button type="button" class="btn" onclick="saveCardio()">Save</button></div></div></div>
 
-<!-- PLATE CALCULATOR -->
+<!-- LLOGARITËSI I DISQEVE -->
 <div class="modal" id="m-plate"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="ctitle">Plate Calculator</div>
   <div class="pc-row">
@@ -1149,7 +1143,7 @@
 </div></div>
 
 
-<!-- TARGET BODY AREAS (Muscle Map editor) -->
+<!-- ZONAT E TRUPIT (redaktuesi i hartës së muskujve) -->
 <div class="modal" id="m-muscle"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="ctitle">Target body areas</div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">Tap to mark. Tap again in the same mode to clear it.</p>
@@ -1170,16 +1164,16 @@
   </div>
 </div></div>
 
-<!-- LOG MEASUREMENTS -->
+<!-- REGJISTRO MATJET -->
 <div class="modal" id="m-measure"><div class="msheet" style="overflow-y:auto;max-height:90vh"><div class="mhandle"></div><div class="ctitle">Log Measurements</div><p class="tm" style="margin-bottom:14px;font-size:12.5px">Leave any field blank to skip it.</p><div class="g2"><div class="f"><label>Waist (cm)</label><input type="number" id="mes-waist" step="0.1" min="30" max="200"></div><div class="f"><label>Chest (cm)</label><input type="number" id="mes-chest" step="0.1" min="40" max="200"></div><div class="f"><label>Hips (cm)</label><input type="number" id="mes-hips" step="0.1" min="40" max="200"></div><div class="f"><label>Neck (cm)</label><input type="number" id="mes-neck" step="0.1" min="20" max="80"></div><div class="f"><label>Arm (cm)</label><input type="number" id="mes-arm" step="0.1" min="15" max="80"></div><div class="f"><label>Thigh (cm)</label><input type="number" id="mes-thigh" step="0.1" min="20" max="100"></div></div><div class="f"><label>Body fat % (optional)</label><input type="number" id="mes-bf" step="0.1" min="3" max="60"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-measure')">Cancel</button><button type="button" class="btn" onclick="saveMeasure()">Save</button></div></div></div>
 
-<!-- UPLOAD PROGRESS PHOTO -->
+<!-- NGARKO FOTO PROGRESI -->
 <div class="modal" id="m-photo"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Add Progress Photo</div><div class="f"><label>Pose</label><select id="ph-pose"><option value="front">Front</option><option value="side">Side</option><option value="back">Back</option><option value="flex">Flex</option></select></div><div class="f"><label>Pick a photo</label><input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" style="font-size:14px;padding:10px"></div><div id="ph-prev-wrap" class="hidden" style="margin-bottom:10px;text-align:center"><img id="ph-prev" style="max-width:100%;max-height:240px;border-radius:10px"></div><div id="ph-msg" class="tm" style="font-size:12px;margin-bottom:6px;display:none"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-photo')">Cancel</button><button type="button" class="btn" id="ph-btn" onclick="savePhoto()">Upload</button></div></div></div>
 
-<!-- VIEW PHOTO -->
+<!-- SHIKO FOTON -->
 <div class="modal" id="m-photoview"><div class="msheet" style="max-height:92vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="pv-title">Photo</div><button type="button" class="btn-g" onclick="cModal('m-photoview')">Done</button></div><img id="pv-img" style="width:100%;border-radius:12px;display:block;margin-bottom:14px"><div class="g2" style="margin-bottom:10px"><button type="button" class="btn-o" style="width:100%" onclick="openPhotoCompare()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-shuffle"/></svg>Compare</button><button type="button" class="btn-o btn-o-danger" style="width:100%" onclick="deletePhoto()">Delete</button></div></div></div>
 
-<!-- PHOTO COMPARE -->
+<!-- KRAHASO FOTOT -->
 <div class="modal" id="m-photocomp">
   <div class="msheet" style="max-height:92vh;overflow-y:auto">
     <div class="mhandle"></div>
@@ -1201,13 +1195,13 @@
   </div>
 </div>
 
-<!-- DAILY CHECK-IN -->
+<!-- KONTROLLI DITOR -->
 <div class="modal" id="m-checkin"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Daily Check-In</div><div class="cki-row"><div class="cki-label">Mood</div><div class="cki-pills" id="cki-mood" data-key="mood"><div class="cki-pill" data-v="1" data-t="Rough">1</div><div class="cki-pill" data-v="2" data-t="Off">2</div><div class="cki-pill" data-v="3" data-t="Fine">3</div><div class="cki-pill" data-v="4" data-t="Good">4</div><div class="cki-pill" data-v="5" data-t="Great">5</div></div></div><div class="cki-row"><div class="cki-label">Energy</div><div class="cki-pills" id="cki-energy" data-key="energy"><div class="cki-pill" data-v="1" data-t="Empty">1</div><div class="cki-pill" data-v="2" data-t="Low">2</div><div class="cki-pill" data-v="3" data-t="OK">3</div><div class="cki-pill" data-v="4" data-t="Charged">4</div><div class="cki-pill" data-v="5" data-t="Wired">5</div></div></div><div class="cki-row"><div class="cki-label">Soreness</div><div class="cki-pills" id="cki-soreness" data-key="soreness"><div class="cki-pill" data-v="1" data-t="Fresh">1</div><div class="cki-pill" data-v="2" data-t="Light">2</div><div class="cki-pill" data-v="3" data-t="Achy">3</div><div class="cki-pill" data-v="4" data-t="Sore">4</div><div class="cki-pill" data-v="5" data-t="Wrecked">5</div></div></div><div class="g2" style="margin-top:18px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-checkin')">Cancel</button><button type="button" class="btn" onclick="saveCheckin()">Save</button></div></div></div>
 
-<!-- 1RM CALCULATOR -->
+<!-- LLOGARITËSI I 1RM -->
 <div class="modal" id="m-1rm"><div class="msheet"><div class="mhandle"></div><div class="ctitle">1-Rep Max Calculator</div><div class="g2"><div class="f"><label>Weight (kg)</label><input type="number" id="rm-w" step="0.5" placeholder="100" oninput="calc1RM()"></div><div class="f"><label>Reps</label><input type="number" id="rm-r" placeholder="5" min="1" max="20" oninput="calc1RM()"></div></div><div class="card" style="background:var(--adim);border-color:var(--accent);text-align:center;padding:18px;margin:6px 0 14px"><div class="sl" style="margin-bottom:6px">Estimated 1RM</div><div id="rm-out" style="font-family:var(--font-body);font-weight:700;font-size:42px;color:var(--accent);line-height:1">–</div></div><div id="rm-pct" style="font-size:12.5px;color:var(--t2);line-height:1.8"></div><button type="button" class="btn-o" style="width:100%;margin-top:12px" onclick="cModal('m-1rm')">Close</button></div></div>
 
-<!-- POST-WORKOUT REPORT CARD -->
+<!-- RAPORTI PAS STËRVITJES -->
 <div class="modal" id="m-summary">
   <div class="msheet rc" style="overflow-y:auto;max-height:92vh">
     <div class="mhandle"></div>
@@ -1217,7 +1211,7 @@
       <div class="rc-date" id="sum-date">—</div>
     </header>
 
-    <!-- Headline metrics -->
+    <!-- Numrat kryesorë -->
     <div class="rc-grid">
       <div class="rc-cell"><div class="rc-v" id="sum-dur">0<small>min</small></div><div class="rc-l">Elapsed</div></div>
       <div class="rc-cell rc-hero"><div class="rc-v" id="sum-vol">0<small>kg</small></div><div class="rc-l">Volume</div></div>
@@ -1225,19 +1219,19 @@
       <div class="rc-cell"><div class="rc-v" id="sum-kcal">0<small>kcal</small></div><div class="rc-l">Burn</div></div>
     </div>
 
-    <!-- Deltas against the previous session -->
+    <!-- Ndryshimet nga seanca e kaluar -->
     <section id="sum-vs" style="display:none">
       <div class="rc-sec">Against last session</div>
       <div id="sum-vs-rows"></div>
     </section>
 
-    <!-- PR badges -->
+    <!-- Etiketat e rekordeve -->
     <section id="sum-prs" style="display:none">
       <div class="rc-sec">Records broken</div>
       <div id="sum-prs-list"></div>
     </section>
 
-    <!-- Exercise ledger -->
+    <!-- Lista e ushtrimeve -->
     <section>
       <div class="rc-sec">Ledger</div>
       <div id="sum-exs"></div>
@@ -1255,7 +1249,7 @@
   </div>
 </div>
 
-<!-- IMPORT FROM APPLE HEALTH / GOOGLE FIT -->
+<!-- IMPORTI NGA APPLE HEALTH / GOOGLE FIT -->
 <div class="modal" id="m-impt">
   <div class="msheet" style="max-height:90vh;overflow-y:auto;padding-bottom:24px">
     <div class="mhandle"></div>
@@ -1264,7 +1258,7 @@
       <button type="button" class="btn-g" onclick="cModal('m-impt')">Done</button>
     </div>
 
-    <!-- Source picker (Apple / Google) -->
+    <!-- Zgjedhja e burimit (Apple / Google) -->
     <div id="impt-srcs">
       <p class="tm" style="font-size:13.5px;line-height:1.55;margin-bottom:14px">Bring weights, cardio sessions and sleep into AthleteOS from your phone. We dedupe by date so re-imports are safe.</p>
       <div style="display:grid;gap:10px">
@@ -1296,7 +1290,7 @@
       </details>
     </div>
 
-    <!-- Working / preview area -->
+    <!-- Zona e punës / parapamja -->
     <div id="impt-work" style="display:none">
       <div id="impt-status" style="text-align:center;padding:24px 0">
         <div class="skel" style="height:6px;border-radius:999px;margin-bottom:14px;width:60%;margin-left:auto;margin-right:auto"></div>
@@ -1336,13 +1330,13 @@
       </div>
     </div>
 
-    <!-- Hidden file pickers -->
+    <!-- Zgjedhësit e fshehur të skedarëve -->
     <input type="file" id="impt-file-apple" accept=".xml,application/xml" style="display:none" onchange="impt_handleFile(event,'apple')">
     <input type="file" id="impt-file-google" accept=".csv,text/csv" style="display:none" onchange="impt_handleFile(event,'google')">
   </div>
 </div>
 
-<!-- MUSCLE BROWSER -->
+<!-- SHFLETUESI I MUSKUJVE -->
 <div class="modal" id="m-musc">
   <div class="msheet" style="max-height:90vh;overflow-y:auto;padding-bottom:20px">
     <div class="mhandle"></div>
@@ -1369,7 +1363,7 @@
   </div>
 </div>
 
-<!-- CHANGE EMAIL -->
+<!-- NDRYSHO EMAILIN -->
 <div class="modal" id="m-chmail"><div class="msheet"><div class="mhandle"></div>
   <div class="ctitle">Change email</div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">We'll send a confirmation link to the new address. You'll stay signed in with the old one until you click it.</p>
@@ -1380,7 +1374,7 @@
   </div>
 </div></div>
 
-<!-- CHANGE PASSWORD -->
+<!-- NDRYSHO FJALËKALIMIN -->
 <div class="modal" id="m-chpw"><div class="msheet"><div class="mhandle"></div>
   <form onsubmit="event.preventDefault();saveChangePassword();">
   <div class="ctitle">Change password</div>
@@ -1394,14 +1388,14 @@
   </form>
 </div></div>
 
-<!-- PLAN LIBRARY -->
+<!-- BIBLIOTEKA E PLANEVE -->
 <div class="modal" id="m-planlib"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0">Plan library</div><button type="button" class="btn-g" onclick="cModal('m-planlib')">Done</button></div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">Battle-tested splits. One tap imports them as templates you can edit.</p>
   <div id="planlib-list"></div>
 </div></div>
 
-<!-- GENERIC INPUT MODAL (replaces window.prompt) -->
+<!-- MODALI I PËRGJITHSHËM PËR HYRJE (zëvendëson window.prompt) -->
 <div class="modal" id="m-input"><div class="msheet"><div class="mhandle"></div>
   <form onsubmit="event.preventDefault();_inputOk();">
   <div class="ctitle" id="inp-title">Enter value</div>
@@ -1413,7 +1407,7 @@
   </div></form>
 </div></div>
 
-<!-- FEEDBACK FORM -->
+<!-- FORMULARI I FEEDBACK-UT / MBËSHTETJES -->
 <div class="modal" id="m-feedback"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div>
   <div class="ctitle" id="fb-title">Send feedback</div>
   <p class="tm" style="font-size:12.5px;margin-bottom:14px">We read every one. Tell us what's broken, missing, or great.</p>
@@ -1430,42 +1424,42 @@
   <p class="tm" style="font-size:11px;margin-bottom:14px;color:var(--t3)">We'll attach your account email and app version. No other data is sent. Prefer email? <a class="lnk" href="mailto:alkanzilgir@gmail.com?subject=AthleteOS%20support">alkanzilgir@gmail.com</a></p>
   <div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-feedback')">Cancel</button><button type="button" class="btn" id="fb-send" onclick="sendFeedback()">Send</button></div>
 </div></div>
-<!-- (legacy plate calc removed — visual version is the m-plate above) -->
 
-<!-- EXERCISE PROGRESSION CHART -->
+
+<!-- GRAFIKU I PROGRESIT TË USHTRIMIT -->
 <div class="modal" id="m-exchart"><div class="msheet" style="max-height:90vh"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="exc-name">Exercise</div><button type="button" class="btn-g" onclick="cModal('m-exchart')">Done</button></div><div class="tm" style="font-size:12px;margin-bottom:10px" id="exc-meta">–</div><div class="chart-wrap" style="height:200px;margin-bottom:6px"><canvas id="exc-chart"></canvas></div><div id="exc-hist" style="max-height:200px;overflow-y:auto"></div></div></div>
 
-<!-- WORKOUT TEMPLATES -->
+<!-- RUTINAT -->
 <div class="modal" id="m-templates"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0">Workout Templates</div><button type="button" class="btn-g" onclick="cModal('m-templates')">Done</button></div><button type="button" class="btn-o" style="width:100%;margin-bottom:12px" onclick="cModal('m-templates');openPlanLibrary()"><svg class="ic" style="font-size:14px" aria-hidden="true"><use href="#i-plan"/></svg>Browse plan library (PPL · U/L · 5/3/1 · Full Body)</button><div id="tpl-list"><div class="bp"><span class="bp-l">No templates</span></div></div></div></div>
 
-<!-- SAVE TEMPLATE -->
+<!-- RUAJ SI RUTINË -->
 <div class="modal" id="m-tplsave"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Save as Template</div><div class="f"><label>Template name</label><input type="text" id="tpl-n" placeholder="e.g. Push Day A"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-tplsave')">Cancel</button><button type="button" class="btn" onclick="saveTemplate()">Save</button></div></div></div>
 
-<!-- RECIPE DETAIL -->
+<!-- DETAJET E RECETËS -->
 <div class="modal" id="m-recipe"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:8px"><div class="ctitle" style="margin:0" id="rc-name">Recipe</div><button type="button" class="btn-g" onclick="cModal('m-recipe')">Done</button></div><div id="rc-macros" class="tm" style="font-size:12.5px;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Ingredients</div><div id="rc-ing" class="tm" style="font-size:13px;line-height:1.85;margin-bottom:14px"></div><div class="ctitle" style="margin:0 0 6px;font-size:13px">Steps</div><div id="rc-steps" class="tm" style="font-size:13px;line-height:1.7;margin-bottom:16px"></div><button type="button" class="btn" style="width:100%" onclick="logRecipeAsMeal()">+ Log as Meal</button></div></div>
 
-<!-- IMPORT SHARED ROUTINE -->
+<!-- IMPORTO RUTINËN E NDARË -->
 <div class="modal" id="m-import"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Import shared routine?</div><p class="tm" style="margin-bottom:12px;font-size:12.5px">Someone shared a workout template with you. Add it to your templates?</p><div class="card" style="background:var(--surface);padding:14px;margin-bottom:14px;border-radius:14px"><div id="imp-info"></div></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="declineShare()">Skip</button><button type="button" class="btn" onclick="acceptShare()">Add to Templates</button></div></div></div>
 
-<!-- EXERCISE PICKER (search) -->
+<!-- ZGJEDHËSI I USHTRIMEVE (kërkimi) -->
 <div class="modal" id="m-expk"><div class="msheet" style="max-height:80vh;display:flex;flex-direction:column"><div class="mhandle"></div><div class="ctitle">Pick Exercise</div><input type="text" id="expk-q" placeholder="Search exercises..." style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px 14px;color:var(--t);font-size:15px;outline:none;margin-bottom:10px" oninput="filterExPk()"><div id="expk-list" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch"></div></div></div>
 
-<!-- CREATE CUSTOM EXERCISE -->
+<!-- KRIJO USHTRIM TË PERSONALIZUAR -->
 <div class="modal" id="m-cuex"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Exercise</div><div class="f"><label>Name</label><input type="text" id="cuex-n" placeholder="e.g. Cable Crossover Variant" autocomplete="off"></div><div class="f"><label>Primary muscle</label><select id="cuex-m"><option value="chest">Chest</option><option value="back">Back</option><option value="legs">Legs</option><option value="shoulders">Shoulders</option><option value="arms">Arms</option><option value="core">Core</option><option value="cardio">Cardio</option><option value="other">Other</option></select></div><div class="f"><label>Demo video URL (optional)</label><input type="url" id="cuex-demo" placeholder="https://youtube.com/..." autocomplete="off"></div><div class="f"><label>Tips (one per line, optional)</label><textarea id="cuex-tips" rows="4" placeholder="e.g.&#10;Pause at the contraction&#10;Slow eccentric on the way down" style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px;color:var(--t);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px"></textarea></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuex')">Cancel</button><button type="button" class="btn" onclick="saveCustomEx()">Save</button></div></div></div>
 
-<!-- CREATE CUSTOM ACHIEVEMENT -->
+<!-- KRIJO ARRITJE TË PERSONALIZUAR -->
 <div class="modal" id="m-cuach"><div class="msheet"><div class="mhandle"></div><div class="ctitle">Create Custom Achievement</div><div class="f"><label>Name</label><input type="text" id="cuach-n" placeholder="e.g. Bench 100 kg" autocomplete="off"></div><div class="f"><label>Icon (emoji)</label><input type="text" id="cuach-i" placeholder="PR" maxlength="4" autocomplete="off"></div><div class="f"><label>Metric</label><select id="cuach-metric"><option value="workouts">Total workouts</option><option value="streak">Current streak (days)</option><option value="maxPR">Max PR (kg)</option><option value="sleepCount">Sleep logs</option><option value="photos">Progress photos</option><option value="meals">Meals logged</option><option value="weightLogs">Weight logs</option><option value="longestMin">Longest session (min)</option><option value="maxVol">Heaviest session volume (kg)</option></select></div><div class="f"><label>Target value</label><input type="number" id="cuach-target" placeholder="e.g. 100" step="any" autocomplete="off"></div><div class="g2" style="margin-top:6px"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-cuach')">Cancel</button><button type="button" class="btn" onclick="saveCustomAch()">Save</button></div></div></div>
 
-<!-- DELETE ACCOUNT -->
+<!-- FSHI LLOGARINË -->
 <div class="modal" id="m-delacc"><div class="msheet"><div class="mhandle"></div><div class="ctitle" style="color:var(--red)">Delete Account</div><p class="tm" style="line-height:1.65;margin-bottom:10px">This is permanent. We'll erase your profile, all workouts, meals, sleep, weight, photos, measurements, and coach chats. There is no undo.</p><div class="f"><label>Type <b style="color:var(--red)">DELETE</b> to confirm</label><input type="text" id="del-confirm" placeholder="DELETE" autocomplete="off" autocapitalize="characters"></div><div id="del-msg" style="font-size:12.5px;margin:4px 0 8px;display:none;color:var(--red)"></div><div class="g2"><button type="button" class="btn-o" style="width:100%" onclick="cModal('m-delacc')">Cancel</button><button type="button" class="btn btn-danger" id="del-btn" onclick="deleteMyAccount()">Erase forever</button></div></div></div>
 
-<!-- DAY DETAIL -->
+<!-- DETAJET E DITËS -->
 <div class="modal" id="m-day"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="day-title">Day</div><button type="button" class="btn-g" onclick="cModal('m-day')">Done</button></div><div id="day-body"></div></div></div>
 
-<!-- PRIVACY / TERMS -->
+<!-- PRIVATËSIA / KUSHTET -->
 <div class="modal" id="m-legal"><div class="msheet" style="max-height:90vh;overflow-y:auto"><div class="mhandle"></div><div class="fb" style="margin-bottom:12px"><div class="ctitle" style="margin:0" id="legal-title">Privacy Policy</div><button type="button" class="btn-g" onclick="cModal('m-legal')">Done</button></div><div id="legal-body" class="tm" style="font-size:13px;line-height:1.7;color:var(--t2)"></div></div></div>
 
-<!-- ONBOARDING WIZARD -->
+<!-- ONBOARDING (hapat e para pas regjistrimit) -->
 <div id="onb">
   <div class="onb-body-wrap">
     <div class="onb-rail">
@@ -1474,7 +1468,7 @@
       <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
     </div>
 
-    <!-- 0: Welcome -->
+    <!-- 0: Mirëseardhja -->
     <div class="onb-step on" id="os-0">
       <div class="onb-hero">Welcome to <span>AthleteOS</span></div>
       <div class="onb-sub">Lift, eat, sleep, repeat. We keep the receipts so you can see it working.</div>
@@ -1485,7 +1479,7 @@
       </div>
     </div>
 
-    <!-- 1: Motivations (multi) -->
+    <!-- 1: Motivimet (disa zgjedhje) -->
     <div class="onb-step" id="os-1">
       <div class="onb-h">What brings you here?</div>
       <div class="onb-sub">Pick everything that fits. It shapes what you see first.</div>
@@ -1501,7 +1495,7 @@
       </div>
     </div>
 
-    <!-- 2: Main goal -->
+    <!-- 2: Qëllimi kryesor -->
     <div class="onb-step" id="os-2">
       <div class="onb-h">What's your main training goal?</div>
       <div class="onb-sub">Everything else gets set from this.</div>
@@ -1516,7 +1510,7 @@
       </div>
     </div>
 
-    <!-- 3: Goal blueprint (educational, dynamic) -->
+    <!-- 3: Plani sipas qëllimit (edukativ, dinamik) -->
     <div class="onb-step" id="os-3">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
       <div class="onb-h" id="ob-bp-title">Your Muscle Blueprint</div>
@@ -1524,7 +1518,7 @@
       <div class="onb-info-list" id="ob-bp-list"></div>
     </div>
 
-    <!-- 4: Experience -->
+    <!-- 4: Përvoja -->
     <div class="onb-step" id="os-4">
       <div class="onb-h">Your training</div>
       <div class="onb-sub">Experience sets the starting loads. Days per week sets the pace.</div>
@@ -1548,7 +1542,7 @@
       </div>
     </div>
 
-    <!-- 5: Prior tracking -->
+    <!-- 5: Gjurmimi i mëparshëm -->
     <div class="onb-step" id="os-5">
       <div class="onb-h">How do you track today?</div>
       <div class="onb-sub">Honest answers help us show you the right tools first.</div>
@@ -1562,7 +1556,7 @@
       </div>
     </div>
 
-    <!-- 6: Profile basics (gender / age / height / units) -->
+    <!-- 6: Të dhënat bazë (gjinia / mosha / gjatësia / njësitë) -->
     <div class="onb-step" id="os-6">
       <div class="onb-h">Tell us about you</div>
       <div class="onb-sub">Used for protein targets, calorie needs, and weight projections.</div>
@@ -1576,7 +1570,7 @@
       </div>
     </div>
 
-    <!-- 7: Train style -->
+    <!-- 7: Stili i stërvitjes -->
     <div class="onb-step" id="os-7">
       <div class="onb-h">Do you train alone or with someone?</div>
       <div class="onb-sub">Helpful for rest-time suggestions and session pacing.</div>
@@ -1589,7 +1583,7 @@
       </div>
     </div>
 
-    <!-- 8: Follow a plan? -->
+    <!-- 8: Ndjek një plan? -->
     <div class="onb-step" id="os-8">
       <div class="onb-h">Do you follow a set routine?</div>
       <div class="onb-sub">No wrong answer. The app bends either way.</div>
@@ -1602,7 +1596,7 @@
       </div>
     </div>
 
-    <!-- 9: Logging style -->
+    <!-- 9: Stili i regjistrimit -->
     <div class="onb-step" id="os-9">
       <div class="onb-h">How much do you want to log?</div>
       <div class="onb-sub">Pick a starting point. You can change anything later.</div>
@@ -1615,7 +1609,7 @@
       </div>
     </div>
 
-    <!-- 10: Weekly goal -->
+    <!-- 10: Objektivi javor -->
     <div class="onb-step" id="os-10">
       <div class="onb-h">Set a weekly goal</div>
       <div class="onb-sub">How many days are you actually showing up? We'll hold you to it.</div>
@@ -1623,7 +1617,7 @@
       </div>
     </div>
 
-    <!-- 11: Muscle map -->
+    <!-- 11: Harta e muskujve -->
     <div class="onb-step" id="os-11">
       <div class="onb-h">Target body areas</div>
       <div class="onb-sub">Mark what you want built, what you want cut, and what to leave alone.</div>
@@ -1642,7 +1636,7 @@
       </div>
     </div>
 
-    <!-- 12: Weight unit choice -->
+    <!-- 12: Njësia e peshës -->
     <div class="onb-step" id="os-12">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
       <div class="onb-h">Choose weight unit</div>
@@ -1655,7 +1649,7 @@
       </div>
     </div>
 
-    <!-- 13: Current weight -->
+    <!-- 13: Pesha aktuale -->
     <div class="onb-step" id="os-13">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
       <div class="onb-h">Your weight</div>
@@ -1682,7 +1676,7 @@
       </div>
     </div>
 
-    <!-- 14: Goal weight + projection -->
+    <!-- 14: Pesha e synuar dhe parashikimi -->
     <div class="onb-step" id="os-14">
       <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><path d="M6 9h12l1 11H5z"/></svg></div>
       <div class="onb-h">Weight goal</div>
@@ -1691,7 +1685,7 @@
       </div>
     </div>
 
-    <!-- 15: Daily targets -->
+    <!-- 15: Objektivat ditore -->
     <div class="onb-step" id="os-15">
       <div class="onb-h">Daily nutrition targets</div>
       <div class="onb-sub">We picked sensible defaults based on your goal. Tweak any time.</div>
@@ -1701,7 +1695,7 @@
       </div>
     </div>
 
-    <!-- 16: Reminders -->
+    <!-- 16: Kujtesat -->
     <div class="onb-step" id="os-16">
       <div class="onb-h">Stay on track</div>
       <div class="onb-sub">Optional daily nudges so a busy day never sinks your streak.</div>
@@ -1719,7 +1713,7 @@
   </div>
 </div>
 
-<!-- BUILDING-YOUR-PLAN SPLASH -->
+<!-- EKRANI "PO NDËRTOJMË PLANIN TËND" -->
 <div id="onb-splash">
   <div class="spl-loader" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120">

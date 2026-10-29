@@ -1,6 +1,9 @@
-/* ── PROFILE ──────────────────────────────── */
+/* settings.js — Cilësimet: profili, tema, feedback dhe mbështetja, llogaria
+   (email / fjalëkalim), kujtesat, njoftimet push, importi dhe eksporti i të
+   dhënave, fshirja e llogarisë, privatësia dhe kushtet. */
+/* ── PROFILI ──────────────────────────────── */
 function loadProfile(){
-  // P is populated by loadGoals() from Supabase; localStorage is offline-only fallback.
+  // P mbushet nga loadGoals() prej Supabase; localStorage është vetëm rezervë offline.
   if(!P||(!P.gender&&!P.height&&!P.age)){
     var saved=JSON.parse(localStorage.getItem('prof_'+CU.id)||'null');
     if(saved)P=Object.assign({gender:'male',age:0,height:0,units:'metric'},saved);
@@ -48,7 +51,7 @@ async function saveProfile(){
   toast(error?'Saved on this device. Sync failed.':'Details saved');
 }
 
-/* ── THEME ────────────────────────────────── */
+/* ── TEMA (e errët / e çelët / sistemi) ───── */
 var _themeMQ=null;
 function _systemPrefersDark(){return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;}
 function applyTheme(mode){
@@ -56,7 +59,7 @@ function applyTheme(mode){
   var isDark=effective==='dark';
   document.body.classList.toggle('dark',isDark);
   document.documentElement.classList.toggle('dark',isDark);
-  document.body.classList.remove('light'); // legacy class no-op now
+  document.body.classList.remove('light'); // klasë e vjetër, nuk bën asgjë tani
   ['dark','light','system'].forEach(function(m){var el=document.getElementById('thm-'+m);if(el)el.classList.toggle('on',m===mode);});
   var sub=document.getElementById('theme-sub');
   if(sub)sub.textContent=mode==='system'?'Following system ('+effective+')':'Currently '+effective;
@@ -78,7 +81,7 @@ function initTheme(){
   setThemeMode(saved);
 }
 
-/* ── FEEDBACK / FAQ stubs ─────────────────── */
+/* ── FEEDBACK DHE KONTAKTI ME MBËSHTETJEN ─── */
 var _fbCat='bug';
 function openFeedback(cat){
   _fbCat=cat||'bug';fb_cat(_fbCat);
@@ -92,8 +95,8 @@ function fb_cat(c){
   ['bug','idea','love','support','other'].forEach(function(x){var el=document.getElementById('fb-cat-'+x);if(el)el.classList.toggle('on',x===c);});
 }
 var SUPPORT_EMAIL='alkanzilgir@gmail.com';
-// Support lands in the feedback table (always works, even in a standalone PWA
-// where mailto: popups are blocked) with a mailto link as the fallback.
+// Mesazhet për mbështetjen ruhen në tabelën feedback (punon gjithmonë, edhe në
+// PWA ku mailto: bllokohet), me lidhjen e emailit si rezervë.
 function openSupport(){openFeedback('support');}
 async function sendFeedback(){
   var msg=(document.getElementById('fb-msg').value||'').trim();
@@ -109,7 +112,7 @@ async function sendFeedback(){
   toast(_fbCat==='support'?'Sent. We reply to '+(CU&&CU.email?CU.email:'your email')+' within 24 hours.':'Got it. Thanks.');
 }
 
-/* ── ACCOUNT (email / password) ───────────── */
+/* ── LLOGARIA (email / fjalëkalim) ────────── */
 function openChangeEmailM(){var inp=document.getElementById('chmail-new');if(inp)inp.value='';oModal('m-chmail');setTimeout(function(){if(inp)inp.focus();},120);}
 function openChangePasswordM(){['chpw-new','chpw-conf'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});oModal('m-chpw');setTimeout(function(){var f=document.getElementById('chpw-new');if(f)f.focus();},120);}
 async function saveChangeEmail(){
@@ -135,7 +138,7 @@ async function saveChangePassword(){
   btn.disabled=false;btn.textContent='Update password';
   if(error){
     console.warn(error);
-    // "Secure password change" is on: Supabase wants a code it emails to the user.
+    // "Ndryshim i sigurt i fjalëkalimit" është aktiv: Supabase kërkon një kod që e dërgon me email.
     if(/reauthenticat|nonce/i.test(error.message||'')){
       var r=await sb.auth.reauthenticate();
       if(r&&r.error){toast(_authErr(r.error,'Could not send the code'));return;}
@@ -159,7 +162,7 @@ function _showPwNonce(show){
   f.style.display=show===false?'none':'block';
   if(show!==false){var i=document.getElementById('chpw-nonce');if(i){i.value='';i.focus();}}
 }
-// Turn Supabase auth errors into something a person can act on.
+// Kthe gabimet e Supabase në mesazhe që një njeri i kupton.
 function _authErr(err,fallback){
   var m=(err&&err.message)||'';
   if(/rate limit|too many/i.test(m))return 'Too many emails sent — wait an hour and try again';
@@ -171,11 +174,10 @@ function _authErr(err,fallback){
   return m||fallback;
 }
 
-/* ── CROSS-DEVICE PREFS ───────────────────── */
-// Persists theme / accent / pinned-exercises to public.user_prefs so signing
-// in on a second device gives the same UI. localStorage stays as the hot cache
-// — writes go to both, reads come from localStorage so first paint isn't gated
-// on Supabase. _syncPref() debounces multi-second bursts (rapid color changes).
+/* ── PREFERENCAT MES PAJISJEVE ────────────── */
+// Ruan temën dhe ushtrimet e fiksuara në tabelën user_prefs, që hyrja nga një
+// pajisje tjetër të japë të njëjtën pamje. localStorage mbetet cache-i i shpejtë:
+// shkruhet në të dyja, lexohet nga localStorage. _syncPref() i grupon ndryshimet.
 var _prefSyncTmr=null,_prefPending={};
 function _syncPref(key,value){
   if(!sb||!CU)return;
@@ -194,8 +196,8 @@ async function loadUserPrefs(){
   try{
     var{data}=await sb.from('user_prefs').select('*').eq('user_id',CU.id).maybeSingle();
     if(!data)return;
-    // If server has a value AND localStorage doesn't (or they differ), trust the
-    // server — it's the canonical store. Apply silently without re-triggering sync.
+    // Nëse serveri ka vlerë të ndryshme nga localStorage, fiton serveri.
+    // Aplikohet pa e rinisur sinkronizimin.
     if(data.theme&&data.theme!==localStorage.getItem('athleteos_theme')){
       localStorage.setItem('athleteos_theme',data.theme);applyTheme(data.theme);
     }
@@ -205,10 +207,9 @@ async function loadUserPrefs(){
   }catch(e){console.warn('loadUserPrefs',e);}
 }
 
-/* ── DATA EXPORT ──────────────────────────── */
-// Pulls every user-scoped row from Supabase and downloads it as JSON. RLS does
-// the per-user filtering automatically. Storage objects (progress photos) are
-// referenced by path only — the user can fetch the binaries from the URL list.
+/* ── EKSPORTI I TË DHËNAVE (JSON) ─────────── */
+// Merr çdo rresht të përdoruesit nga Supabase dhe e shkarkon si JSON. RLS e bën
+// filtrimin për përdorues automatikisht. Fotot referohen vetëm me shteg.
 async function exportMyData(){
   if(!sb||!CU){toast('Sign in first');return;}
   toast('Building your export…');
@@ -222,7 +223,7 @@ async function exportMyData(){
       bundle.tables[t]=error?{error:error.message}:data;
     }catch(e){bundle.tables[t]={error:String(e)};}
   }
-  // Local-only data the user might want too: prefs, AI plan, custom exercises cache.
+  // Të dhënat vetëm lokale: preferencat, plani i trajnerit, cache-i i ushtrimeve.
   bundle.local={
     theme:localStorage.getItem('athleteos_theme'),
     pinned:getPinnedEx(),
@@ -238,7 +239,7 @@ async function exportMyData(){
   toast('Export downloaded');
 }
 
-/* ── DELETE ACCOUNT ───────────────────────── */
+/* ── FSHIRJA E LLOGARISË ──────────────────── */
 function openDeleteAccount(){
   document.getElementById('del-confirm').value='';
   document.getElementById('del-msg').style.display='none';
@@ -250,7 +251,7 @@ async function deleteMyAccount(){
   if(v!=='DELETE'){msg.textContent='Type DELETE to confirm';msg.style.display='block';return;}
   var btn=document.getElementById('del-btn');btn.disabled=true;btn.textContent='Erasing…';
   try{
-    // Best-effort: clean up storage objects first (DB cascade only handles rows)
+    // Fshi së pari fotot nga storage (kaskada e bazës fshin vetëm rreshtat)
     var{data:photos}=await sb.from('progress_photos').select('storage_path').eq('user_id',CU.id);
     if(photos&&photos.length){
       var paths=photos.map(function(p){return p.storage_path;});
@@ -258,7 +259,7 @@ async function deleteMyAccount(){
     }
     var{error}=await sb.rpc('delete_my_account');
     if(error)throw error;
-    // Clear local caches
+    // Pastro cache-in lokal
     try{Object.keys(localStorage).forEach(function(k){if(k.indexOf(CU.id)!==-1||k.indexOf('athleteos_')===0)localStorage.removeItem(k);});}catch(e){}
     await sb.auth.signOut();
     location.reload();
@@ -269,7 +270,7 @@ async function deleteMyAccount(){
 }
 
 
-/* ── REMINDERS ─────────────────────────────── */
+/* ── KUJTESAT ─────────────────────────────── */
 var REM={workout:true,protein:true,water:false,wt:'17:00',pt:'20:00'};
 function loadReminderUI(){
   document.getElementById('rm-wo').checked=!!REM.workout;
@@ -279,7 +280,7 @@ function loadReminderUI(){
   document.getElementById('rt-pr-time').textContent=fmt12(REM.pt);
   if(typeof refreshPushToggleUI==='function')refreshPushToggleUI();
 }
-/* ── WEB PUSH (live, cross-device) ────────── */
+/* ── NJOFTIMET PUSH ───────────────────────── */
 var VAPID_PUBLIC_KEY='BKKcha3TRIxUDHlmOnfvUtWQZUgD1woqn-eE2C9HG1Mx_CwIazYznZFETyKya_HB3dErk0QSDC9_lyB-6-RCy_4';
 function _b64UrlToU8(s){
   var pad='='.repeat((4-s.length%4)%4);
@@ -342,7 +343,7 @@ async function pushSubscribe(){
     return false;
   }
 }
-// Proves the whole chain (subscription → server → device) right after enabling.
+// Provon gjithë zinxhirin (abonimi → serveri → pajisja) menjëherë pas aktivizimit.
 async function _sendTestPush(){
   try{
     var r=await sb.auth.getSession();var session=r&&r.data&&r.data.session;if(!session)return;
@@ -411,7 +412,7 @@ function _nextOccurrence(hhmm){
 function scheduleReminders(){
   if(!navigator.serviceWorker||!navigator.serviceWorker.controller)return;
   var items=[];
-  // Plan-aware morning notification: tells the user what today's session is from AI_PLAN.
+  // Njoftimi i mëngjesit: i thotë përdoruesit cila është seanca e sotme sipas planit.
   if(REM.workout){
     var planMsg=_planMessageForToday();
     items.push({id:'rem-workout',title:planMsg.title,body:planMsg.body,at:_nextOccurrence(REM.wt)});
@@ -420,21 +421,21 @@ function scheduleReminders(){
   if(REM.water){
     [9,12,15,18,21].forEach(function(h){var t=h<10?'0'+h+':00':h+':00';items.push({id:'rem-water-'+h,title:'Water',body:'Get a glass in.',at:_nextOccurrence(t)});});
   }
-  // Streak-saving nudge: only when an active streak is at risk of breaking tonight.
+  // Kujtesa për serinë: vetëm kur seria rrezikon të ndërpritet sonte.
   if(_streakCount>=1 && !_streakDoneToday){
     var d=new Date();d.setHours(20,0,0,0);
     if(d.getTime()>Date.now()){
       items.push({id:'rem-streak',title:'Streak on the line',body:'Your '+_streakCount+'-day streak ends in 4 hours.',at:d.getTime()});
     }
   }
-  // Plan-aware tomorrow heads-up at 21:00 — only if AI_PLAN actually has tomorrow scheduled.
+  // Paralajmërimi për nesër në 21:00, vetëm nëse plani ka seancë nesër.
   var tn=_planMessageForTomorrow();
   if(tn){
     var d2=new Date();d2.setHours(21,0,0,0);
     if(d2.getTime()<=Date.now())d2.setDate(d2.getDate()+1);
     items.push({id:'rem-tomorrow',title:tn.title,body:tn.body,at:d2.getTime()});
   }
-  // Weekly digest — fire Saturday 09:00 with this week's volume/PRs/sessions.
+  // Përmbledhja javore: të shtunën në 09:00 me volumin, rekordet dhe seancat e javës.
   var dig=_weeklyDigestMessage();
   if(dig){
     var dgDate=new Date();
@@ -456,8 +457,8 @@ function _planMessageForTomorrow(){
   var focus=day.exercises.slice(0,3).map(function(e){return e.name;}).join(', ');
   return{title:'Tomorrow: '+(day.name||'Workout'),body:'Eat enough today. On deck: '+focus+'.'};
 }
-// Aggregates last-7-day stats from local data already cached for the Home tab
-// so we don't hit Supabase from the scheduler. If nothing was logged, no digest.
+// Mbledh statistikat e 7 ditëve nga të dhënat lokale të faqes kryesore,
+// pa thirrur Supabase. Nëse s'u regjistrua asgjë, s'ka përmbledhje.
 function _weeklyDigestMessage(){
   if(typeof _wHistAll==='undefined'||!_wHistAll)return null;
   var since=Date.now()-7*864e5;
@@ -472,14 +473,14 @@ function _weeklyDigestMessage(){
   body+='. Time to '+(weekly.length>=4?'deload':'push harder')+'?';
   return{title:'Your week',body:body};
 }
-// Returns the title/body for today's workout notification, based on AI_PLAN.
+// Kthen titullin dhe tekstin e njoftimit të sotëm sipas planit.
 function _planMessageForToday(){
   if(!AI_PLAN||!AI_PLAN.days||!AI_PLAN.days.length)return{title:'Session due',body:'Twenty minutes still counts.'};
   var DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var todayName=DAYS[new Date().getDay()];
   var day=AI_PLAN.days.find(function(d){return(d.day||'').toLowerCase()===todayName.toLowerCase();});
   if(!day){
-    // No specific day match — pick first non-rest day after today.
+    // S'ka ditë që përputhet: merr ditën e parë pa pushim pas sotit.
     var next=AI_PLAN.days.find(function(d){return d.exercises&&d.exercises.length;});
     if(next)return{title:'Active recovery',body:'No lifts today. Walk, stretch, sleep. Next up: '+next.name+'.'};
     return{title:'Session due',body:'Twenty minutes still counts.'};
@@ -489,7 +490,7 @@ function _planMessageForToday(){
   return{title:'Today: '+(day.name||'Workout'),body:focus+(day.exercises.length>4?' + '+(day.exercises.length-4)+' more':'')};
 }
 
-/* ── DATA EXPORT ──────────────────────────── */
+/* ── IMPORTI DHE EKSPORTI I TË DHËNAVE ────── */
 function _csvEscape(v){if(v==null)return '';v=String(v);if(/[",\n]/.test(v))return '"'+v.replace(/"/g,'""')+'"';return v;}
 function _toCsv(rows){
   if(!rows.length)return '';
@@ -502,7 +503,7 @@ function _download(name,text){
   var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
   setTimeout(function(){URL.revokeObjectURL(url);},1500);
 }
-/* ── IMPORT: Apple Health / Google Fit ─────────────────────────── */
+/* ── IMPORTI NGA APPLE HEALTH / GOOGLE FIT ── */
 var _impt={source:null,parsed:null};
 
 function openImport(){
@@ -572,7 +573,7 @@ function _showImportPreview(p){
   document.getElementById('impt-sample').innerHTML=parts.join('<br>');
 }
 
-// ── Apple Health export.xml parser (regex-based for memory efficiency) ──
+// ── Lexuesi i export.xml të Apple Health (me regex, që të kursejë memorie) ──
 function _parseAppleHealth(text){
   if(text.indexOf('HealthData')<0&&text.indexOf('HKQuantityType')<0)throw new Error('This does not look like an Apple Health export.xml');
   var weights=_appleWeights(text);
@@ -620,7 +621,7 @@ function _appleWorkouts(text){
   return out;
 }
 function _appleParseDate(s){
-  // Apple format: "2024-12-01 09:43:21 +0100"
+  // Formati i Apple: "2024-12-01 09:43:21 +0100"
   if(!s)return null;
   var iso=s.replace(' ','T').replace(/\s(\+|-)(\d{2})(\d{2})$/,'$1$2:$3');
   var d=new Date(iso);return isNaN(d.getTime())?null:d.toISOString();
@@ -631,7 +632,7 @@ function _appleSleep(text){
   while((m=re.exec(text))){
     var line=m[0];
     var val=_appleAttr(line,'value')||'';
-    if(!/Asleep/.test(val))continue; // ignore InBed/Awake
+    if(!/Asleep/.test(val))continue; // injoro InBed/Awake
     var s=_appleAttr(line,'startDate'),e=_appleAttr(line,'endDate');
     if(!s||!e)continue;
     var sd=new Date(_appleParseDate(s)),ed=new Date(_appleParseDate(e));
@@ -642,7 +643,7 @@ function _appleSleep(text){
   return Object.keys(byDate).sort().map(function(d){return{date:d,hours:Math.round(byDate[d]*10)/10};});
 }
 
-// ── Google Fit / Takeout CSV parser ──
+// ── Lexuesi i CSV-së nga Google Fit / Takeout ──
 function _parseGoogleFit(text){
   var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});
   if(lines.length<2)throw new Error('CSV is empty or has no rows');
@@ -678,7 +679,7 @@ function _parseGoogleFit(text){
       }
     }
   }
-  // Dedupe weights by date
+  // Hiq peshat e dyfishta sipas datës
   var wMap={};weights.forEach(function(w){wMap[w.date]=w.kg;});
   weights=Object.keys(wMap).sort().map(function(d){return{date:d,kg:wMap[d]};});
   return{weights:weights,cardios:cardios,sleeps:[]};
@@ -694,7 +695,7 @@ function _csvSplit(line){
   out.push(cur);return out;
 }
 
-// ── Commit to Supabase (upsert weight+sleep, insert cardio) ──
+// ── Ruaj në Supabase (pesha dhe gjumi me upsert, kardio me insert) ──
 async function impt_commit(){
   if(!_impt.parsed||!CU)return;
   document.getElementById('impt-preview').style.display='none';
@@ -705,7 +706,7 @@ async function impt_commit(){
   var done=0;
   function tick(label){done++;bar.style.width=Math.round(done/Math.max(total,1)*100)+'%';lbl.textContent=label;}
   var inserted={w:0,c:0,s:0};
-  // Weights — batch upsert in chunks of 200
+  // Peshat: upsert në grupe prej 200
   if(p.weights.length){
     lbl.textContent='Importing weights…';
     var rows=p.weights.map(function(w){return{user_id:CU.id,logged_date:w.date,weight_kg:w.kg};});
@@ -715,7 +716,7 @@ async function impt_commit(){
       done+=batch.length;bar.style.width=Math.round(done/Math.max(total,1)*100)+'%';
     }
   }
-  // Sleep — upsert by (user_id, logged_date)
+  // Gjumi: upsert sipas (user_id, logged_date)
   if(p.sleeps.length){
     lbl.textContent='Importing sleep…';
     var sRows=p.sleeps.map(function(s){return{user_id:CU.id,logged_date:s.date,duration_hours:s.hours,quality:'good'};});
@@ -725,7 +726,7 @@ async function impt_commit(){
       done+=sb2.length;bar.style.width=Math.round(done/Math.max(total,1)*100)+'%';
     }
   }
-  // Cardio — there's no natural dedupe key, so we fetch existing started_at values and skip matches
+  // Kardio: s'ka çelës natyral, prandaj marrim started_at ekzistuese dhe kapërcejmë përputhjet
   if(p.cardios.length){
     lbl.textContent='Importing cardio sessions…';
     var existing={};
@@ -744,13 +745,13 @@ async function impt_commit(){
   document.getElementById('impt-progress').style.display='none';
   document.getElementById('impt-done').style.display='block';
   document.getElementById('impt-done-sub').innerHTML='Imported <b>'+inserted.w+'</b> weight, <b>'+inserted.c+'</b> cardio, <b>'+inserted.s+'</b> sleep records.<br>Duplicates by date were skipped.';
-  // Refresh visible charts so the new data shows up
+  // Rifresko grafikët që të shfaqen të dhënat e reja
   try{if(typeof loadWtLog==='function')await loadWtLog();}catch(e){}
   try{if(typeof loadSleepHist==='function')await loadSleepHist();}catch(e){}
   try{if(typeof renderActivityFeed==='function')await renderActivityFeed();}catch(e){}
 }
 
-// Lazy-load JSZip from CDN. Cached on window so we only fetch once per session.
+// Ngarko JSZip nga CDN kur nevojitet; ruhet në window që të shkarkohet një herë.
 function _loadJSZip(){
   if(window.JSZip)return Promise.resolve(window.JSZip);
   return new Promise(function(resolve,reject){
@@ -773,7 +774,7 @@ async function exportData(){
   var stamp=new Date().toISOString().slice(0,10);
   var folder=zip.folder('athleteos-'+stamp);
 
-  // 1) Tabular data → CSVs in /data
+  // 1) Tabelat → CSV në /data
   var queries=await Promise.all([
     sb.from('workouts').select('*').eq('user_id',CU.id),
     sb.from('exercises').select('*').eq('user_id',CU.id),
@@ -791,7 +792,7 @@ async function exportData(){
   var dataFolder=folder.folder('data');
   queries.forEach(function(q,i){if(q.data&&q.data.length){dataFolder.file(names[i]+'.csv',_toCsv(q.data));}});
 
-  // 2) Settings + profile + local-cached PRs → settings.json
+  // 2) Cilësimet, profili dhe rekordet lokale → settings.json
   try{
     var{data:profile}=await sb.from('profiles').select('*').eq('id',CU.id).maybeSingle();
     var settings={
@@ -807,7 +808,7 @@ async function exportData(){
     folder.file('settings.json',JSON.stringify(settings,null,2));
   }catch(e){console.warn('settings bundle failed',e);}
 
-  // 3) Progress photos — download blobs, store in /photos with a manifest.
+  // 3) Fotot e progresit: shkarkohen dhe ruhen në /photos me një listë.
   try{
     var{data:photos}=await sb.from('progress_photos').select('*').eq('user_id',CU.id).order('taken_at',{ascending:false});
     if(photos&&photos.length){
@@ -832,7 +833,7 @@ async function exportData(){
     }
   }catch(e){console.warn('photos bundle failed',e);}
 
-  // 4) README so a future-you (or other apps) can make sense of the bundle.
+  // 4) README që paketa të kuptohet më vonë (ose nga aplikacione të tjera).
   folder.file('README.txt',
     'AthleteOS data export\n'+
     'Generated: '+new Date().toISOString()+'\n\n'+
@@ -853,7 +854,7 @@ async function exportData(){
   setTimeout(function(){URL.revokeObjectURL(url);},2000);
   toast('Export ready — '+(Math.round(blob.size/1024))+' KB');
 }
-// Fallback if JSZip CDN is blocked: same as the original — drop one CSV per table.
+// Rezervë nëse CDN-ja e JSZip është e bllokuar: një CSV për tabelë.
 async function _exportDataLegacy(){
   var queries=await Promise.all([
     sb.from('workouts').select('*').eq('user_id',CU.id),
@@ -874,7 +875,7 @@ async function _exportDataLegacy(){
   toast(any?'Downloads started':'No data yet');
 }
 
-/* ── PRIVACY / TERMS ──────────────────────── */
+/* ── PRIVATËSIA / KUSHTET ─────────────────── */
 var LEGAL_HTML={
   privacy:
 '<p style="color:var(--t3);font-size:11.5px;margin-bottom:14px">Last updated: 2026-05-24 · Effective immediately</p>'+

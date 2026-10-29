@@ -1,11 +1,13 @@
+/* core.js — Themeli i aplikacionit.
+   Versioni, gjurmimi i gabimeve (Sentry), analitika (PostHog), ngarkimi i
+   vonuar i bibliotekave, radha e ruajtjeve offline, nisja dhe hyrja me
+   Supabase, instalimi si PWA dhe funksionet ndihmëse të përbashkëta. */
 const APP_VERSION='v1.2.2';
 
-/* ── ERROR TRACKING (Sentry) ──────────────────
-   The Sentry Loader Script is in index.html <head>. It lazily injects the SDK
-   on first error and exposes window.Sentry as a queueing proxy until then —
-   meaning Sentry.captureException() / Sentry.setUser() calls below work even
-   before the SDK has finished downloading. Org/release/environment are set in
-   the Sentry dashboard (Loader Script Settings) and via onLoad below. */
+/* ── GJURMIMI I GABIMEVE (Sentry) ─────────────
+   Skripti ngarkues i Sentry është në <head> të index.html. Ai e ngarkon SDK-në
+   vetëm kur ndodh gabimi i parë dhe deri atëherë i mban thirrjet në radhë,
+   kështu që Sentry.captureException() punon edhe para se SDK të shkarkohet. */
 if(window.Sentry&&Sentry.onLoad){
   Sentry.onLoad(function(){
     try{
@@ -17,17 +19,15 @@ if(window.Sentry&&Sentry.onLoad){
     }catch(e){console.warn('Sentry init',e);}
   });
 }
-// Defer Sentry.setUser until the real SDK has actually loaded — the loader
-// stub exposes window.Sentry but only `captureException` and a few others. If
-// CU isn't set yet, this no-ops cleanly.
+// Sentry.setUser thirret vetëm pasi SDK-ja e vërtetë të jetë ngarkuar; nëse
+// përdoruesi (CU) ende s'është vendosur, nuk bën asgjë.
 function _sentrySetUser(id){
   if(!id||!window.Sentry)return;
   var apply=function(){try{if(typeof Sentry.setUser==='function')Sentry.setUser({id:id});}catch(e){}};
   if(Sentry.onLoad)Sentry.onLoad(apply);else apply();
 }
-// PostHog identify — moves anonymous events under the signed-in user. Guarded
-// because the snippet stub exists synchronously but `.identify` is only real
-// after the array.js bundle loads; the stub queues calls until then.
+// PostHog identify: i lidh ngjarjet anonime me përdoruesin e hyrë. Thirrjet
+// mbahen në radhë derisa të ngarkohet biblioteka.
 function _phIdentify(id){
   try{if(id&&window.posthog&&typeof window.posthog.identify==='function')window.posthog.identify(id);}catch(e){}
 }
@@ -41,26 +41,22 @@ window.addEventListener('unhandledrejection',function(ev){
   if(window.Sentry)Sentry.captureException(ev.reason);
 });
 
-/* ── ANALYTICS (PostHog — free tier, no card) ──
-   To activate: sign up at posthog.com, create a project, copy the Project API
-   Key (starts with "phc_") into POSTHOG_KEY. If left empty, no analytics are
-   sent. Use track('event_name', {prop:'val'}) for custom funnel events.
-   Gated on cookie consent in EU regions — see _maybeShowConsent() below.
-   `person_profiles:'identified_only'` keeps anonymous users out of person counts
-   so the free 1M-events/mo budget lasts. */
+/* ── ANALITIKA (PostHog) ──
+   Për ta aktivizuar vendos çelësin e projektit (fillon me "phc_") te POSTHOG_KEY.
+   Nëse është bosh, nuk dërgohet asgjë. track('emri', {…}) regjistron një ngjarje.
+   Në BE kërkohet pëlqimi për cookies më parë; shih _maybeShowConsent(). */
 var POSTHOG_KEY='phc_qSwMLSDtYz4HWuN8F9FQfJXNTNNyd9tKzuANUQPVY9iJ';
 var POSTHOG_HOST='https://eu.i.posthog.com'; // use 'https://us.i.posthog.com' if your PostHog project is in the US region
 function _initPostHog(){
   if(!POSTHOG_KEY)return;
   if(localStorage.getItem('consent_analytics')==='no')return;
   if(window.posthog&&window.posthog.__loaded)return;
-  // PostHog official snippet, inlined and minified by hand.
+  // Skripti zyrtar i PostHog, i vendosur këtu i minimizuar.
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   window.posthog.init(POSTHOG_KEY,{api_host:POSTHOG_HOST,person_profiles:'identified_only',capture_pageview:true,disable_session_recording:true});
 }
-// Consent banner — shows on first visit in EU-ish timezones. PostHog uses
-// cookies by default; consent is required under GDPR before any tracking fires.
-// After choice it stays in localStorage and never re-asks.
+// Banderola e pëlqimit: shfaqet në vizitën e parë në zonat kohore të Evropës.
+// Sipas GDPR, gjurmimi nis vetëm pas pëlqimit. Zgjedhja ruhet në localStorage.
 function _maybeShowConsent(){
   if(localStorage.getItem('consent_analytics'))return _initPostHog();
   var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
@@ -86,10 +82,9 @@ function track(event,props){
 const SUPA_URL='https://apnxpcehjapfhcybciqd.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwbnhwY2VoamFwZmhjeWJjaXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNTAzMzAsImV4cCI6MjA5NDYyNjMzMH0.jx61F_MGGINbEZgMJLZNeza0mS1spO4zUr7r5ZvnfGI';
 
-/* ── LAZY SCRIPT LOADERS ─────────────────────
-   Chart.js (~250KB) and supabase-js (~120KB) are no longer in <head>.
-   They are dynamically injected the first time something needs them so the
-   initial HTML paint isn't blocked on parsing/executing them. */
+/* ── NGARKIMI I VONUAR I BIBLIOTEKAVE ────────
+   Chart.js (~250KB) dhe supabase-js (~120KB) nuk janë në <head>. Ngarkohen
+   herën e parë që nevojiten, që faqja të shfaqet sa më shpejt. */
 function _loadScript(src){
   return new Promise(function(resolve,reject){
     var s=document.createElement('script');s.src=src;s.async=true;
@@ -116,14 +111,14 @@ var sb=null;
 var CU=null,G={protein:170,weight:85,water:8,calories:2500};
 var meals=[],waterCups=0;
 var wExs=[],wSets=[],wStart=null,wTmr=null;
-// Cache of the most-recent session for each exercise name. Populated on demand;
-// drives the "Last: 80kg × 8 / 80 × 6 …" line on the active session card.
+// Cache i seancës së fundit për çdo ushtrim. Mbush rreshtin
+// "Herën e kaluar: 80kg × 8 / 80 × 6 …" në kartën e seancës aktive.
 var _lastSessByEx={};
 async function ensureLastSession(name){
   if(!name||!CU)return null;
   var key=name.toLowerCase();
   if(_lastSessByEx[key]!==undefined)return _lastSessByEx[key];
-  _lastSessByEx[key]=null; // mark as in-flight so concurrent calls don't refetch
+  _lastSessByEx[key]=null; // shëno si 'në proces' që thirrjet paralele të mos e rimarrin
   try{
     var{data}=await sb.from('exercises')
       .select('name,created_at,workouts!inner(started_at,user_id),sets(weight_kg,reps,set_number)')
@@ -142,11 +137,11 @@ function _lastSessSummary(name){
   if(!ls||!ls.sets||!ls.sets.length)return null;
   return ls.sets.slice(0,4).map(function(s){return s.w>0?(s.w+'×'+s.r):(s.r+' reps');}).join(' / ');
 }
-// Auto-progression target suggestion. Heuristic:
-//   - If last session's top set hit its reps in full (≥6), bump weight by +2.5kg (compound) / +1kg (isolation guess by weight<25)
-//   - If reps were low (<6), keep weight same and aim for +1 rep on the top set
-//   - Skip for bodyweight (w=0): aim for +1 rep on the top set
-// Returns null if not enough data.
+// Sugjerimi i objektivit për herën tjetër (progresion automatik):
+//   - Nëse seria më e mirë e kaluar arriti ≥6 përsëritje, shto +2.5kg (ose +1kg për ushtrime të lehta nën 25kg)
+//   - Nëse përsëritjet ishin <6, mbaj peshën dhe synoje +1 përsëritje
+//   - Për ushtrime me peshë trupi (w=0): synoje +1 përsëritje
+// Kthen null nëse nuk ka të dhëna të mjaftueshme.
 function _progressionTarget(name){
   var ls=_lastSessByEx[(name||'').toLowerCase()];
   if(!ls||!ls.sets||!ls.sets.length)return null;
@@ -174,13 +169,12 @@ var AI_PLAN=null,planDayIdx=0;
 var P={gender:'male',age:0,height:0,units:'metric'};
 var _selGender='male',_selUnits='metric';
 
-/* ── INIT ─────────────────────────────────── */
-/* ── OFFLINE-FIRST WRITE QUEUE ─────────────
-   Writes that miss the network (offline, fetch error, Supabase down) get pushed
-   to localStorage and replayed when we're back online. Designed for fire-and-forget
-   inserts — does NOT cover writes whose return value the UI needs immediately
-   (sign-up, photo uploads, workouts whose .id is referenced by subsequent inserts).
-   Use sbQueueInsert(table, row) instead of sb.from(table).insert(row) for those. */
+/* ── NISJA ────────────────────────────────── */
+/* ── RADHA E RUAJTJEVE OFFLINE ─────────────
+   Ruajtjet që dështojnë (pa internet, gabim rrjeti, Supabase i rënë) vendosen
+   në localStorage dhe riprovohen kur kthehet interneti. Vlen për insert-e
+   "dërgo dhe harro"; jo për ato që UI-ja i pret menjëherë (regjistrim, ngarkim
+   fotosh). Përdor sbQueueInsert(tabela, rreshti) në vend të sb.from().insert(). */
 function _wqKey(){return 'wq_'+((CU&&CU.id)||'anon');}
 function _wqRead(){try{return JSON.parse(localStorage.getItem(_wqKey())||'[]');}catch(e){return [];}}
 function _wqWrite(q){try{localStorage.setItem(_wqKey(),JSON.stringify(q.slice(-500)));}catch(e){console.warn('wq write failed',e);}}
@@ -188,8 +182,8 @@ function _wqPush(item){
   var q=_wqRead();
   q.push(Object.assign({id:Date.now()+'-'+Math.random().toString(36).slice(2,7),at:new Date().toISOString()},item));
   _wqWrite(q);_updateOfflineBadge();
-  // Ask the SW to replay this when connectivity returns — Chrome Android only;
-  // other browsers will retry on next app open via the online listener.
+  // Kërkoji service worker-it ta riprovojë kur kthehet interneti (vetëm Chrome
+  // Android); shfletuesit e tjerë riprovojnë kur hapet aplikacioni.
   if('serviceWorker' in navigator && navigator.serviceWorker.ready){
     navigator.serviceWorker.ready.then(function(reg){
       if(reg.sync)return reg.sync.register('flush-queue').catch(function(){});
@@ -197,11 +191,11 @@ function _wqPush(item){
   }
 }
 function _wqPending(){return _wqRead().length;}
-// Client-side UUID so multi-table inserts (workouts → exercises → sets) can be queued
-// without needing the round-trip to learn the server-assigned id.
+// UUID i krijuar në klient, që ruajtjet në disa tabela (workouts → exercises → sets)
+// të lidhen mes tyre edhe pa pritur id-në nga serveri.
 function _genId(){
   try{if(crypto&&crypto.randomUUID)return crypto.randomUUID();}catch(e){}
-  // Fallback: RFC4122-ish v4 from Math.random (not cryptographically perfect, fine for offline ids)
+  // Rezervë: UUID v4 me Math.random (jo kriptografik, mjafton për id offline)
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;var v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});
 }
 async function sbQueueInsert(table,row){
@@ -255,8 +249,7 @@ function _updateOfflineBadge(){
 }
 window.addEventListener('online',function(){_updateOfflineBadge();flushWriteQueue();});
 window.addEventListener('offline',_updateOfflineBadge);
-// Service worker can ask us to flush when Background Sync wakes it. Listen
-// once at boot; idempotent if SW isn't ready yet.
+// Service worker-i mund të kërkojë zbrazjen e radhës kur e zgjon Background Sync.
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('message',function(e){
     if(e.data&&e.data.type==='FLUSH_QUEUE')flushWriteQueue();
@@ -266,8 +259,7 @@ if('serviceWorker' in navigator){
 async function init(){
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
   var av=document.getElementById('app-version');if(av)av.textContent=APP_VERSION;
-  // Supabase JS is no longer loaded synchronously in <head>; fetch it now and
-  // create the client. Without this, any sb.* call below crashes.
+  // Ngarko supabase-js tani dhe krijo klientin; pa këtë çdo thirrje sb.* dështon.
   try{await _ensureSupabase();sb=supabase.createClient(SUPA_URL,SUPA_KEY);}
   catch(e){console.error('Supabase failed to load',e);showAuth();return;}
   var session=null;
@@ -277,8 +269,8 @@ async function init(){
   sb.auth.onAuthStateChange(function(event,sess){
     if(event==='SIGNED_IN'&&!CU){CU=sess.user;_sentrySetUser(CU.id);_phIdentify(CU.id);bootApp();}
     if(event==='SIGNED_OUT'){CU=null;_phReset();showAuth();}
-    // Supabase fires this when the user lands back via a password-reset email link.
-    // Prompt for a new password immediately so they don't stay in this special session.
+    // Supabase e dërgon këtë kur përdoruesi kthehet nga lidhja e rivendosjes së
+    // fjalëkalimit. Kërko fjalëkalim të ri menjëherë.
     if(event==='PASSWORD_RECOVERY'){promptNewPassword();}
     if(event==='USER_UPDATED'&&sess&&sess.user){
       if(CU&&CU.email!==sess.user.email)toast('Email changed to '+sess.user.email);
@@ -287,8 +279,8 @@ async function init(){
   });
   _consumeAuthHash();
 }
-// Supabase appends #message=… or #error_description=… when the user lands back
-// from an email link (email change, recovery). Show it, then clean the URL.
+// Supabase shton #message=… ose #error_description=… kur përdoruesi kthehet nga
+// një lidhje emaili (ndryshim emaili, rikuperim). Shfaqe, pastaj pastro URL-në.
 function _consumeAuthHash(){
   try{
     var h=location.hash||'';if(!h||h.indexOf('share=')!==-1)return;
@@ -303,12 +295,12 @@ function _consumeAuthHash(){
   }catch(e){}
 }
 function promptNewPassword(){
-  // Reuse the in-app change-password modal so we don't rely on the browser's prompt()
-  // (which on iOS is ugly and on PWA standalone often shows the URL bar).
+  // Përdor modalin e aplikacionit për fjalëkalim të ri, jo prompt() e shfletuesit
+  // (në iOS është i shëmtuar dhe në PWA shfaq shiritin e URL-së).
   if(typeof openChangePasswordM==='function'){
     try{openChangePasswordM();return;}catch(e){console.warn('open chpw failed',e);}
   }
-  // Fallback: only if the modal isn't loaded yet (edge case during boot).
+  // Rezervë: vetëm nëse modali ende nuk është ngarkuar.
   var p=window.prompt('Set your new password (min 8 characters):');
   if(!p||p.length<8)return;
   sb.auth.updateUser({password:p}).then(function(r){
@@ -317,11 +309,10 @@ function promptNewPassword(){
   });
 }
 
-/* ── PWA INSTALL ──────────────────────────── */
+/* ── INSTALIMI SI APLIKACION (PWA) ────────── */
 var _installEv=null;
-// Shows a one-time card on Home explaining "Share → Add to Home Screen" to iOS
-// Safari users who aren't already running the PWA standalone. Dismissed for
-// good once shown — never bug them again.
+// Shfaq një herë të vetme një kartë në faqen kryesore që u shpjegon përdoruesve
+// të Safari në iPhone "Share → Add to Home Screen".
 function maybeShowIosInstall(){
   if(localStorage.getItem('ios_install_seen'))return;
   if(_isStandalone())return;
@@ -329,7 +320,7 @@ function maybeShowIosInstall(){
   var isIOS=/iPhone|iPad|iPod/.test(ua)&&!window.MSStream;
   var isSafari=/Safari/.test(ua)&&!/CriOS|FxiOS|EdgiOS/.test(ua);
   if(!isIOS||!isSafari)return;
-  // Inject card at top of Home if not already there.
+  // Vendos kartën në krye të faqes kryesore nëse s'është aty.
   if(document.getElementById('ios-install-card'))return;
   var home=document.getElementById('p-home');if(!home)return;
   var card=document.createElement('div');card.id='ios-install-card';
@@ -346,7 +337,7 @@ function dismissIosInstall(){
   var c=document.getElementById('ios-install-card');if(c)c.remove();
 }
 function _isStandalone(){
-  // iOS Safari uses navigator.standalone; everything else uses display-mode standalone or fullscreen.
+  // iOS Safari përdor navigator.standalone; të tjerët display-mode standalone ose fullscreen.
   try{
     if(window.navigator.standalone===true)return true;
     if(window.matchMedia){
@@ -354,7 +345,7 @@ function _isStandalone(){
       if(window.matchMedia('(display-mode: fullscreen)').matches)return true;
       if(window.matchMedia('(display-mode: minimal-ui)').matches)return true;
     }
-    // PWA launched from home screen often gets ?source=pwa or utm_source=homescreen — defensive only.
+    // Kur hapet nga ekrani kryesor shpesh ka ?source=pwa ose utm_source=homescreen.
     if(/source=(pwa|homescreen)/i.test(location.search))return true;
   }catch(e){}
   return false;
@@ -362,12 +353,12 @@ function _isStandalone(){
 function refreshInstallUI(){
   var card=document.getElementById('install-card');
   if(!card)return;
-  // Hide on actual phones (no QR scanner needed on the same device) and when PWA is installed.
-  // Show on tablet (>= 640px) and desktop where the QR is genuinely useful.
+  // Fshihe në telefon dhe kur PWA është i instaluar; shfaqe në tablet (>= 640px)
+  // dhe desktop, ku kodi QR ka kuptim.
   var isTabletOrUp=window.matchMedia&&window.matchMedia('(min-width: 640px)').matches;
   if(_isStandalone()||!isTabletOrUp){card.style.display='none';return;}
   card.style.display='';
-  // Generate / update the QR for the current public URL.
+  // Krijo ose përditëso kodin QR për URL-në publike.
   var img=document.getElementById('install-qr');
   if(img){
     var base=(location.origin&&location.origin!=='null')?location.origin:'https://athleteos.app';
@@ -375,7 +366,7 @@ function refreshInstallUI(){
     var src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data='+encodeURIComponent(url);
     if(img.dataset.src!==src){img.dataset.src=src;img.src=src;}
   }
-  // The optional "install web app" button only shows when the browser fires beforeinstallprompt.
+  // Butoni "Instalo aplikacionin" shfaqet vetëm kur shfletuesi lëshon beforeinstallprompt.
   var btn=document.getElementById('install-btn');
   if(btn){btn.classList.toggle('hidden',!_installEv);}
 }
@@ -394,7 +385,7 @@ async function doInstall(){
   }catch(e){_installEv=null;refreshInstallUI();}
 }
 
-/* ── UTILS ────────────────────────────────── */
+/* ── FUNKSIONE NDIHMËSE ───────────────────── */
 function skelRows(n,h){var s='';for(var i=0;i<n;i++)s+='<div class="skel" style="height:'+(h||44)+'px;margin:8px 0"></div>';return s;}
 function showInitialSkeletons(){
   var threeTiles='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="skel" style="height:78px"></div><div class="skel" style="height:78px"></div><div class="skel" style="height:78px"></div></div>';
@@ -414,9 +405,9 @@ function showInitialSkeletons(){
     'ph-grid':twoTiles
   };
   Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=map[id];});
-  // Calendar grid placeholder
+  // Vendmbajtës për rrjetin e kalendarit
   var cg=document.getElementById('cal-grid');if(cg&&!cg.innerHTML)cg.innerHTML=skelRows(6,32);
-  // Hide the static empty messages until data arrives
+  // Fshih mesazhet "bosh" derisa të vijnë të dhënat
   var me=document.getElementById('mes-empty');if(me)me.style.display='none';
   var ve=document.getElementById('vol-empty');if(ve)ve.style.display='none';
 }
@@ -425,7 +416,7 @@ function weekStr(){var n=new Date();return n.getFullYear()+'-W'+Math.ceil(n.getD
 function fdate(s){if(!s)return'–';var d=new Date(s+'T12:00:00');return d.toLocaleDateString('en',{month:'short',day:'numeric'});}
 function pct(v,max){return Math.min(100,Math.round((v/max)*100));}
 function autoH(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
-// In-app prompt() replacement — opens m-input modal with a title/sub/value and resolves the callback on OK.
+// Zëvendësimi i prompt(): hap modalin m-input me titull/nëntitull/vlerë dhe thërret callback-un në OK.
 var _inputCb=null;
 function inputModal(opts,cb){
   opts=opts||{};_inputCb=cb||null;

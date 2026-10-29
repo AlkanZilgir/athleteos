@@ -1,3 +1,7 @@
+/* sw.js — Service worker-i i AthleteOS.
+   Mban aplikacionin të punojë offline (cache), shfaq njoftimet e
+   kohëmatësit të pushimit dhe njoftimet push, dhe riprovon ruajtjet
+   që dështuan kur kthehet interneti. */
 const CACHE='athleteos-v83';
 
 const BASE=self.registration.scope;
@@ -37,17 +41,16 @@ self.addEventListener('activate',e=>{
   self.clients.claim();
 });
 
-/* ── REST TIMER NOTIFICATIONS ─────────────── */
-// Notes on background firing: the only fully-reliable client-side scheduled
-// notification (Notification Triggers / TimestampTrigger) was removed from
-// Chrome, and a plain SW setTimeout dies when the browser kills the idle SW
-// (~30s after the page backgrounds with the screen off). So we do three things:
-//   1. Show an ongoing (silent, sticky) notification the moment rest starts, so
-//      something is always in the tray even if the SW is later killed.
-//   2. Let the foreground page drive the live countdown (REST_TICK) — each tick
-//      also wakes the SW, keeping its completion setTimeout alive longer.
-//   3. Fire the "complete" alert from whichever survives: the page (REST_DONE)
-//      or the SW setTimeout. Both share tag 'rest' so it collapses to one.
+/* ── NJOFTIMET E KOHËMATËSIT TË PUSHIMIT ──── */
+// Si funksionon njoftimi i pushimit në sfond: shfletuesi e vret service
+// worker-in pas ~30 sekondash kur ekrani fiket, kështu që një setTimeout i
+// thjeshtë nuk mjafton. Bëjmë tri gjëra:
+//   1. Sapo nis pushimi, shfaqim një njoftim të heshtur që qëndron në shirit,
+//      që diçka të jetë gjithmonë aty edhe nëse SW vritet më vonë.
+//   2. Faqja e hapur dërgon çdo sekondë REST_TICK; çdo tik e zgjon SW-në dhe
+//      e mban gjallë kohëmatësin e përfundimit.
+//   3. Alarmi "pushimi mbaroi" vjen nga kush mbijeton: faqja (REST_DONE) ose
+//      setTimeout-i i SW. Të dy kanë tag 'rest', kështu shfaqet vetëm një.
 var _rTmr=null;
 
 function _closeTag(tag){
@@ -62,7 +65,7 @@ function _clearScheduled(){
   _closeTag('rest');
 }
 
-// Sticky, silent countdown notification — visible in the bar / on the lock screen.
+// Njoftimi i heshtur i numërimit mbrapsht, i dukshëm në shirit dhe në ekranin e kyçjes.
 function _showRestOngoing(endAt){
   var left=Math.max(0,Math.ceil((endAt-Date.now())/1000));
   var mm=Math.floor(left/60),ss=left%60;
@@ -126,7 +129,7 @@ function _scheduleOne(item){
 self.addEventListener('message',function(e){
   if(!e.data)return;
   if(e.data.type==='SCHEDULE_REMINDERS'){
-    // Clear any prior rem-* notifications
+    // Hiq njoftimet e mëparshme të kujtesave (rem-*)
     ['rem-workout','rem-protein','rem-water-9','rem-water-12','rem-water-15','rem-water-18','rem-water-21','rem-streak'].forEach(_clearReminderTag);
     (e.data.items||[]).forEach(_scheduleOne);
     return;
@@ -145,7 +148,7 @@ self.addEventListener('message',function(e){
   if(e.data.type==='REST_CANCEL'){_clearScheduled();}
 });
 
-/* ── WEB PUSH ─────────────────────────────── */
+/* ── NJOFTIMET PUSH NGA SERVERI ───────────── */
 self.addEventListener('push',function(e){
   var data={};
   try{data=e.data?e.data.json():{};}catch(err){data={body:e.data?e.data.text():''};}
@@ -171,17 +174,18 @@ self.addEventListener('notificationclick',function(e){
   );
 });
 
-/* ── BACKGROUND SYNC ──────────────────────────
-   When a write fails offline, app.js queues it in localStorage and registers a
-   'flush-queue' sync. Chrome Android replays it once the device is back online,
-   even if the PWA is closed. Safari ignores this — falls back to in-app flush. */
+/* ── SINKRONIZIMI NË SFOND ────────────────────
+   Kur një ruajtje dështon offline, aplikacioni e vendos në radhë në
+   localStorage dhe regjistron një sync 'flush-queue'. Chrome në Android
+   e riprovon sapo kthehet interneti, edhe me aplikacionin të mbyllur.
+   Safari nuk e mbështet; atje radha zbrazet kur hapet aplikacioni. */
 self.addEventListener('sync',function(e){
   if(e.tag!=='flush-queue')return;
   e.waitUntil(
     self.clients.matchAll({type:'window',includeUncontrolled:true}).then(function(list){
-      // Wake any open window so its flushWriteQueue() runs. If none is open we
-      // can't replay (we don't ship the Supabase client into the SW); the queue
-      // simply waits for the next visit.
+      // Zgjo ndonjë dritare të hapur që të ekzekutojë flushWriteQueue(). Nëse s'ka
+      // asnjë, nuk mund ta riprovojmë vetë (klienti Supabase nuk është në SW);
+      // radha pret vizitën tjetër.
       list.forEach(function(c){try{c.postMessage({type:'FLUSH_QUEUE'});}catch(err){}});
     })
   );
@@ -210,20 +214,17 @@ self.addEventListener('fetch',e=>{
     return;
   }
 
-  // Cache API only stores GET responses; never try to cache POST/PUT/DELETE.
-  // Hitting cache.put with a non-GET throws and surfaces in DevTools.
+  // Cache API ruan vetëm përgjigje GET; POST/PUT/DELETE nuk ruhen kurrë.
   if(e.request.method!=='GET')return;
 
-  // Code and styles are stale-while-revalidate; everything else stays
-  // cache-first. Pure cache-first meant a CSS or module change stayed invisible
-  // until someone remembered to bump CACHE — which is how an old app.css ends
-  // up paired with a new index.html.
+  // Kodi dhe stilet shërbehen nga cache-i dhe rifreskohen në sfond
+  // (stale-while-revalidate); gjithçka tjetër është cache-first. Kështu një
+  // ndryshim në CSS ose JS arrin te përdoruesi edhe pa ndryshuar CACHE.
   const isCode=/\.(?:css|js|html)$/.test(new URL(url).pathname);
 
-  // The revalidation must bypass the HTTP cache or it re-reads the same stale
-  // bytes: a static host sends Cache-Control: max-age=3600, so a plain fetch()
-  // is answered from the browser cache and the SW 'refreshes' to the old copy
-  // forever. 'no-cache' still revalidates, and a 304 costs nothing.
+  // Rifreskimi duhet ta anashkalojë cache-in HTTP të shfletuesit, ndryshe
+  // lexon përsëri të njëjtën kopje të vjetër. 'no-cache' e riverifikon me
+  // serverin dhe një përgjigje 304 nuk kushton asgjë.
   const req=isCode?new Request(e.request.url,{cache:'no-cache',credentials:'same-origin'}):e.request;
 
   e.respondWith((async()=>{
@@ -237,9 +238,8 @@ self.addEventListener('fetch',e=>{
     });
 
     if(cached){
-      // waitUntil is load-bearing: without it the SW may be killed the moment
-      // respondWith settles, the write-back never lands, and the stale copy is
-      // served forever — the exact failure this strategy exists to prevent.
+      // waitUntil është i domosdoshëm: pa të, SW mund të vritet sapo kthehet
+      // përgjigjja dhe kopja e re nuk ruhet kurrë në cache.
       if(isCode)e.waitUntil(fresh.catch(()=>{}));
       return cached;
     }

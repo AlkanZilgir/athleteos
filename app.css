@@ -1,17 +1,25 @@
+/* ═══════════════════════════════════════════════════════════════
+   AthleteOS — app.css
+   Të gjitha stilet e aplikacionit në një skedar. Rendi ka rëndësi:
+   në fillim janë rregullat e strukturës (korniza, navigimi, kartat,
+   modalet), pastaj vizualizimi i të dhënave dhe seksionet e veçanta,
+   dhe në fund shtresa IRON, e cila përcakton ngjyrat, fontet dhe
+   radiuset përfundimtare për të dyja temat.
+   ═══════════════════════════════════════════════════════════════ */
 :root{--sb:240px;--topH:56px;--navH:50px;--z-sticky:20;--z-overlay:900;--z-modal:1000;--z-toast:1200}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html{height:100%;height:100dvh;overflow:hidden}
 body{height:100%;height:100dvh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow:hidden;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
 input,textarea,select{-webkit-user-select:text;user-select:text;font-family:var(--font-body)}
 ::-webkit-scrollbar{width:0;height:0}
-/* ── A11Y: focus rings (keyboard) + reduced motion respect ── */
+/* ── AKSESUESHMËRIA: unaza fokusi për tastierë dhe respektimi i "reduced motion" ── */
 :focus{outline:none}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
-/* Press-feedback fallback for buttons that don't declare their own. Lifts
-   tactile feel across the whole app without per-component tweaking. */
-/* Onboarding tooltips — soft spotlight on a target element with a label below. */
+/* Efekti i shtypjes për çdo buton që nuk e ka të vetin: zvogëlohet pak
+   kur e prek, që të ndihet si buton i vërtetë në të gjithë aplikacionin. */
+/* Këshillat e para (tooltips): ndriçojnë një element dhe shfaqin një shpjegim poshtë tij. */
 .tip-overlay{position:fixed;inset:0;z-index:990;animation:fadeUp .22s ease both}
 .tip-spot{position:fixed;pointer-events:none;z-index:991}
 @keyframes tipPulse{0%,100%{box-shadow:0 0 0 9999px rgba(10,10,15,.55),0 0 0 4px rgba(var(--accent-rgb),.95),0 0 0 12px rgba(var(--accent-rgb),.15)}50%{box-shadow:0 0 0 9999px rgba(10,10,15,.55),0 0 0 4px rgba(var(--accent-rgb),.95),0 0 0 20px rgba(var(--accent-rgb),0)}}
@@ -21,7 +29,7 @@ input,textarea,select{-webkit-user-select:text;user-select:text;font-family:var(
 .tip-card .tip-actions{display:flex;justify-content:space-between;gap:8px}
 .tip-card .tip-skip{background:transparent;color:var(--t3);border:none;font-size:13px;cursor:pointer;font-family:inherit;padding:4px 8px}
 .tip-card .tip-ok{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:8px 18px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit}
-/* ── WELCOME (first-launch intro) ─────────── */
+/* ── MIRËSEVINI (ekrani i parë kur hapet aplikacioni) ─────────── */
 #welcome{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;padding:calc(28px + env(safe-area-inset-top,0px)) 24px calc(40px + env(safe-area-inset-bottom,0px));background:var(--bg);z-index:1100;overflow-y:auto}
 .wc-inner{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;text-align:center}
 .wc-hero{margin:24px 0 36px;display:flex;align-items:center;justify-content:center;max-width:100%}
@@ -36,8 +44,8 @@ input,textarea,select{-webkit-user-select:text;user-select:text;font-family:var(
 .wc-foot{text-align:center;font-size:15px;color:var(--t2)}
 .wc-link{background:none;border:none;font-family:inherit;font-size:15px;cursor:pointer;padding:6px 4px;-webkit-appearance:none}
 .wc-link:hover{color:var(--accent-d)}
-/* welcome hero now paints from tokens directly */
-/* ── ONBOARDING PAYWALL (second-to-last step) ── */
+/* Ilustrimi i mirëseardhjes i merr ngjyrat nga variablat e temës */
+/* ── OFERTA PRO gjatë regjistrimit (hapi i parafundit) ── */
 #ob-paywall{position:fixed;inset:0;background:var(--bg);z-index:1100;overflow-y:auto;padding:calc(28px + env(safe-area-inset-top,0px)) 0 calc(24px + env(safe-area-inset-bottom,0px))}
 .obp-inner{width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;min-height:100%}
 .obp-title-block{padding:8px 24px 22px}
@@ -79,7 +87,7 @@ body.dark .obp-radio{background:var(--card2)}
 .obp-dot-sep{width:3px;height:3px;border-radius:2px;background:var(--t4);display:inline-block;flex-shrink:0}
 .obp-fine{margin-top:8px;padding:0 24px 12px;text-align:center}
 .obp-fine b{color:var(--t2);font-weight:600}
-/* ── AUTH ─────────────────────────────────── */
+/* ── HYRJA / REGJISTRIMI ──────────────────── */
 #auth{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(28px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));background:var(--bg);z-index:1000;overflow-y:auto}
 .alogo{font-family:var(--font-body);font-weight:600;letter-spacing:-.5px;color:var(--t);line-height:1}
 .alogo span{color:var(--accent)}
@@ -111,9 +119,9 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .oauth-divider span{background:var(--card);padding:0 10px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .errmsg{color:var(--red);font-size:13.5px;margin-top:12px;text-align:center;display:none;font-weight:500}
-/* ── APP SHELL ────────────────────────────── */
+/* ── KORNIZA E APLIKACIONIT (pas hyrjes) ──── */
 #app{position:fixed;inset:0;height:100dvh;display:none;background:var(--bg)}
-/* ── SIDEBAR ──────────────────────────────── */
+/* ── MENUJA ANËSORE (vetëm në desktop) ────── */
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sb);display:none;flex-direction:column;z-index:10}
 .sb-head{flex-shrink:0;cursor:pointer}
 .sb-logo{font-family:var(--font-body);font-weight:600;font-size:20px;letter-spacing:-.6px;color:var(--t)}
@@ -140,16 +148,16 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
 .sb-uname{font-size:13.5px;font-weight:600;line-height:1.3;color:var(--t)}
 .sb-ustreak{font-size:11.5px;color:var(--t2);margin-top:1px}
-/* ── MAIN AREA ────────────────────────────── */
+/* ── ZONA KRYESORE ────────────────────────── */
 .app-main{position:fixed;top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column}
-/* ── TOPBAR (mobile) ──────────────────────── */
+/* ── SHIRITI I SIPËRM (telefon) ───────────── */
 .topbar{flex-shrink:0;height:calc(var(--topH) + max(env(safe-area-inset-top,0px),0px));padding-top:env(safe-area-inset-top,0px);padding-left:20px;padding-right:14px;display:flex;align-items:center;justify-content:space-between}
 .tlogo{font-family:var(--font-body);font-size:20px;color:var(--t);cursor:pointer}
 .tlogo span{color:var(--accent)}
 .tright{display:flex;align-items:center;gap:8px}
 .avatar{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;transition:opacity .15s;width:36px;height:36px;min-width:36px;min-height:36px}
 .avatar:active{opacity:.75}
-/* The accent arrives with the initial. A placeholder question mark is not a primary action. */
+/* Avatari merr ngjyrën e theksit vetëm kur ka inicialin e përdoruesit; pikëpyetja mbetet neutrale. */
 .avatar.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
 .badge{display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;font-size:12px}
 .by{background:rgba(245,158,11,.12);color:var(--yel)}
@@ -157,12 +165,12 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .bb{background:var(--bdim);color:var(--blue)}
 .tb-pro-pill{padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:-.1px;border:none;cursor:pointer;font-family:inherit;background:var(--accent);color:#FFFFFF;-webkit-appearance:none;box-shadow:0 2px 6px -1px rgba(var(--accent-rgb),.4)}
 .tb-pro-pill:active{transform:scale(.95)}
-/* Pro lock badge (shown next to features that require upgrade) */
+/* Etiketa "Pro" pranë veçorive që kërkojnë abonim */
 .pro-lock{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:var(--accent);color:#FFFFFF;font-size:10px;font-weight:600;letter-spacing:.7px;line-height:1;vertical-align:middle;margin-left:6px;text-transform:none}
 .pro-lock svg{width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:2.5}
 .pro-soft{position:relative}
 .pro-soft::after{content:"";position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;border:2px solid var(--card)}
-/* ── CONTENT ──────────────────────────────── */
+/* ── PËRMBAJTJA QË SKROLLOHET ─────────────── */
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;min-height:0}
 .panel{display:none}
 @keyframes panelIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -173,7 +181,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .panel.on .card:nth-child(3){animation:cardIn .3s .15s ease both}
 .panel.on .card:nth-child(4){animation:cardIn .3s .20s ease both}
 .panel.on .sg{animation:cardIn .3s .02s ease both}
-/* ── AI PANEL ─────────────────────────────── */
+/* ── PANELI I TRAJNERIT (Coach) ───────────── */
 #p-ai{position:absolute;top:calc(var(--topH) + env(safe-area-inset-top,0px));left:0;right:0;bottom:calc(var(--navH) + env(safe-area-inset-bottom,0px));display:none;flex-direction:column;background:var(--bg);z-index:20;overflow:hidden}
 #p-ai.on{display:flex}
 .ai-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-shrink:0}
@@ -199,13 +207,13 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .chat-mic:hover{color:var(--t)}
 .chat-mic.on{background:var(--red);border-color:var(--red);color:#fff;animation:micPulse 1.2s ease-in-out infinite}
 @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
-/* ── PR SHARE BUTTON ──────────────────────── */
+/* ── BUTONI PËR NDARJEN E REKORDIT ────────── */
 .pr-share-btn{background:var(--surface);border:1px solid var(--bdr);color:var(--accent-d);width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-left:8px;transition:background .15s,transform .12s;font-family:inherit}
 .pr-share-btn:active{transform:scale(.9);background:var(--adim)}
-/* ── INVITE CARD ──────────────────────────── */
+/* ── KARTA "FTO NJË MIK" ──────────────────── */
 .invite-card{background:var(--card2);border-color:var(--bdr2);transition:transform .12s,opacity .15s}
 .invite-card:active{transform:scale(.985);opacity:.8}
-/* ── GETTING STARTED CARD ─────────────────── */
+/* ── KARTA E OBJEKTIVAVE DITORE ───────────── */
 .gs-card{background:var(--card2);border-color:var(--bdr2)}
 .gs-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--bdr);cursor:pointer;transition:opacity .15s}
 .gs-row:active{opacity:.6}
@@ -218,12 +226,12 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .gs-s{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
 .gs-arrow{color:var(--t3);font-weight:600;font-size:18px}
 .gs-row.done .gs-arrow{display:none}
-/* ── BOTTOM NAV (mobile) ──────────────────── */
+/* ── NAVIGIMI I POSHTËM (telefon) ─────────── */
 .navbar{flex-shrink:0;display:flex;position:relative;z-index:30}
 .nv{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;letter-spacing:-.1px;font-family:inherit;transition:color .15s,opacity .1s}
 .nv svg.ico{display:block}
 .nv.on{color:var(--accent-d)}
-/* ── DESKTOP ──────────────────────────────── */
+/* ── PËRSHTATJET PËR DESKTOP ──────────────── */
 @media(min-width:768px){
   .sidebar{display:flex}
   .topbar{display:none}
@@ -236,7 +244,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
   .content::-webkit-scrollbar-thumb{background:var(--t4);border-radius:3px}
   .content::-webkit-scrollbar-thumb:hover{background:var(--t3)}
 }
-/* ── CARDS ────────────────────────────────── */
+/* ── KARTAT ───────────────────────────────── */
 .card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r)}
 .card2{background:var(--surface);border-radius:14px;padding:14px;margin-bottom:8px}
 .ptitle{font-family:var(--font-body);font-weight:600;letter-spacing:-1px;color:var(--t)}
@@ -245,21 +253,21 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .ta{color:var(--accent-d)}
 .tr{color:var(--red)}
 .tc{text-align:center}
-/* ── STAT GRID ────────────────────────────── */
+/* ── RRJETI I STATISTIKAVE ────────────────── */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .sc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
 .sv{font-family:var(--font-body);font-weight:600;letter-spacing:-.5px;line-height:1;color:var(--sc,var(--t));margin-top:4px}
 .su{font-size:14px;color:var(--t2);font-family:inherit;font-weight:500;letter-spacing:-.3px}
 .sl{font-size:12px;color:var(--t2);font-weight:500;margin-top:6px;letter-spacing:-.1px}
-/* ── PROGRESS ─────────────────────────────── */
+/* ── SHIRITAT E PROGRESIT ─────────────────── */
 .pbar{border-radius:999px;overflow:hidden;margin-top:8px}
 .pfill{height:100%;border-radius:999px;background:var(--accent);transition:width .7s cubic-bezier(.4,0,.2,1)}
-/* ── PILLS ────────────────────────────────── */
+/* ── BUTONAT E RRUMBULLAKËT (pills) ───────── */
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .pill{padding:8px 15px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:none;color:var(--t2);background:var(--surface);font-family:inherit;transition:all .15s;-webkit-appearance:none;letter-spacing:-.1px}
 .pill.on{background:var(--accent);color:#FFFFFF}
 .pill:active{transform:scale(.96)}
-/* ── PR ───────────────────────────────────── */
+/* ── REKORDET PERSONALE ───────────────────── */
 .pri{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--bdr)}
 .pri:last-child{border:none}
 .prn{font-weight:600;font-size:15px;letter-spacing:-.2px}
@@ -269,15 +277,15 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .dup{background:var(--adim);color:var(--accent-d)}
 .ddn{background:rgba(239,68,68,.12);color:var(--red)}
 .deq{background:var(--surface);color:var(--t2)}
-/* ── WATER ────────────────────────────────── */
+/* ── UJI ──────────────────────────────────── */
 .wg{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:12px 0;min-width:0}
 .wc{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;font-size:14px;line-height:1;min-width:0}
-/* ── SETS ─────────────────────────────────── */
+/* ── SERITË ───────────────────────────────── */
 .shrow,.srow{display:grid;grid-template-columns:24px 1fr 1fr 28px;gap:8px;align-items:center;margin-bottom:8px}
 .shl{font-size:11px;color:var(--t2);font-weight:600}
 .si{background:var(--surface);border:1.5px solid transparent;border-radius:12px;color:var(--t);font-family:inherit;outline:none;width:100%;text-align:center;-webkit-appearance:none;transition:all .15s}
 .si:focus{border-color:var(--accent);background:#FFFFFF;box-shadow:0 0 0 3px var(--adim)}
-/* ── INLINE SET GRID ──────────────────────── */
+/* ── TABELA E SERIVE BRENDA USHTRIMIT ─────── */
 .setgrid{margin-top:9px}
 .setrow{display:grid}
 .setrow.sethead{padding:0 2px}
@@ -292,7 +300,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .setdone{align-items:center;justify-content:center;padding:0;-webkit-appearance:none}
 .setdel{background:none;border:none;font-size:13px;line-height:1;justify-self:center}
 .setrow.done .setin{opacity:.62}
-/* ── SESSION MUSCLE MAP ───────────────────── */
+/* ── HARTA E MUSKUJVE TË SEANCËS ──────────── */
 .bm-card{margin-bottom:13px}
 .bm-wrap{display:flex;gap:18px;justify-content:center;align-items:flex-start}
 .bm-col{display:flex;flex-direction:column;align-items:center;flex:0 0 auto}
@@ -302,14 +310,14 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .bm-side{font-size:10px;text-align:center;color:var(--t3);font-weight:600;letter-spacing:.4px;text-transform:none;margin-top:6px}
 .bm-legend{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:11px}
 .bm-chip{font-size:11px;font-weight:600;color:var(--accent-d);background:var(--adim);border-radius:999px;padding:3px 10px;text-transform:capitalize}
-/* ── INLINE EXERCISE DEMO ─────────────────── */
+/* ── DEMONSTRIMI I USHTRIMIT (gif) ────────── */
 .exdemo{margin-top:10px}
 .exdemo-stage{position:relative;width:100%;max-width:240px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;overflow:hidden;background:var(--surface)}
 .exdemo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s}
 .exdemo-skel{width:100%;max-width:240px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;background:var(--surface-2);background-size:200% 100%;animation:shimmer 1.3s infinite}
 .exdemo-fb{padding:18px;text-align:center;color:var(--t3);font-size:12.5px;font-weight:500;background:var(--surface);border-radius:14px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* ── EX / MEAL ────────────────────────────── */
+/* ── RRESHTAT E USHTRIMEVE DHE VAKTEVE ────── */
 .exi{transition:border-color .15s}
 .exn{font-weight:600;font-size:15px;letter-spacing:-.2px;color:var(--t)}
 .tag{display:inline-block;padding:4px 10px;background:var(--surface);font-size:11.5px;color:var(--t2);font-weight:600;letter-spacing:-.1px}
@@ -317,13 +325,13 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .mc:hover{border-color:var(--bdr2)}
 .mcn{font-weight:600;font-size:15px;margin-bottom:4px;letter-spacing:-.2px;color:var(--t)}
 .mcm{font-size:12.5px;color:var(--t2);font-weight:500}
-/* ── SLEEP RING ───────────────────────────── */
+/* ── UNAZA E GJUMIT ───────────────────────── */
 .sring-wrap{width:170px;height:170px;position:relative;margin:0 auto 20px}
 .sring-wrap svg{transform:rotate(-90deg)}
 .sring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .sring-val{font-family:var(--font-body);font-weight:600;font-size:46px;line-height:1;color:var(--t);letter-spacing:-2px}
 .sring-lbl{font-size:13px;color:var(--t2);margin-top:4px;font-weight:500}
-/* ── SLEEP TIME BLOCKS ────────────────────── */
+/* ── BLLOQET E ORËVE TË GJUMIT ────────────── */
 .stime-block{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--bdr)}
 .stime-block:last-of-type{border-bottom:none;padding-bottom:4px}
 .stime-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -332,7 +340,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .stime-block{cursor:pointer}
 .stime-block:active{opacity:.7;transition:none}
 .stime-val{font-size:24px;font-family:var(--font-body);font-weight:600;color:var(--t);letter-spacing:-.8px;line-height:1.2}
-/* ── TIME PICKER ─────────────────────────── */
+/* ── ZGJEDHËSI I ORËS ─────────────────────── */
 .tp-wrap{position:relative;height:210px;margin:14px 0;overflow:hidden;border-radius:18px;background:var(--surface)}
 .tp-inner{display:flex;align-items:flex-start;justify-content:center;height:100%}
 .tp-col{height:100%;width:88px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
@@ -342,7 +350,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .tp-colon{height:100%;width:30px;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:38px;font-weight:600;color:var(--t3);flex-shrink:0;letter-spacing:-1px}
 .tp-mask{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,var(--surface) 0%,transparent 36%,transparent 64%,var(--surface) 100%);z-index:2;border-radius:18px}
 .tp-bar{position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);height:52px;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);pointer-events:none;z-index:3}
-/* ── REST TIMER ──────────────────────────── */
+/* ── KOHËMATËSI I PUSHIMIT ────────────────── */
 .rpreset{display:flex;gap:6px;margin-bottom:22px}
 .rpill{flex:1;padding:11px 0;border:1.5px solid var(--bdr2);border-radius:999px;background:#FFFFFF;color:var(--t2);font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-appearance:none;transition:all .15s;letter-spacing:-.1px}
 .rpill.on{border-color:var(--accent);color:var(--accent-d);background:var(--adim)}
@@ -359,7 +367,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .rring-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
 .rring-time{font-family:var(--font-body);font-size:52px;font-weight:600;color:var(--t);line-height:1;letter-spacing:-2.5px}
 .rring-sub{font-size:12px;color:var(--t2);font-weight:500;margin-top:4px;letter-spacing:-.1px}
-/* ── WEEK COMPARE ────────────────────────── */
+/* ── KRAHASIMI I JAVËVE ───────────────────── */
 .wkdays{display:flex;justify-content:space-between;margin:12px 0 18px}
 .wkday{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
 .wkday-lbl{font-size:11px;color:var(--t2);font-weight:600}
@@ -373,12 +381,12 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .wkdelta.up{color:var(--accent-d);background:var(--adim)}
 .wkdelta.dn{color:var(--red);background:rgba(239,68,68,.12)}
 .wkdelta.eq{color:var(--t2);background:var(--surface)}
-/* ── SETTINGS ─────────────────────────────── */
+/* ── CILËSIMET ────────────────────────────── */
 .sit{transition:opacity .15s}
 .sit:last-child{border:none}
 .sit:hover{opacity:.75}
 .sib{font-size:19px}
-/* ── MODALS ───────────────────────────────── */
+/* ── DRITARET MODALE (fletët nga poshtë) ──── */
 .modal{position:fixed;inset:0;z-index:500;display:none;align-items:flex-end}
 .modal.on{display:flex;animation:mfade .22s ease both}
 .modal#m-exi{z-index:520}
@@ -388,19 +396,19 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 @keyframes sheetUp{from{transform:translateY(44px)}to{transform:translateY(0)}}
 .mhandle{width:40px;height:5px;border-radius:999px;margin:0 auto 20px}
 video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:cover}
-/* ── CHART ────────────────────────────────── */
+/* ── GRAFIKËT ─────────────────────────────── */
 .chart-wrap{height:200px;position:relative}
-/* ── TOAST ────────────────────────────────── */
+/* ── NJOFTIMI I SHKURTËR (toast) ──────────── */
 #toast{position:fixed;bottom:calc(var(--navH) + env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%) translateY(12px);opacity:0;visibility:hidden;padding:13px 22px;font-size:14px;z-index:900;transition:transform .25s cubic-bezier(.4,0,.2,1),opacity .25s ease,visibility 0s linear .25s;white-space:nowrap;letter-spacing:-.1px;pointer-events:none;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
 #toast.on{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible;transition:transform .25s cubic-bezier(.4,0,.2,1),opacity .25s ease,visibility 0s linear 0s}
 @media(min-width:768px){#toast{bottom:26px}}
-/* ── MISC ─────────────────────────────────── */
+/* ── TË NDRYSHME ──────────────────────────── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .fu{animation:fadeUp .3s ease both}
 .hidden{display:none!important}
 .spin{display:inline-block;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* ── HEATMAP ──────────────────────────────── */
+/* ── HARTA E NXEHTËSISË (ditët e stërvitjes) ─ */
 .hm-grid{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;direction:ltr}
 .hm-col{display:grid;grid-template-rows:repeat(7,1fr);gap:3px}
 .hm-cell{aspect-ratio:1;background:var(--surface);min-width:0;cursor:default}
@@ -412,7 +420,7 @@ video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:
 .hm-cell.lv2{background:rgba(var(--accent-rgb),.55)}
 .hm-cell.lv3{background:var(--accent)}
 .hm-cell.future{visibility:hidden}
-/* ── ACHIEVEMENTS ─────────────────────────── */
+/* ── ARRITJET ─────────────────────────────── */
 .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px}
 .ach{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 4px;background:var(--surface);border-radius:12px;transition:transform .15s;min-width:0;overflow:hidden}
 .ach.off{opacity:.35}
@@ -420,13 +428,13 @@ video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:
 .ach.off .ach-ico{filter:grayscale(1) saturate(0)}
 .ach-name{font-size:11px;font-weight:600;color:var(--t);letter-spacing:-.1px;margin-bottom:2px;line-height:1.2;overflow-wrap:anywhere;hyphens:auto;max-width:100%;width:100%}
 .ach-desc{font-size:9.5px;color:var(--t2);font-weight:500;line-height:1.25;overflow-wrap:anywhere;hyphens:auto;max-width:100%;width:100%}
-/* ── MUSCLE BROWSER ───────────────────────── */
+/* ── SHFLETUESI I MUSKUJVE ────────────────── */
 .musc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .musc-pill{display:flex;align-items:center;justify-content:center;padding:14px 8px;background:var(--surface);border:none;border-radius:14px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--t);transition:all .15s;-webkit-appearance:none;letter-spacing:-.1px}
 .musc-pill:hover{background:var(--surface-2)}
 .musc-pill:active{transform:scale(.97)}
 .musc-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
-/* Exercise rows in muscle browser */
+/* Rreshtat e ushtrimeve brenda shfletuesit të muskujve */
 .musc-row{display:flex;gap:12px;align-items:center;padding:10px;background:var(--surface);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:background .15s}
 .musc-row:hover{background:var(--surface-2)}
 .musc-row:active{transform:scale(.99)}
@@ -438,7 +446,7 @@ video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:
 .musc-tags{font-size:12px;color:var(--t2);font-weight:500;display:flex;flex-wrap:wrap;gap:4px}
 .musc-tag.s{background:rgba(0,0,0,.05);color:var(--t2)}
 .musc-best-badge{color:#FFFFFF;font-size:9.5px;font-weight:600;padding:2px 6px;letter-spacing:.5px}
-/* ── EMPTY STATES ─────────────────────────── */
+/* ── GJENDJET BOSH (kur s'ka të dhëna) ────── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px 14px 22px;gap:6px}
 .empty-ico{display:flex;align-items:center;justify-content:center;font-size:24px}
 .empty-ico svg{display:block}
@@ -446,13 +454,13 @@ video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:
 .empty-sub{font-weight:500}
 .empty-cta{margin-top:12px;border:none;font-family:inherit;font-weight:600;letter-spacing:-.1px;cursor:pointer;-webkit-appearance:none;display:inline-flex;align-items:center;gap:6px;transition:transform .12s,background .15s}
 .empty-cta:active{transform:scale(.97)}
-/* ── DARK MODE ────────────────────────────── */
-/* topbar + navbar now use var(--bg) which already follows dark mode */
+/* ── TEMA E ERRËT ─────────────────────────── */
+/* Shiriti i sipërm dhe navigimi marrin sfondin nga variablat, që ndjekin temën */
 body.dark .modal{background:rgba(0,0,0,.65)}
 body.dark .atab.on{color:var(--t)}
 body.dark .acard{box-shadow:0 4px 24px rgba(0,0,0,.4)}
 body.dark .wc:not(.on){background:transparent;border-color:var(--bdr2)}
-/* Inputs: keep focused field readable in dark mode (don't switch to hardcoded white). */
+/* Fushat e fokusuara mbeten të lexueshme në temën e errët (jo sfond i bardhë fiks). */
 body.dark .f input:focus,
 body.dark .f select:focus,
 body.dark .chat-in:focus,
@@ -464,7 +472,7 @@ body.dark .btn-o:hover{background:var(--surface-2)}
 body.dark .sring-track{stroke:rgba(255,255,255,.08)}
 input[type="time"]{min-width:0}
 .g2>*{min-width:0}
-/* ── TOGGLE SWITCH ────────────────────────── */
+/* ── ÇELËSI NDEZ/FIK ──────────────────────── */
 .tog-row{display:flex;align-items:center;gap:13px;padding:14px 0}
 .tog-row:last-child{border-bottom:none}
 .tog-lbl{flex:1}
@@ -474,11 +482,11 @@ input[type="time"]{min-width:0}
 .tog-track::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .22s;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .tog-sw input:checked~.tog-track{background:var(--accent)}
 .tog-sw input:checked~.tog-track::after{transform:translateX(20px)}
-/* ── GENDER / UNIT PILLS ──────────────────── */
+/* ── ZGJEDHJA E GJINISË / NJËSIVE ─────────── */
 .gpills{display:flex;gap:6px}
 .gpill{flex:1;padding:13px 8px;border:1.5px solid var(--bdr2);border-radius:14px;background:#FFFFFF;color:var(--t2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;letter-spacing:-.1px}
 body.dark .gpill:not(.on){background:var(--surface)}
-/* ── TRAINING PLAN ────────────────────────── */
+/* ── PLANI I STËRVITJES ───────────────────── */
 .plan-days{display:flex;gap:8px;overflow-x:auto;padding:0 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .plan-days::-webkit-scrollbar{display:none}
 .pday{flex-shrink:0;width:72px;background:#FFFFFF;border:1.5px solid var(--bdr);border-radius:14px;padding:10px 6px 9px;text-align:center;cursor:pointer;transition:all .18s}
@@ -494,7 +502,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 .prow-m{font-size:13px;color:var(--t2);font-family:inherit;font-weight:600;letter-spacing:-.1px}
 .pinfo{background:none;border:none;cursor:pointer;padding:6px;color:var(--t3);line-height:0;transition:color .12s;flex-shrink:0}
 .pinfo:active{color:var(--accent)}
-/* ── EXERCISE INFO MODAL ──────────────────── */
+/* ── DRITARJA ME INFORMACION PËR USHTRIMIN ── */
 .mtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .mtag{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:-.1px}
 .mtag.p{background:var(--adim);color:var(--accent-d)}
@@ -502,7 +510,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 .etips{margin-top:12px;display:flex;flex-direction:column;gap:8px}
 .etip{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--t2);line-height:1.6;font-weight:500}
 .etip-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:8px}
-/* ── ONBOARDING WIZARD ────────────────────── */
+/* ── MAGJISTARI I REGJISTRIMIT (onboarding) ─ */
 #onb{position:fixed;inset:0;height:100dvh;display:none;flex-direction:column;z-index:900}
 #onb.on{display:flex}
 .onb-body-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -541,7 +549,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 .onb-multi{flex-wrap:wrap;margin-top:8px}
 .onb-multi-chip{display:flex;cursor:pointer;-webkit-appearance:none}
 .onb-multi-chip-ico{line-height:1}
-/* Muscle map (clean grouped chip list) */
+/* Harta e muskujve si listë çipash të grupuara */
 .mm-wrap{margin:6px 0 14px}
 .mm-legend{display:flex;justify-content:center;gap:18px;margin:0 0 12px;flex-wrap:wrap}
 .mm-leg{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--t)}
@@ -560,7 +568,7 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .mm-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;justify-content:center}
 .mm-quick button{padding:7px 12px;border:1.5px solid var(--bdr);background:var(--surface);color:var(--t2);cursor:pointer;-webkit-appearance:none}
 .mm-quick button:active{background:var(--surface-2)}
-/* Weight projection */
+/* Parashikimi i peshës */
 .wp-wrap{margin:6px 0 12px;background:var(--card);border:1px solid var(--bdr);border-radius:18px;padding:18px 16px}
 .wp-canvas-wrap{height:170px;position:relative;margin-top:8px}
 .wp-avg{display:flex;align-items:baseline;gap:6px}
@@ -572,10 +580,10 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .wp-foot-l{font-size:11px;color:var(--t2);font-weight:600;text-transform:none;letter-spacing:.5px;margin-bottom:4px}
 .wp-foot-v{font-size:16px;font-weight:600;color:var(--accent-d);letter-spacing:-.2px}
 .wp-foot-v.dim{color:var(--t2)}
-/* Heart/Apple-style icon header */
+/* Koka me ikonë në stil Apple */
 .onb-iconcard{width:72px;height:72px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:var(--adim)}
 .onb-iconcard svg{width:38px;height:38px;color:var(--accent)}
-/* ── PAYWALL — premium look ─────────────── */
+/* ── FAQJA E ABONIMIT PRO ─────────────────── */
 .pw-sheet{padding:0 0 calc(20px + env(safe-area-inset-bottom,0px))!important;overflow:hidden!important}
 .pw-sheet .pw-scroll{padding:18px 22px 24px;max-height:calc(92vh - 8px);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .pw-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:var(--surface);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;z-index:10;font-size:16px;font-weight:600}
@@ -625,12 +633,12 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .pw-tl-step:last-child{margin-bottom:0}
 .pw-tl-step-t{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.1px}
 .pw-tl-step-b{font-size:12.5px;color:var(--t2);margin-top:2px;line-height:1.45}
-/* Desktop treatment: centered card instead of bottom sheet */
+/* Në desktop: kartë në qendër në vend të fletës nga poshtë */
 @media(min-width:768px){
   .modal#m-paywall{align-items:center;justify-content:center;padding:24px}
   .modal#m-paywall .pw-sheet{max-width:480px;border-radius:24px;animation:pwUp .26s cubic-bezier(.4,0,.2,1) both}
   .pw-hero{border-radius:24px 24px 0 0}
-  /* Generic sheet modals: center + cap width on desktop so content (esp. exercise GIFs) isn't full-screen */
+  /* Në desktop modalet qendërzohen dhe kufizohen në gjerësi, që gif-et e ushtrimeve të mos zënë gjithë ekranin */
   .modal{align-items:center;justify-content:center;padding:24px}
   .msheet{
     max-width:520px;border-radius:24px;
@@ -638,11 +646,11 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
     animation:pwUp .26s cubic-bezier(.4,0,.2,1) both;
   }
   .mhandle{display:none}
-  /* Cap exercise demo image height so it never dominates the desktop modal (inline styles need !important) */
+  /* Kufizo lartësinë e gif-it të ushtrimit (stilet inline kërkojnë !important) */
   #exi-img-wrap{aspect-ratio:auto!important;height:340px!important;max-height:340px!important}
 }
 @keyframes pwUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-/* Plan-building splash */
+/* Ekrani "po ndërtojmë planin tënd" */
 #onb-splash{position:fixed;inset:0;background:var(--bg);z-index:950;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
 #onb-splash.on{display:flex;animation:fadeUp .3s ease both}
 .spl-loader .sp{position:absolute;color:var(--accent);opacity:.7;animation:twinkle 1.8s ease-in-out infinite}
@@ -656,7 +664,7 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .spl-step{font-size:14.5px;min-height:22px;transition:opacity .25s}
 .spl-prog{margin-top:36px;width:100%;max-width:260px;height:4px;background:var(--surface);border-radius:999px;overflow:hidden}
 .spl-prog-fill{height:100%;width:0;transition:width .35s ease}
-/* ── HEATMAP CALENDAR ─────────────────────── */
+/* ── KALENDARI I STËRVITJEVE ──────────────── */
 .cal-nav{background:var(--surface);border:none;border-radius:10px;width:32px;height:32px;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600}
 .cal-nav:active{background:var(--surface-2)}
 .cal-title{font-family:var(--font-body);font-weight:600;font-size:16px;letter-spacing:-.3px;color:var(--t)}
@@ -669,23 +677,23 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .cal-cell.tr-2{background:rgba(var(--accent-rgb),.50);color:#FFFFFF}
 .cal-cell.tr-3{background:var(--accent);color:#FFFFFF;font-weight:600}
 .cal-cell.tod{box-shadow:inset 0 0 0 2px var(--accent)}
-/* ── DAILY CHECK-IN ───────────────────────── */
+/* ── KONTROLLI DITOR (humor, energji, dhimbje) ─ */
 .cki-row{display:flex}
 .cki-row:last-child{margin-bottom:0}
 .cki-pills{flex:1;display:flex}
 .cki-pill{flex:1;border:1.5px solid transparent;border-radius:12px;text-align:center;cursor:pointer}
-/* ── SEGMENT SWITCHER ─────────────────────── */
+/* ── NDËRRUESI ME SEGMENTE ────────────────── */
 .seg{display:flex;background:var(--surface);border-radius:12px;padding:4px;gap:2px}
 .seg button{flex:1;background:none;border:none;color:var(--t2);font-family:inherit;font-size:13px;font-weight:600;padding:9px 6px;border-radius:9px;cursor:pointer;transition:all .15s;-webkit-appearance:none;letter-spacing:-.1px}
 .seg button.on{background:#FFFFFF;color:var(--t);box-shadow:var(--shadow-sm)}
-/* ── BODY MEASURE / PROGRESS PHOTOS ───────── */
+/* ── MATJET E TRUPIT / FOTOT E PROGRESIT ──── */
 .mes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .mes-tile{background:var(--surface);border-radius:14px;padding:14px 10px;text-align:center}
 .mes-tile .mv{font-family:var(--font-body);font-weight:600;font-size:22px;color:var(--t);line-height:1.1;letter-spacing:-.8px}
 .mes-tile .ml{font-size:11px;color:var(--t2);font-weight:600;margin-top:3px;letter-spacing:-.1px}
 .mes-tile .md{font-size:11px;color:var(--accent-d);margin-top:3px;font-weight:600;letter-spacing:-.1px}
 .mes-tile .md.dn{color:var(--blue)}
-/* New animated body measurements view */
+/* Pamja e matjeve të trupit me animacion */
 .mes-body{position:relative;width:100%;max-width:340px;margin:6px auto 14px;aspect-ratio:1/1.55}
 .mes-body svg{width:100%;height:100%;display:block}
 .mes-body-fill{fill:rgba(var(--accent-rgb),.10);stroke:rgba(var(--accent-rgb),.45);stroke-width:.7;transition:fill .5s ease}
@@ -708,14 +716,14 @@ body.dark .mes-line{stroke:rgba(255,255,255,.20)}
 .mes-sumitem{flex:1;text-align:center}
 .mes-sum-l{font-size:10.5px;color:var(--t2);font-weight:600;text-transform:none;letter-spacing:.5px;margin-bottom:2px}
 .mes-sum-v{font-family:var(--font-body);font-weight:600;font-size:16px;color:var(--t);letter-spacing:-.4px}
-/* Accent color picker (Settings → Appearance) */
+/* Rreshtat e fushave në Cilësime → Pamja */
 .acc-row{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;align-items:center}
 .acc-pick{width:36px;height:36px;border-radius:50%;background:var(--c);border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--bdr2);cursor:pointer;-webkit-appearance:none;transition:all .15s;padding:0;position:relative;flex-shrink:0}
 .acc-pick:hover{transform:scale(1.06)}
 .acc-pick:active{transform:scale(.94)}
 .acc-pick.on{box-shadow:0 0 0 2.5px var(--c)}
 .acc-pick.on::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
-/* Get-on-phone card (desktop + tablet) */
+/* Karta "merre në telefon" me kod QR (desktop dhe tablet) */
 .get-app-wrap{display:flex;gap:18px;align-items:flex-start}
 .get-app-qr{flex-shrink:0}
 .get-app-stores{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center;min-height:160px}
@@ -726,7 +734,7 @@ body.dark .mes-line{stroke:rgba(255,255,255,.20)}
 .store-btn-pre{font-size:10px;letter-spacing:.4px;opacity:.7;font-weight:500}
 .store-btn-name{font-size:15px;font-weight:600;letter-spacing:-.2px;margin-top:1px}
 body.dark .store-btn{background:#FAFAFA;color:#0A0A0B;border-color:#FAFAFA}
-/* Settings-page mobile polish */
+/* Rregullime të faqes së cilësimeve për telefon */
 @media(max-width:480px){
   #p-settings .card{padding:16px}
   #p-settings .ctitle{font-size:14px;margin-bottom:12px}
@@ -740,11 +748,11 @@ body.dark .store-btn{background:#FAFAFA;color:#0A0A0B;border-color:#FAFAFA}
   #p-settings .acc-pick{width:28px;height:28px;border-width:2px}
   #p-settings .acc-pick.on::after{font-size:12px}
 }
-/* Make sure the settings ptitle has a bit more breathing room on mobile */
+/* Pak më shumë hapësirë rreth titullit të cilësimeve në telefon */
 @media(max-width:767px){
   #p-settings>.ptitle{padding-top:4px}
 }
-/* ── PLATE CALCULATOR ───────────────────── */
+/* ── LLOGARITËSI I DISQEVE (pllakave) ─────── */
 .pc-out{background:var(--surface);border-radius:14px;padding:18px 16px;margin:14px 0 8px;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 .pc-bar{position:relative;width:100%;max-width:340px;height:90px;display:flex;align-items:center;justify-content:center;gap:1px}
 .pc-bar-rod{position:absolute;top:50%;left:0;right:0;height:6px;background:#8A8A96;border-radius:2px;transform:translateY(-50%);z-index:1}
@@ -764,23 +772,23 @@ body.dark .store-btn{background:#FAFAFA;color:#0A0A0B;border-color:#FAFAFA}
 .ph-tile .ph-date{position:absolute;left:6px;bottom:6px;font-size:10px;color:#fff;background:rgba(0,0,0,.55);padding:3px 7px;border-radius:6px;font-weight:600}
 .ph-add{aspect-ratio:3/4;border:1.5px dashed var(--bdr2);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:26px;cursor:pointer;background:transparent}
 .ph-add:active{border-color:var(--accent);color:var(--accent)}
-/* ── EXERCISE PICKER LIST ─────────────────── */
+/* ── LISTA PËR ZGJEDHJEN E USHTRIMIT ──────── */
 .expk-row{display:flex;align-items:center;gap:10px;padding:13px 8px;border-bottom:1px solid var(--bdr);cursor:pointer}
 .expk-row:active{background:var(--surface)}
 .expk-row:last-child{border-bottom:none}
 .expk-n{flex:1;font-size:15px;color:var(--t);font-weight:600;letter-spacing:-.2px}
 .expk-m{font-size:12px;color:var(--t2);font-weight:500}
-/* ── LINK BUTTON ──────────────────────────── */
+/* ── BUTONI SI LIDHJE (tekst) ─────────────── */
 .lnk{background:none;border:none;font-family:inherit;font-size:13.5px;cursor:pointer;padding:6px 4px;-webkit-appearance:none}
 .lnk:active{opacity:.7}
-/* ── SETTING ITEM ─────────────────────────── */
+/* ── RRESHTI I CILËSIMIT ──────────────────── */
 .sit{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--bdr);cursor:pointer}
 .sit:last-child{border-bottom:none}
 .sib{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-/* ── SKELETON ─────────────────────────────── */
+/* ── SKELETI I NGARKIMIT ──────────────────── */
 .skel{background:var(--surface-2);background-size:200% 100%;animation:skel 1.4s linear infinite;border-radius:10px}
 @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* ── OPTION LIST (Setgraph-style picker) ── */
+/* ── LISTA E OPSIONEVE (në onboarding) ────── */
 .opt-item:active{transform:scale(.99)}
 .opt-item.on{border:2px solid var(--accent)}
 body.dark .opt-item.on{background:#17171C}
@@ -788,7 +796,7 @@ body.dark .opt-item.on{background:#17171C}
 .opt-body{flex:1;min-width:0}
 .opt-group{background:var(--surface);padding:4px 18px}
 .opt-row.on .opt-row-r{color:var(--accent-d);font-weight:600}
-/* ── DASHBOARD HOME ──────────────────────── */
+/* ── FAQJA KRYESORE ───────────────────────── */
 .seclabel{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0;color:var(--accent-d);margin-bottom:8px}
 .seclabel-dot{width:6px;height:6px;border-radius:50%}
 .hero-title{font-family:var(--font-body);font-weight:600;color:var(--t)}
@@ -819,20 +827,22 @@ body.dark .hero-card{background:var(--card)}
 .qa-ico{display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .qa-lbl{color:var(--t);text-align:left}
 /* ═══════════════════════════════════════════════════════════════
-   ATHLETIC LAYER
-   Display typography, the signal-coloured data visuals, and the
-   asymmetric home composition. Everything below deliberately
-   overrides the earlier generic-card styling.
+   VIZUALIZIMI I TË DHËNAVE
+   Ikonat, tipografia e numrave, shiritat dhe unazat me ngjyrat e
+   të dhënave (stërvitje, ushqim, ujë, gjumë) dhe përbërja e faqes
+   kryesore. Rregullat këtu mbishkruajnë stilin e thjeshtë të kartave
+   më lart.
    ═══════════════════════════════════════════════════════════════ */
-/* ── ICONS ─────────────────────────────────
-   One 24×24 stroke set, referenced from a hidden sprite. Sized by
-   font-size on the parent so an icon always matches its label. */
+/* ── IKONAT ────────────────────────────────
+   Një set ikonash 24×24 me vija, të marra nga sprite-i i fshehur në
+   index.html. Madhësia vjen nga font-size i prindit, kështu që ikona
+   gjithmonë përputhet me tekstin pranë saj. */
 .ic{width:1em;height:1em;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
 .ic-b{stroke-width:2.2}
 .icb{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-/* ── DISPLAY TYPOGRAPHY ────────────────────
-   Oswald is condensed, so the negative tracking Inter needed is wrong
-   here: reset to ~0 and let the width do the work. */
+/* ── TIPOGRAFIA E TITUJVE ──────────────────
+   Titujt dhe numrat e mëdhenj. Hapësira mes shkronjave mbahet afër
+   zeros; dallimin e bën madhësia dhe pesha. */
 .ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand{font-family:var(--font-display);font-weight:600;letter-spacing:0;text-transform:none;text-wrap:balance}
 .ptitle{line-height:.95}
 .hero-title{line-height:.95;letter-spacing:.2px}
@@ -841,18 +851,17 @@ body.dark .hero-card{background:var(--card)}
 .obp-title,.pw-hero-title{font-weight:600;letter-spacing:.3px}
 .ctitle{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.9px;text-transform:none;color:var(--t)}
 .sb-logo,.tlogo{font-family:var(--font-display);text-transform:none}
-/* Numerals stay legible: the display face above 20px, the body face below. */
+/* Numrat mbeten të lexueshëm: fonti i titujve mbi 20px, fonti i tekstit nën të. */
 .stat-num{font-family:var(--font-display);font-weight:600;letter-spacing:0;line-height:.9;font-variant-numeric:tabular-nums;color:var(--t)}
-/* ── HOME HEADER ───────────────────────────
-   Replaces the eyebrow + generic subtitle with a date rule and a
-   display greeting. */
+/* ── KOKA E FAQES KRYESORE ─────────────────
+   Data me një vijë, përshëndetja e madhe dhe një rresht gjendjeje. */
 .home-date{display:flex;align-items:center;gap:9px;font-family:var(--font-body);text-transform:none}
 .home-date::after{content:"";flex:1;height:1px;background:var(--bdr2)}
 .home-sub{line-height:1.5;font-weight:500;max-width:44ch}
 .home-sub b{color:var(--t);font-weight:600}
-/* ── BAND: the full-width primary metric ───
-   Not a card. No uniform padding box repeated four times — each band
-   composes differently inside a shared frame. */
+/* ── BANDA: seksioni me gjerësi të plotë ───
+   Seksionet "Stërvitja" dhe "Ushqimi" në faqen kryesore. Secila ka
+   përmbajtje të ndryshme brenda së njëjtës kornizë. */
 .band{position:relative;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r-lg);overflow:hidden}
 .band::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--band-hue,var(--sig-train)) 0%,transparent 72%);opacity:.9}
 .band-train{--band-hue:var(--sig-train-pure)}
@@ -860,11 +869,11 @@ body.dark .hero-card{background:var(--card)}
 .band-head{display:flex;justify-content:space-between;gap:12px}
 .band-kicker{font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t);line-height:1}
 .band-note{font-size:12px;letter-spacing:-.1px}
-/* Status chip — replaces the ✓/– glyph tile */
+/* Çipi i gjendjes ("Logged" / "Not logged") */
 .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px 5px 9px;border-radius:999px;letter-spacing:.3px;text-transform:none;font-family:var(--font-body);background:var(--surface);color:var(--t2);border:1px solid var(--bdr2);white-space:nowrap}
 .chip .ic{font-size:13px}
-/* ── TRAINING BAND ─────────────────────────
-   Volume headline + 7-day bars + a four-slot readout. */
+/* ── BANDA E STËRVITJES ────────────────────
+   Volumi i javës, shtyllat e 7 ditëve dhe tabela me statistika. */
 .tr-vol{align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
 .tr-vol .stat-num{font-size:clamp(46px,13vw,62px)}
 .tr-vol-unit{font-family:var(--font-display);font-size:20px;text-transform:none;color:var(--sig-train);line-height:1}
@@ -875,9 +884,8 @@ body.dark .hero-card{background:var(--card)}
 .readout-i+.readout-i::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;background:var(--bdr)}
 .readout-v{font-family:var(--font-display);font-weight:600;letter-spacing:.2px;line-height:1;color:var(--t);font-variant-numeric:tabular-nums}
 .readout-l{font-size:10.5px;color:var(--t3);font-weight:600;margin-top:5px;letter-spacing:.9px;text-transform:none}
-/* ── RINGS ─────────────────────────────────
-   Progress ring with a signal-coloured arc. The glow only fires on the
-   dark surface, where it reads as light rather than mud. */
+/* ── UNAZAT E PROGRESIT ────────────────────
+   Unazë rrethore me hark në ngjyrën e të dhënës përkatëse. */
 .ring{position:relative;flex-shrink:0;display:grid;place-items:center}
 .ring svg{transform:rotate(-90deg);display:block;overflow:visible;width:100%;height:100%}
 .ring-track{fill:none}
@@ -888,12 +896,12 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .ring-u{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:0;text-transform:none;margin-top:4px}
 .ring-lg .ring-v{font-size:30px}
 .ring-sm .ring-v{font-size:23px}
-/* ── FUEL BAND ─────────────────────────────
-   Big calorie ring, then two accent bars. Asymmetric on purpose. */
+/* ── BANDA E USHQIMIT ──────────────────────
+   Kaloritë dhe proteinat e ditës si shirita progresi. */
 .fuel-grid{align-items:center;gap:20px}
 .fuel-bars{flex:1;min-width:0;display:flex;flex-direction:column}
-/* ── ACCENT BARS ───────────────────────────
-   Replaces the flat grey progress bars. */
+/* ── SHIRITAT E PROGRESIT ME NGJYRË ────────
+   Shiriti i hollë me mbushje në ngjyrën e të dhënës. */
 .meter-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .meter-l{letter-spacing:0;text-transform:none}
 .meter-v{letter-spacing:.4px;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -905,11 +913,10 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .m-water{--meter-hue:var(--sig-water-pure)}
 .m-sleep{--meter-hue:var(--sig-sleep-pure)}
 .meter-note{margin-top:6px}
-/* Retrofit the legacy .pbar/.pfill used on the nutrition tab so the whole
-   app speaks the same bar language. */
+/* Shiritat e vjetër .pbar/.pfill të skedës Ushqimi marrin të njëjtin stil. */
 .pbar{height:7px;background:var(--sig-track)}
-/* ── SECONDARY PAIR ────────────────────────
-   Water + sleep: deliberately smaller, side by side, ring-led. */
+/* ── ÇIFTI DYTËSOR ─────────────────────────
+   Uji dhe gjumi: më të vegjël, njëri pranë tjetrit. */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .pair-cell{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:15px 14px;display:flex;align-items:center;gap:13px;min-width:0;cursor:pointer;transition:border-color .18s,background .18s;-webkit-appearance:none;font-family:inherit;text-align:left;width:100%}
 .pair-cell:hover{border-color:var(--bdr3);background:var(--card2)}
@@ -920,23 +927,21 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .pair-v .su{font-family:var(--font-display);font-size:14px;font-weight:500;color:var(--t2);letter-spacing:.6px;margin-left:1px}
 .pair-s{font-size:11.5px;color:var(--t2);font-weight:600;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:340px){.pair{grid-template-columns:1fr}}
-/* ── COACH ─────────────────────────────────
-   Was the ✨ "AI Trainer". Now a chat-bubble mark and a flat name. */
+/* ── KARTA E TRAJNERIT NË FAQEN KRYESORE ─── */
 .coach-card{background:var(--card);border:1px solid color-mix(in srgb,var(--sig-train) 26%,var(--bdr));position:relative;overflow:hidden}
 .coach-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:18px}
 .coach-title{font-family:var(--font-display);letter-spacing:.3px;text-transform:none;color:var(--t);margin:12px 0 6px;line-height:1.05}
 .coach-body{color:var(--t2);font-weight:500;max-width:62ch}
-/* ── QUICK ACTIONS ─────────────────────────*/
+/* ── VEPRIMET E SHPEJTA ────────────────────*/
 .qa-ico{font-size:16px}
 .qa-btn{gap:12px}
 .qa-lbl{font-size:13.5px;letter-spacing:-.1px}
-/* ── OPTION / CHIP ICON SLOTS ──────────────
-   Onboarding lists lose their emoji tiles for stroke icons. */
+/* ── VENDET E IKONAVE NË OPSIONE DHE ÇIPA ── */
 .opt-ico,.onb-multi-chip-ico,.rp-ico{font-size:19px;color:var(--t2)}
 .opt-item.on .opt-ico,.onb-multi-chip.on .onb-multi-chip-ico{color:var(--sig-train)}
 .onb-info-ico,.obp-tile,.pw-feat-ico{font-size:19px}
-/* ── SEGMENTED SCALE (check-in) ────────────
-   Replaces the mood/energy/soreness emoji rows. */
+/* ── SHKALLA ME SEGMENTE (kontrolli ditor) ─
+   Humori, energjia dhe dhimbja zgjidhen si 1 deri 5. */
 .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .scale-b{all:unset;cursor:pointer;text-align:center;padding:11px 2px 9px;border-radius:12px;border:1.5px solid var(--bdr2);background:var(--card);font-family:inherit;transition:border-color .15s,background .15s,color .15s;box-sizing:border-box}
 .scale-b:hover{border-color:var(--bdr3)}
@@ -945,16 +950,16 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .scale-b.on{border-color:var(--sig-train);background:color-mix(in srgb,var(--sig-train) 10%,transparent)}
 .scale-b.on .scale-n{color:var(--sig-train)}
 .scale-b.on .scale-t{color:var(--t2)}
-/* ── PRO / BADGES ──────────────────────────*/
+/* ── ETIKETAT PRO ──────────────────────────*/
 .sb-pro-ico{font-size:17px;display:grid;place-items:center}
 .badge{font-family:var(--font-body)}
 .tb-pro-pill{display:inline-flex;align-items:center;gap:5px}
 .streak-pill{display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums}
-/* A zero-day streak is a fact, not a fault: the fuel colour only comes on once there is a streak to protect. */
+/* Seria prej zero ditësh mbetet neutrale; ngjyra ndizet vetëm kur ka një seri për të mbrojtur. */
 .badge.bn{background:var(--surface-2);color:var(--t3);border:1px solid var(--bdr2)}
 .onb-sect{font-family:var(--font-display);margin:22px 0 10px}
 .streak-pill .ic{font-size:12px}
-/* ── MOTION ────────────────────────────────*/
+/* ── ANIMACIONET ───────────────────────────*/
 @keyframes bandIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .band,.pair-cell{animation:bandIn .5s cubic-bezier(.16,1,.3,1) both}
 .band+.band{animation-delay:.06s}
@@ -963,20 +968,20 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
   .band,.pair-cell{animation:none}
   .ring-arc,.meter-fill{transition:none}
 }
-/* ── ICONS INSIDE CONTROLS ─────────────────
-   .ic is display:block, so any button that now carries an icon has to
-   become a flex row or the glyph drops to its own line. */
+/* ── IKONAT BRENDA BUTONAVE ────────────────
+   .ic është display:block, prandaj çdo buton me ikonë bëhet rresht flex,
+   përndryshe ikona bie në rresht më vete. */
 .btn,.btn-o,.btn-g,.chat-chip,.empty-cta,.wc-cta,.obp-cta,.pw-cta,.opt-item,.musc-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px}
-/* .btn already declares width:100%; .btnsm must stay auto, so do not re-set it here. */
+/* .btn ka width:100%; .btnsm duhet të mbetet auto, mos e vendos këtu. */
 .btn-g{gap:6px}
 .chat-chip{gap:6px}
 .opt-item{justify-content:flex-start}
 .musc-pill{flex-direction:column;gap:7px}
 .pw-trust span,.obp-trust > span{display:inline-flex;align-items:center;gap:5px}
 .sib>.ic{font-size:inherit}
-/* ── CHECK-IN SCALE ────────────────────────
-   The pill stays a single element (the delegated click handler reads
-   e.target), so the word rides in on a pseudo-element. */
+/* ── SHKALLA E KONTROLLIT DITOR ────────────
+   Butoni mbetet një element i vetëm (klikimi lexon e.target), prandaj
+   fjala shfaqet me pseudo-element. */
 .cki-row{flex-direction:column;align-items:stretch;gap:8px;margin-bottom:18px}
 .cki-label{flex:none;font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t2)}
 .cki-pills{gap:6px}
@@ -984,16 +989,15 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .cki-pill::after{content:attr(data-t);display:block;font-family:var(--font-body);font-size:9px;font-weight:600;letter-spacing:.4px;text-transform:none;color:var(--t3);margin-top:5px}
 .cki-pill.on{transform:none;border-color:var(--sig-train);color:var(--sig-train);background:color-mix(in srgb,var(--sig-train) 10%,transparent)}
 .cki-pill.on::after{color:var(--t2)}
-/* ── SPLASH ────────────────────────────────
-   The twinkling sparkle cluster becomes one rotating arc. */
+/* ── EKRANI I NGARKIMIT ────────────────────
+   Një hark që rrotullohet. */
 .spl-loader svg{display:block;animation:splSpin 1.5s linear infinite}
 body.dark .spl-ring-a{filter:drop-shadow(0 0 7px var(--sig-train))}
 @keyframes splSpin{to{transform:rotate(360deg)}}
 .spl-h{font-family:var(--font-display);font-weight:600;letter-spacing:.3px;text-transform:none;line-height:1}
 @media (prefers-reduced-motion:reduce){.spl-loader svg{animation-duration:4s}}
-/* ── MEASURE ───────────────────────────────
-   On desktop the panel used the full column, which stretched meters and
-   body copy well past a readable line. Cap it and let the bands breathe. */
+/* ── SKEDA PROGRESI NË DESKTOP ─────────────
+   Kufizohet gjerësia që shiritat dhe teksti të mbeten të lexueshëm. */
 @media(min-width:820px){
   .panel{max-width:940px;margin:0 auto;padding:30px 26px 60px;width:100%}
   .band{padding:26px 28px}
@@ -1001,22 +1005,20 @@ body.dark .spl-ring-a{filter:drop-shadow(0 0 7px var(--sig-train))}
   .home-sub{font-size:15.5px}
 }
 @media(min-width:1240px){.panel{max-width:1020px}}
-/* ── PRO SURFACES ──────────────────────────
-   The green-to-violet gradient read as stock SaaS. Pro is now the one
-   place the app goes to ink-black with a single hot accent. */
+/* ── SIPËRFAQET PRO ────────────────────────
+   Karta Pro në menunë anësore dhe faqja e abonimit. */
 .sb-pro::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,var(--sig-fuel-pure),transparent 78%)}
 .sb-pro-t{font-family:var(--font-display);font-weight:600;letter-spacing:.8px;text-transform:none}
 .pw-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,transparent,var(--sig-fuel-pure),transparent)}
 .pw-hero-badge{font-family:var(--font-display);font-weight:600}
 .pw-hero-sub{color:rgba(255,255,255,.74)}
 .obp-title span,.pw-hero-title span{color:var(--sig-fuel-pure)}
-/* ── OPTION TILES ──────────────────────────
-   Without an emoji filling it, the icon slot needed its own edge in dark. */
+/* ── PLLAKAT E OPSIONEVE ───────────────────
+   Vendi i ikonës merr një buzë në temën e errët. */
 body.dark .opt-ico{background:var(--card2)}
-/* ── BADGES ────────────────────────────────
-   The amber streak badge was mud on the dark surface. */
-/* The four-slot readout has to survive "3h 12m" at 360px: keep each value on
-   one line and let the type shrink instead of wrapping under its label. */
+/* ── ETIKETAT ──────────────────────────────*/
+/* Vlerat si "3h 12m" duhet të hyjnë në 360px: mbahen në një rresht dhe
+   fonti zvogëlohet në vend që teksti të thyhet. */
 .readout-v{white-space:nowrap;font-size:clamp(17px,4.6vw,22px)}
 .readout-i{padding-right:6px}
 .readout-i+.readout-i{padding-left:9px}
@@ -1028,21 +1030,21 @@ body.dark .opt-ico{background:var(--card2)}
   .band{padding:18px}
 }
 /* ═══════════════════════════════════════════════════════════════
-   OBSIDIAN — the dark identity
-   Five colours do all the work: obsidian ground, graphite layer,
-   one high-voltage accent, muted slate for everything secondary,
-   and a two-step type ramp. Nothing else earns a hue.
+   TEMA E ERRËT: SHTRESIMI
+   Si dallohen kartat nga sfondi në temën e errët (me vlerë ngjyre,
+   jo me hije) dhe çfarë ngjyre merr teksti mbi mbushjen e theksit.
+   Ngjyrat vetë përcaktohen në shtresën IRON në fund të skedarit.
    ═══════════════════════════════════════════════════════════════ */
-/* Layering: on obsidian, cards read by their own value, not by a shadow. */
+/* Në temën e errët kartat dallohen nga toni i tyre, jo nga hija. */
 body.dark .card,body.dark .band,body.dark .pair-cell,body.dark .exi,body.dark .mc{background:var(--card);box-shadow:none}
 body.dark .acard,body.dark .msheet{box-shadow:0 -20px 60px rgba(0,0,0,.7)}
-/* Anything filled with the accent takes ink, not white. */
+/* Çdo element i mbushur me ngjyrën e theksit merr tekst me ngjyrën --accent-ink. */
 .btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.obp-badge,
 .msg.u,.chat-send,.pill.on,.setdone.on,.gs-row.done .gs-check,
 .wkday-dot.today.done,.cal-cell.tr-3,.sb-avatar,.avatar.on,.pw-tl-dot.now{color:var(--accent-ink)}
 body.dark .btn:disabled{background:var(--surface-2);color:var(--t3)}
 .acc-pick.on::after{color:var(--accent-ink);text-shadow:none}
-/* Secondary state uses the muted slate, so volt never competes with itself. */
+/* Gjendja dytësore përdor gri të butë, që theksi të mos konkurrojë me veten. */
 body.dark .nv{color:var(--t3)}
 body.dark .nv:not(.on) .ico{color:var(--t4)}
 body.dark .nv.on{color:var(--accent)}
@@ -1054,31 +1056,25 @@ body.dark .badge.bb{background:rgba(34,211,238,.13);color:var(--sig-water);borde
 body.dark .badge.bg{background:var(--adim);color:var(--accent);border:1px solid rgba(204,255,0,.24)}
 body.dark .tog-track{background:var(--t4)}
 body.dark .tog-sw input:checked~.tog-track::after{background:var(--accent-ink)}
-/* Volt is bright enough that the old wide glow reads as haze. Keep it tight. */
+/* Pa shkëlqim rreth elementeve të theksuara. */
 body.dark .tr-vol-unit{text-shadow:none;color:var(--accent)}
 body.dark .chip.live{box-shadow:none;border-color:rgba(204,255,0,.38)}
 body.dark .coach-mark{box-shadow:none}
 body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
 /* ═══════════════════════════════════════════════════════════════
-   GEOMETRY + CONTROLS
-   Cards and readouts keep the sharpened corners. Controls do not: a
-   button is the thing you should be able to reach for without noticing
-   it, so it gets an ordinary radius, the body face, and its label set
-   the way the label is actually spoken.
+   BUTONAT DHE KONTROLLET
+   Butoni kryesor, dytësor, veprimet e shpejta, çipat, kontrollet e
+   bisedës, fushat e formularëve dhe unaza e fokusit.
    ═══════════════════════════════════════════════════════════════ */
 button:not([disabled]){transition:background .14s,border-color .14s,color .14s,box-shadow .1s,transform .1s}
 button:not([disabled]):active{transform:translateY(1px)}
-/* ── ACTION LABEL ──────────────────────────
-   Inter, sentence case, one weight down from the old display caps. Caps
-   and wide tracking stay on headings and readouts, where they read as
-   voice; on every control at once they were just volume. Labels render
-   as written in the markup, so nothing here transforms them. */
+/* ── TEKSTI I BUTONAVE ─────────────────────
+   Shkronja normale (jo kapitale), si është shkruar në HTML. */
 .btn,.btnsm,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.btn-o,.qa-btn .qa-lbl,
 .onb-cta .btn,.onb-cta .btn-o,.mm-mode-btn,.pill,.gpill{font-family:var(--font-body);font-weight:600;text-transform:none;letter-spacing:0}
 .btn,.wc-cta,.obp-cta,.pw-cta{letter-spacing:-.01em}
-/* ── PRIMARY ───────────────────────────────
-   Volt fill, obsidian ink. The press is a 1px settle: the hard offset
-   block behind it read as a sticker pasted onto the page. */
+/* ── BUTONI KRYESOR ────────────────────────
+   Mbushje me ngjyrën e theksit; kur shtypet ulet 1px. */
 .btn,.wc-cta,.obp-cta,.pw-cta{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);border:none;font-size:14.5px;padding:14px 20px;box-shadow:none;text-shadow:none}
 .btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover{background:var(--accent-d)}
 .btn:disabled{box-shadow:none;transform:none;opacity:1}
@@ -1087,22 +1083,21 @@ button:not([disabled]):active{transform:translateY(1px)}
 .empty-cta:hover{background:var(--accent-d)}
 .empty-cta.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1.5px solid var(--bdr3)}
 .empty-cta.ghost:hover{border-color:var(--accent);background:var(--adim)}
-/* ── SECONDARY ─────────────────────────────
-   Outline only. Border carries the contrast; the fill arrives on hover. */
+/* ── BUTONI DYTËSOR ────────────────────────
+   Vetëm kornizë; mbushja shfaqet kur kalon miun sipër. */
 .btn-o{border-radius:var(--r-btn);background:transparent;color:var(--t);border:1.5px solid var(--bdr3)}
 .btn-o:hover{background:var(--surface-2);border-color:var(--t);color:var(--t)}
 .btn-g{letter-spacing:0}
 .btn-oauth{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr3);box-shadow:none;text-transform:none;letter-spacing:0;font-family:var(--font-body)}
 .btn-oauth:hover{background:var(--surface-2);border-color:var(--t)}
-/* ── QUICK ACTIONS ─────────────────────────
-   The brief's "+1 Water" case: transparent, sharp border, and the whole tile
-   floods with volt the moment you touch it. */
+/* ── VEPRIMET E SHPEJTA ────────────────────
+   P.sh. "+1 gotë ujë": transparent, mbushet kur e prek. */
 .qa-btn:hover{border-color:var(--accent)}
 .qa-btn:hover .qa-lbl{color:var(--accent-ink)}
 .qa-btn:hover .qa-ico{background:transparent;border-color:transparent;color:var(--accent-ink)}
 .qa-btn:active{transform:translateY(1px)}
 .qa-ico{border-radius:var(--r-chip)}
-/* ── CHIPS, PILLS, BADGES ──────────────────*/
+/* ── ÇIPAT, PILLS, ETIKETAT ────────────────*/
 .pill,.gpill,.chat-chip,.badge,.chip,.tag,.mm-mode-btn,.mm-chip,.onb-multi-chip,
 .obp-badge,.pw-plan-badge,.pw-hero-badge,.hm-c0,.hm-c1,.hm-c2,.hm-c3,.hm-cell,
 .rest-preset,.scale-b,.obp-plan,.pw-plan,.opt-item,.tip-card,.tip-card .tip-ok{border-radius:var(--r-chip)}
@@ -1110,7 +1105,7 @@ button:not([disabled]):active{transform:translateY(1px)}
 .pill,.gpill,.mm-mode-btn{font-size:13px}
 .pill.on,.gpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .chat-chip:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-/* ── CHAT CONTROLS ─────────────────────────*/
+/* ── KONTROLLET E BISEDËS ──────────────────*/
 .chat-send{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);box-shadow:none}
 .chat-send:hover{background:var(--accent-d)}
 .chat-mic{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr2)}
@@ -1118,42 +1113,41 @@ button:not([disabled]):active{transform:translateY(1px)}
 .chat-in{border-radius:var(--r-btn)}
 .msg{border-radius:var(--r-sm)}
 .msg.u{border-bottom-right-radius:var(--r-chip)}
-/* ── CONTAINERS ────────────────────────────
-   Cards follow the buttons down; circles that must stay circles are exempt. */
+/* ── KONTEJNERËT ───────────────────────────
+   Kartat marrin të njëjtin radius si butonat; rrathët mbeten rrathë. */
 .card,.card2,.band,.pair-cell,.exi,.mc,.msheet,.acard,.onb-info,.wc,
 .sib,.act-ico,.qa-ico,.coach-mark,.empty-ico,.opt-ico,.onb-feat-ico,
 .obp-tile,.pw-feat-ico,.f input,.f select,.f textarea,.si{border-radius:var(--r-sm)}
 .card,.band{border-radius:var(--r)}
 .avatar,.sb-avatar,.acc-pick,.tog-track,.tog-track::after,.seclabel-dot,
 .mm-leg-dot,.obp-radio,.pw-plan-radio,.ring,.ring svg{border-radius:50%}
-/* Bars go square-ended: an instrument readout, not a lozenge. */
+/* Shiritat e progresit */
 .pbar,.pfill,.meter,.meter-fill,.onb-prog,.onb-prog-fill,.spl-prog,.spl-prog-fill,
 .nb-seg,.hm-cell{border-radius:1px}
 .ring-arc,.ring-track{stroke-linecap:butt}
-/* ── FORM FIELDS ───────────────────────────*/
+/* ── FUSHAT E FORMULARËVE ──────────────────*/
 .f input,.f select,.f textarea,.si,input[type="text"],input[type="number"],
 input[type="email"],input[type="password"],textarea{border-radius:var(--r-btn)}
 .f input:focus,.f select:focus,.si:focus,.chat-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--adim)}
 body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{background:var(--bg2);border:1.5px solid var(--bdr2);color:var(--t)}
-/* ── FOCUS ─────────────────────────────────*/
+/* ── FOKUSI ────────────────────────────────*/
 @media (prefers-reduced-motion:reduce){
   button:not([disabled]):active,.qa-btn:active,.mm-chip:active{transform:none}
 }
-/* Destructive actions: same geometry, different signal. The ink stays white
-   because red is dark enough to carry it. */
+/* Veprimet shkatërruese (fshij, dil): e njëjta formë, ngjyrë e kuqe. */
 .btn-danger{box-shadow:none}
 .btn-danger:hover{background:#DC2626}
 .btn-o-danger{border-color:var(--red);color:var(--red)}
 .btn-o-danger:hover{background:var(--red);border-color:var(--red);color:#FFFFFF}
 /* ═══════════════════════════════════════════════════════════════
-   ONBOARDING — setup sequence, not a wizard
-   Each question owns the whole screen. Progress is a raw fraction
-   and a tick rail, not a candy-bar. Answers are blocks you hit.
+   ONBOARDING (hapat e para pas regjistrimit)
+   Çdo pyetje zë gjithë ekranin. Progresi tregohet si "Hapi 2 nga 5"
+   me një shirit segmentesh. Përgjigjet janë blloqe të mëdha që preken.
    ═══════════════════════════════════════════════════════════════ */
 #onb{background:var(--bg)}
 .onb-body-wrap{padding:calc(20px + env(safe-area-inset-top,0px)) 20px 28px;display:flex;flex-direction:column}
 .onb-step.on{flex:1;justify-content:flex-start}
-/* ── PROGRESS: 03 // 14 plus a tick rail ───*/
+/* ── PROGRESI: numri i hapit dhe shiriti ───*/
 .onb-prog{display:none}
 .onb-rail{display:flex;align-items:center;gap:14px;margin:0 0 34px;flex-shrink:0}
 .onb-idx{white-space:nowrap;font-variant-numeric:tabular-nums;display:flex;gap:6px;align-items:baseline}
@@ -1162,18 +1156,16 @@ body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{backg
 .onb-tick{flex:1;height:2px;background:var(--bdr2);transition:background .3s}
 .onb-tick.done{background:var(--t4)}
 .onb-tick.now{background:var(--accent);box-shadow:var(--glow-train)}
-/* ── QUESTION ──────────────────────────────
-   Full-bleed type. The question is the whole design at the top of
-   the screen; nothing frames it. */
+/* ── PYETJA ────────────────────────────────
+   Titull i madh në krye të ekranit, pa kornizë. */
 .onb-h{font-family:var(--font-display);font-weight:600;text-transform:none;font-size:clamp(30px,9vw,44px);line-height:.94;letter-spacing:.5px;color:var(--t);margin:0 0 14px;text-wrap:balance}
 .onb-hero{font-family:var(--font-display);font-weight:600;text-transform:none;font-size:clamp(36px,11vw,52px);line-height:.92;letter-spacing:.5px;margin-bottom:14px}
 .onb-hero span{color:var(--accent)}
 .onb-sub{color:var(--t2);font-size:15px;line-height:1.5;margin-bottom:30px;font-weight:500;max-width:40ch}
 .onb-eyebrow{display:none}
 .onb-step-n{display:none}
-/* ── SELECTION BLOCKS ──────────────────────
-   Oversized, dark-tinted, and they change depth when you take one.
-   The volt outline is the whole selected state; no ticks, no fills. */
+/* ── BLLOQET E ZGJEDHJES ───────────────────
+   Opsione të mëdha; i zgjedhuri merr kornizë me ngjyrën e theksit. */
 .opt-list{display:flex;flex-direction:column;gap:8px}
 .opt-item{display:flex;align-items:center;gap:16px;width:100%;padding:19px 18px;background:#111114;border:1.5px solid var(--bdr2);border-radius:var(--r-chip);cursor:pointer;font-family:inherit;text-align:left;transition:background .16s,border-color .16s,transform .1s;position:relative;-webkit-appearance:none}
 body:not(.dark) .opt-item{background:var(--card)}
@@ -1187,8 +1179,8 @@ body:not(.dark) .opt-item.on{background:var(--adim)}
 .opt-item.on .opt-ico{border-color:var(--accent);color:var(--accent);background:var(--adim)}
 .opt-title{font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.4px;text-transform:none;line-height:1.05;color:var(--t)}
 .opt-sub{font-size:13px;color:var(--t2);margin-top:5px;line-height:1.4;font-weight:500}
-/* ── MULTI-SELECT GRID ─────────────────────
-   Same block language, two up. */
+/* ── RRJETI ME ZGJEDHJE TË SHUMËFISHTË ─────
+   I njëjti stil, dy në rresht. */
 .onb-multi{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .onb-multi-chip{flex-direction:column;align-items:flex-start;gap:14px;padding:18px 16px;min-height:104px;justify-content:space-between;background:#111114;border:1.5px solid var(--bdr2);border-radius:var(--r-chip);color:var(--t);font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.4px;text-transform:none;line-height:1.1;text-align:left;transition:background .16s,border-color .16s}
 body:not(.dark) .onb-multi-chip{background:var(--card)}
@@ -1196,7 +1188,7 @@ body:not(.dark) .onb-multi-chip{background:var(--card)}
 body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .onb-multi-chip-ico{font-size:22px;color:var(--t3)}
 .onb-multi-chip.on .onb-multi-chip-ico{color:var(--accent)}
-/* ── ROW GROUP (weekly days) ───────────────*/
+/* ── GRUPI I RRESHTAVE (ditët e javës) ─────*/
 .opt-group{border:1px solid var(--bdr2);border-radius:var(--r-chip);overflow:hidden}
 .opt-row{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .16s}
 .opt-row:last-child{border-bottom:none}
@@ -1204,20 +1196,19 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .opt-row-r{font-weight:600;letter-spacing:.6px;text-transform:none}
 .opt-row.on{background:var(--adim);box-shadow:inset 2px 0 0 var(--accent)}
 .opt-row.on .opt-row-l{color:var(--accent)}
-/* ── BLUEPRINT ROWS (goal explainer) ───────*/
+/* ── RRESHTAT E PLANIT (shpjegimi i qëllimit) ─*/
 .onb-info{background:transparent;border:none;border-top:1px solid var(--bdr);border-radius:0;padding:16px 2px}
 .onb-info-list{gap:0}
 .onb-info-ico{background:transparent;border:1px solid var(--bdr2);color:var(--accent);border-radius:var(--r-chip)}
 .onb-info-t{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:.4px;text-transform:none}
 .onb-iconcard{border-radius:var(--r-chip)}
-/* ── FEATURE LIST (welcome step) ───────────*/
+/* ── LISTA E VEÇORIVE (hapi i mirëseardhjes) ─*/
 .onb-feat-ico{background:transparent;border:1px solid var(--bdr2);color:var(--accent);border-radius:var(--r-chip)}
 .onb-feat-t{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.4px;text-transform:none}
-/* ── FOOTER ────────────────────────────────*/
+/* ── FUNDI I FAQES (butonat Vazhdo / Kalo) ─*/
 .onb-cta{background:var(--bg);border-top:1px solid var(--bdr);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px))}
-/* ── MUSCLE MAP: blueprint, not a sticker sheet ──
-   Three states read as three line weights and three cool hues; the
-   labels stay monospaced-technical and the map keeps its grid. */
+/* ── HARTA E MUSKUJVE ──────────────────────
+   Tri gjendje (rrit / përcakto / përjashto) me tri ngjyra. */
 .mm-mode{gap:0;border:1px solid var(--bdr2);border-radius:var(--r-chip);overflow:hidden;margin-bottom:18px}
 .mm-mode-btn{flex:1;justify-content:center;border:none;border-right:1px solid var(--bdr2);border-radius:0;background:transparent;padding:12px 8px;font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:0;text-transform:none;color:var(--t3)}
 .mm-mode-btn:last-child{border-right:none}
@@ -1242,13 +1233,10 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
   .onb-cta{max-width:600px;margin:0 auto;width:100%}
 }
 /* ═══════════════════════════════════════════════════════════════
-   STRUCTURE SWEEP
-   Daily targets, the session stopwatch, the notebook log, the macro
-   split, and the blueprint plots that replace empty-text states.
+   OBJEKTIVAT DITORE, KRONOMETRI, DITARI I SERIVE, MAKROT, GJENDJET BOSH
    ═══════════════════════════════════════════════════════════════ */
-/* ── DAILY TARGETS ─────────────────────────
-   Three lines of type and three tick boxes. No card, no numbering,
-   no instructional sentence per row. */
+/* ── OBJEKTIVAT DITORE ─────────────────────
+   Tri rreshta me nga një kuti për shenjë. */
 .targets{margin:0 0 14px}
 .targets.hidden{display:none}
 .targets-head{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
@@ -1264,9 +1252,8 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .tgt.done .tgt-box{background:var(--accent);border-color:var(--accent)}
 .tgt.done .tgt-l{color:var(--t3);text-decoration:line-through;text-decoration-color:var(--t4);text-decoration-thickness:1.5px}
 .tgt.done .tgt-m{color:var(--t4)}
-/* ── SESSION STOPWATCH ─────────────────────
-   The running clock is the loudest thing on the screen while a
-   session is open. Tabular figures so it never jitters. */
+/* ── KRONOMETRI I SEANCËS ──────────────────
+   Ora që ecën gjatë stërvitjes. Shifra me gjerësi fikse që të mos dridhet. */
 .stopwatch{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px 14px;margin-bottom:16px}
 .sw-meta{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--t3)}
 .sw-live{width:7px;height:7px;background:var(--accent);flex-shrink:0;animation:swPulse 1.6s ease-in-out infinite}
@@ -1274,9 +1261,8 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .sw-time{font-family:var(--font-display);font-weight:600;font-size:clamp(46px,15vw,66px);line-height:.85;letter-spacing:.5px;color:var(--accent);font-variant-numeric:tabular-nums;text-shadow:var(--glow-train)}
 .sw-finish{align-self:end}
 @media (prefers-reduced-motion:reduce){.sw-live{animation:none}}
-/* ── NOTEBOOK LOG ──────────────────────────
-   Exercise rows lose their card edges. What is left is a ruled
-   training log: one hairline per row, numbers doing the work. */
+/* ── DITARI I STËRVITJES ───────────────────
+   Rreshtat e ushtrimeve si ditar: një vijë e hollë për rresht. */
 .exi{border-radius:0;padding:16px 2px;margin-bottom:0}
 .exi:hover{border-color:var(--bdr2);background:transparent}
 .exi:first-child{border-top:none}
@@ -1288,8 +1274,8 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .setin{background:transparent;border:none;border-bottom:1px solid transparent;border-radius:0;text-align:center;font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:.5px;color:var(--t);font-variant-numeric:tabular-nums;padding:6px 2px}
 .setin:focus{border-bottom-color:var(--accent);background:transparent;box-shadow:none}
 .setin::placeholder{color:var(--t4);font-weight:500}
-/* ── MACRO SPLIT ───────────────────────────
-   One bar. Each block is that macro's share of today's calories. */
+/* ── NDARJA E MAKROVE ──────────────────────
+   Një shirit; çdo bllok është pjesa e makros në kaloritë e ditës. */
 .split{display:flex;height:34px;overflow:hidden;background:var(--sig-track);border:1px solid var(--bdr2);position:relative;margin-bottom:12px}
 .split-seg{display:flex;align-items:center;justify-content:center;min-width:0;transition:flex-basis .7s cubic-bezier(.16,1,.3,1);overflow:hidden}
 .split-seg span{font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:0;color:var(--accent-ink);opacity:.82}
@@ -1304,10 +1290,9 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .split-k i.s-c{background:var(--sig-water)}
 .split-k i.s-f{background:var(--sig-fuel)}
 .split-k b{font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--t);letter-spacing:.3px;font-variant-numeric:tabular-nums}
-/* ── BLUEPRINT PLOTS ───────────────────────
-   Empty states stop apologising. A surveyed plot with crosshairs at
-   the grid intersections reads as space waiting to be filled. The
-   marks live on a pseudo-element so they never clip the content. */
+/* ── GJENDJET BOSH ─────────────────────────
+   Kur s'ka të dhëna: një kuti me vija të ndërprera dhe një fjali
+   që thotë çfarë do të shfaqet këtu. */
 .bp,.empty-state{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;overflow:hidden}
 .bp::before,.empty-state::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M22 17.5v9M17.5 22h9' stroke='%233F3F46' stroke-width='1'/%3E%3C/svg%3E");background-position:center center}
 body:not(.dark) .bp::before,body:not(.dark) .empty-state::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M22 17.5v9M17.5 22h9' stroke='%23D4D4D8' stroke-width='1'/%3E%3C/svg%3E")}
@@ -1317,25 +1302,24 @@ body:not(.dark) .bp::before,body:not(.dark) .empty-state::before{background-imag
 body:not(.dark) .empty-sub{color:var(--t2)}
 .empty-ico{background:var(--bg);border:1px solid var(--bdr2);color:var(--t4);width:48px;height:48px;border-radius:var(--r-chip);margin-bottom:2px}
 .empty-ico svg{width:26px;height:26px}
-/* ── WEEK STRIP + HEATMAP ──────────────────*/
+/* ── SHIRITI I JAVËS DHE HARTA E NXEHTËSISË ─*/
 .hm-cell{border-radius:0}
-/* The empty heatmap swatch needs an edge or it vanishes into the card. */
+/* Qeliza bosh e hartës ka nevojë për buzë, ndryshe humbet në kartë. */
 .hm-c0{border:1px solid var(--bdr2);background:transparent}
-/* ── CONTRAST ──────────────────────────────
-   --t3 carries every small label (readouts, ring units, tab names, the
-   date rule). At the old value it sat at 3.8:1 on obsidian and 2.5:1 on
-   white, i.e. below AA at the exact sizes it is used. Lift the step in
-   both themes; --t4 stays slate for decoration only. */
-/* Light-mode status badges were amber-on-amber at 2.2:1. */
+/* ── KONTRASTI ─────────────────────────────
+   --t3 përdoret për çdo etiketë të vogël; mbahet mjaft e errët që të
+   kalojë standardin WCAG AA. --t4 është vetëm për dekor. */
+/* Etiketat e gjendjes në temën e çelët */
 body:not(.dark) .badge.by{background:rgba(234,88,12,.10);color:#9A3412}
 body:not(.dark) .badge.bb{background:rgba(37,99,235,.10);color:#1D4ED8}
 body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}
 /* ═══════════════════════════════════════════════════════════════
-   RAPID-FIRE LOGGER
-   Steppers instead of keyboards, one tap to complete, a running HUD,
-   and an inline add that never leaves the page.
+   REGJISTRIMI I SHPEJTË I SERIVE
+   Butona +/- në vend të tastierës, një prekje për ta shënuar serinë
+   si të kryer, numrat e seancës që ndryshojnë live, dhe shtimi i
+   ushtrimit pa dalë nga faqja.
    ═══════════════════════════════════════════════════════════════ */
-/* ── LIVE HUD ──────────────────────────────*/
+/* ── TREGUESI LIVE (ora dhe volumi) ────────*/
 .hud{display:grid;grid-template-columns:1fr auto;gap:12px 14px;align-items:end;margin-bottom:18px}
 .hud-meta{grid-column:1/-1;display:flex;align-items:center;gap:8px;color:var(--t3)}
 .hud-main{display:flex;align-items:flex-end;gap:0;min-width:0}
@@ -1347,13 +1331,13 @@ body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}
 .hud-l{font-family:var(--font-mono);font-size:10px;letter-spacing:0;text-transform:none;color:var(--t3);margin-top:8px;white-space:nowrap}
 .hud-end{align-self:end}
 #wtimer{text-shadow:var(--glow-train)}
-/* ── SET ROW ───────────────────────────────
-   One horizontal strip per set: number, two steppers, effort, tick, kill. */
+/* ── RRESHTI I SERISË ──────────────────────
+   Numri, pesha, përsëritjet, mundimi (RIR), shenja e kryerjes, fshirja. */
 .setrow{grid-template-columns:20px 1fr 1fr 34px 34px 18px;gap:6px;padding:4px 0;align-items:center}
 .setrow.sethead{grid-template-columns:20px 1fr 1fr 34px 34px 18px}
 .setn{font-size:13px;text-align:center}
-/* Stepper: minus, value, plus. The buttons are tall so the touch target is
-   the full row height even though the control reads as small. */
+/* Stepper: minus, vlera, plus. Butonat janë sa lartësia e rreshtit që
+   të preken lehtë me gisht. */
 .step{display:grid;grid-template-columns:26px minmax(0,1fr) 26px;align-items:stretch;border:1px solid var(--bdr2);background:transparent;transition:border-color .14s}
 .step:focus-within{border-color:var(--accent)}
 .step .setin{border:none;padding:8px 0;min-width:0;font-size:16px;border-bottom:none}
@@ -1363,8 +1347,8 @@ body:not(.dark) .badge.bg{background:var(--adim);color:var(--accent-d)}
 .step-b:active{background:var(--accent);color:var(--accent-ink)}
 .step.ghost .setin::placeholder{color:var(--t4);opacity:1}
 .step.ghost .setin{color:var(--t4)}
-/* ── ONE-TAP COMPLETION ────────────────────
-   Hollow technical outline, then a solid volt block. No fade. */
+/* ── SHENJA "SERIA U KRYE" ─────────────────
+   Kuti boshe, pastaj e mbushur. */
 .setdone{all:unset;box-sizing:border-box;cursor:pointer;display:grid;place-items:center;color:transparent;transition:none}
 .setdone svg{width:16px;height:16px}
 .setdone:hover{border-color:var(--t2)}
@@ -1373,7 +1357,7 @@ body.dark .setdone.on{box-shadow:var(--glow-train)}
 .setrow.done .step{border-color:var(--bdr)}
 .setdel{all:unset;cursor:pointer;color:var(--t4);display:grid;place-items:center;padding:4px 0}
 .setdel:hover{color:var(--red)}
-/* RIR is a power feature: it is the first thing to go when space is short. */
+/* RIR (përsëritjet e mbetura) fshihet i pari kur ekrani është i ngushtë. */
 .setrir{display:flex;align-items:center;gap:4px;min-width:0}
 .rir-in{font-size:13px;padding:8px 0}
 @media(max-width:379px){
@@ -1381,7 +1365,7 @@ body.dark .setdone.on{box-shadow:var(--glow-train)}
   .setrir,.setrow.sethead>div:nth-child(4){display:none}
   .step{grid-template-columns:23px minmax(0,1fr) 23px}
 }
-/* ── INLINE QUICK-ADD ──────────────────────*/
+/* ── SHTIMI I SHPEJTË I USHTRIMIT ──────────*/
 .qa{margin-top:14px;position:relative}
 .qa-bar{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1.5px solid var(--bdr2);background:var(--bg2);transition:border-color .14s}
 .qa-bar:focus-within{border-color:var(--accent)}
@@ -1397,21 +1381,20 @@ body.dark .setdone.on{box-shadow:var(--glow-train)}
 .qa-n{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.4px;text-transform:none;color:var(--t)}
 .qa-m{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--t3);white-space:nowrap}
 .qa-new .qa-n{color:var(--accent)}
-/* Session muscle chips: sharp, volt, technical — they were the last soft
-   pills left inside the logger. */
+/* Çipat e muskujve të seancës */
 .mm-chip.on,.musc-tag,.musc-tag.s{border-radius:var(--r-chip)}
 .musc-tag{font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:0;text-transform:none;border-radius:var(--r-chip);background:var(--adim);color:var(--accent);border:1px solid rgba(204,255,0,.28);padding:5px 10px}
 body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:var(--bdr2)}
 /* ═══════════════════════════════════════════════════════════════
-   SESSION REPORT CARD
-   Volume leads, the deltas say whether anything moved, and records
-   get a badge instead of a congratulation.
+   RAPORTI PAS STËRVITJES
+   Volumi në krye, ndryshimet krahasuar me seancën e kaluar, dhe
+   rekordet si etiketa.
    ═══════════════════════════════════════════════════════════════ */
 .rc{padding-bottom:24px}
 .rc-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:2px solid var(--accent);margin-bottom:18px}
 .rc-kicker{font-family:var(--font-display);letter-spacing:0;text-transform:none;color:var(--t)}
 .rc-date{font-family:var(--font-mono);font-size:11px;letter-spacing:0;color:var(--t3)}
-/* Headline metrics — volume gets the whole top row. */
+/* Numrat kryesorë; volumi zë gjithë rreshtin e parë. */
 .rc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bdr);border:1px solid var(--bdr);margin-bottom:22px}
 .rc-cell{background:var(--card);padding:14px 12px}
 .rc-hero{grid-column:1/-1;order:-1;padding:18px 14px}
@@ -1423,7 +1406,7 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .rc-sec{font-family:var(--font-mono);font-size:10px;letter-spacing:0;text-transform:none;color:var(--t3);margin:0 0 10px;display:flex;align-items:center;gap:10px}
 .rc-sec::after{content:"";flex:1;height:1px;background:var(--bdr)}
 .rc section{margin-bottom:20px}
-/* Deltas. A spike in volume earns a volt rule down the left. */
+/* Ndryshimet; një rritje e madhe volumi merr një vijë me ngjyrë majtas. */
 .rc-delta{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;padding:11px 0 11px 12px;border-bottom:1px solid var(--bdr);border-left:2px solid transparent}
 .rc-delta:last-child{border-bottom:none}
 .rc-delta.spike{border-left-color:var(--accent);background:var(--adim)}
@@ -1434,11 +1417,11 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .rc-d-v.up{color:var(--accent)}
 .rc-d-v.down{color:var(--sig-fuel)}
 .rc-d-v.flat{color:var(--t4)}
-/* PR badges */
+/* Etiketat e rekordeve */
 .rc-pr{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1px solid var(--accent);background:var(--adim);margin-bottom:7px}
 .rc-pr-tag{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:0;background:var(--accent);color:var(--accent-ink);padding:4px 7px;flex-shrink:0}
 .rc-pr-t{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.4px;text-transform:none;color:var(--t);line-height:1.15}
-/* Ledger */
+/* Lista e ushtrimeve të seancës */
 .rc-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--bdr)}
 .rc-row:last-child{border-bottom:none}
 .rc-n{font-family:var(--font-mono);font-size:11px;color:var(--t4);letter-spacing:0}
@@ -1447,11 +1430,11 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .rc-sets{font-family:var(--font-display);font-weight:600;font-size:15px;color:var(--accent);font-variant-numeric:tabular-nums;min-width:26px;text-align:right}
 .rc-note{font-size:13.5px;line-height:1.6;color:var(--t2);padding:12px 13px;border-left:2px solid var(--bdr3);background:var(--bg2)}
 /* ═══════════════════════════════════════════════════════════════
-   PAYWALL
-   One stream, not three columns. A numbered ledger instead of five
-   identical ticks. A receipt where the fine print used to be.
+   FAQJA E ABONIMIT PRO
+   Lista e veçorive, tri planet njëri nën tjetrin, dhe një "faturë"
+   me çmimin në fund.
    ═══════════════════════════════════════════════════════════════ */
-/* ── FEATURE LEDGER ────────────────────────*/
+/* ── LISTA E VEÇORIVE ──────────────────────*/
 .pw-ledger{list-style:none;margin:0 0 24px;padding:0}
 .pw-led{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--bdr)}
 .pw-led:last-child{border-bottom:none}
@@ -1461,8 +1444,8 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .pw-led-lead{border-left:2px solid var(--accent);padding-left:13px;background:var(--adim);margin-bottom:4px}
 .pw-led-lead .pw-led-n{color:var(--accent)}
 .pw-led-lead .pw-led-b b{font-size:19px;color:var(--accent)}
-/* ── TIER STREAM ───────────────────────────
-   Same structure in every row; the selected one opens. */
+/* ── PLANET ────────────────────────────────
+   Çdo plan është një rresht; i zgjedhuri hapet. */
 .pw-plans{display:flex;flex-direction:column;gap:0;margin-bottom:16px;border:1px solid var(--bdr2)}
 .pw-plan{all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:grid;grid-template-columns:18px 1fr auto;gap:6px 13px;align-items:baseline;width:100%;padding:15px 16px;border-bottom:1px solid var(--bdr2);font-family:inherit;transition:background .16s,padding .18s}
 .pw-plan:last-child{border-bottom:none}
@@ -1480,8 +1463,8 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .pw-plan.on .pw-p-t{color:var(--accent)}
 .pw-plan.on .pw-p-price b{font-size:30px;color:var(--t)}
 .pw-plan.on .pw-p-extra{display:block;margin-top:8px}
-/* ── RECEIPT ───────────────────────────────
-   Dashed rules and monospace figures: a gym transaction slip. */
+/* ── FATURA ────────────────────────────────
+   Vija të ndërprera dhe shifra me gjerësi fikse. */
 .pw-receipt{border:1px dashed var(--bdr3);padding:15px 16px;margin:16px 0 8px;font-family:var(--font-mono)}
 .pw-r-line{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;font-size:11.5px;letter-spacing:0}
 .pw-r-line span{color:var(--t3);text-transform:none;letter-spacing:0;font-size:10px}
@@ -1491,8 +1474,8 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .pw-r-rule{border-top:1px dashed var(--bdr3);margin:9px 0}
 .pw-r-fine{line-height:1.7;letter-spacing:0}
 .pw-trust,.pw-fineprint{display:none}
-/* ── TRIAL TRACKER ─────────────────────────
-   A loading graph with three named milestones, not a decorated list. */
+/* ── GJURMUESI I PROVËS FALAS ──────────────
+   Tri momente të emërtuara përgjatë një vije. */
 .pw-timeline summary{font-family:var(--font-display);font-weight:600;font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--t2);cursor:pointer;padding:13px 0;border-top:1px solid var(--bdr);list-style:none}
 .pw-timeline summary::-webkit-details-marker{display:none}
 .pw-timeline[open] summary{color:var(--accent)}
@@ -1509,12 +1492,11 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .pw-track-d{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0;color:var(--accent)}
 .pw-track-steps li:last-child .pw-track-d{color:var(--t3)}
 .pw-track-t{font-size:12.5px;color:var(--t2);line-height:1.5}
-/* Onboarding paywall inherits the ledger + receipt language. */
+/* Oferta Pro gjatë onboarding-ut përdor të njëjtin stil. */
 .obp-trust{display:none}
 .obp-fine{font-family:var(--font-mono);font-size:9.5px;line-height:1.7;color:var(--t4)}
-/* ── UTILITY STRIP ─────────────────────────
-   Water and sleep sit under two full-width bands, so they read as
-   instruments, not cards: a value, a fill line, one tap. */
+/* ── SHIRITI UJË + GJUMË ───────────────────
+   Dy qeliza nën bandat kryesore: vlera, vija e mbushjes, një prekje. */
 .util-cell{all:unset;box-sizing:border-box;cursor:pointer;display:block;transition:background .15s}
 .util-cell:active{background:var(--adim)}
 .util-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
@@ -1526,54 +1508,47 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .util-bar{display:block;height:3px;background:var(--sig-track);margin:10px 0 8px}
 .util-bar i{display:block;height:100%;transition:width .7s cubic-bezier(.16,1,.3,1)}
 .util-s{display:block;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* Training keeps the weight it earned as the hero. */
+/* Numri i volumit të stërvitjes mbetet më i madhi. */
 .band-train .tr-vol .stat-num{font-size:clamp(52px,15vw,72px)}
 .band-train .hero-spark{height:76px}
-/* ── CHARTS BLEED ──────────────────────────
-   Canvases run to the container edge; the card padding was doubling up
-   with Chart.js's own inset. NB: do not put #hm-grid in this rule — an id
-   beats .hm-grid's `display:grid` and collapses the heatmap into one
-   full-width column per cell. */
+/* ── GRAFIKËT DERI NË BUZË ─────────────────
+   Kanavacat shkojnë deri në skaj të kartës. Kujdes: mos e vendos #hm-grid
+   këtu, sepse id-ja mund .hm-grid dhe prish rrjetin e hartës. */
 .card>[style*="position:relative"]>canvas{display:block}
-/* ── WATER GRID ────────────────────────────
-   Hollow technical cell, solid volt on tap. No fade. */
+/* ── RRJETI I GOTAVE TË UJIT ───────────────
+   Qelizë boshe, e mbushur kur preket. */
 .wc{border-radius:var(--r-chip);background:transparent;border:1.5px solid var(--bdr2);color:var(--t4);transition:none}
 .wc:hover{border-color:var(--bdr3)}
 .wc.on{background:var(--sig-water);border-color:var(--sig-water);color:var(--bg)}
 body.dark .wc.on{box-shadow:var(--glow-water)}
-/* ── ONBOARDING: technical sequence index ──*/
+/* ── ONBOARDING: numri i hapit ─────────────*/
 .onb-idx-k{color:var(--t4)}
 .onb-idx i{color:var(--t4);margin:0 1px}
-/* ── UTILITARIAN DATA FIELDS ───────────────
-   Underlined strips with the unit set hard right. No boxes. */
+/* ── FUSHAT E TË DHËNAVE ───────────────────
+   Fushë me vijë poshtë dhe njësia djathtas. */
 .fdata label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:0;text-transform:none;color:var(--t3)}
 .fd{display:flex;align-items:baseline;gap:8px;border-bottom:1.5px solid var(--bdr3);padding:4px 0 6px;transition:border-color .15s}
 .fd:focus-within{border-bottom-color:var(--accent)}
 .fd input{flex:1;min-width:0;background:transparent!important;border:none!important;border-radius:0;padding:4px 0;outline:none;box-shadow:none!important;font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.4px;color:var(--t);font-variant-numeric:tabular-nums}
 .fd input::placeholder{color:var(--t4)}
 .fd-u{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);flex-shrink:0}
-/* Receipt fine print was below AA at --t4. */
+/* Shkrimi i vogël i faturës me kontrast të mjaftueshëm. */
 .pw-r-fine{color:var(--t3);font-size:10px}
-/* Onboarding field labels all speak the same technical register. */
+/* Etiketat e fushave të onboarding-ut */
 #onb .f>label,#onb .fdata label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:0;text-transform:none;color:var(--t3);font-weight:600}
-/* Selected states own their fill regardless of theme-scoped base rules. */
+/* Elementet e zgjedhura mbajnë mbushjen e tyre në të dyja temat. */
 .sb-item.on{color:var(--accent);background:var(--adim);box-shadow:inset 2px 0 0 var(--accent)}
 .rest-preset.on{border-color:var(--accent);background:var(--adim)}
-/* "No data yet" reads as a label, not as a stray dash in the accent colour. */
+/* "Ende s'ka të dhëna" duket si etiketë, jo si vizë me ngjyrë. */
 .nodata{letter-spacing:0;text-transform:none}
-/* ── CHARTS BLEED ──────────────────────────
-   Gridlines and axis borders are gone; the last thing holding the plot in
-   was the card's own padding. Let the ink run to the edge. */
+/* ── GRAFIKËT PA MBUSHJE ANËSORE ──────────── */
 .chart-wrap{margin-left:-20px;margin-right:-20px;padding:0}
 .card>.chart-wrap:last-child{margin-bottom:-20px}
 @media(min-width:820px){.band .chart-wrap,.card .chart-wrap{margin-left:-28px;margin-right:-28px}}
-/* Heatmap loses its inner gutter for the same reason. The display is pinned
-   here at id strength: any blanket display:block on #hm-grid outranks
-   .hm-grid and stacks each week into full-width, day-sized blocks. */
+/* Harta e nxehtësisë pa mbushje anësore. display:grid fiksohet me id,
+   që asnjë rregull tjetër të mos e prishë rrjetin. */
 #hm-grid{margin:0 -2px;display:grid}
-/* ── MUSCLE MAP: diagnostic blueprint ──────
-   A marked zone is a solid contrast block with the survey grid showing
-   through it, so the map reads as an instrument rather than a checklist. */
+/* ── HARTA E MUSKUJVE: zonat e shënuara ──── */
 .mm-chip{position:relative;overflow:hidden}
 .mm-chip.grow::before,.mm-chip.def::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.26;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M7 5.2v3.6M5.2 7h3.6' stroke='%230A0A0C' stroke-width='.8'/%3E%3C/svg%3E");background-position:center}
 .mm-chip.grow>*,.mm-chip.def>*,.mm-chip.exc>*{position:relative;z-index:1}
@@ -1581,30 +1556,22 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 .mm-chip.grow .mm-chip-dot,.mm-chip.def .mm-chip-dot{background:currentColor;opacity:.5}
 .mm-wrap{border:1px dashed var(--bdr3);padding:14px 12px}
 /* ═══════════════════════════════════════════════════════════════
-   SETTINGS
-   A settings screen is somewhere you go to find one specific thing
-   and leave. So it is built for scanning, not for looking at: bare
-   monochrome icons at one size, one weight for labels and one for
-   values, rows tight enough that a group reads as a group.
-
-   Colour appears exactly twice — the Pro card and the destructive
-   rows — and carries meaning both times. The old tinted icon tiles
-   spent eight different hues on rows that meant nothing by colour,
-   which is what made the screen read as decoration.
+   CILËSIMET
+   Faqe për t'u skanuar shpejt: ikona njëngjyrëshe të një madhësie,
+   rreshta të ngjeshur në grupe. Ngjyra shfaqet vetëm te karta Pro
+   dhe te veprimet shkatërruese.
    ═══════════════════════════════════════════════════════════════ */
-/* ── IDENTITY ──────────────────────────────
-   The whole row opens the profile editor, so there is no separate
-   button competing with it for the same job. */
+/* ── IDENTITETI ────────────────────────────
+   Gjithë rreshti (avatar, emër, email) hap redaktimin e profilit. */
 .set-id{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;font-family:inherit;-webkit-appearance:none;transition:border-color .15s,background .15s}
 .set-id:hover{border-color:var(--bdr3)}
 .set-ava{width:44px;height:44px;flex-shrink:0;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--adim);color:var(--accent);border:1px solid var(--bdr2);font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.5px}
 .set-id-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .set-id-n{font-size:15px;font-weight:600;color:var(--t);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .set-id-e{font-size:12.5px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ── ROWS ──────────────────────────────────
-   Icon, label stack, chevron. The icon is a landmark for the eye, not
-   an ornament, so it stays the same size and the same colour on every
-   row and only the label carries the difference. */
+/* ── RRESHTAT ──────────────────────────────
+   Ikonë, etiketë me nëntitull, shigjetë. Ikona ka gjithmonë të njëjtën
+   madhësi dhe ngjyrë. */
 #p-settings .sit,#p-settings .tog-row{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--bdr)}
 #p-settings .sit{cursor:pointer;transition:opacity .15s}
 #p-settings .sit:hover{opacity:.72}
@@ -1616,27 +1583,26 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 .sit-s{font-size:12px;color:var(--t3);line-height:1.4}
 .sit-x{width:15px;height:15px;flex-shrink:0;color:var(--t4);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #p-settings .sit-s .lnk{font-size:12px;padding:0}
-/* Destructive rows are the second and last place colour appears. Signal red
-   sits at 3.8:1 on white, below AA at label size, so light mode takes a
-   darker step of the same hue; the icon can stay bright, it is not text. */
+/* Rreshtat shkatërrues (fshi llogarinë) janë të kuq; në temën e çelët
+   përdoret një e kuqe më e errët që teksti të ketë kontrast. */
 .set-danger .sit-danger .sic{color:var(--red)}
 .set-danger .sit-danger .sit-l{color:#B91C1C}
 body.dark .set-danger .sit-danger .sit-l{color:var(--red)}
-/* ── FIELDS (theme, accent) ────────────────*/
+/* ── FUSHAT (tema) ─────────────────────────*/
 .set-field{padding:12px 0;border-bottom:1px solid var(--bdr)}
 .set-field-last{border-bottom:none;padding-bottom:2px}
 .set-field-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .set-field-h>span:first-child{font-size:13.5px;font-weight:600;color:var(--t)}
 .set-field-h .tm{font-size:12px}
-/* ── SUBSCRIPTION ──────────────────────────*/
+/* ── ABONIMI ───────────────────────────────*/
 .set-pro{display:flex;align-items:center;gap:14px;cursor:pointer;border-color:color-mix(in srgb,var(--accent) 34%,transparent);background:var(--adim);transition:border-color .15s}
 .set-pro:hover{border-color:var(--accent)}
 .set-pro-ico{width:22px;height:22px;flex-shrink:0;color:var(--accent);fill:currentColor;stroke:none}
 .set-pro-t{font-size:14px;font-weight:600;color:var(--t);letter-spacing:-.01em}
 .set-pro-s{font-size:12px;color:var(--t2);line-height:1.4}
 .set-pro .sit-x{color:var(--accent)}
-/* ── ABOUT ─────────────────────────────────
-   Facts, not tappable rows. Set as a definition list would be. */
+/* ── RRETH APLIKACIONIT ────────────────────
+   Versioni dhe faqja e internetit; fakte, jo rreshta që preken. */
 .set-meta{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--bdr);font-size:13px}
 .set-meta-last{border-bottom:none;padding-bottom:0}
 .set-meta>span:first-child{color:var(--t3)}
@@ -1646,42 +1612,34 @@ body.dark .set-danger .sit-danger .sit-l{color:var(--red)}
   #p-settings .sit,#p-settings .tog-row{gap:11px}
   .sit-l{font-size:13px}
 }
-/* ── SEGMENTED CONTROLS ────────────────────
-   A filter chip is small enough that a solid accent fill reads as a mark.
-   A segmented control is not: Male / Metric / Dark are half-width slabs, and
-   filling one solid volt put the loudest object on the screen on a field
-   label. Selection here is carried the way the rest of the app carries it
-   (rest presets, muscle map) — accent edge, dim accent ground, accent ink. */
+/* ── KONTROLLET ME SEGMENTE ────────────────
+   Mashkull / Femër, Metrik / Imperial, Çelët / Errët. */
 .gpill.on{background:var(--adim);color:var(--accent-d);border-color:var(--accent)}
 body.dark .gpill.on{color:var(--accent)}
 .gpill{transition:background .14s,border-color .14s,color .14s}
-/* Field labels sit above their value, so they recede and the value leads. */
+/* Etiketa e fushës qëndron mbi vlerën, më e qetë se ajo. */
 .f label{line-height:1.3}
-/* Amber readout text. Signal amber is 2.15:1 on white, under AA even at
-   30px, so light mode takes the darker step the status badges use. */
+/* Teksti me ngjyrë të verdhë merr një ton më të errët në temën e çelët. */
 .ty{color:var(--yel)}
 body:not(.dark) .ty{color:#B45309}
 /* ═══════════════════════════════════════════════════════════════
-   COMMAND ENGINE
-   The chat metaphor is gone. What is left reads as an instrument:
-   a header that reports state, output in bordered data cards with a
-   labelled rule across the top, and a command bar instead of a
-   message box. No pills, no bubbles, no tails, no sparkles.
+   SKEDA E TRAJNERIT (Coach): kartat e përgjigjeve
+   Koka me gjendjen, përgjigjet e trajnerit si karta me kornizë, dhe
+   fusha e mesazhit. Stili i bisedës përfundon në shtresën IRON.
    ═══════════════════════════════════════════════════════════════ */
 .eng-head{display:flex;justify-content:space-between;gap:14px;flex-shrink:0}
 .eng-head-t{min-width:0}
 .eng-title{font-family:var(--font-display);text-transform:none;color:var(--t)}
 .eng-status{display:flex;align-items:center;gap:7px}
-/* Empty thread: one line of plain guidance, gone as soon as a message exists. */
+/* Biseda bosh: një rresht udhëzimi që zhduket sapo ka një mesazh. */
 .chat-empty{margin:auto;max-width:34ch;padding:48px 24px;text-align:center;font-family:var(--font-body);font-size:14px;line-height:1.6;color:var(--t3);text-wrap:pretty}
 .chat-empty:not(:only-child){display:none}
 .eng-dot{width:6px;height:6px;flex-shrink:0;background:var(--accent);animation:engPulse 2s ease-in-out infinite}
 @keyframes engPulse{0%,100%{opacity:1}50%{opacity:.3}}
 .eng-reset{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;background:transparent;border:1px solid var(--bdr2);cursor:pointer;font-weight:600;letter-spacing:0;text-transform:none;-webkit-appearance:none;transition:border-color .15s,color .15s}
 .eng-reset:hover{border-color:var(--t3);color:var(--t)}
-/* ── OUTPUT CARD ───────────────────────────
-   Square corners, one hairline border, and a rule under the header so the
-   label reads as a column heading rather than a title. */
+/* ── KARTA E PËRGJIGJES ────────────────────
+   Kornizë e hollë dhe një vijë nën titull. */
 .eng-out{border:1px solid var(--bdr2);background:var(--card);max-width:100%;flex-shrink:0}
 body.dark .eng-out{background:#0F0F12}
 .eng-out-h{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--bdr2);background:var(--surface);font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3)}
@@ -1689,28 +1647,25 @@ body.dark .eng-out-h{background:#141418}
 .eng-out-ico{width:13px;height:13px;flex-shrink:0;color:var(--accent);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .eng-out-ts{margin-left:auto;color:var(--t4);letter-spacing:0}
 .eng-out-b{padding:14px;color:var(--t);white-space:pre-wrap;word-break:break-word;font-variant-numeric:tabular-nums}
-/* ── COMMAND ECHO ──────────────────────────
-   What you typed is a logged command, not a message from a person. */
+/* ── MESAZHI I PËRDORUESIT ─────────────────*/
 .eng-cmd{display:flex;align-items:baseline;flex-shrink:0;padding:2px 2px 2px 0;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--t2);word-break:break-word}
 .eng-cmd-k{color:var(--accent);flex-shrink:0;font-size:11px}
 .eng-cmd-t{min-width:0}
-/* ── PRESETS ───────────────────────────────*/
+/* ── PYETJET E GATSHME ─────────────────────*/
 .eng-presets{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 10px;flex-shrink:0}
 .eng-presets .chat-chip{position:relative;border-radius:0;border:1px solid var(--bdr3);border-left:2px solid var(--accent);background:transparent;font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;padding:8px 12px;color:var(--t2)}
 .eng-presets .chat-chip:hover{border-color:var(--accent);background:var(--adim);color:var(--accent)}
 .eng-presets .chat-chip:active{transform:translateY(1px)}
 body:not(.dark) .eng-presets .chat-chip:hover{color:var(--accent-d)}
-/* ── COMMAND BAR ───────────────────────────
-   A single field with a caret marker, squared off and flush to the input. */
+/* ── FUSHA E MESAZHIT ──────────────────────*/
 .chat-row{align-items:stretch;gap:0;border:1px solid var(--bdr2);background:var(--card);padding:0}
 body.dark .chat-row{background:#0F0F12}
 .chat-row:focus-within{border-color:var(--accent)}
 .eng-caret{display:flex;align-items:center;padding:0 2px 0 12px;flex-shrink:0;color:var(--accent);font-size:12px;line-height:1}
 #p-ai .chat-in{border:none;border-radius:0;background:transparent;padding:12px 10px;font-size:14px;font-family:var(--font-mono);line-height:1.5;box-shadow:none}
 #p-ai .chat-in:focus{border:none;background:transparent;box-shadow:none}
-/* The command hint is long by design. The field stays one line — a search
-   bar, not a text box — so the hint is truncated rather than wrapped, and
-   the full string still reaches assistive tech from the placeholder attr. */
+/* Teksti ndihmës i fushës është i gjatë: pritet me "…" në vend që të
+   thyhet, por mbetet i plotë për lexuesit e ekranit. */
 #p-ai .chat-in{white-space:nowrap;overflow-x:hidden;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
 #p-ai .chat-in::placeholder{color:var(--t4);font-family:var(--font-mono);font-size:11.5px;line-height:1.5;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #p-ai .chat-mic,#p-ai .chat-send{border-radius:0;align-self:stretch;height:auto;width:46px;flex-shrink:0;box-shadow:none;border:none}
@@ -1718,7 +1673,7 @@ body.dark .chat-row{background:#0F0F12}
 #p-ai .chat-mic:hover{color:var(--t);background:var(--surface)}
 #p-ai .chat-send{background:var(--accent);color:var(--accent-ink)}
 #p-ai .chat-send:hover{background:var(--accent-d)}
-/* The action confirmation card follows the same geometry. */
+/* Karta e konfirmimit të veprimit ka të njëjtën formë. */
 #p-ai .act-card,#p-ai .acard{border-radius:0}
 .eng-out+.eng-out,.eng-cmd+.eng-out,.eng-out+.eng-cmd{margin-top:2px}
 @media(max-width:400px){
@@ -1726,13 +1681,11 @@ body.dark .chat-row{background:#0F0F12}
   .eng-out-b{padding:12px;font-size:12.5px}
 }
 @media (prefers-reduced-motion:reduce){.eng-dot{animation:none}}
-/* The upgrade link sits inside the status line, so it inherits its register. */
+/* Lidhja "Kalo në Pro" brenda rreshtit të gjendjes. */
 .eng-status .lnk{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;font-weight:600;padding:0}
 /* ═══════════════════════════════════════════════════════════════
-   SYSTEM SYNCHRONIZATION
-   The readout card's loading state. Three labelled bars for the three
-   series being compiled, so the wait shows what is being waited on
-   instead of the word "Loading".
+   GJENDJA E NGARKIMIT TË KARTËS SË TRAJNERIT
+   Shirita që lëvizin derisa të vijë përgjigjja.
    ═══════════════════════════════════════════════════════════════ */
 .sync{padding-top:2px}
 .sync-t{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);margin-bottom:12px}
@@ -1745,15 +1698,14 @@ body.dark .chat-row{background:#0F0F12}
 .sync-row:nth-child(3) .sync-bar::after{animation-delay:.36s}
 @keyframes syncScan{0%{background-position:200% 0}100%{background-position:-200% 0}}
 body:not(.dark) .sync-bar{background:var(--surface-2)}
-/* The block rationale: one sentence of programming reasoning above the week. */
+/* Arsyetimi i planit: një fjali mbi javën. */
 .plan-why{font-size:12.5px;line-height:1.55;color:var(--t2);margin:-4px 0 14px;max-width:62ch}
 @media (prefers-reduced-motion:reduce){
   .sync-bar::after{animation:none;background:var(--adim)}
 }
-/* ── ENGINE GRIDS ──────────────────────────
-   The readout renders markdown tables as real tables. Rules, not fills, carry
-   the structure; a wide grid scrolls inside its own box so the card never
-   pushes the page sideways. */
+/* ── TABELAT NË PËRGJIGJET E TRAJNERIT ─────
+   Tabelat markdown bëhen tabela të vërteta; një tabelë e gjerë
+   skrollohet brenda kutisë së vet. */
 .eng-out-b .eng-txt{white-space:pre-wrap;word-break:break-word}
 .eng-out-b .eng-txt+.eng-grid-wrap,.eng-out-b .eng-txt+.eng-log,
 .eng-out-b .eng-grid-wrap+.eng-txt,.eng-out-b .eng-log+.eng-txt,
@@ -1770,21 +1722,20 @@ body:not(.dark) .eng-grid b{color:var(--accent-d)}
 .eng-log li{position:relative;padding-left:16px;line-height:1.55}
 .eng-log li::before{content:"";position:absolute;left:2px;top:.62em;width:5px;height:1px;background:var(--accent)}
 /* ═══════════════════════════════════════════════════════════════
-   PROFILE SECTIONS
-   Biometrics, calibrations and the distribution matrix are the three
-   things the engine reads before it prescribes anything, so they sit
-   on the page as sections rather than behind three sheets.
+   SEKSIONET E PROFILIT (në Cilësime)
+   Të dhënat e trupit, objektivat ditore dhe fokusi i muskujve janë
+   seksione në faqe, jo dritare të veçanta.
    ═══════════════════════════════════════════════════════════════ */
 .sec-note{font-size:12px;line-height:1.5;color:var(--t3);margin:0 0 16px;max-width:52ch}
 .sec-tag{font-family:var(--font-mono);letter-spacing:0;text-transform:none;border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);padding:3px 8px;white-space:nowrap}
 body:not(.dark) .sec-tag{color:var(--accent-d)}
 .sec-tag.warn{color:var(--yel);border-color:color-mix(in srgb,var(--yel) 40%,transparent)}
 body:not(.dark) .sec-tag.warn{color:#B45309}
-/* A committed jump should say where it landed. */
+/* Seksioni ndriçohet për një çast kur arrin tek ai nga një lidhje. */
 @keyframes secFlash{0%{box-shadow:0 0 0 0 var(--adim)}100%{box-shadow:0 0 0 5px transparent}}
 .sec-flash{animation:secFlash .9s ease-out}
 @media (prefers-reduced-motion:reduce){.sec-flash{animation:none}}
-/* ── ENGINE CALIBRATIONS ───────────────────*/
+/* ── OBJEKTIVAT DITORE ─────────────────────*/
 .cal-rows{display:flex;flex-direction:column;gap:18px}
 .cal-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
 .cal-l{font-size:13.5px;font-weight:600;color:var(--t)}
@@ -1794,7 +1745,7 @@ body:not(.dark) .sec-tag.warn{color:#B45309}
 .cal-set input{flex:1;min-width:0;background:transparent;border:none;outline:none;padding:9px 12px;color:var(--t);font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.3px;font-variant-numeric:tabular-nums;-webkit-appearance:none}
 .cal-u{display:flex;align-items:center;padding:0 12px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--bdr2);font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);white-space:nowrap}
 body.dark .cal-u{background:var(--bg2)}
-/* ── VOLUME DISTRIBUTION MATRIX ────────────*/
+/* ── FOKUSI I MUSKUJVE ─────────────────────*/
 .vdm-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px}
 .vdm-k{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3)}
 .vdm-k i{width:9px;height:9px;flex-shrink:0}
@@ -1805,8 +1756,7 @@ body.dark .cal-u{background:var(--bg2)}
 .vdm-gh{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);margin-bottom:7px}
 .vdm-row{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface);margin-bottom:3px}
 body.dark .vdm-row{background:var(--bg2)}
-/* The swatch is the same mark as the legend key, so the row reads against it
-   directly. A coloured side stripe would say the same thing less precisely. */
+/* Katrori i ngjyrës është i njëjtë me atë të legjendës. */
 .vdm-row::before{content:"";width:9px;height:9px;flex-shrink:0;background:var(--bdr3);box-shadow:none}
 .vdm-n{flex:1;font-size:13px;font-weight:500;color:var(--t2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vdm-s{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);flex-shrink:0}
@@ -1821,13 +1771,11 @@ body.dark .vdm-row{background:var(--bg2)}
 .vdm-row.cut .vdm-s{color:var(--sig-fuel)}
 body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
 /* ═══════════════════════════════════════════════════════════════
-   HUMAN PASS (2026-10-28)
-   Everything below overrides earlier rules on purpose. (Typefaces changed
-   again in the PLAIN PASS further down: system sans everywhere, no webfont.)
-   No tracked uppercase kickers; no monospace HUD; sections
-   instead of a stack of identical cards; motion only where state changes.
+   THJESHTËSIMI I PAMJES
+   Titujt me shkronja normale, pa monospace, seksione në vend të
+   kartave identike, animacion vetëm kur ndryshon gjendja.
    ═══════════════════════════════════════════════════════════════ */
-/* 1. Headings and labels in the body face, sentence case, untracked. */
+/* 1. Titujt dhe etiketat me fontin e tekstit, shkronja normale. */
 .ctitle,.band-kicker,.targets-t,.coach-title,.onb-sect,.bp-l,.empty-h,.opt-title,.opt-row-l,
 .onb-info-t,.onb-feat-t,.tgt-l,.rc-name,.rc-kicker,.eng-title,.musc-tag,.scale-n,.cki-label,
 .split-seg span,.split-k b,.pw-led-b b,.sw-time,.chip,.tlogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em}
@@ -1852,7 +1800,7 @@ body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
 .opt-row-r{font-size:13px;color:var(--t3)}
 .sec-tag{font-size:11px;font-weight:600}
 .mm-group-h{font-size:13px;font-weight:600;color:var(--t2)}
-/* Coach tab: a conversation, not a terminal. */
+/* Skeda e trajnerit: bisedë, jo terminal. */
 .eng-status{letter-spacing:0;text-transform:none}
 .eng-dot{border-radius:50%}
 .chat-chip{font-family:var(--font-body);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0;border-radius:999px;border-width:1px}
@@ -1861,24 +1809,23 @@ body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
 .eng-out-b{font-family:var(--font-body);font-size:14.5px;line-height:1.55}
 .eng-out-b .eng-grid{font-family:var(--font-mono)}
 .eng-out-h,.eng-reset{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px}
-/* Onboarding rail reads as a sentence: "Step 2 of 5". */
+/* Progresi i onboarding-ut lexohet si fjali: "Hapi 2 nga 5". */
 .onb-idx{font-family:var(--font-body);font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--t2)}
 .onb-idx i{display:none}
 .onb-idx b{color:var(--t);font-weight:600}
 #ob-idx-n::before{content:" "}
 #ob-idx-n::after{content:" of "}
-/* 2. Chrome: no gradient edges, one radius, neutral badges. */
+/* 2. Korniza: pa gradient, një radius, etiketa neutrale. */
 .band::before{display:none}
 body.dark .band{background:var(--card)}
 .badge.bg{background:var(--surface-2);color:var(--t2);border:1px solid var(--bdr2)}
-/* 3. Cards with real insets. Content never touches the screen edge; the frame
-   is quiet (one hairline, one radius) and the inner gutter matches the bands. */
+/* 3. Kartat me hapësirë të brendshme; përmbajtja nuk prek kurrë skajin e ekranit. */
 .panel>.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:18px 16px 20px;margin:0 0 12px;box-shadow:none}
 .panel>.card>.ctitle,.panel>.card>.fb .ctitle{font-size:17px}
 .panel>.coach-card,.panel>.invite-card,.panel>.card.boxed,.panel>#set-pro-card,.panel>#plan-tweak-banner{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin:0 0 12px}
 #active-sess{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r);padding:16px;margin:0 0 16px}
 .panel>.card.tc{padding-top:16px}
-/* 4. Motion is a state change, not a show. */
+/* 4. Animacioni vetëm kur ndryshon gjendja. */
 .panel.on{animation:none}
 .panel.on .card:nth-child(1),.panel.on .card:nth-child(2),.panel.on .card:nth-child(3),.panel.on .card:nth-child(4),.panel.on .sg{animation:none}
 .onb-step{animation:none}
@@ -1887,12 +1834,12 @@ body.dark .band{background:var(--card)}
 .setrow.done{animation:setFlash .55s cubic-bezier(.16,1,.3,1) both;border-radius:8px}
 .setdone.on{animation:setPop .28s cubic-bezier(.16,1,.3,1) both}
 @media(prefers-reduced-motion:reduce){.setrow.done,.setdone.on{animation:none}}
-/* 5. Quiet empty state: a line and a link, for everything that is not the tab's first action. */
+/* 5. Gjendje bosh e qetë: një rresht dhe një lidhje. */
 .bp.quiet{border:0;background:none;padding:12px 0 2px;min-height:0}
 .bp.quiet::before{display:none}
 .bp.quiet .bp-l{color:var(--t3);font-weight:500;font-size:14px}
 .bp.quiet .empty-cta{background:none;color:var(--accent);box-shadow:none;padding:6px 0;margin-top:2px;font-weight:600}
-/* 6. Next session. */
+/* 6. Karta "Seanca tjetër". */
 .next{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r-lg)}
 .next-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
 .next-t{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--t2);margin:0}
@@ -1902,31 +1849,30 @@ body.dark .band{background:var(--card)}
 .next-cta .btn{flex:1;width:auto;padding:14px 18px;font-size:15px;box-shadow:none}
 .next-cta .btn-g{padding:14px 16px}
 .next .lnk{font-size:13px;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
-/* Follow-up to the human pass: rules that outranked the first block. */
+/* Rregulla shtesë me përparësi më të lartë. */
 .split-empty{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:13px;font-weight:500}
 .sec-tag{color:var(--t2);border-color:var(--bdr2);background:transparent}
 #p-ai .chat-chip,#p-ai .eng-presets .chat-chip,body.dark #p-ai .chat-chip{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--t);background:var(--surface);border:1px solid var(--bdr2);border-radius:999px;padding:8px 14px;box-shadow:none}
 #p-ai .chat-in{padding-left:16px}
 .onb-h,.onb-hero,body.dark .onb-h,body.dark .onb-hero{text-transform:none;line-height:1.05}
 .opt-row.on,body.dark .opt-row.on{border-left:0;box-shadow:none}
-/* The prompt prefix on sent messages and the input caret were terminal cues. */
+/* Pa shenja terminali para mesazheve. */
 .eng-cmd-k,.eng-caret{display:none}
 .eng-cmd{gap:0}
-/* Warm-up sets and supersets. The set number is the switch; a warm row reads
-   as support work, not a record in waiting. */
+/* Seritë e ngrohjes dhe superseritë. Numri i serisë është çelësi;
+   ngrohja duket si punë ndihmëse, jo si rekord. */
 .setn[role="button"]{cursor:pointer;border-radius:6px;user-select:none}
 .setrow.warm .setn{color:var(--sig-water);font-weight:600}
 .setrow.warm .setin{opacity:.72}
 .ss-chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;color:var(--t2);background:var(--surface-2);border:1px solid var(--bdr2);border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
 .hud-meta{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px;font-weight:500}
-/* Empty states: a soft tile, not a surveyed plot. The crosshair grid ran through
-   the text and the subtitle sat below contrast. */
+/* Gjendjet bosh: pllakë e butë me vija të ndërprera. */
 .bp,.empty-state{border:1px solid var(--bdr);background:var(--surface);border-radius:var(--r-sm);padding:26px 18px}
 .bp::before,.empty-state::before{display:none}
 .bp-sm{padding:18px 14px}
 .empty-sub,body.dark .empty-sub{color:var(--t2)}
 .empty-ico,body.dark .empty-ico{color:var(--t2);background:var(--surface-2);border-color:var(--bdr2)}
-/* Plan card (Train tab): dark chips, labels that fit, no quote stripe. */
+/* Karta e planit (skeda Stërvitja). */
 .pday,body.dark .pday{background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r-sm);width:86px;padding:10px 8px 9px;box-shadow:none}
 .pday.on,body.dark .pday.on{border-color:var(--accent);background:var(--adim)}
 .pday.rd{opacity:.6}
@@ -1938,20 +1884,20 @@ body.dark .band{background:var(--card)}
 .plan-sel-n{font-size:16px;font-weight:600;color:var(--t)}
 .plan-sel-f{font-size:12.5px;color:var(--t3)}
 .prow-n{font-weight:500}
-/* Rounder, everywhere a corner shows. */
+/* Qoshe më të rrumbullakëta kudo. */
 .exi,body.dark .exi{border-radius:var(--r)}
 .setin,.setrir{border-radius:12px}
 .btn-o,.btn-g{border-radius:14px}
 .msheet{border-top-left-radius:var(--r-lg);border-top-right-radius:var(--r-lg)}
 .chip,.badge{border-radius:999px}
 .tag{border-radius:999px}
-/* Session card headers never push their controls off the edge. */
+/* Koka e kartës së seancës nuk i nxjerr butonat jashtë skajit. */
 .exi>.fb{flex-wrap:wrap;row-gap:6px;align-items:center}
 .exn{min-width:0;overflow-wrap:anywhere;margin-bottom:0}
 .ss-chip{max-width:40%;overflow:hidden;text-overflow:ellipsis}
 .prow-n{min-width:0;overflow-wrap:anywhere}
 .plan-card .ctitle{min-width:0;overflow-wrap:anywhere}
-/* Personal record dialog: the number is the hero, the chrome stays quiet. */
+/* Dritarja e rekordit personal: numri është kryesori. */
 .prc-overlay{position:fixed;inset:0;z-index:var(--z-modal);background:rgba(10,10,12,.66);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .prc{width:100%;max-width:420px;background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r-lg);padding:22px 20px 18px;color:var(--t);box-shadow:0 30px 80px -20px rgba(0,0,0,.8);animation:prcIn .32s cubic-bezier(.16,1,.3,1) both}
 @keyframes prcIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
@@ -1973,9 +1919,9 @@ body.dark .band{background:var(--card)}
 .prc-sec{display:flex;gap:8px}
 .prc-sec .btn-g{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 14px;font-size:14px;min-height:44px}
 .prc:focus{outline:none}
-/* ═══ PLAIN PASS ═══
-   System typefaces only (Roboto / SF / Segoe), no webfonts; no glow anywhere;
-   no status dots. Display sizes re-tuned for a normal-width face. */
+/* ═══ FONTET E SISTEMIT ═══
+   Madhësitë e titujve të përshtatura për fontin e sistemit; pa shkëlqim,
+   pa pika gjendjeje. */
 .ptitle,.hero-title,html body .hero-title{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:-.02em;text-transform:none;line-height:1.1}
 .ptitle.sub{font-size:20px}
 .stat-num,.tr-vol .stat-num{font-weight:600;letter-spacing:-.03em;font-size:clamp(40px,11vw,52px)}
@@ -1993,22 +1939,21 @@ body.dark .meter-fill,body.dark .coach-mark,body.dark .chip.live{box-shadow:none
 .hud-v,.tr-vol-unit,.stat-num,.prc-num,.ring-v{text-shadow:none}
 .setdone.on,.nv.on,.btn,.btn:hover,.pday.on,.seclabel-dot,.acc-pick.on{box-shadow:none}
 .eng-dot,.sw-live,.onb-eyebrow-dot{display:none}
-/* Barcode sheet: a fixed-ratio camera stage, a status line that never moves,
-   and the manual field always in reach. */
+/* Skaneri i barkodit: kamera me raport fiks, rreshti i gjendjes që nuk
+   lëviz, dhe fusha për shkrim me dorë gjithmonë në dispozicion. */
 .bc-stage{position:relative;width:100%;aspect-ratio:4/3;max-height:280px;background:#000;overflow:hidden}
 .bc-stage video{display:block;width:100%;height:100%;max-height:none;border-radius:0;object-fit:cover}
 .bc-frame{position:absolute;left:12%;right:12%;top:26%;bottom:26%;border:2px solid rgba(255,255,255,.85);border-radius:10px;box-shadow:0 0 0 4000px rgba(0,0,0,.35);pointer-events:none}
 .bc-status{margin-top:10px;min-height:20px;font-size:13.5px;line-height:1.45;color:var(--t2);text-align:center;font-weight:500;text-wrap:pretty}
 /* ═══════════════════════════════════════════════════════════════
-   LEDGER — final layer
-   One white sheet, charcoal ink, a single slate-blue accent; a slate
-   dark theme with flat 1px borders. No gradients, no glow, no blur,
-   no drop shadows, no entrance stagger. Numbers in mono, everything
-   else in the platform sans at 400 / 500 / 600.
+   SHTRESA "LEDGER": tipografia, sipërfaqet e sheshta, kontrollet
+   Vendos peshat e fonteve, kornizat e sheshta 1px, fushat e
+   formularëve dhe stilin e bisedës së trajnerit. Ngjyrat dhe
+   radiuset përfundimtare vijnë nga shtresa IRON më poshtë.
    ═══════════════════════════════════════════════════════════════ */
 :root{--glow-train:none;--glow-fuel:none;--glow-water:none;--glow-sleep:none;--glow-strength:0}
 body.dark{--glow-train:none;--glow-fuel:none;--glow-water:none;--glow-sleep:none}
-/* ── Type ─────────────────────────────────── */
+/* ── Tipografia ───────────────────────────── */
 .ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand,
 .ctitle,.sb-logo,.tlogo,.band-kicker,.eng-title,.next-t,.targets-t,.spl-h,.alogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em;font-weight:600;line-height:1.2}
 .ptitle{font-size:24px;margin-bottom:16px}
@@ -2028,11 +1973,11 @@ body.dark{--glow-train:none;--glow-fuel:none;--glow-water:none;--glow-sleep:none
 .seclabel-dot{box-shadow:none;background:var(--t3)}
 .obp-eyebrow{color:var(--t2)}
 .obp-eyedot{display:none}
-/* ── Motion: no entrance stagger, no press-scale ── */
+/* ── Animacioni: pa hyrje të vonuara ──────── */
 .panel.on,.panel.on .card,.panel.on .sg,.band,.pair-cell,.fu,.eng-out,.rp{animation:none}
 button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:active,.pill:active,
 .qa-btn:active,.opt-item:active,.coach-card:active,.chat-chip:active,.mm-chip:active,.nv:active svg.ico{transform:none}
-/* ── Surfaces: flat, bordered, 6px ─────────── */
+/* ── Sipërfaqet: të sheshta, me kornizë ───── */
 .card,.band,.exi,.mc,.acard,.opt-item,.obp-plan,.tip-card,.eng-out,.hero-card,.coach-card,.next,.targets,.util,
 .plan-card,.wk-card,.ex-card,.sg{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r);box-shadow:none}
 .band::before,.band::after,.sb-pro::before,.sb-pro::after,.pw-hero::before,.pw-hero::after{content:none;display:none}
@@ -2051,7 +1996,7 @@ body.dark #toast{box-shadow:none}
 .tip-overlay{background:rgba(30,32,28,.55)}
 .tip-spot{animation:none}
 .tip-card{box-shadow:none}
-/* ── Controls ─────────────────────────────── */
+/* ── Kontrollet ───────────────────────────── */
 .btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.chat-send,.rp-run{border-radius:var(--r-btn);box-shadow:none;background:var(--accent-fill);color:var(--accent-ink);font-weight:600;letter-spacing:0}
 .btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover,.rp-run:hover{background:var(--accent-fill-d)}
 .btn:disabled{background:var(--surface-2);color:var(--t3)}
@@ -2083,7 +2028,7 @@ body.dark .f input:focus,body.dark .f select:focus,body.dark .si:focus,body.dark
 .f input::placeholder,.rp-details::placeholder{color:var(--t3)}
 :focus-visible{outline-offset:2px}
 .tog-row{border-bottom:1px solid var(--bdr)}
-/* ── Navigation ───────────────────────────── */
+/* ── Navigimi ─────────────────────────────── */
 .sb-head{padding:20px 20px 18px}
 .sb-sub{font-weight:400;color:var(--t3)}
 .sb-nav{padding:10px 10px}
@@ -2092,7 +2037,7 @@ body:not(.dark) .sb-item.on{color:var(--accent-d)}
 .nv.on,body.dark .nv.on{color:var(--accent)}
 body:not(.dark) .nv.on{color:var(--accent-d)}
 .avatar,.sb-avatar{border-radius:var(--r-sm);background:var(--surface);color:var(--t);border:1px solid var(--bdr2);font-weight:600}
-/* ── Data: tables, meters, lists ──────────── */
+/* ── Të dhënat: tabela, shirita, lista ────── */
 .tbl,.kv{width:100%;border-collapse:collapse;font-size:14px}
 .tbl th,.kv th{text-align:left;font-weight:500;color:var(--t2);font-size:12.5px;padding:0 0 8px;border-bottom:1px solid var(--bdr2)}
 .tbl td,.kv td{padding:9px 0;border-bottom:1px solid var(--bdr);color:var(--t);vertical-align:middle}
@@ -2150,7 +2095,7 @@ body:not(.dark) .nv.on{color:var(--accent-d)}
 .sring-track{stroke:var(--sig-track)}
 .ach-grid .ach{border-radius:var(--r);border:1px solid var(--bdr2)}
 .cal-cell,.wkday-dot,.mm-chip-dot{box-shadow:none}
-/* ── Coach: a request form and a list of reports ── */
+/* ── Trajneri: kartat e raporteve ─────────── */
 #p-ai{padding:20px 16px 20px}
 @media(min-width:900px){#p-ai{padding:28px 32px 28px}}
 .eng-head{padding-bottom:14px;margin-bottom:16px;align-items:center}
@@ -2196,12 +2141,12 @@ body.dark .rp-h{background:var(--card2)}
 .rp-confirm-actions .btn,.rp-confirm-actions .btn-o{flex:1}
 .rp-result{margin-top:10px;font-size:13px;color:var(--t2);line-height:1.6}
 .dots span{background:var(--t3)}
-/* ── Splash loader ─────────────────────────── */
+/* ── Ekrani i ngarkimit ───────────────────── */
 .spl-loader{position:relative;width:96px;height:96px;margin-bottom:24px}
 .spl-ring-t{stroke:var(--sig-track)}
 .spl-h{font-size:22px}
 .spl-step{color:var(--t2);font-weight:400}
-/* ── Welcome / paywall copy weights ──────── */
+/* ── Peshat e tekstit në mirëseardhje / Pro ─ */
 .wc-tag,.asub,.obp-feat-b,.obp-plan-b,.obp-fine,.obp-trust{font-weight:400}
 .wc-foot{font-weight:400}
 .wc-link{font-weight:500;color:var(--accent)}
@@ -2212,9 +2157,9 @@ body.dark .rp-h{background:var(--card2)}
 .rp-b .eng-log li{padding-left:0}
 .rp-b .eng-log li::before{content:none}
 .rp-b .eng-log li::marker{color:var(--t3)}
-/* Filled selection states take the matte fill, never the pastel text accent. */
+/* Elementet e zgjedhura mbushen me ngjyrën e theksit. */
 .pill.on,.gpill.on,.setdone.on,.wkday-dot.today.done,.cal-cell.tr-3,.pw-tl-dot.now{background:var(--accent-fill);border-color:var(--accent-fill);color:#FFFFFF}
-/* ── Coach: a conversation ────────────────── */
+/* ── Trajneri: biseda ─────────────────────── */
 .cv-empty{margin:auto 0;padding:8px 0 16px}
 .cv-empty-t{margin:0 0 14px;line-height:1.6;max-width:46ch}
 .cv-starters{display:flex;flex-direction:column;gap:8px;max-width:420px}
@@ -2251,17 +2196,20 @@ body.dark .rp-h{background:var(--card2)}
 .cv-send:hover{background:var(--accent-fill-d)}
 .cv-send:disabled{background:var(--surface-2);color:var(--t3);cursor:default}
 /* ═══════════════════════════════════════════════════════════════
-   IRON — final layer (2026-10-29)
-   Dark-first charcoal, cards not rules, periwinkle accent that means
-   "act here", gym-toned data colours, Archivo 88% for every figure.
-   Only colour changes between themes. No shadows, no gradients, no glow.
+   SHTRESA "IRON": sistemi aktual i dizajnit (29 tetor 2026)
+   Këtu janë ngjyrat e vërteta të aplikacionit, për temën e errët dhe
+   të çelët: sfondi gri-qymyr, kartat pak më të çelëta, një ngjyrë
+   theksi (blu-vjollcë) që do të thotë "vepro këtu", dhe katër ngjyra
+   për të dhënat: ulliri = stërvitje, ndryshku = ushqim, deti = ujë,
+   rëra = gjumë. Numrat shkruhen me fontin Archivo. Mes temave ndryshon
+   vetëm ngjyra, jo forma. Pa hije, pa gradient, pa shkëlqim.
    ═══════════════════════════════════════════════════════════════ */
 :root{--font-figure:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--font-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--font-display:var(--font-body);--font-mono:var(--font-figure);--figure-stretch:88%;--r:16px;--r-sm:8px;--r-lg:16px;--r-btn:12px;--r-chip:999px;--shadow-sm:none;--shadow:none;--shadow-lg:none;--dur-tap:120ms;--dur-move:200ms;--ease:cubic-bezier(.2,.7,.2,1);--ground:#E9E8EC;--surface-i:#F6F5F8;--raised:#FFFFFF;--line:#D5D3DB;--line-strong:#78767F;--ink:#1F1E22;--ink-2:#55535C;--ink-3:#64626C;--accent:#4F4FA0;--accent-d:#43438C;--accent-fg:#FFFFFF;--accent-dim:#E2E2F4;--accent-rgb:79,79,160;--training:#586920;--fuel:#9E4A1A;--water:#196A6E;--sleep:#735F1E;--danger:#B42F27;--fuel-tint:#F3DDD0;--training-tint:#E6EBD2;--water-tint:#D3E9EA;--sleep-tint:#EFE6CF;--bg:var(--ground);--bg2:var(--surface-i);--card:var(--surface-i);--card2:var(--raised);--surface:var(--raised);--surface-2:var(--line);--bm-rest:var(--line);--t:var(--ink);--t2:var(--ink-2);--t3:var(--ink-3);--t4:var(--line-strong);--bdr:var(--line);--bdr2:var(--line);--bdr3:var(--line-strong);--accent-fill:var(--accent);--accent-fill-d:var(--accent-d);--accent-ink:var(--accent-fg);--adim:var(--accent-dim);--blue:var(--water);--bdim:var(--water-tint);--red:var(--danger);--yel:var(--sleep);--pur:var(--sleep);--pink:var(--fuel);--sig-train:var(--training);--sig-train-pure:var(--training);--sig-fuel:var(--fuel);--sig-fuel-pure:var(--fuel);--sig-water:var(--water);--sig-water-pure:var(--water);--sig-sleep:var(--sleep);--sig-sleep-pure:var(--sleep);--sig-track:var(--line)}
 html{background:#E9E8EC}
 html.dark{background:#1F1E22}
 body.dark{--ground:#1F1E22;--surface-i:#29282E;--raised:#34333A;--line:#3D3C44;--line-strong:#8B8994;--ink:#EDEBF1;--ink-2:#B4B1BC;--ink-3:#A19EA8;--accent:#A9ABE3;--accent-d:#9A9CD6;--accent-fg:#1F1E22;--accent-dim:#3A3A55;--accent-rgb:169,171,227;--training:#A7B86C;--fuel:#DC8A55;--water:#5DB5B8;--sleep:#CDB68E;--danger:#F08A80;--fuel-tint:#3E2A1E;--training-tint:#2E321F;--water-tint:#1E3334;--sleep-tint:#3A3222}
 body{background:var(--ground);color:var(--ink);font-family:var(--font-body);font-feature-settings:"tnum"}
-/* ── Figures: Archivo 88%, tabular, heavy ── */
+/* ── Numrat: Archivo 88%, shifra me gjerësi fikse, të trasha ── */
 .stat-num,.readout-v,.ring-v,.meter-v,.util-v,.hero-foot-v,.tile-mini .sv,.tr-vol-unit,
 .sv,.wkday-num,.set-v,.pr-v,.targets-n,.kv td.num,.tbl td.num,.tbl th.num,
 .sw-time,.hud-v,.next-name,.prc-num,.obp-plan-v,.eng-grid td,.si,.rest-time,.rest-big,.bm-v,.cal-day-n{font-family:var(--font-figure);font-stretch:var(--figure-stretch);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:0}
@@ -2273,7 +2221,7 @@ body{background:var(--ground);color:var(--ink);font-family:var(--font-body);font
 .sw-time,.rest-time{font-size:36px;font-weight:700;letter-spacing:-.02em;line-height:1}
 .next-name{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1}
 .next-body b,.next-body strong{font-family:var(--font-figure);font-stretch:var(--figure-stretch);font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
-/* ── Type: titles heavy, labels 13/600 ── */
+/* ── Tipografia: titujt të trashë, etiketat 13px/600 ── */
 .ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand,.alogo,.eng-title,.spl-h{font-family:var(--font-body);font-weight:700;letter-spacing:-.02em;line-height:32px}
 .ptitle,.hero-title{font-size:28px;margin-bottom:14px}
 .hero-title{margin-bottom:4px}
@@ -2288,7 +2236,7 @@ body{background:var(--ground);color:var(--ink);font-family:var(--font-body);font
 .sb-logo,.tlogo{font-weight:700;font-size:17px}
 .sb-logo span,.tlogo span,.wc-brand span,.alogo span{color:var(--accent)}
 b,strong{font-weight:600}
-/* ── Surfaces: cards on --surface, 16px, 1px --line ── */
+/* ── Sipërfaqet: kartat me --surface, radius 16px, kornizë 1px --line ── */
 .card,.band,.exi,.mc,.acard,.opt-item,.obp-plan,.tip-card,.eng-out,.hero-card,.coach-card,.next,.targets,.util,
 .plan-card,.wk-card,.ex-card,.sg,.rp,.rp-form,.cv-starter,.cm.a,.qa-btn,.rest-preset,.ach-grid .ach,.sb-pro,.pw-hero,.msheet{background:var(--surface-i);border:1px solid var(--line);border-radius:var(--r);box-shadow:none}
 body.dark .card,body.dark .band,body.dark .exi,body.dark .mc,body.dark .acard,body.dark .msheet,
@@ -2345,7 +2293,7 @@ body.dark #toast{background:var(--ink);color:var(--ground)}
 .wkday-dot.done{background:var(--training-tint);color:var(--training)}
 .wkday-dot.today{box-shadow:inset 0 0 0 2px var(--accent)}
 .wkday-dot.today.done,.cal-cell.tr-3,.pw-tl-dot.now{background:var(--accent);color:var(--accent-fg);box-shadow:none}
-/* ── Controls ── */
+/* ── Kontrollet: butonat, fushat, çipat ── */
 .btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.chat-send,.rp-run,.cv-send{border-radius:var(--r-btn);box-shadow:none;background:var(--accent);color:var(--accent-fg);font-weight:700;letter-spacing:0;border:none}
 .btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover,.rp-run:hover,.cv-send:hover,.empty-cta:hover{background:var(--accent-d);color:var(--accent-fg)}
 body.dark .btn,body.dark .wc-cta,body.dark .obp-cta,body.dark .pw-cta,body.dark .rp-run{color:var(--accent-fg)}
@@ -2393,13 +2341,13 @@ body.dark .rest-preset:not(.on){background:var(--surface-i)}
 .avatar{background:var(--raised);color:var(--ink);border:1px solid var(--line-strong);border-radius:var(--r-chip)}
 .avatar.on,.sb-avatar{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);border-radius:var(--r-chip)}
 .musc-tag.s,body.dark .musc-tag.s{background:var(--raised)}
-/* ── Press feedback: 120ms scale, no entrance stagger ── */
+/* ── Efekti i shtypjes: zvogëlim 2% për 120ms ── */
 button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:active,.pill:active,
 .qa-btn:active,.opt-item:active,.coach-card:active,.cv-starter:active,.util-cell:active{transform:scale(.98);transition:transform var(--dur-tap) ease-out}
 .nv:active svg.ico{transform:none}
 .nv:active{opacity:1}
 .meter-fill,.util-bar i{transition:width 240ms ease-in-out}
-/* ── Navigation (same five tabs; only the look changes) ── */
+/* ── Navigimi (të njëjtat pesë skeda; ndryshon vetëm pamja) ── */
 .topbar{border-bottom:1px solid var(--line);background:var(--ground);box-shadow:none}
 .navbar{border-top:1px solid var(--line);background:var(--surface-i);box-shadow:none;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
 .nv{min-height:52px;gap:4px;padding:0 2px;font-size:11px;font-weight:500;color:var(--ink-3);border-radius:0;justify-content:center}
@@ -2415,7 +2363,7 @@ button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:
 .sb-div{background:var(--line)}
 .sb-pro{background:var(--surface-i);border:1px solid var(--line);color:var(--ink);border-radius:var(--r)}
 .sb-pro-ico{background:var(--raised);color:var(--accent)}
-/* ── Coach: a conversation ── */
+/* ── Trajneri: biseda ── */
 .eng-head{border-bottom:1px solid var(--line)}
 .eng-title{font-size:20px;line-height:24px}
 .eng-reset{color:var(--ink);border-radius:var(--r-chip);min-height:44px;padding:0 14px}
@@ -2443,17 +2391,18 @@ button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:
 .cm-ty .dots span,.dots span{background:var(--ink-3)}
 .sync-bar{background:var(--line)}
 .sync-bar::after{background:var(--accent);opacity:.7}
-/* ── Charts / rings ── */
+/* ── Grafikët dhe unazat ── */
 .ring-track,.sring-track,.spl-ring-t{stroke:var(--line)}
 .ring-arc{stroke-linecap:round}
 .spl-ring-a{stroke:var(--accent)}
 .spl-prog-fill{background:var(--accent)}
-/* ── Reduced motion ── */
+/* ── Kur përdoruesi ka kërkuar më pak animacion ── */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:120ms!important;animation:none!important}
   button:not([disabled]):active,.btn:active,.nv:active svg.ico{transform:none!important}
 }
-/* Dark bridge: body.dark literals from older layers beat :root var() on the body, so restate them here. */
+/* Ura për temën e errët: emrat e vjetër të variablave (--bg, --card, --t…) lidhen
+   me ngjyrat e reja edhe brenda body.dark, se përndryshe vlerat e vjetra fitojnë. */
 body.dark{--bg:var(--ground);--bg2:var(--surface-i);--card:var(--surface-i);--card2:var(--raised);--surface:var(--raised);--surface-2:var(--line);--bm-rest:var(--line);--t:var(--ink);--t2:var(--ink-2);--t3:var(--ink-3);--t4:var(--line-strong);--bdr:var(--line);--bdr2:var(--line);--bdr3:var(--line-strong);--accent-fill:var(--accent);--accent-fill-d:var(--accent-d);--accent-ink:var(--accent-fg);--adim:var(--accent-dim);--blue:var(--water);--bdim:var(--water-tint);--red:var(--danger);--yel:var(--sleep);--pur:var(--sleep);--pink:var(--fuel);--sig-train:var(--training);--sig-train-pure:var(--training);--sig-fuel:var(--fuel);--sig-fuel-pure:var(--fuel);--sig-water:var(--water);--sig-water-pure:var(--water);--sig-sleep:var(--sleep);--sig-sleep-pure:var(--sleep);--sig-track:var(--line)}
 body.dark .pill.on,body.dark .gpill.on,body.dark .mm-chip.on,body.dark .onb-multi-chip.on{color:var(--accent-fg)}
 .opt-item:hover,body:not(.dark) .opt-item:hover{background:var(--surface-i);border-color:var(--line-strong)}
