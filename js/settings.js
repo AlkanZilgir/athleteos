@@ -64,7 +64,7 @@ function applyTheme(mode){
   if(meta)meta.setAttribute('content',isDark?'#0A0A0C':'#FFFFFF');
   // Volt resolves differently per theme, so the accent has to follow the flip.
   if(typeof applyAccent==='function'){
-    var acc='volt';try{acc=localStorage.getItem('athleteos_accent')||'volt';}catch(e){}
+    var acc='slate';try{acc=localStorage.getItem('athleteos_accent')||'slate';}catch(e){}
     applyAccent(acc);
   }
 }
@@ -86,28 +86,30 @@ function initTheme(){
 
 /* ── ACCENT COLOR ─────────────────────────── */
 var ACCENTS={
-  // ink = what sits ON the accent. lt/ltd = the light-theme stand-in, needed
-  // because volt at 94% lightness is unreadable on white at any weight.
-  volt:  {a:'#CCFF00',d:'#B4E600',rgb:'204,255,0',   ink:'#0A0A0C',lt:'#4D6A00',ltd:'#3D5400'},
-  green: {a:'#22C55E',d:'#16A34A',rgb:'34,197,94',   ink:'#FFFFFF'},
-  forge: {a:'#FF6B35',d:'#EA580C',rgb:'255,107,53',  ink:'#0A0A0C'},
-  cool:  {a:'#22D3EE',d:'#06B6D4',rgb:'34,211,238',  ink:'#0A0A0C'},
-  purple:{a:'#A855F7',d:'#9333EA',rgb:'168,85,247',  ink:'#FFFFFF'},
-  pink:  {a:'#EC4899',d:'#DB2777',rgb:'236,72,153',  ink:'#FFFFFF'}
+  // a/d = the fill and its hover on the slate dark theme (light enough to
+  // clear 4.5:1 on #1E293B); lt/ltd = the ink-dark fill for the white theme.
+  // ink = what sits ON the dark fill; the light fill always takes white.
+  // a/d = muted text accent on the dark theme; fill/filld = the matte dark
+  // button fill; lt/ltd = fill and text on the white theme. Ink is always white.
+  slate: {a:'#8BA4C8',d:'#9DB4D4',fill:'#3E5F93',filld:'#4A6CA3',rgb:'58,90,140', rgbd:'139,164,200',lt:'#3A5A8C',ltd:'#2E4A75'},
+  forest:{a:'#7FAE93',d:'#92BCA4',fill:'#2F6B4F',filld:'#3A7D5E',rgb:'47,107,79', rgbd:'127,174,147',lt:'#2F6B4F',ltd:'#255740'},
+  clay:  {a:'#C99A80',d:'#D4AB94',fill:'#9E4E2E',filld:'#B05E3B',rgb:'176,83,46', rgbd:'201,154,128',lt:'#B0532E',ltd:'#944525'},
+  plum:  {a:'#A79CC4',d:'#B6ADCF',fill:'#625486',filld:'#71639A',rgb:'107,91,149',rgbd:'167,156,196',lt:'#6B5B95',ltd:'#584B7C'}
 };
+var ACCENT_LEGACY={volt:'slate',green:'forest',forge:'clay',cool:'slate',purple:'plum',pink:'plum'};
 function applyAccent(name){
-  var p=ACCENTS[name]||ACCENTS.volt;
+  name=ACCENT_LEGACY[name]||name;
+  var p=ACCENTS[name]||ACCENTS.slate;
   var root=document.documentElement;
   var dark=document.body.classList.contains('dark');
   // On the light ground a near-white accent has nowhere to go: swap to the
   // declared stand-in and put white back on top of it.
-  var fill=(!dark&&p.lt)?p.lt:p.a;
-  var fillD=(!dark&&p.ltd)?p.ltd:p.d;
-  var ink=(!dark&&p.lt)?'#FFFFFF':(p.ink||'#FFFFFF');
-  root.style.setProperty('--accent',fill);
-  root.style.setProperty('--accent-d',fillD);
-  root.style.setProperty('--accent-ink',ink);
-  root.style.setProperty('--adim','rgba('+p.rgb+',.10)');
+  root.style.setProperty('--accent',dark?p.a:p.lt);
+  root.style.setProperty('--accent-d',dark?p.d:p.ltd);
+  root.style.setProperty('--accent-fill',dark?p.fill:p.lt);
+  root.style.setProperty('--accent-fill-d',dark?p.filld:p.ltd);
+  root.style.setProperty('--accent-ink','#FFFFFF');
+  root.style.setProperty('--adim',dark?'rgba('+p.rgbd+',.14)':'rgba('+p.rgb+',.10)');
   root.style.setProperty('--accent-rgb',p.rgb);
   document.querySelectorAll('.acc-pick').forEach(function(b){b.classList.toggle('on',b.dataset.acc===name);});
   var sub=document.getElementById('accent-sub');if(sub)sub.textContent=name.charAt(0).toUpperCase()+name.slice(1);
@@ -118,8 +120,8 @@ function setAccent(name){
   _syncPref('accent',name);
 }
 function initAccent(){
-  var saved='volt';
-  try{saved=localStorage.getItem('athleteos_accent')||'volt';}catch(e){}
+  var saved='slate';
+  try{saved=localStorage.getItem('athleteos_accent')||'slate';}catch(e){}
   applyAccent(saved);
 }
 

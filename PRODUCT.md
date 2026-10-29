@@ -22,7 +22,8 @@ Direct, grounded, expert. The voice is a coach who has read your log and tells y
 
 - The "AI command console" aesthetic: diagnostics panels, "System: Operational", "engine calibrations", "distribution matrix", status LEDs. It reads as a prop, and it makes a fitness app sound like a spaceship.
 - Generic SaaS dashboard scaffolding: the hero metric with a gradient accent, identical icon-heading-text card grids, uppercase tracked eyebrows over every section.
-- Neon as wallpaper: the volt accent on borders, glows and decoration until it no longer signals anything.
+- Neon as wallpaper: bright accents on borders, glows and decoration until they no longer signal anything.
+- The chat identifier: a message thread with bubbles, a floating input bar and prompt-suggestion chips. The Coach is a report form with a dropdown and a list of dated reports.
 - Interrogation onboarding: a dozen single-question screens before the person has logged anything.
 - Empty screens that are just blank: a chart frame with nothing in it, a wall of zeros on first open.
 
@@ -30,7 +31,7 @@ Direct, grounded, expert. The voice is a coach who has read your log and tells y
 
 1. **The number, then the action.** Every screen leads with the figure the athlete came for and the one thing to do next. Decoration never sits between them.
 2. **Earned familiarity.** Standard controls, standard patterns, the same button in the same place on every tab. Surprise is spent on data moments, not on chrome.
-3. **Volt means "act here" or "this is the signal".** The accent marks primary actions, the current selection and true data highlights. Everything else is a neutral. If volt stops meaning something, it is being overused.
+3. **The accent means "act here" or "this is the selection".** One muted slate blue marks primary actions and the current selection; four muted signal colours (forest, clay, slate, plum) mark the training, fuel, water and sleep data and nothing else. Everything else is charcoal on white, or light slate on dark slate. No neon, no glow, no gradients.
 4. **Empty is a starting line, not a void.** A screen with no data yet shows what will appear there and how to make the first entry.
 5. **Say what the data says.** Copy names the lift, the load, the gap to target. No buzzwords, no restated headings, no cheerleading.
 
