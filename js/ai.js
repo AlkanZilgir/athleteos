@@ -331,7 +331,16 @@ async function sendMsg(prompt,title){
   var msg=(typeof prompt==='string'&&prompt.trim())||(inp?inp.value.trim():'');
   if(!msg)return;
   if(!_aiRateOk())return;
-  if(inp){inp.value='';inp.style.height='auto';setTimeout(function(){if(inp.value===msg){inp.value='';inp.style.height='auto';}},250);}
+  if(inp){
+    // Blur first: the phone keyboard's own dictation (iOS / Gboard) keeps its
+    // session open and re-inserts the transcript after a plain value='' —
+    // losing focus is what ends it. Clear again over the next half second in
+    // case a late insert still lands, then hand focus back.
+    var hadFocus=document.activeElement===inp;
+    inp.blur();inp.value='';inp.style.height='auto';
+    [120,300,600].forEach(function(ms){setTimeout(function(){inp.value='';inp.style.height='auto';},ms);});
+    if(hadFocus)setTimeout(function(){try{inp.focus();}catch(e){}},650);
+  }
   _rpTitle=title||'';
   var runBtn=document.getElementById('rp-run');if(runBtn)runBtn.disabled=true;
   addMsg('u',msg);chatH.push({role:'user',content:msg});
