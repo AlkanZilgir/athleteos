@@ -58,7 +58,6 @@ footer a:hover{color:var(--t)}
     <li><b>Account</b>: email, display name, password hash (via Supabase Auth).</li>
     <li><b>Fitness data you log</b>: workouts, sets, exercises, meals, water, sleep, weight, body measurements, progress photos, daily check-ins.</li>
     <li><b>Profile preferences</b>: goal, experience, training style, weekly target, muscle map preferences, accent &amp; theme.</li>
-    <li><b>Subscription</b>: Stripe customer ID and subscription status. Card details are handled by Stripe — we never see them.</li>
     <li><b>Device/usage</b>: browser type, OS, screen size, error logs (for debugging only).</li>
   </ul>
 
@@ -67,7 +66,6 @@ footer a:hover{color:var(--t)}
     <li>Show your data back to you and calculate trends, streaks, PRs.</li>
     <li>Provide AI coaching — your stats are sent as context to a third-party LLM (Pollinations) to generate replies.</li>
     <li>Send opt-in notifications you turned on (workout reminders, protein nudges).</li>
-    <li>Process subscriptions via Stripe (managed payments).</li>
     <li>Debug crashes and improve the app.</li>
   </ul>
 
@@ -75,13 +73,12 @@ footer a:hover{color:var(--t)}
   <ul>
     <li>Stored encrypted at rest on <b>Supabase</b> (EU-West-1, Ireland).</li>
     <li>Progress photos in a <b>private Supabase Storage bucket</b> — only your authenticated requests can read yours.</li>
-    <li>Payment data on <b>Stripe</b> (US/EU). Stripe is PCI-DSS Level 1 certified.</li>
     <li>AI conversations are sent to <b>Pollinations.ai</b> as transient requests. We mark them <code>private:true</code> and we do not retain training rights to them.</li>
     <li>If you accept the cookie banner, anonymous product-usage events (page views, button clicks) are sent to <b>PostHog</b> (EU region) to help us understand how the app is used. Decline the banner and no events are sent.</li>
   </ul>
 
   <h2>4. Sharing</h2>
-  <p>We do not sell, rent, or share your personal data with third parties for marketing. We share data only with the processors above (Supabase, Stripe, Pollinations) strictly to deliver the service.</p>
+  <p>We do not sell, rent, or share your personal data with third parties for marketing. We share data only with the processors above (Supabase, Pollinations) strictly to deliver the service.</p>
 
   <h2>5. Your rights (GDPR &amp; equivalents)</h2>
   <ul>
@@ -89,7 +86,6 @@ footer a:hover{color:var(--t)}
     <li><b>Deletion</b>: Settings → Delete Account erases your account, all logged data, photos, PRs, and cancels any active subscription.</li>
     <li><b>Correction</b>: edit any field directly in the app, or email <a href="mailto:alkanzilgir@gmail.com">alkanzilgir@gmail.com</a>.</li>
     <li><b>Portability</b>: the CSV export is machine-readable and re-importable.</li>
-    <li><b>Objection / withdrawal of consent</b>: opt out of any notification toggle in Settings; cancel subscription in Stripe portal.</li>
   </ul>
 
   <h2>6. Retention</h2>

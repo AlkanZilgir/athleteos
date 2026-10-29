@@ -4,20 +4,10 @@ Everything below is blocked on something I can't do for you — money, accounts,
 or a real device. Pick them off in any order. The app already works without
 any of them.
 
-## Critical for shipping paid
+## Critical for shipping
 
-- [ ] **Stripe live keys.** Replace test keys in the Supabase Edge Function
-      env vars (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`). Create the
-      three live Products with these exact lookup keys / amounts so the
-      pricing page on `marketing.html` stays truthful:
-      - `pro_monthly` — €4.99/month, recurring
-      - `pro_yearly` — €15.99/year, 7-day trial, recurring
-      - `pro_lifetime` — €49.99, one-time
 - [ ] **Custom domain.** Point `athleteos.app` (or whatever you pick) at the
-      static host. Update OG tags and the canonical URL in `marketing.html`,
-      `privacy.html`, `terms.html` once it's live.
-- [ ] **Verify a paid signup → cancel → resubscribe loop end to end in
-      production** before publishing anywhere.
+      static host. Update the canonical URL in `privacy.html` and `terms.html` once it's live.
 
 ## High value
 

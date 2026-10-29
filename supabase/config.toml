@@ -433,11 +433,6 @@ verify_jwt = true
 [functions.send-push]
 verify_jwt = true
 
-# Stripe signs its webhooks; it does not carry a Supabase JWT. Signature
-# verification inside the function is the gate.
-[functions.stripe-webhook]
-verify_jwt = false
-
 # Called by pg_cron with a shared secret header, not a user JWT.
 [functions.push-cron]
 verify_jwt = false

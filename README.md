@@ -8,7 +8,6 @@ A personal fitness PWA — workouts, nutrition, sleep, body composition, and an 
 - **Backend**: Supabase (Postgres + Auth + Storage + Edge Functions).
 - **AI**: Pollinations.AI (free, no SLA) via fetch.
 - **Charts**: Chart.js (lazy-loaded).
-- **Payments**: Stripe (edge functions deployed).
 - **Hosting**: any static host (Netlify / Cloudflare Pages / Vercel — all free).
 
 ## Run locally
@@ -61,7 +60,6 @@ Code-level — already wired:
 - [x] AI retry + offline fallback messaging
 - [x] Cookie consent banner (EU only)
 - [x] Google OAuth button (calls supabase.auth.signInWithOAuth)
-- [x] Stripe Checkout + Customer Portal (edge functions live)
 - [x] Sentry bootstrap (lazy-loaded)
 - [x] PostHog bootstrap (cookie-consent gated)
 - [x] Service Worker w/ Background Sync, scheduled reminders, weekly digest
@@ -73,7 +71,6 @@ Needs your config (free):
 | Paste Sentry DSN | `app.js` → `SENTRY_DSN` | 5 min — create project at [sentry.io](https://sentry.io) |
 | Paste PostHog project key | `app.js` → `POSTHOG_KEY` | 5 min — sign up at [posthog.com](https://posthog.com) (free 1M events/mo), create a project, copy the Project API Key (starts with `phc_`). If you picked the US region, also set `POSTHOG_HOST` to `https://us.i.posthog.com`. |
 | Enable Google OAuth | Supabase Dashboard → Authentication → Providers → Google | 10 min — needs a Google Cloud OAuth client (free) |
-| Add Stripe keys | Supabase Dashboard → Functions → Secrets | 5 min — `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, price IDs |
 | Set Supabase Auth redirect URL | Supabase Dashboard → Auth → URL Configuration | 2 min after deploy |
 | Configure email templates | Supabase Dashboard → Auth → Email Templates | 10 min — at least replace the password-reset template subject |
 

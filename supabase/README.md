@@ -10,9 +10,6 @@ keep them in sync when you change a function.
 
 | Function | verify_jwt | Trigger | Purpose |
 |---|---|---|---|
-| `create-checkout-session` | yes | app | Stripe Checkout for monthly/yearly/lifetime. 7-day trial on yearly; lifetime is one-time `payment` mode. Reads price IDs from secrets. |
-| `create-portal-session` | yes | app | Stripe billing portal (manage/cancel). |
-| `stripe-webhook` | no | Stripe | Syncs `profiles.is_premium` / `premium_plan` / `premium_until` from Stripe events. Preserves lifetime on cancel. |
 | `send-push` | yes | app | One-off web push to the calling user's own devices. |
 | `push-cron` | no | pg_cron `*/15 * * * *` | Daily reminders (workout, protein, streak-save, re-engage, weekly recap), timezone-aware. |
 | `rest-push-cron` | no | pg_cron `* * * * *` | Drains `scheduled_pushes` — backstop delivery for the rest-timer "complete" alert when the app/SW were killed. |
@@ -36,8 +33,6 @@ Both pass `x-cron-secret: <CRON_SECRET>`.
 
 - `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` — web push.
 - `CRON_SECRET` — shared secret guarding the cron functions.
-- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — **flip to live keys before launch.**
-- `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`, `STRIPE_PRICE_LIFETIME` — live price IDs.
 - `APP_BASE_URL` — production return URL (e.g. `https://athleteos.app/index.html`).
 - `ANTHROPIC_API_KEY` — **required for the Coach tab to answer at all.** Without it
   the `coach` function returns `engine_not_configured` and the app says so plainly.
