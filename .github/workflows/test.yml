@@ -14,7 +14,7 @@ concurrency:
 jobs:
   smoke:
     name: Playwright smoke tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       # If you want the sign-in test to run too, add TEST_EMAIL + TEST_PASSWORD
