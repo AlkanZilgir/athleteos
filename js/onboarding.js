@@ -1,13 +1,10 @@
 /* onboarding.js — Hapat e para pas regjistrimit dhe harta e muskujve. */
 /* ── MAGJISTARI I REGJISTRIMIT ────────────── */
 var OB_STEPS=17;
-// Shfaqen vetëm pesë ekrane. Të tjerët mbeten në DOM që ob_finish të lexojë
-// çdo fushë sipas id-së, por nuk shfaqen kurrë:
-//   0 mirëseardhja, 1 motivimet, 3 plani, 5 gjurmimi i mëparshëm,
-//   7 stili i stërvitjes, 8 ndjekja e planit, 9 stili i regjistrimit,
-//   10 ditët javore dhe 14 pesha e synuar (të bashkuara me hapat 4 dhe 13),
-//   11 harta e muskujve (është te Progresi), 12 njësitë (pyetet në hapin 6),
-//   16 kujtesat (janë te Cilësimet).
+// Shfaqen vetëm pesë ekrane: 2 qëllimi, 4 përvoja dhe ditët javore, 6 të dhënat
+// bazë, 13 pesha aktuale dhe e synuar, 15 objektivat ditore. Numrat e tjerë në
+// OB_SKIP janë hapa të vjetër që u hoqën; numërimi ruhet që ob_finish dhe
+// profilet e vjetra të mos ndryshojnë.
 var OB_SKIP={0:1,1:1,3:1,5:1,7:1,8:1,9:1,10:1,11:1,12:1,14:1,16:1};
 var OB_VISIBLE_COUNT=(function(){var n=0;for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])n++;return n;})();
 function _obFirstVisible(){for(var i=0;i<OB_STEPS;i++)if(!OB_SKIP[i])return i;return 0;}
@@ -23,11 +20,6 @@ function ob_pick(key,el){
   _ob[key]=isNaN(+v)?v:+v;
   el.parentNode.querySelectorAll('.opt-item,.opt-row').forEach(function(o){o.classList.toggle('on',o===el);});
   if(key==='units'){ob_units(v);}
-}
-function ob_mot_toggle(el){
-  var v=el.dataset.v;var i=_ob.motivations.indexOf(v);
-  if(i>=0){_ob.motivations.splice(i,1);el.classList.remove('on');}
-  else{_ob.motivations.push(v);el.classList.add('on');}
 }
 function _setOnbEyebrow(){
   // Vendos "Hapi X nga Y" mbi titullin e hapit aktiv.
@@ -61,17 +53,8 @@ function ob_goto(i){
     next.onclick=i===lastVis?ob_finish:ob_next;
   }
   // Sinkronizo zgjedhjet dhe vizato përmbajtjen dinamike të hapit
-  if(i===1)_obSyncMulti('ob-mot',_ob.motivations);
   if(i===2)_obSyncList('ob-goal-list',_ob.main_goal);
-  if(i===3)ob_renderBlueprint();
   if(i===4){_obSyncList('ob-exp-list',_ob.experience);_obSyncList('ob-week-list',String(_ob.weekly_days));}
-  if(i===5)_obSyncList('ob-prior-list',_ob.prior_tracking);
-  if(i===7)_obSyncList('ob-train-list',_ob.train_style);
-  if(i===8)_obSyncList('ob-plan-list',_ob.follow_plan);
-  if(i===9)_obSyncList('ob-log-list',_ob.logging_style);
-  if(i===10)_obSyncList('ob-week-list',String(_ob.weekly_days));
-  if(i===11)mm_render();
-  if(i===12)_obSyncList('ob-unit-list',_ob.units);
   if(i===13){ob_units(_ob.units);setTimeout(ob_renderProjection,30);}
   if(i===15)ob_applyGoalDefaults();
   // Skrollo në krye
@@ -93,52 +76,9 @@ function _obRenderRail(i){
   });
 }
 function _obSyncList(containerId,value){var c=document.getElementById(containerId);if(!c)return;c.querySelectorAll('.opt-item,.opt-row').forEach(function(o){o.classList.toggle('on',o.dataset.v===String(value));});}
-function _obSyncMulti(containerId,values){var c=document.getElementById(containerId);if(!c)return;c.querySelectorAll('.onb-multi-chip').forEach(function(o){o.classList.toggle('on',values.indexOf(o.dataset.v)>=0);});}
 function ob_next(){var i=_ob.step+1;while(OB_SKIP[i]&&i<OB_STEPS)i++;if(i<OB_STEPS)ob_goto(i);}
 function ob_back(){var i=_ob.step-1;while(OB_SKIP[i]&&i>0)i--;if(i>=0)ob_goto(i);}
 
-// Plani dinamik (hapi 3) sipas qëllimit të zgjedhur
-function ob_renderBlueprint(){
-  var goal=_ob.main_goal;
-  var bp={
-    strength:{title:'Your Strength Blueprint',sub:'Force production needs heavy weight, low fatigue, and full recovery between sets.',items:[
-      {ico:ICO('barbell'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'1–6 reps, big lifts',b:'Squat, bench, deadlift, overhead press. Compound first, always.'},
-      {ico:ICO('timer'),c:'var(--adim)',col:'var(--accent)',t:'Rest 3–5 minutes',b:'Long rests = better lifts. Quality over density.'},
-      {ico:ICO('trend'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Add weight weekly',b:'Small jumps each session beat occasional huge ones.'},
-      {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'Eat in surplus',b:'Strength gains demand calories and protein (1.6–2.2 g/kg).'}
-    ]},
-    muscle:{title:'Your Muscle Blueprint',sub:'Muscle grows across a wide rep range — volume, effort, and protein drive it.',items:[
-      {ico:ICO('layers'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'6–12 reps, close to failure',b:'Effort matters more than the exact number.'},
-      {ico:ICO('timer'),c:'var(--adim)',col:'var(--accent)',t:'Rest 60–120 seconds',b:'Enough recovery to keep sets productive without dragging on.'},
-      {ico:ICO('repeat'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'10+ sets per muscle / week',b:'Total weekly volume is the strongest predictor of growth.'},
-      {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'1.6–2.2 g/kg protein',b:'Spread across 3–5 meals for steady muscle protein synthesis.'}
-    ]},
-    lean:{title:'Your Recomp Blueprint',sub:'Build muscle and shed fat at the same time — slow but the most sustainable path.',items:[
-      {ico:ICO('scale'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'Small deficit, big protein',b:'~200 kcal under maintenance, 2 g/kg protein minimum.'},
-      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Heavy lifting stays',b:'Lifting heavy signals your body to keep the muscle you have.'},
-      {ico:ICO('run'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'8k–10k steps daily',b:'Daily movement does more for fat loss than extra cardio sessions.'},
-      {ico:ICO('moon'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'7+ hours of sleep',b:'Recovery and appetite control depend on it.'}
-    ]},
-    lose:{title:'Your Fat Loss Blueprint',sub:'A modest deficit, enough protein, and consistent movement beats extreme diets every time.',items:[
-      {ico:ICO('scale'),c:'rgba(239,68,68,.12)',col:'#DC2626',t:'300–500 kcal deficit',b:'Aim for ~0.5% bodyweight lost per week.'},
-      {ico:ICO('utensils'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'High protein',b:'2 g/kg protects muscle and keeps you full.'},
-      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Lift 3+ days a week',b:'Keep the muscle you have so the scale loss is fat, not lean tissue.'},
-      {ico:ICO('run'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Move daily',b:'Walks compound. 8k–12k steps per day is the sweet spot.'}
-    ]},
-    general:{title:'Your Fitness Blueprint',sub:'The basics done consistently beat any complicated program.',items:[
-      {ico:ICO('barbell'),c:'var(--adim)',col:'var(--accent)',t:'Strength 2–3x / week',b:'Squat, hinge, push, pull, carry. Hit every pattern.'},
-      {ico:ICO('run'),c:'rgba(59,130,246,.12)',col:'#3B82F6',t:'150 min cardio / week',b:'Mix of moderate (walks, cycling) and a sprinkle of intense.'},
-      {ico:ICO('utensils'),c:'rgba(168,85,247,.12)',col:'#A855F7',t:'Eat mostly real food',b:'Protein at every meal, plants on every plate.'},
-      {ico:ICO('moon'),c:'rgba(245,158,11,.12)',col:'#B45309',t:'Sleep 7–9 hours',b:'Recovery is when everything actually changes.'}
-    ]}
-  };
-  var data=bp[goal]||bp.muscle;
-  document.getElementById('ob-bp-title').textContent=data.title;
-  document.getElementById('ob-bp-sub').textContent=data.sub;
-  document.getElementById('ob-bp-list').innerHTML=data.items.map(function(it){
-    return '<div class="onb-info"><div class="onb-info-ico" style="background:'+it.c+';color:'+it.col+'">'+it.ico+'</div><div class="onb-info-body"><div class="onb-info-t">'+it.t+'</div><div class="onb-info-b">'+it.b+'</div></div></div>';
-  }).join('');
-}
 
 // Vendos objektiva ditore të arsyeshme sipas qëllimit dhe profilit (hapi 15)
 function ob_applyGoalDefaults(){
@@ -388,8 +328,7 @@ async function ob_finish(){
   var pr=parseInt(document.getElementById('ob-p').value)||170;
   var kc=parseInt(document.getElementById('ob-k').value)||2500;
   var wt=parseInt(document.getElementById('ob-wt').value)||8;
-  var rwo=document.getElementById('ob-r-wo').checked;
-  var rpr=document.getElementById('ob-r-pr').checked;
+  var rwo=false,rpr=false; // kujtesat aktivizohen më vonë te Cilësimet
   P={gender:_ob.gender,age:age||0,height:ht||0,units:_ob.units};
   G={protein:pr,weight:gw||85,water:wt,calories:kc};
   try{localStorage.setItem('prof_'+CU.id,JSON.stringify(P));}catch(e){}

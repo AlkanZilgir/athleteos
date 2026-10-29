@@ -932,7 +932,7 @@
         <div class="card">
           <div class="ctitle">About</div>
           <div class="set-meta">
-            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.2</span></span>
+            <span>Version</span><span>AthleteOS <span id="app-version">v1.2.3</span></span>
           </div>
           <div class="set-meta">
             <span>Website</span><span class="lnk" onclick="window.open('https://athleteos.app','_blank')">athleteos.app</span>
@@ -1468,35 +1468,8 @@
       <div class="onb-prog"><div class="onb-prog-fill" id="ob-prog"></div></div>
     </div>
 
-    <!-- 0: Mirëseardhja -->
-    <div class="onb-step on" id="os-0">
-      <div class="onb-hero">Welcome to <span>AthleteOS</span></div>
-      <div class="onb-sub">Lift, eat, sleep, repeat. We keep the receipts so you can see it working.</div>
-      <div class="onb-feat-list">
-        <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--adim);color:var(--accent-d)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Beat last session</div><div class="onb-feat-b">See exactly what you did last time and what to aim for now.</div></div></div>
-        <div class="onb-feat"><div class="onb-feat-ico" style="background:var(--bdim);color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Log in seconds</div><div class="onb-feat-b">Your last set is pre-filled. Tap, save, get back to training.</div></div></div>
-        <div class="onb-feat"><div class="onb-feat-ico" style="background:rgba(168,85,247,.12);color:#A855F7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="onb-feat-body"><div class="onb-feat-t">Computed, never guessed</div><div class="onb-feat-b">Tonnage, macro load and recovery windows derived from your own sets. Your data is never sold, shared, or used to train anything.</div></div></div>
-      </div>
-    </div>
-
-    <!-- 1: Motivimet (disa zgjedhje) -->
-    <div class="onb-step" id="os-1">
-      <div class="onb-h">What brings you here?</div>
-      <div class="onb-sub">Pick everything that fits. It shapes what you see first.</div>
-      <div class="onb-multi" id="ob-mot">
-        <button type="button" class="onb-multi-chip" data-v="progress" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></span>Track progress</button>
-        <button type="button" class="onb-multi-chip" data-v="muscle" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></span>Build muscle</button>
-        <button type="button" class="onb-multi-chip" data-v="lose" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span>Lose weight</button>
-        <button type="button" class="onb-multi-chip" data-v="eat" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></span>Eat better</button>
-        <button type="button" class="onb-multi-chip" data-v="sleep" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg></span>Sleep deeper</button>
-        <button type="button" class="onb-multi-chip" data-v="rest" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg></span>Rest timer</button>
-        <button type="button" class="onb-multi-chip" data-v="plan" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></span>Personal plan</button>
-        <button type="button" class="onb-multi-chip" data-v="streak" onclick="ob_mot_toggle(this)"><span class="onb-multi-chip-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg></span>Stay consistent</button>
-      </div>
-    </div>
-
     <!-- 2: Qëllimi kryesor -->
-    <div class="onb-step" id="os-2">
+    <div class="onb-step on" id="os-2">
       <div class="onb-h">What's your main training goal?</div>
       <div class="onb-sub">Everything else gets set from this.</div>
       <div class="onb-body">
@@ -1508,14 +1481,6 @@
           <button type="button" class="opt-item" data-v="general" onclick="ob_pick('main_goal',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-sprout"/></svg></span><div class="opt-body"><div class="opt-title">Stay in shape</div><div class="opt-sub">Move well, feel good, still lifting at 60</div></div></button>
         </div>
       </div>
-    </div>
-
-    <!-- 3: Plani sipas qëllimit (edukativ, dinamik) -->
-    <div class="onb-step" id="os-3">
-      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-      <div class="onb-h" id="ob-bp-title">Your Muscle Blueprint</div>
-      <div class="onb-sub" id="ob-bp-sub">How this goal actually gets built.</div>
-      <div class="onb-info-list" id="ob-bp-list"></div>
     </div>
 
     <!-- 4: Përvoja -->
@@ -1542,20 +1507,6 @@
       </div>
     </div>
 
-    <!-- 5: Gjurmimi i mëparshëm -->
-    <div class="onb-step" id="os-5">
-      <div class="onb-h">How do you track today?</div>
-      <div class="onb-sub">Honest answers help us show you the right tools first.</div>
-      <div class="onb-body">
-        <div class="opt-list" id="ob-prior-list">
-          <button type="button" class="opt-item" data-v="memory" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg></span><div class="opt-body"><div class="opt-title">Memory</div><div class="opt-sub">In my head</div></div></button>
-          <button type="button" class="opt-item" data-v="paper" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-notebook"/></svg></span><div class="opt-body"><div class="opt-title">Notebook / paper</div><div class="opt-sub">Pen &amp; pad at the gym</div></div></button>
-          <button type="button" class="opt-item" data-v="app" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg></span><div class="opt-body"><div class="opt-title">Another app</div><div class="opt-sub">Switching from something else</div></div></button>
-          <button type="button" class="opt-item" data-v="none" onclick="ob_pick('prior_tracking',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-slash"/></svg></span><div class="opt-body"><div class="opt-title">Not keeping track</div><div class="opt-sub">Starts today</div></div></button>
-        </div>
-      </div>
-    </div>
-
     <!-- 6: Të dhënat bazë (gjinia / mosha / gjatësia / njësitë) -->
     <div class="onb-step" id="os-6">
       <div class="onb-h">Tell us about you</div>
@@ -1567,85 +1518,6 @@
           <div class="f fdata"><label>Height</label><div class="fd"><input type="number" id="ob-ht" placeholder="175" min="50" max="280" inputmode="numeric"><span class="fd-u">cm</span></div></div>
         </div>
         <div class="f"><label>Units</label><div class="gpills" style="margin-top:8px"><button type="button" class="gpill on" id="ob-u-metric" onclick="ob_units('metric')">Metric (kg/cm)</button><button type="button" class="gpill" id="ob-u-imperial" onclick="ob_units('imperial')">Imperial (lb/in)</button></div></div>
-      </div>
-    </div>
-
-    <!-- 7: Stili i stërvitjes -->
-    <div class="onb-step" id="os-7">
-      <div class="onb-h">Do you train alone or with someone?</div>
-      <div class="onb-sub">Helpful for rest-time suggestions and session pacing.</div>
-      <div class="onb-body">
-        <div class="opt-list" id="ob-train-list">
-          <button type="button" class="opt-item" data-v="solo" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span><div class="opt-body"><div class="opt-title">Solo</div><div class="opt-sub">Me and the bar</div></div></button>
-          <button type="button" class="opt-item" data-v="partner" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></span><div class="opt-body"><div class="opt-title">With a training partner</div><div class="opt-sub">Push each other</div></div></button>
-          <button type="button" class="opt-item" data-v="trainer" onclick="ob_pick('train_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-whistle"/></svg></span><div class="opt-body"><div class="opt-title">With a trainer / coach</div><div class="opt-sub">Following someone's program</div></div></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 8: Ndjek një plan? -->
-    <div class="onb-step" id="os-8">
-      <div class="onb-h">Do you follow a set routine?</div>
-      <div class="onb-sub">No wrong answer. The app bends either way.</div>
-      <div class="onb-body">
-        <div class="opt-list" id="ob-plan-list">
-          <button type="button" class="opt-item" data-v="yes" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-plan"/></svg></span><div class="opt-body"><div class="opt-title">Yes, I have a plan</div><div class="opt-sub">Same split every week</div></div></button>
-          <button type="button" class="opt-item" data-v="flexible" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-shuffle"/></svg></span><div class="opt-body"><div class="opt-title">Sort of, but flexible</div><div class="opt-sub">I shift things around</div></div></button>
-          <button type="button" class="opt-item" data-v="wing" onclick="ob_pick('follow_plan',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-dice"/></svg></span><div class="opt-body"><div class="opt-title">No, I wing it</div><div class="opt-sub">Decide on the day</div></div></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 9: Stili i regjistrimit -->
-    <div class="onb-step" id="os-9">
-      <div class="onb-h">How much do you want to log?</div>
-      <div class="onb-sub">Pick a starting point. You can change anything later.</div>
-      <div class="onb-body">
-        <div class="opt-list" id="ob-log-list">
-          <button type="button" class="opt-item" data-v="minimal" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="opt-body"><div class="opt-title">Minimal</div><div class="opt-sub">PRs and top sets, nothing else</div></div></button>
-          <button type="button" class="opt-item" data-v="balanced" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></span><div class="opt-body"><div class="opt-title">Balanced</div><div class="opt-sub">The sets that matter</div></div></button>
-          <button type="button" class="opt-item" data-v="detailed" onclick="ob_pick('logging_style',this)"><span class="opt-ico icb"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></span><div class="opt-body"><div class="opt-title">Detailed</div><div class="opt-sub">Every set, every rep</div></div></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 10: Objektivi javor -->
-    <div class="onb-step" id="os-10">
-      <div class="onb-h">Set a weekly goal</div>
-      <div class="onb-sub">How many days are you actually showing up? We'll hold you to it.</div>
-      <div class="onb-body">
-      </div>
-    </div>
-
-    <!-- 11: Harta e muskujve -->
-    <div class="onb-step" id="os-11">
-      <div class="onb-h">Target body areas</div>
-      <div class="onb-sub">Mark what you want built, what you want cut, and what to leave alone.</div>
-      <div class="onb-body">
-        <div class="mm-mode">
-          <button type="button" class="mm-mode-btn grow on" data-mode="grow" onclick="mm_setMode('grow')"><span class="mm-leg-dot grow"></span>Build</button>
-          <button type="button" class="mm-mode-btn def" data-mode="def" onclick="mm_setMode('def')"><span class="mm-leg-dot def"></span>Cut</button>
-          <button type="button" class="mm-mode-btn exc" data-mode="exc" onclick="mm_setMode('exc')"><span class="mm-leg-dot exc"></span>Skip</button>
-        </div>
-        <div class="mm-wrap" id="ob-mm-wrap"></div>
-        <div class="mm-quick">
-          <button type="button" onclick="mm_quick('upper')">+ Upper body</button>
-          <button type="button" onclick="mm_quick('lower')">+ Lower body</button>
-          <button type="button" onclick="mm_quick('clear')">Clear all</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 12: Njësia e peshës -->
-    <div class="onb-step" id="os-12">
-      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="2"/><path d="M5 21l3-15h8l3 15z"/></svg></div>
-      <div class="onb-h">Choose weight unit</div>
-      <div class="onb-sub">Used everywhere weight shows up. Change it anytime in Settings.</div>
-      <div class="onb-body">
-        <div class="opt-list" id="ob-unit-list">
-          <button type="button" class="opt-item" data-v="imperial" onclick="ob_pick('units',this)"><span class="opt-ico" style="font-weight:800;font-size:16px;color:var(--t)">lb</span><div class="opt-body"><div class="opt-title">Pounds</div><div class="opt-sub">Imperial</div></div></button>
-          <button type="button" class="opt-item on" data-v="metric" onclick="ob_pick('units',this)"><span class="opt-ico" style="font-weight:800;font-size:16px;color:var(--accent-d)">kg</span><div class="opt-body"><div class="opt-title">Kilograms</div><div class="opt-sub">Metric</div></div></button>
-        </div>
       </div>
     </div>
 
@@ -1676,15 +1548,6 @@
       </div>
     </div>
 
-    <!-- 14: Pesha e synuar dhe parashikimi -->
-    <div class="onb-step" id="os-14">
-      <div class="onb-iconcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><path d="M6 9h12l1 11H5z"/></svg></div>
-      <div class="onb-h">Weight goal</div>
-      <div class="onb-sub">A realistic target you can reach with healthy habits.</div>
-      <div class="onb-body">
-      </div>
-    </div>
-
     <!-- 15: Objektivat ditore -->
     <div class="onb-step" id="os-15">
       <div class="onb-h">Daily nutrition targets</div>
@@ -1695,16 +1558,6 @@
       </div>
     </div>
 
-    <!-- 16: Kujtesat -->
-    <div class="onb-step" id="os-16">
-      <div class="onb-h">Stay on track</div>
-      <div class="onb-sub">Optional daily nudges so a busy day never sinks your streak.</div>
-      <div class="onb-body">
-        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib icb" style="background:var(--adim);color:var(--sig-train)"><svg class="ic" aria-hidden="true"><use href="#i-barbell"/></svg></div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Workout reminder</div><div class="tm" style="font-size:12.5px">Daily at 5:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-wo" checked><span class="tog-track"></span></label></div></div>
-        <div class="card" style="margin-bottom:10px"><div class="tog-row" style="padding:6px 0;border:none"><div class="sib icb" style="background:var(--bdim);color:var(--sig-water)"><svg class="ic" aria-hidden="true"><use href="#i-utensils"/></svg></div><div class="tog-lbl"><div style="font-size:14.5px;font-weight:700;letter-spacing:-.2px">Protein nudge</div><div class="tm" style="font-size:12.5px">Daily at 8:00 PM</div></div><label class="tog-sw"><input type="checkbox" id="ob-r-pr" checked><span class="tog-track"></span></label></div></div>
-        <p class="tm" style="font-size:12.5px;text-align:center;margin-top:10px">We'll ask for notification permission once you turn one on.</p>
-      </div>
-    </div>
   </div>
   <div class="onb-cta">
     <button type="button" class="btn-g" id="ob-back-btn" onclick="ob_back()">Back</button>

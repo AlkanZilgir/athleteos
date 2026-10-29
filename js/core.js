@@ -2,7 +2,7 @@
    Versioni, gjurmimi i gabimeve (Sentry), analitika (PostHog), ngarkimi i
    vonuar i bibliotekave, radha e ruajtjeve offline, nisja dhe hyrja me
    Supabase, instalimi si PWA dhe funksionet ndihmëse të përbashkëta. */
-const APP_VERSION='v1.2.2';
+const APP_VERSION='v1.2.3';
 
 /* ── GJURMIMI I GABIMEVE (Sentry) ─────────────
    Skripti ngarkues i Sentry është në <head> të index.html. Ai e ngarkon SDK-në

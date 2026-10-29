@@ -2,7 +2,7 @@
    Mban aplikacionin të punojë offline (cache), shfaq njoftimet e
    kohëmatësit të pushimit dhe njoftimet push, dhe riprovon ruajtjet
    që dështuan kur kthehet interneti. */
-const CACHE='athleteos-v83';
+const CACHE='athleteos-v84';
 
 const BASE=self.registration.scope;
 const ASSETS=[

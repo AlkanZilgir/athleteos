@@ -46,47 +46,7 @@ input,textarea,select{-webkit-user-select:text;user-select:text;font-family:var(
 .wc-link:hover{color:var(--accent-d)}
 /* Ilustrimi i mirëseardhjes i merr ngjyrat nga variablat e temës */
 /* ── OFERTA PRO gjatë regjistrimit (hapi i parafundit) ── */
-#ob-paywall{position:fixed;inset:0;background:var(--bg);z-index:1100;overflow-y:auto;padding:calc(28px + env(safe-area-inset-top,0px)) 0 calc(24px + env(safe-area-inset-bottom,0px))}
-.obp-inner{width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;min-height:100%}
-.obp-title-block{padding:8px 24px 22px}
-.obp-eyebrow{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;margin-bottom:14px}
-.obp-eyedot{width:8px;height:8px;border-radius:4px;background:var(--accent)}
-.obp-title{font-family:var(--font-body);font-weight:600;font-size:34px;line-height:1.05;letter-spacing:-.5px;color:var(--t);margin:0}
-.obp-title span{color:var(--accent)}
-.obp-feats{padding:0 24px;display:flex;flex-direction:column;gap:14px}
-.obp-feat{display:flex;align-items:flex-start;gap:12px}
-.obp-tile{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.obp-feat-text{flex:1;padding-top:2px}
-.obp-feat-t{font-size:15px;font-weight:600;color:var(--t);letter-spacing:-.3px}
-.obp-feat-b{font-size:13px;color:var(--t2);line-height:1.4;margin-top:2px;font-weight:500}
-.obp-plans{padding:22px 20px 0;display:flex;flex-direction:column;gap:10px}
-.obp-plan{all:unset;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid var(--bdr2);border-radius:18px;background:var(--card);font-family:inherit;position:relative;transition:border-color .15s,background .15s}
-.obp-plan:hover{border-color:var(--bdr3)}
-.obp-plan.on{border:2px solid var(--accent);background:#FBFEFC}
-body.dark .obp-plan.on{background:var(--adim)}
-.obp-radio{width:22px;height:22px;border:2px solid var(--bdr3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
-body.dark .obp-radio{background:var(--card2)}
-.obp-plan.on .obp-radio{border-color:var(--accent)}
-.obp-plan.on .obp-radio::after{content:"";width:11px;height:11px;border-radius:6px;background:var(--accent)}
-.obp-plan-body{flex:1;min-width:0;text-align:left}
-.obp-plan-t{font-size:16px;font-weight:600;color:var(--t);letter-spacing:-.3px}
-.obp-plan-b{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500}
-.obp-plan-price{text-align:right;flex-shrink:0}
-.obp-plan-v{font-size:17px;color:var(--t);letter-spacing:-.4px;line-height:1}
-.obp-plan-u{font-size:11px;color:var(--t2);font-weight:600;margin-top:3px}
-.obp-badge{position:absolute;top:-10px;right:16px;background:var(--accent);color:#fff;font-size:11px;font-weight:600;letter-spacing:.8px;padding:4px 10px;border-radius:999px}
-.obp-actions{padding:24px 24px 14px;display:flex;flex-direction:column;gap:8px;margin-top:auto}
-.obp-cta{width:100%;height:54px;border-radius:999px;border:none;background:var(--accent);color:#fff;font-family:inherit;font-size:16.5px;font-weight:600;letter-spacing:-.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 18px rgba(var(--accent-rgb),.32);transition:transform .12s,background .2s;-webkit-appearance:none}
-.obp-cta:hover{background:var(--accent-d)}
-.obp-cta:active{transform:scale(.98)}
-.obp-cta:disabled{opacity:.7;cursor:default;transform:none}
-.obp-later{background:transparent;border:none;color:var(--t2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:8px;-webkit-appearance:none}
-.obp-later:hover{color:var(--t)}
-.obp-trust{justify-content:center;align-items:center;gap:8px;padding:0 24px;font-size:11.5px;color:var(--t2);font-weight:600}
-.obp-trust > span{display:inline-flex;align-items:center;gap:5px}
-.obp-dot-sep{width:3px;height:3px;border-radius:2px;background:var(--t4);display:inline-block;flex-shrink:0}
-.obp-fine{margin-top:8px;padding:0 24px 12px;text-align:center}
-.obp-fine b{color:var(--t2);font-weight:600}
+
 /* ── HYRJA / REGJISTRIMI ──────────────────── */
 #auth{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(28px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));background:var(--bg);z-index:1000;overflow-y:auto}
 .alogo{font-family:var(--font-body);font-weight:600;letter-spacing:-.5px;color:var(--t);line-height:1}
@@ -132,17 +92,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .sb-ico{width:18px;height:18px;flex-shrink:0}
 .sb-div{height:1px;margin:8px 0}
 .sb-foot{padding:12px;border-top:1px solid var(--bdr);flex-shrink:0;display:flex;flex-direction:column;gap:8px}
-.sb-pro{display:flex;align-items:center;gap:11px;padding:10px 11px;cursor:pointer;transition:transform .12s,box-shadow .15s;position:relative;overflow:hidden}
-.sb-pro::before{content:"";position:absolute;inset:0;background:none;pointer-events:none}
-.sb-pro:hover{transform:translateY(-1px);box-shadow:0 6px 16px -4px rgba(var(--accent-rgb),.4)}
-.sb-pro-ico{width:32px;height:32px;border-radius:9px;align-items:center;justify-content:center;flex-shrink:0;position:relative}
-.sb-pro-body{flex:1;min-width:0;position:relative}
-.sb-pro-t{font-size:13px;line-height:1.1}
-.sb-pro-b{font-size:11px;font-weight:600;opacity:.88;margin-top:2px}
-.sb-pro.active{background:var(--card);color:var(--t);border:1px solid var(--bdr)}
-.sb-pro.active::before{display:none}
-.sb-pro.active .sb-pro-ico{background:var(--adim);color:var(--accent-d)}
-.sb-pro.active .sb-pro-b{color:var(--t2);opacity:1}
+
 .sb-user{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:12px;cursor:pointer;transition:background .15s}
 .sb-user:hover{background:var(--surface)}
 .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
@@ -163,13 +113,9 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .by{background:rgba(245,158,11,.12);color:var(--yel)}
 .bg{background:var(--adim);color:var(--accent-d)}
 .bb{background:var(--bdim);color:var(--blue)}
-.tb-pro-pill{padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:-.1px;border:none;cursor:pointer;font-family:inherit;background:var(--accent);color:#FFFFFF;-webkit-appearance:none;box-shadow:0 2px 6px -1px rgba(var(--accent-rgb),.4)}
-.tb-pro-pill:active{transform:scale(.95)}
+
 /* Etiketa "Pro" pranë veçorive që kërkojnë abonim */
-.pro-lock{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:var(--accent);color:#FFFFFF;font-size:10px;font-weight:600;letter-spacing:.7px;line-height:1;vertical-align:middle;margin-left:6px;text-transform:none}
-.pro-lock svg{width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:2.5}
-.pro-soft{position:relative}
-.pro-soft::after{content:"";position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;border:2px solid var(--card)}
+
 /* ── PËRMBAJTJA QË SKROLLOHET ─────────────── */
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;min-height:0}
 .panel{display:none}
@@ -184,7 +130,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 /* ── PANELI I TRAJNERIT (Coach) ───────────── */
 #p-ai{position:absolute;top:calc(var(--topH) + env(safe-area-inset-top,0px));left:0;right:0;bottom:calc(var(--navH) + env(safe-area-inset-bottom,0px));display:none;flex-direction:column;background:var(--bg);z-index:20;overflow:hidden}
 #p-ai.on{display:flex}
-.ai-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-shrink:0}
+
 .chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;min-height:0}
 .msg{max-width:86%;padding:13px 16px;font-size:14.5px;line-height:1.55;word-break:break-word}
 .msg.u{align-self:flex-end;background:var(--accent);color:#FFFFFF;font-weight:600}
@@ -195,14 +141,11 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .dots span:nth-child(2){animation-delay:.18s}
 .dots span:nth-child(3){animation-delay:.36s}
 @keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-.chat-row{flex-shrink:0;display:flex}
-.chat-chip{background:var(--surface);border:1px solid var(--bdr2);padding:7px 12px;color:var(--t);cursor:pointer;-webkit-appearance:none;transition:all .15s;white-space:nowrap}
-.chat-chip:active{transform:scale(.97)}
+
 .chat-in{flex:1;background:var(--surface);border:1.5px solid transparent;padding:13px 16px;color:var(--t);font-size:16px;font-family:inherit;outline:none;resize:none;max-height:120px;line-height:1.45;-webkit-appearance:none;transition:all .18s;font-weight:500}
 .chat-in::placeholder{color:var(--t3);font-weight:400}
 .chat-in:focus{border-color:var(--accent);background:#FFFFFF;box-shadow:0 0 0 4px var(--adim)}
-.chat-send{width:46px;height:46px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-appearance:none;transition:transform .12s,background .15s}
-.chat-send:active{transform:scale(.92)}
+
 .chat-mic{width:46px;height:46px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-appearance:none;color:var(--t2);transition:all .15s}
 .chat-mic:hover{color:var(--t)}
 .chat-mic.on{background:var(--red);border-color:var(--red);color:#fff;animation:micPulse 1.2s ease-in-out infinite}
@@ -211,21 +154,16 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .pr-share-btn{background:var(--surface);border:1px solid var(--bdr);color:var(--accent-d);width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-left:8px;transition:background .15s,transform .12s;font-family:inherit}
 .pr-share-btn:active{transform:scale(.9);background:var(--adim)}
 /* ── KARTA "FTO NJË MIK" ──────────────────── */
-.invite-card{background:var(--card2);border-color:var(--bdr2);transition:transform .12s,opacity .15s}
-.invite-card:active{transform:scale(.985);opacity:.8}
+
 /* ── KARTA E OBJEKTIVAVE DITORE ───────────── */
 .gs-card{background:var(--card2);border-color:var(--bdr2)}
 .gs-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--bdr);cursor:pointer;transition:opacity .15s}
 .gs-row:active{opacity:.6}
 .gs-row.done{opacity:.55}
-.gs-row.done .gs-t{text-decoration:line-through}
+
 .gs-check{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--bdr);color:var(--t2);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0}
 .gs-row.done .gs-check{background:var(--accent);border-color:var(--accent);color:#fff}
-.gs-body{flex:1;min-width:0}
-.gs-t{font-weight:600;font-size:14px;color:var(--t);letter-spacing:-.2px}
-.gs-s{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
-.gs-arrow{color:var(--t3);font-weight:600;font-size:18px}
-.gs-row.done .gs-arrow{display:none}
+
 /* ── NAVIGIMI I POSHTËM (telefon) ─────────── */
 .navbar{flex-shrink:0;display:flex;position:relative;z-index:30}
 .nv{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;letter-spacing:-.1px;font-family:inherit;transition:color .15s,opacity .1s}
@@ -261,7 +199,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .sl{font-size:12px;color:var(--t2);font-weight:500;margin-top:6px;letter-spacing:-.1px}
 /* ── SHIRITAT E PROGRESIT ─────────────────── */
 .pbar{border-radius:999px;overflow:hidden;margin-top:8px}
-.pfill{height:100%;border-radius:999px;background:var(--accent);transition:width .7s cubic-bezier(.4,0,.2,1)}
+
 /* ── BUTONAT E RRUMBULLAKËT (pills) ───────── */
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .pill{padding:8px 15px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:none;color:var(--t2);background:var(--surface);font-family:inherit;transition:all .15s;-webkit-appearance:none;letter-spacing:-.1px}
@@ -336,7 +274,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .stime-block:last-of-type{border-bottom:none;padding-bottom:4px}
 .stime-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .stime-lbl{font-size:12px;color:var(--t2);font-weight:500;margin-bottom:3px;letter-spacing:-.1px}
-.stime-inp{width:100%;background:transparent;border:none;padding:0;font-size:24px;font-family:var(--font-body);font-weight:600;color:var(--t);letter-spacing:-.8px;outline:none;-webkit-appearance:none;min-width:0;cursor:pointer;-webkit-user-select:text;user-select:text;padding-right:4px}
+
 .stime-block{cursor:pointer}
 .stime-block:active{opacity:.7;transition:none}
 .stime-val{font-size:24px;font-family:var(--font-body);font-weight:600;color:var(--t);letter-spacing:-.8px;line-height:1.2}
@@ -351,9 +289,7 @@ body.dark .btn-oauth{color:var(--t);border-color:var(--bdr2)}
 .tp-mask{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,var(--surface) 0%,transparent 36%,transparent 64%,var(--surface) 100%);z-index:2;border-radius:18px}
 .tp-bar{position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);height:52px;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);pointer-events:none;z-index:3}
 /* ── KOHËMATËSI I PUSHIMIT ────────────────── */
-.rpreset{display:flex;gap:6px;margin-bottom:22px}
-.rpill{flex:1;padding:11px 0;border:1.5px solid var(--bdr2);border-radius:999px;background:#FFFFFF;color:var(--t2);font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-appearance:none;transition:all .15s;letter-spacing:-.1px}
-.rpill.on{border-color:var(--accent);color:var(--accent-d);background:var(--adim)}
+
 .rest-presets{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
 .rest-preset{display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;font-family:inherit;-webkit-appearance:none;text-align:left;transition:all .15s;width:100%}
 .rest-preset:hover{border-color:var(--bdr3)}
@@ -416,9 +352,7 @@ video{width:100%;border-radius:18px;background:#000;max-height:260px;object-fit:
 .hm-c1{display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(var(--accent-rgb),.30);margin:0 1px}
 .hm-c2{display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(var(--accent-rgb),.55);margin:0 1px}
 .hm-c3{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent);margin:0 1px}
-.hm-cell.lv1{background:rgba(var(--accent-rgb),.30)}
-.hm-cell.lv2{background:rgba(var(--accent-rgb),.55)}
-.hm-cell.lv3{background:var(--accent)}
+
 .hm-cell.future{visibility:hidden}
 /* ── ARRITJET ─────────────────────────────── */
 .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px}
@@ -461,10 +395,7 @@ body.dark .atab.on{color:var(--t)}
 body.dark .acard{box-shadow:0 4px 24px rgba(0,0,0,.4)}
 body.dark .wc:not(.on){background:transparent;border-color:var(--bdr2)}
 /* Fushat e fokusuara mbeten të lexueshme në temën e errët (jo sfond i bardhë fiks). */
-body.dark .f input:focus,
-body.dark .f select:focus,
-body.dark .chat-in:focus,
-body.dark .si:focus{background:var(--card2);color:var(--t)}
+body.dark .f input:focus,body.dark .f select:focus,body.dark .chat-in:focus,body.dark .si:focus{background:var(--card2);color:var(--t)}
 body.dark .f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23F4F4F5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")}
 body.dark .msheet{box-shadow:0 -10px 40px rgba(0,0,0,.6)}
 body.dark .btn-o{background:var(--surface);border-color:var(--bdr2);color:var(--t)}
@@ -514,9 +445,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 #onb{position:fixed;inset:0;height:100dvh;display:none;flex-direction:column;z-index:900}
 #onb.on{display:flex}
 .onb-body-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.onb-dots{display:flex;gap:5px;justify-content:center;margin-bottom:28px}
-.onb-dot{width:24px;height:4px;border-radius:999px;background:var(--t4);transition:background .25s,width .25s}
-.onb-dot.on{background:var(--accent);width:36px}
+
 .onb-step{display:none}
 .onb-step.on{display:flex;flex-direction:column}
 .onb-h{margin-bottom:12px}
@@ -528,7 +457,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 .onb-cta .lnk{padding:10px 14px}
 .onb-prog{height:5px;background:var(--surface);border-radius:999px;margin:0 -24px 26px;overflow:hidden;position:relative}
 .onb-prog-fill{height:100%;background:var(--accent);transition:width .35s cubic-bezier(.4,0,.2,1);width:0;border-radius:999px}
-.onb-step-n{position:absolute;right:24px;top:calc(env(safe-area-inset-top,0px) + 28px);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.4px}
+
 .onb-hero{color:var(--t)}
 .onb-feat-list{display:flex;flex-direction:column;gap:22px;margin-top:30px}
 .onb-feat{display:flex;gap:16px;align-items:flex-start}
@@ -541,7 +470,7 @@ body.dark .gpill:not(.on){background:var(--surface)}
 .onb-info-ico{flex-shrink:0;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .onb-info-t{color:var(--t);margin-bottom:4px}
 .onb-info-b{font-size:13.5px;color:var(--t2);line-height:1.55;font-weight:500}
-.onb-big-emoji{font-size:64px;text-align:center;line-height:1;margin:6px 0 18px}
+
 .onb-num-wrap{background:var(--card);border:1px solid var(--bdr);border-radius:18px;padding:24px 20px;margin:14px 0;display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
 .onb-num{font-family:var(--font-body);font-weight:600;font-size:60px;letter-spacing:-2.5px;color:var(--t);background:transparent;border:none;outline:none;text-align:center;width:auto;min-width:60px;max-width:220px;-webkit-appearance:none;font-variant-numeric:tabular-nums}
 .onb-num::placeholder{color:var(--t4)}
@@ -584,60 +513,12 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .onb-iconcard{width:72px;height:72px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:var(--adim)}
 .onb-iconcard svg{width:38px;height:38px;color:var(--accent)}
 /* ── FAQJA E ABONIMIT PRO ─────────────────── */
-.pw-sheet{padding:0 0 calc(20px + env(safe-area-inset-bottom,0px))!important;overflow:hidden!important}
-.pw-sheet .pw-scroll{padding:18px 22px 24px;max-height:calc(92vh - 8px);overflow-y:auto;-webkit-overflow-scrolling:touch}
-.pw-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:var(--surface);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;z-index:10;font-size:16px;font-weight:600}
-.pw-close:hover{background:var(--surface-2);color:var(--t)}
-.pw-hero{position:relative;padding:36px 24px 22px;text-align:center;overflow:hidden}
-.pw-hero::before{content:"";position:absolute;inset:0;background:none;pointer-events:none}
-.pw-hero-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;margin-bottom:14px;position:relative}
-.pw-hero-title{font-family:var(--font-body);font-weight:600;font-size:28px;letter-spacing:-.5px;line-height:1.1;margin:0 0 6px;position:relative}
-.pw-hero-sub{font-size:13.5px;line-height:1.5;opacity:.92;margin:0;font-weight:500;position:relative;max-width:300px;margin:0 auto}
-.pw-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
-.pw-feat{display:flex;gap:13px;align-items:flex-start}
-.pw-feat-ico{flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--adim);color:var(--accent-d);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600}
-.pw-feat-t{font-size:14.5px;font-weight:600;color:var(--t);letter-spacing:-.2px;margin-bottom:2px}
-.pw-feat-b{font-size:13px;color:var(--t2);line-height:1.45;font-weight:500}
-.pw-plan{border:1.5px solid var(--bdr2);border-radius:16px;background:var(--card)}
-.pw-plan:hover{border-color:var(--bdr3)}
-.pw-plan.on{border-color:var(--accent)}
-.pw-plan-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr3);background:var(--card);flex-shrink:0;position:relative;transition:all .15s}
-.pw-plan.on .pw-plan-radio{border-color:var(--accent);background:var(--accent)}
-.pw-plan.on .pw-plan-radio::after{content:"";position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:#FFFFFF;transform:translate(-50%,-50%)}
-.pw-plan-body{flex:1;min-width:0}
-.pw-plan-t{font-size:15px;font-weight:600;color:var(--t);letter-spacing:-.2px}
-.pw-plan-b{font-size:12.5px;color:var(--t2);margin-top:2px;font-weight:500}
-.pw-plan-price{text-align:right;flex-shrink:0}
-.pw-plan-price-v{font-family:var(--font-body);font-weight:600;font-size:18px;color:var(--t);letter-spacing:-.4px;line-height:1}
-.pw-plan-price-u{font-size:11px;color:var(--t2);font-weight:600;margin-top:3px}
-.pw-plan-badge{position:absolute;top:-10px;right:14px;background:var(--accent);color:#FFFFFF;font-size:10px;font-weight:600;letter-spacing:0;padding:3px 10px;border-radius:999px;text-transform:none}
-.pw-cta{margin-bottom:10px}
-.pw-trust{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;font-size:11.5px;color:var(--t2);font-weight:500;margin-bottom:8px}
-.pw-trust span{display:inline-flex;align-items:center;gap:4px}
-.pw-trust-sep{color:var(--t4)}
-.pw-fineprint{font-size:11px;color:var(--t3);text-align:center;line-height:1.5}
-.pw-timeline{margin-top:18px;padding-top:18px;border-top:1px solid var(--bdr)}
-.pw-timeline summary{display:flex;align-items:center;justify-content:space-between}
-.pw-timeline summary::after{content:"▾";color:var(--t3);transition:transform .2s;font-size:12px}
-.pw-timeline[open] summary::after{transform:rotate(180deg)}
-.pw-tl-body{display:flex;gap:14px;margin-top:14px}
-.pw-tl-rail{display:flex;flex-direction:column;align-items:center;padding-top:4px;flex-shrink:0}
-.pw-tl-dot{width:30px;height:30px;border-radius:50%;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.pw-tl-dot.now{background:var(--accent)}
-.pw-tl-dot.warn{background:#A855F7}
-.pw-tl-dot.charge{background:var(--yel)}
-.pw-tl-line{width:2px;flex:1;min-height:18px;margin:4px 0}
-.pw-tl-line.a{background:var(--accent)}
-.pw-tl-line.b{background:var(--accent)}
-.pw-tl-step{margin-bottom:14px}
-.pw-tl-step:last-child{margin-bottom:0}
-.pw-tl-step-t{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.1px}
-.pw-tl-step-b{font-size:12.5px;color:var(--t2);margin-top:2px;line-height:1.45}
+
 /* Në desktop: kartë në qendër në vend të fletës nga poshtë */
 @media(min-width:768px){
-  .modal#m-paywall{align-items:center;justify-content:center;padding:24px}
-  .modal#m-paywall .pw-sheet{max-width:480px;border-radius:24px;animation:pwUp .26s cubic-bezier(.4,0,.2,1) both}
-  .pw-hero{border-radius:24px 24px 0 0}
+  
+  
+  
   /* Në desktop modalet qendërzohen dhe kufizohen në gjerësi, që gif-et e ushtrimeve të mos zënë gjithë ekranin */
   .modal{align-items:center;justify-content:center;padding:24px}
   .msheet{
@@ -694,30 +575,15 @@ body.dark .mm-chip.exc{background:transparent;color:var(--t4)}
 .mes-tile .md{font-size:11px;color:var(--accent-d);margin-top:3px;font-weight:600;letter-spacing:-.1px}
 .mes-tile .md.dn{color:var(--blue)}
 /* Pamja e matjeve të trupit me animacion */
-.mes-body{position:relative;width:100%;max-width:340px;margin:6px auto 14px;aspect-ratio:1/1.55}
-.mes-body svg{width:100%;height:100%;display:block}
-.mes-body-fill{fill:rgba(var(--accent-rgb),.10);stroke:rgba(var(--accent-rgb),.45);stroke-width:.7;transition:fill .5s ease}
-body.dark .mes-body-fill{fill:rgba(var(--accent-rgb),.14);stroke:rgba(var(--accent-rgb),.55)}
-.mes-line{stroke:rgba(0,0,0,.18);stroke-width:.6;stroke-dasharray:2 2;fill:none}
-body.dark .mes-line{stroke:rgba(255,255,255,.20)}
-.mes-pulse{fill:var(--accent);opacity:.18;animation:mes-pulse 2.8s ease-in-out infinite}
+
 @keyframes mes-pulse{0%,100%{opacity:.10;transform:scale(.95)}50%{opacity:.30;transform:scale(1.05)}}
-.mes-mark{position:absolute;display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--card);border:1px solid var(--bdr);border-radius:999px;font-family:var(--font-body);cursor:pointer;transition:all .15s;-webkit-appearance:none;color:var(--t);font-weight:600;white-space:nowrap;box-shadow:var(--shadow-sm);font-size:12.5px;transform:translate(-50%,-50%)}
-.mes-mark:hover{border-color:var(--accent);background:var(--card)}
-.mes-mark:active{transform:translate(-50%,-50%) scale(.96)}
-.mes-mark.empty{background:transparent;border-style:dashed;color:var(--t3);font-weight:500}
-.mes-mark-lbl{font-size:11px;color:var(--t2);text-transform:none;letter-spacing:.5px;font-weight:600;margin-right:1px}
-.mes-mark-v{font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.2px;color:var(--t)}
-.mes-mark-u{font-size:10.5px;color:var(--t3);font-weight:600;margin-left:1px}
-.mes-mark-delta{font-size:10px;font-weight:600;padding:2px 5px;border-radius:6px;letter-spacing:-.1px;font-variant-numeric:tabular-nums}
-.mes-mark-delta.up{background:var(--adim);color:var(--accent-d)}
-.mes-mark-delta.dn{background:var(--bdim);color:var(--blue)}
+
 .mes-summary{display:flex;justify-content:space-around;gap:8px;padding:10px 8px;background:var(--surface);border-radius:14px;margin-top:6px}
 .mes-sumitem{flex:1;text-align:center}
 .mes-sum-l{font-size:10.5px;color:var(--t2);font-weight:600;text-transform:none;letter-spacing:.5px;margin-bottom:2px}
 .mes-sum-v{font-family:var(--font-body);font-weight:600;font-size:16px;color:var(--t);letter-spacing:-.4px}
 /* Rreshtat e fushave në Cilësime → Pamja */
-.acc-row{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;align-items:center}
+
 .acc-pick{width:36px;height:36px;border-radius:50%;background:var(--c);border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--bdr2);cursor:pointer;-webkit-appearance:none;transition:all .15s;padding:0;position:relative;flex-shrink:0}
 .acc-pick:hover{transform:scale(1.06)}
 .acc-pick:active{transform:scale(.94)}
@@ -740,9 +606,9 @@ body.dark .store-btn{background:#FAFAFA;color:#0A0A0B;border-color:#FAFAFA}
   #p-settings .ctitle{font-size:14px;margin-bottom:12px}
   #p-settings .sit{padding:12px 0;gap:11px}
   #p-settings .sib{width:36px;height:36px}
-  #p-settings .acc-row{gap:8px}
+  
   #p-settings .acc-pick{width:32px;height:32px}
-  #set-pro-card{padding:16px!important}
+  
 }
 @media(max-width:380px){
   #p-settings .acc-pick{width:28px;height:28px;border-width:2px}
@@ -797,24 +663,14 @@ body.dark .opt-item.on{background:#17171C}
 .opt-group{background:var(--surface);padding:4px 18px}
 .opt-row.on .opt-row-r{color:var(--accent-d);font-weight:600}
 /* ── FAQJA KRYESORE ───────────────────────── */
-.seclabel{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0;color:var(--accent-d);margin-bottom:8px}
-.seclabel-dot{width:6px;height:6px;border-radius:50%}
+
 .hero-title{font-family:var(--font-body);font-weight:600;color:var(--t)}
-.hero-card{background:var(--card);border:1px solid var(--bdr);position:relative;overflow:hidden}
-body.dark .hero-card{background:var(--card)}
+
 .hero-stat{font-family:var(--font-body);font-weight:600;font-size:36px;letter-spacing:-.5px;color:var(--t);line-height:1;margin-top:6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .hero-stat-unit{font-size:13px;font-weight:500;color:var(--t2);letter-spacing:-.1px}
-.hero-foot{display:flex;align-items:stretch;padding-top:14px;border-top:1px solid var(--bdr)}
-.hero-foot-item{flex:1;text-align:center}
-.hero-foot-v{font-family:var(--font-body);font-weight:600;font-size:18px;letter-spacing:-.4px;color:var(--t);line-height:1}
-.hero-foot-l{font-size:11px;color:var(--t2);font-weight:500;margin-top:3px;letter-spacing:-.1px}
-.hero-foot-divider{width:1px;background:var(--bdr);margin:0 6px}
-.tile-mini{display:flex;flex-direction:column;padding:14px}
-.tile-ico{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:10px}
-.tile-mini .sv{font-size:24px;letter-spacing:-1px;margin-top:0}
-.tile-mini .sl{margin-top:3px;font-size:11.5px}
+
 .coach-card:active{transform:scale(.995);transition:transform .1s}
-.coach-ico{font-size:24px;line-height:1}
+
 .coach-title{margin-bottom:6px}
 .act-row{display:flex;align-items:center;gap:12px;padding:11px 0}
 .act-row:last-child{border-bottom:none}
@@ -843,16 +699,16 @@ body.dark .hero-card{background:var(--card)}
 /* ── TIPOGRAFIA E TITUJVE ──────────────────
    Titujt dhe numrat e mëdhenj. Hapësira mes shkronjave mbahet afër
    zeros; dallimin e bën madhësia dhe pesha. */
-.ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand{font-family:var(--font-display);font-weight:600;letter-spacing:0;text-transform:none;text-wrap:balance}
+.ptitle,.hero-title,.onb-h,.onb-hero,.wc-brand{font-family:var(--font-display);font-weight:600;letter-spacing:0;text-transform:none;text-wrap:balance}
 .ptitle{line-height:.95}
 .hero-title{line-height:.95;letter-spacing:.2px}
 .wc-brand{line-height:.9;letter-spacing:.5px}
 .onb-hero,.onb-h{font-weight:600}
-.obp-title,.pw-hero-title{font-weight:600;letter-spacing:.3px}
+
 .ctitle{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.9px;text-transform:none;color:var(--t)}
 .sb-logo,.tlogo{font-family:var(--font-display);text-transform:none}
 /* Numrat mbeten të lexueshëm: fonti i titujve mbi 20px, fonti i tekstit nën të. */
-.stat-num{font-family:var(--font-display);font-weight:600;letter-spacing:0;line-height:.9;font-variant-numeric:tabular-nums;color:var(--t)}
+
 /* ── KOKA E FAQES KRYESORE ─────────────────
    Data me një vijë, përshëndetja e madhe dhe një rresht gjendjeje. */
 .home-date{display:flex;align-items:center;gap:9px;font-family:var(--font-body);text-transform:none}
@@ -875,27 +731,19 @@ body.dark .hero-card{background:var(--card)}
 /* ── BANDA E STËRVITJES ────────────────────
    Volumi i javës, shtyllat e 7 ditëve dhe tabela me statistika. */
 .tr-vol{align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
-.tr-vol .stat-num{font-size:clamp(46px,13vw,62px)}
-.tr-vol-unit{font-family:var(--font-display);font-size:20px;text-transform:none;color:var(--sig-train);line-height:1}
+
 .tr-caption{font-size:12.5px;color:var(--t2);font-weight:500;margin-bottom:4px}
 .hero-spark{height:62px;position:relative}
-.readout{grid-template-columns:repeat(4,1fr);gap:2px;margin-top:14px;padding-top:15px;border-top:1px solid var(--bdr)}
-.readout-i{text-align:left;position:relative}
-.readout-i+.readout-i::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;background:var(--bdr)}
-.readout-v{font-family:var(--font-display);font-weight:600;letter-spacing:.2px;line-height:1;color:var(--t);font-variant-numeric:tabular-nums}
-.readout-l{font-size:10.5px;color:var(--t3);font-weight:600;margin-top:5px;letter-spacing:.9px;text-transform:none}
+
 /* ── UNAZAT E PROGRESIT ────────────────────
    Unazë rrethore me hark në ngjyrën e të dhënës përkatëse. */
 .ring{position:relative;flex-shrink:0;display:grid;place-items:center}
 .ring svg{transform:rotate(-90deg);display:block;overflow:visible;width:100%;height:100%}
 .ring-track{fill:none}
-.ring-arc{fill:none;stroke:var(--ring-hue,var(--sig-train));transition:stroke-dashoffset .85s cubic-bezier(.16,1,.3,1)}
-body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))}
+
 .ring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1}
 .ring-v{font-family:var(--font-display);font-weight:600;letter-spacing:0;color:var(--t);line-height:.9;font-variant-numeric:tabular-nums}
-.ring-u{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:0;text-transform:none;margin-top:4px}
-.ring-lg .ring-v{font-size:30px}
-.ring-sm .ring-v{font-size:23px}
+
 /* ── BANDA E USHQIMIT ──────────────────────
    Kaloritë dhe proteinat e ditës si shirita progresi. */
 .fuel-grid{align-items:center;gap:20px}
@@ -911,21 +759,14 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .m-fuel{--meter-hue:var(--sig-fuel-pure)}
 .m-train{--meter-hue:var(--sig-train-pure)}
 .m-water{--meter-hue:var(--sig-water-pure)}
-.m-sleep{--meter-hue:var(--sig-sleep-pure)}
+
 .meter-note{margin-top:6px}
 /* Shiritat e vjetër .pbar/.pfill të skedës Ushqimi marrin të njëjtin stil. */
 .pbar{height:7px;background:var(--sig-track)}
 /* ── ÇIFTI DYTËSOR ─────────────────────────
    Uji dhe gjumi: më të vegjël, njëri pranë tjetrit. */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.pair-cell{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:15px 14px;display:flex;align-items:center;gap:13px;min-width:0;cursor:pointer;transition:border-color .18s,background .18s;-webkit-appearance:none;font-family:inherit;text-align:left;width:100%}
-.pair-cell:hover{border-color:var(--bdr3);background:var(--card2)}
-.pair-cell:active{transform:scale(.985)}
-.pair-body{min-width:0;flex:1}
-.pair-l{font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3)}
-.pair-v{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.2px;line-height:1;color:var(--t);margin-top:5px;font-variant-numeric:tabular-nums}
-.pair-v .su{font-family:var(--font-display);font-size:14px;font-weight:500;color:var(--t2);letter-spacing:.6px;margin-left:1px}
-.pair-s{font-size:11.5px;color:var(--t2);font-weight:600;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 @media(max-width:340px){.pair{grid-template-columns:1fr}}
 /* ── KARTA E TRAJNERIT NË FAQEN KRYESORE ─── */
 .coach-card{background:var(--card);border:1px solid color-mix(in srgb,var(--sig-train) 26%,var(--bdr));position:relative;overflow:hidden}
@@ -939,21 +780,15 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 /* ── VENDET E IKONAVE NË OPSIONE DHE ÇIPA ── */
 .opt-ico,.onb-multi-chip-ico,.rp-ico{font-size:19px;color:var(--t2)}
 .opt-item.on .opt-ico,.onb-multi-chip.on .onb-multi-chip-ico{color:var(--sig-train)}
-.onb-info-ico,.obp-tile,.pw-feat-ico{font-size:19px}
+.onb-info-ico{font-size:19px}
 /* ── SHKALLA ME SEGMENTE (kontrolli ditor) ─
    Humori, energjia dhe dhimbja zgjidhen si 1 deri 5. */
 .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.scale-b{all:unset;cursor:pointer;text-align:center;padding:11px 2px 9px;border-radius:12px;border:1.5px solid var(--bdr2);background:var(--card);font-family:inherit;transition:border-color .15s,background .15s,color .15s;box-sizing:border-box}
-.scale-b:hover{border-color:var(--bdr3)}
-.scale-n{font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--t2);line-height:1}
-.scale-t{font-size:9.5px;font-weight:600;letter-spacing:.5px;text-transform:none;color:var(--t3);margin-top:5px;line-height:1.2}
-.scale-b.on{border-color:var(--sig-train);background:color-mix(in srgb,var(--sig-train) 10%,transparent)}
-.scale-b.on .scale-n{color:var(--sig-train)}
-.scale-b.on .scale-t{color:var(--t2)}
+
 /* ── ETIKETAT PRO ──────────────────────────*/
-.sb-pro-ico{font-size:17px;display:grid;place-items:center}
+
 .badge{font-family:var(--font-body)}
-.tb-pro-pill{display:inline-flex;align-items:center;gap:5px}
+
 .streak-pill{display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums}
 /* Seria prej zero ditësh mbetet neutrale; ngjyra ndizet vetëm kur ka një seri për të mbrojtur. */
 .badge.bn{background:var(--surface-2);color:var(--t3);border:1px solid var(--bdr2)}
@@ -961,23 +796,23 @@ body.dark .ring-arc{filter:drop-shadow(0 0 6px var(--ring-hue,var(--sig-train)))
 .streak-pill .ic{font-size:12px}
 /* ── ANIMACIONET ───────────────────────────*/
 @keyframes bandIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.band,.pair-cell{animation:bandIn .5s cubic-bezier(.16,1,.3,1) both}
+.band{animation:bandIn .5s cubic-bezier(.16,1,.3,1) both}
 .band+.band{animation-delay:.06s}
-.pair-cell:nth-child(2){animation-delay:.05s}
+
 @media (prefers-reduced-motion:reduce){
-  .band,.pair-cell{animation:none}
-  .ring-arc,.meter-fill{transition:none}
+  .band{animation:none}
+  .meter-fill{transition:none}
 }
 /* ── IKONAT BRENDA BUTONAVE ────────────────
    .ic është display:block, prandaj çdo buton me ikonë bëhet rresht flex,
    përndryshe ikona bie në rresht më vete. */
-.btn,.btn-o,.btn-g,.chat-chip,.empty-cta,.wc-cta,.obp-cta,.pw-cta,.opt-item,.musc-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn,.btn-o,.btn-g,.empty-cta,.wc-cta,.opt-item,.musc-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px}
 /* .btn ka width:100%; .btnsm duhet të mbetet auto, mos e vendos këtu. */
 .btn-g{gap:6px}
-.chat-chip{gap:6px}
+
 .opt-item{justify-content:flex-start}
 .musc-pill{flex-direction:column;gap:7px}
-.pw-trust span,.obp-trust > span{display:inline-flex;align-items:center;gap:5px}
+
 .sib>.ic{font-size:inherit}
 /* ── SHKALLA E KONTROLLIT DITOR ────────────
    Butoni mbetet një element i vetëm (klikimi lexon e.target), prandaj
@@ -1007,26 +842,18 @@ body.dark .spl-ring-a{filter:drop-shadow(0 0 7px var(--sig-train))}
 @media(min-width:1240px){.panel{max-width:1020px}}
 /* ── SIPËRFAQET PRO ────────────────────────
    Karta Pro në menunë anësore dhe faqja e abonimit. */
-.sb-pro::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,var(--sig-fuel-pure),transparent 78%)}
-.sb-pro-t{font-family:var(--font-display);font-weight:600;letter-spacing:.8px;text-transform:none}
-.pw-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,transparent,var(--sig-fuel-pure),transparent)}
-.pw-hero-badge{font-family:var(--font-display);font-weight:600}
-.pw-hero-sub{color:rgba(255,255,255,.74)}
-.obp-title span,.pw-hero-title span{color:var(--sig-fuel-pure)}
+
 /* ── PLLAKAT E OPSIONEVE ───────────────────
    Vendi i ikonës merr një buzë në temën e errët. */
 body.dark .opt-ico{background:var(--card2)}
 /* ── ETIKETAT ──────────────────────────────*/
 /* Vlerat si "3h 12m" duhet të hyjnë në 360px: mbahen në një rresht dhe
    fonti zvogëlohet në vend që teksti të thyhet. */
-.readout-v{white-space:nowrap;font-size:clamp(17px,4.6vw,22px)}
-.readout-i{padding-right:6px}
-.readout-i+.readout-i{padding-left:9px}
-@media(min-width:820px){.readout-v{font-size:22px}.readout-i+.readout-i{padding-left:14px}}
+
 @media(max-width:360px){
   .fuel-grid{gap:14px}
-  .ring-lg{width:94px!important;height:94px!important}
-  .ring-lg .ring-v{font-size:25px}
+  
+  
   .band{padding:18px}
 }
 /* ═══════════════════════════════════════════════════════════════
@@ -1036,12 +863,10 @@ body.dark .opt-ico{background:var(--card2)}
    Ngjyrat vetë përcaktohen në shtresën IRON në fund të skedarit.
    ═══════════════════════════════════════════════════════════════ */
 /* Në temën e errët kartat dallohen nga toni i tyre, jo nga hija. */
-body.dark .card,body.dark .band,body.dark .pair-cell,body.dark .exi,body.dark .mc{background:var(--card);box-shadow:none}
+body.dark .card,body.dark .band,body.dark .exi,body.dark .mc{background:var(--card);box-shadow:none}
 body.dark .acard,body.dark .msheet{box-shadow:0 -20px 60px rgba(0,0,0,.7)}
 /* Çdo element i mbushur me ngjyrën e theksit merr tekst me ngjyrën --accent-ink. */
-.btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.obp-badge,
-.msg.u,.chat-send,.pill.on,.setdone.on,.gs-row.done .gs-check,
-.wkday-dot.today.done,.cal-cell.tr-3,.sb-avatar,.avatar.on,.pw-tl-dot.now{color:var(--accent-ink)}
+.btn,.wc-cta,.empty-cta,.tip-card .tip-ok,.msg.u,.pill.on,.setdone.on,.gs-row.done .gs-check,.wkday-dot.today.done,.cal-cell.tr-3,.sb-avatar,.avatar.on{color:var(--accent-ink)}
 body.dark .btn:disabled{background:var(--surface-2);color:var(--t3)}
 .acc-pick.on::after{color:var(--accent-ink);text-shadow:none}
 /* Gjendja dytësore përdor gri të butë, që theksi të mos konkurrojë me veten. */
@@ -1057,7 +882,7 @@ body.dark .badge.bg{background:var(--adim);color:var(--accent);border:1px solid 
 body.dark .tog-track{background:var(--t4)}
 body.dark .tog-sw input:checked~.tog-track::after{background:var(--accent-ink)}
 /* Pa shkëlqim rreth elementeve të theksuara. */
-body.dark .tr-vol-unit{text-shadow:none;color:var(--accent)}
+
 body.dark .chip.live{box-shadow:none;border-color:rgba(204,255,0,.38)}
 body.dark .coach-mark{box-shadow:none}
 body.dark .meter-fill{box-shadow:0 0 8px var(--meter-hue,var(--accent))}
@@ -1070,13 +895,12 @@ button:not([disabled]){transition:background .14s,border-color .14s,color .14s,b
 button:not([disabled]):active{transform:translateY(1px)}
 /* ── TEKSTI I BUTONAVE ─────────────────────
    Shkronja normale (jo kapitale), si është shkruar në HTML. */
-.btn,.btnsm,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.btn-o,.qa-btn .qa-lbl,
-.onb-cta .btn,.onb-cta .btn-o,.mm-mode-btn,.pill,.gpill{font-family:var(--font-body);font-weight:600;text-transform:none;letter-spacing:0}
-.btn,.wc-cta,.obp-cta,.pw-cta{letter-spacing:-.01em}
+.btn,.btnsm,.wc-cta,.empty-cta,.btn-o,.qa-btn .qa-lbl,.onb-cta .btn,.onb-cta .btn-o,.mm-mode-btn,.pill,.gpill{font-family:var(--font-body);font-weight:600;text-transform:none;letter-spacing:0}
+.btn,.wc-cta{letter-spacing:-.01em}
 /* ── BUTONI KRYESOR ────────────────────────
    Mbushje me ngjyrën e theksit; kur shtypet ulet 1px. */
-.btn,.wc-cta,.obp-cta,.pw-cta{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);border:none;font-size:14.5px;padding:14px 20px;box-shadow:none;text-shadow:none}
-.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover{background:var(--accent-d)}
+.btn,.wc-cta{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);border:none;font-size:14.5px;padding:14px 20px;box-shadow:none;text-shadow:none}
+.btn:hover,.wc-cta:hover{background:var(--accent-d)}
 .btn:disabled{box-shadow:none;transform:none;opacity:1}
 .btnsm{border-radius:var(--r-btn)}
 .empty-cta{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);box-shadow:none}
@@ -1098,16 +922,13 @@ button:not([disabled]):active{transform:translateY(1px)}
 .qa-btn:active{transform:translateY(1px)}
 .qa-ico{border-radius:var(--r-chip)}
 /* ── ÇIPAT, PILLS, ETIKETAT ────────────────*/
-.pill,.gpill,.chat-chip,.badge,.chip,.tag,.mm-mode-btn,.mm-chip,.onb-multi-chip,
-.obp-badge,.pw-plan-badge,.pw-hero-badge,.hm-c0,.hm-c1,.hm-c2,.hm-c3,.hm-cell,
-.rest-preset,.scale-b,.obp-plan,.pw-plan,.opt-item,.tip-card,.tip-card .tip-ok{border-radius:var(--r-chip)}
-.pill,.gpill,.chat-chip,.rest-preset{border-radius:var(--r-btn)}
+.pill,.gpill,.badge,.chip,.tag,.mm-mode-btn,.mm-chip,.onb-multi-chip,.hm-c0,.hm-c1,.hm-c2,.hm-c3,.hm-cell,.rest-preset,.opt-item,.tip-card,.tip-card .tip-ok{border-radius:var(--r-chip)}
+.pill,.gpill,.rest-preset{border-radius:var(--r-btn)}
 .pill,.gpill,.mm-mode-btn{font-size:13px}
 .pill.on,.gpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.chat-chip:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
 /* ── KONTROLLET E BISEDËS ──────────────────*/
-.chat-send{border-radius:var(--r-btn);background:var(--accent);color:var(--accent-ink);box-shadow:none}
-.chat-send:hover{background:var(--accent-d)}
+
 .chat-mic{border-radius:var(--r-btn);background:transparent;border:1.5px solid var(--bdr2)}
 .chat-mic:hover{background:var(--surface-2);border-color:var(--t)}
 .chat-in{border-radius:var(--r-btn)}
@@ -1115,19 +936,14 @@ button:not([disabled]):active{transform:translateY(1px)}
 .msg.u{border-bottom-right-radius:var(--r-chip)}
 /* ── KONTEJNERËT ───────────────────────────
    Kartat marrin të njëjtin radius si butonat; rrathët mbeten rrathë. */
-.card,.card2,.band,.pair-cell,.exi,.mc,.msheet,.acard,.onb-info,.wc,
-.sib,.act-ico,.qa-ico,.coach-mark,.empty-ico,.opt-ico,.onb-feat-ico,
-.obp-tile,.pw-feat-ico,.f input,.f select,.f textarea,.si{border-radius:var(--r-sm)}
+.card,.card2,.band,.exi,.mc,.msheet,.acard,.onb-info,.wc,.sib,.act-ico,.qa-ico,.coach-mark,.empty-ico,.opt-ico,.onb-feat-ico,.f input,.f select,.f textarea,.si{border-radius:var(--r-sm)}
 .card,.band{border-radius:var(--r)}
-.avatar,.sb-avatar,.acc-pick,.tog-track,.tog-track::after,.seclabel-dot,
-.mm-leg-dot,.obp-radio,.pw-plan-radio,.ring,.ring svg{border-radius:50%}
+.avatar,.sb-avatar,.acc-pick,.tog-track,.tog-track::after,.mm-leg-dot,.ring,.ring svg{border-radius:50%}
 /* Shiritat e progresit */
-.pbar,.pfill,.meter,.meter-fill,.onb-prog,.onb-prog-fill,.spl-prog,.spl-prog-fill,
-.nb-seg,.hm-cell{border-radius:1px}
-.ring-arc,.ring-track{stroke-linecap:butt}
+.pbar,.meter,.meter-fill,.onb-prog,.onb-prog-fill,.spl-prog,.spl-prog-fill,.hm-cell{border-radius:1px}
+.ring-track{stroke-linecap:butt}
 /* ── FUSHAT E FORMULARËVE ──────────────────*/
-.f input,.f select,.f textarea,.si,input[type="text"],input[type="number"],
-input[type="email"],input[type="password"],textarea{border-radius:var(--r-btn)}
+.f input,.f select,.f textarea,.si,input[type="text"],input[type="number"],input[type="email"],input[type="password"],textarea{border-radius:var(--r-btn)}
 .f input:focus,.f select:focus,.si:focus,.chat-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--adim)}
 body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{background:var(--bg2);border:1.5px solid var(--bdr2);color:var(--t)}
 /* ── FOKUSI ────────────────────────────────*/
@@ -1163,7 +979,7 @@ body.dark .f input,body.dark .f select,body.dark .f textarea,body.dark .si{backg
 .onb-hero span{color:var(--accent)}
 .onb-sub{color:var(--t2);font-size:15px;line-height:1.5;margin-bottom:30px;font-weight:500;max-width:40ch}
 .onb-eyebrow{display:none}
-.onb-step-n{display:none}
+
 /* ── BLLOQET E ZGJEDHJES ───────────────────
    Opsione të mëdha; i zgjedhuri merr kornizë me ngjyrën e theksit. */
 .opt-list{display:flex;flex-direction:column;gap:8px}
@@ -1254,13 +1070,9 @@ body:not(.dark) .onb-multi-chip.on{background:var(--adim);color:var(--accent-d)}
 .tgt.done .tgt-m{color:var(--t4)}
 /* ── KRONOMETRI I SEANCËS ──────────────────
    Ora që ecën gjatë stërvitjes. Shifra me gjerësi fikse që të mos dridhet. */
-.stopwatch{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px 14px;margin-bottom:16px}
-.sw-meta{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--t3)}
-.sw-live{width:7px;height:7px;background:var(--accent);flex-shrink:0;animation:swPulse 1.6s ease-in-out infinite}
+
 @keyframes swPulse{0%,100%{opacity:1}50%{opacity:.25}}
-.sw-time{font-family:var(--font-display);font-weight:600;font-size:clamp(46px,15vw,66px);line-height:.85;letter-spacing:.5px;color:var(--accent);font-variant-numeric:tabular-nums;text-shadow:var(--glow-train)}
-.sw-finish{align-self:end}
-@media (prefers-reduced-motion:reduce){.sw-live{animation:none}}
+
 /* ── DITARI I STËRVITJES ───────────────────
    Rreshtat e ushtrimeve si ditar: një vijë e hollë për rresht. */
 .exi{border-radius:0;padding:16px 2px;margin-bottom:0}
@@ -1435,66 +1247,18 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
    me çmimin në fund.
    ═══════════════════════════════════════════════════════════════ */
 /* ── LISTA E VEÇORIVE ──────────────────────*/
-.pw-ledger{list-style:none;margin:0 0 24px;padding:0}
-.pw-led{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--bdr)}
-.pw-led:last-child{border-bottom:none}
-.pw-led-n{font-family:var(--font-mono);font-size:11px;letter-spacing:0;color:var(--t4);padding-top:3px}
-.pw-led-b b{display:block;font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:.4px;text-transform:none;color:var(--t);line-height:1.1}
-.pw-led-b em{display:block;font-style:normal;font-size:13px;color:var(--t2);line-height:1.5;margin-top:5px}
-.pw-led-lead{border-left:2px solid var(--accent);padding-left:13px;background:var(--adim);margin-bottom:4px}
-.pw-led-lead .pw-led-n{color:var(--accent)}
-.pw-led-lead .pw-led-b b{font-size:19px;color:var(--accent)}
+
 /* ── PLANET ────────────────────────────────
    Çdo plan është një rresht; i zgjedhuri hapet. */
-.pw-plans{display:flex;flex-direction:column;gap:0;margin-bottom:16px;border:1px solid var(--bdr2)}
-.pw-plan{all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:grid;grid-template-columns:18px 1fr auto;gap:6px 13px;align-items:baseline;width:100%;padding:15px 16px;border-bottom:1px solid var(--bdr2);font-family:inherit;transition:background .16s,padding .18s}
-.pw-plan:last-child{border-bottom:none}
-.pw-plan:hover{background:var(--card2)}
-.pw-mark{width:14px;height:14px;border:1.5px solid var(--t4);align-self:center;transition:background .14s,border-color .14s}
-.pw-p-t{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.4px;text-transform:none;color:var(--t)}
-.pw-p-price{text-align:right;white-space:nowrap}
-.pw-p-price b{font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.3px;color:var(--t);display:block}
-.pw-p-price small{font-family:var(--font-mono);font-size:9.5px;letter-spacing:0;text-transform:none;color:var(--t3);display:block;margin-top:4px}
-.pw-p-extra{display:none;grid-column:2/-1;font-family:var(--font-mono);font-size:11px;letter-spacing:0;color:var(--t2);line-height:1.7}
-.pw-p-extra i{font-style:normal;color:var(--t4);margin:0 6px}
-.pw-p-tag{position:absolute;top:0;right:0;font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;background:var(--accent);color:var(--accent-ink);padding:4px 8px}
-.pw-plan.on{background:var(--adim);padding:20px 16px 18px;box-shadow:inset 2px 0 0 var(--accent)}
-.pw-plan.on .pw-mark{background:var(--accent);border-color:var(--accent)}
-.pw-plan.on .pw-p-t{color:var(--accent)}
-.pw-plan.on .pw-p-price b{font-size:30px;color:var(--t)}
-.pw-plan.on .pw-p-extra{display:block;margin-top:8px}
+
 /* ── FATURA ────────────────────────────────
    Vija të ndërprera dhe shifra me gjerësi fikse. */
-.pw-receipt{border:1px dashed var(--bdr3);padding:15px 16px;margin:16px 0 8px;font-family:var(--font-mono)}
-.pw-r-line{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;font-size:11.5px;letter-spacing:0}
-.pw-r-line span{color:var(--t3);text-transform:none;letter-spacing:0;font-size:10px}
-.pw-r-line b{color:var(--t);font-weight:600;font-variant-numeric:tabular-nums}
-.pw-r-line:first-child b{color:var(--accent);font-size:15px}
-.pw-r-meta b{font-weight:400;color:var(--t2);font-size:11px}
-.pw-r-rule{border-top:1px dashed var(--bdr3);margin:9px 0}
-.pw-r-fine{line-height:1.7;letter-spacing:0}
-.pw-trust,.pw-fineprint{display:none}
+
 /* ── GJURMUESI I PROVËS FALAS ──────────────
    Tri momente të emërtuara përgjatë një vije. */
-.pw-timeline summary{font-family:var(--font-display);font-weight:600;font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--t2);cursor:pointer;padding:13px 0;border-top:1px solid var(--bdr);list-style:none}
-.pw-timeline summary::-webkit-details-marker{display:none}
-.pw-timeline[open] summary{color:var(--accent)}
-.pw-track{padding:6px 0 16px}
-.pw-track-bar{position:relative;height:3px;background:var(--sig-track);margin:16px 6px 20px}
-.pw-track-fill{position:absolute;inset:0 28% 0 0;background:var(--accent)}
-.pw-track-node{position:absolute;top:50%;width:11px;height:11px;margin-top:-5.5px;margin-left:-5.5px;background:var(--bg);border:2px solid var(--t4)}
-.pw-track-node.n0{left:0;background:var(--accent);border-color:var(--accent)}
-.pw-track-node.n1{left:72%;background:var(--accent);border-color:var(--accent)}
-.pw-track-node.n2{left:100%}
-.pw-track-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
-.pw-track-steps li{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--bdr)}
-.pw-track-steps li:last-child{border-bottom:none}
-.pw-track-d{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0;color:var(--accent)}
-.pw-track-steps li:last-child .pw-track-d{color:var(--t3)}
-.pw-track-t{font-size:12.5px;color:var(--t2);line-height:1.5}
+
 /* Oferta Pro gjatë onboarding-ut përdor të njëjtin stil. */
-.obp-trust{display:none}
-.obp-fine{font-family:var(--font-mono);font-size:9.5px;line-height:1.7;color:var(--t4)}
+
 /* ── SHIRITI UJË + GJUMË ───────────────────
    Dy qeliza nën bandat kryesore: vlera, vija e mbushjes, një prekje. */
 .util-cell{all:unset;box-sizing:border-box;cursor:pointer;display:block;transition:background .15s}
@@ -1509,7 +1273,7 @@ body.dark .musc-tag.s{background:var(--surface-2);color:var(--t3);border-color:v
 .util-bar i{display:block;height:100%;transition:width .7s cubic-bezier(.16,1,.3,1)}
 .util-s{display:block;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Numri i volumit të stërvitjes mbetet më i madhi. */
-.band-train .tr-vol .stat-num{font-size:clamp(52px,15vw,72px)}
+
 .band-train .hero-spark{height:76px}
 /* ── GRAFIKËT DERI NË BUZË ─────────────────
    Kanavacat shkojnë deri në skaj të kartës. Kujdes: mos e vendos #hm-grid
@@ -1533,7 +1297,7 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 .fd input::placeholder{color:var(--t4)}
 .fd-u{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3);flex-shrink:0}
 /* Shkrimi i vogël i faturës me kontrast të mjaftueshëm. */
-.pw-r-fine{color:var(--t3);font-size:10px}
+
 /* Etiketat e fushave të onboarding-ut */
 #onb .f>label,#onb .fdata label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:0;text-transform:none;color:var(--t3);font-weight:600}
 /* Elementet e zgjedhura mbajnë mbushjen e tyre në të dyja temat. */
@@ -1575,8 +1339,7 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 #p-settings .sit,#p-settings .tog-row{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--bdr)}
 #p-settings .sit{cursor:pointer;transition:opacity .15s}
 #p-settings .sit:hover{opacity:.72}
-#p-settings .sit:last-child,#p-settings .tog-row:last-child,
-#p-settings .tog-row-last{border-bottom:none}
+#p-settings .sit:last-child,#p-settings .tog-row:last-child,#p-settings .tog-row-last{border-bottom:none}
 .sic{width:19px;height:19px;flex-shrink:0;color:var(--t3);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .sit-t,#p-settings .tog-lbl{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .sit-l{font-size:13.5px;font-weight:600;color:var(--t);letter-spacing:-.01em}
@@ -1590,17 +1353,12 @@ body.dark .wc.on{box-shadow:var(--glow-water)}
 body.dark .set-danger .sit-danger .sit-l{color:var(--red)}
 /* ── FUSHAT (tema) ─────────────────────────*/
 .set-field{padding:12px 0;border-bottom:1px solid var(--bdr)}
-.set-field-last{border-bottom:none;padding-bottom:2px}
+
 .set-field-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
 .set-field-h>span:first-child{font-size:13.5px;font-weight:600;color:var(--t)}
 .set-field-h .tm{font-size:12px}
 /* ── ABONIMI ───────────────────────────────*/
-.set-pro{display:flex;align-items:center;gap:14px;cursor:pointer;border-color:color-mix(in srgb,var(--accent) 34%,transparent);background:var(--adim);transition:border-color .15s}
-.set-pro:hover{border-color:var(--accent)}
-.set-pro-ico{width:22px;height:22px;flex-shrink:0;color:var(--accent);fill:currentColor;stroke:none}
-.set-pro-t{font-size:14px;font-weight:600;color:var(--t);letter-spacing:-.01em}
-.set-pro-s{font-size:12px;color:var(--t2);line-height:1.4}
-.set-pro .sit-x{color:var(--accent)}
+
 /* ── RRETH APLIKACIONIT ────────────────────
    Versioni dhe faqja e internetit; fakte, jo rreshta që preken. */
 .set-meta{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--bdr);font-size:13px}
@@ -1632,55 +1390,37 @@ body:not(.dark) .ty{color:#B45309}
 .eng-title{font-family:var(--font-display);text-transform:none;color:var(--t)}
 .eng-status{display:flex;align-items:center;gap:7px}
 /* Biseda bosh: një rresht udhëzimi që zhduket sapo ka një mesazh. */
-.chat-empty{margin:auto;max-width:34ch;padding:48px 24px;text-align:center;font-family:var(--font-body);font-size:14px;line-height:1.6;color:var(--t3);text-wrap:pretty}
-.chat-empty:not(:only-child){display:none}
-.eng-dot{width:6px;height:6px;flex-shrink:0;background:var(--accent);animation:engPulse 2s ease-in-out infinite}
+
 @keyframes engPulse{0%,100%{opacity:1}50%{opacity:.3}}
 .eng-reset{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;background:transparent;border:1px solid var(--bdr2);cursor:pointer;font-weight:600;letter-spacing:0;text-transform:none;-webkit-appearance:none;transition:border-color .15s,color .15s}
 .eng-reset:hover{border-color:var(--t3);color:var(--t)}
 /* ── KARTA E PËRGJIGJES ────────────────────
    Kornizë e hollë dhe një vijë nën titull. */
-.eng-out{border:1px solid var(--bdr2);background:var(--card);max-width:100%;flex-shrink:0}
-body.dark .eng-out{background:#0F0F12}
-.eng-out-h{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--bdr2);background:var(--surface);font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--t3)}
-body.dark .eng-out-h{background:#141418}
-.eng-out-ico{width:13px;height:13px;flex-shrink:0;color:var(--accent);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.eng-out-ts{margin-left:auto;color:var(--t4);letter-spacing:0}
-.eng-out-b{padding:14px;color:var(--t);white-space:pre-wrap;word-break:break-word;font-variant-numeric:tabular-nums}
+
 /* ── MESAZHI I PËRDORUESIT ─────────────────*/
-.eng-cmd{display:flex;align-items:baseline;flex-shrink:0;padding:2px 2px 2px 0;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--t2);word-break:break-word}
-.eng-cmd-k{color:var(--accent);flex-shrink:0;font-size:11px}
-.eng-cmd-t{min-width:0}
+
 /* ── PYETJET E GATSHME ─────────────────────*/
-.eng-presets{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 10px;flex-shrink:0}
-.eng-presets .chat-chip{position:relative;border-radius:0;border:1px solid var(--bdr3);border-left:2px solid var(--accent);background:transparent;font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;padding:8px 12px;color:var(--t2)}
-.eng-presets .chat-chip:hover{border-color:var(--accent);background:var(--adim);color:var(--accent)}
-.eng-presets .chat-chip:active{transform:translateY(1px)}
-body:not(.dark) .eng-presets .chat-chip:hover{color:var(--accent-d)}
+
 /* ── FUSHA E MESAZHIT ──────────────────────*/
-.chat-row{align-items:stretch;gap:0;border:1px solid var(--bdr2);background:var(--card);padding:0}
-body.dark .chat-row{background:#0F0F12}
-.chat-row:focus-within{border-color:var(--accent)}
-.eng-caret{display:flex;align-items:center;padding:0 2px 0 12px;flex-shrink:0;color:var(--accent);font-size:12px;line-height:1}
+
 #p-ai .chat-in{border:none;border-radius:0;background:transparent;padding:12px 10px;font-size:14px;font-family:var(--font-mono);line-height:1.5;box-shadow:none}
 #p-ai .chat-in:focus{border:none;background:transparent;box-shadow:none}
 /* Teksti ndihmës i fushës është i gjatë: pritet me "…" në vend që të
    thyhet, por mbetet i plotë për lexuesit e ekranit. */
 #p-ai .chat-in{white-space:nowrap;overflow-x:hidden;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
 #p-ai .chat-in::placeholder{color:var(--t4);font-family:var(--font-mono);font-size:11.5px;line-height:1.5;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#p-ai .chat-mic,#p-ai .chat-send{border-radius:0;align-self:stretch;height:auto;width:46px;flex-shrink:0;box-shadow:none;border:none}
+#p-ai .chat-mic{border-radius:0;align-self:stretch;height:auto;width:46px;flex-shrink:0;box-shadow:none;border:none}
 #p-ai .chat-mic{background:transparent;border-left:1px solid var(--bdr2);color:var(--t3)}
 #p-ai .chat-mic:hover{color:var(--t);background:var(--surface)}
-#p-ai .chat-send{background:var(--accent);color:var(--accent-ink)}
-#p-ai .chat-send:hover{background:var(--accent-d)}
+
 /* Karta e konfirmimit të veprimit ka të njëjtën formë. */
-#p-ai .act-card,#p-ai .acard{border-radius:0}
-.eng-out+.eng-out,.eng-cmd+.eng-out,.eng-out+.eng-cmd{margin-top:2px}
+#p-ai .acard{border-radius:0}
+
 @media(max-width:400px){
   .eng-title{font-size:16.5px;letter-spacing:0}
-  .eng-out-b{padding:12px;font-size:12.5px}
+  
 }
-@media (prefers-reduced-motion:reduce){.eng-dot{animation:none}}
+
 /* Lidhja "Kalo në Pro" brenda rreshtit të gjendjes. */
 .eng-status .lnk{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;font-weight:600;padding:0}
 /* ═══════════════════════════════════════════════════════════════
@@ -1706,10 +1446,7 @@ body:not(.dark) .sync-bar{background:var(--surface-2)}
 /* ── TABELAT NË PËRGJIGJET E TRAJNERIT ─────
    Tabelat markdown bëhen tabela të vërteta; një tabelë e gjerë
    skrollohet brenda kutisë së vet. */
-.eng-out-b .eng-txt{white-space:pre-wrap;word-break:break-word}
-.eng-out-b .eng-txt+.eng-grid-wrap,.eng-out-b .eng-txt+.eng-log,
-.eng-out-b .eng-grid-wrap+.eng-txt,.eng-out-b .eng-log+.eng-txt,
-.eng-out-b .eng-grid-wrap+.eng-grid-wrap{margin-top:14px}
+
 .eng-grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 .eng-grid{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 .eng-grid th{padding:8px 10px;text-align:left;white-space:nowrap}
@@ -1776,9 +1513,7 @@ body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
    kartave identike, animacion vetëm kur ndryshon gjendja.
    ═══════════════════════════════════════════════════════════════ */
 /* 1. Titujt dhe etiketat me fontin e tekstit, shkronja normale. */
-.ctitle,.band-kicker,.targets-t,.coach-title,.onb-sect,.bp-l,.empty-h,.opt-title,.opt-row-l,
-.onb-info-t,.onb-feat-t,.tgt-l,.rc-name,.rc-kicker,.eng-title,.musc-tag,.scale-n,.cki-label,
-.split-seg span,.split-k b,.pw-led-b b,.sw-time,.chip,.tlogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em}
+.ctitle,.band-kicker,.targets-t,.coach-title,.onb-sect,.bp-l,.empty-h,.opt-title,.opt-row-l,.onb-info-t,.onb-feat-t,.tgt-l,.rc-name,.rc-kicker,.eng-title,.musc-tag,.cki-label,.split-seg span,.split-k b,.chip,.tlogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em}
 .ctitle,.band-kicker{font-size:16px;font-weight:600;color:var(--t)}
 .ctitle{margin-bottom:14px}
 .targets-t,.opt-title{font-size:16px;font-weight:600}
@@ -1791,24 +1526,18 @@ body:not(.dark) .vdm-row.build .vdm-s{color:var(--accent-d)}
 .tlogo{letter-spacing:-.02em}
 .ptitle,.hero-title{font-family:var(--font-display);font-weight:600;letter-spacing:0;text-transform:none;line-height:1}
 .ptitle.sub{margin:34px 0 14px}
-.readout-l,.meter-l,.ring-u,.util-l,.sync-l,.sync-t,.sec-tag,.sl,.wp-avg-l,.wp-foot-l,.mes-sum-l,
-.mes-mark-lbl,.pair-l,.scale-t,.split-k,.hud-l,.qa-m,.rc-l,.rc-date,.rc-sec,.rc-d-l,.cal-now,.vdm-k,
-.vdm-gh,.vdm-s,.nodata,.fd-u,.fdata label,#onb .f>label,#onb .fdata label,.setrow.sethead>div,
-.mm-group-h,.opt-row-r,.obp-eyebrow,.pw-plan-badge,.pc-meta-l,.bm-side,.onb-eyebrow{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-weight:500}
-.readout-l,.meter-l,.ring-u,.util-l,.sl{font-size:12px;color:var(--t2)}
+.meter-l,.util-l,.sync-l,.sync-t,.sec-tag,.sl,.wp-avg-l,.wp-foot-l,.mes-sum-l,.split-k,.hud-l,.qa-m,.rc-l,.rc-date,.rc-sec,.rc-d-l,.cal-now,.vdm-k,.vdm-gh,.vdm-s,.nodata,.fd-u,.fdata label,#onb .f>label,#onb .fdata label,.setrow.sethead>div,.mm-group-h,.opt-row-r,.pc-meta-l,.bm-side,.onb-eyebrow{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-weight:500}
+.meter-l,.util-l,.sl{font-size:12px;color:var(--t2)}
 .setrow.sethead>div{font-size:11px;color:var(--t3);font-weight:600}
 .opt-row-r{font-size:13px;color:var(--t3)}
 .sec-tag{font-size:11px;font-weight:600}
 .mm-group-h{font-size:13px;font-weight:600;color:var(--t2)}
 /* Skeda e trajnerit: bisedë, jo terminal. */
 .eng-status{letter-spacing:0;text-transform:none}
-.eng-dot{border-radius:50%}
-.chat-chip{font-family:var(--font-body);font-size:13px;font-weight:500;text-transform:none;letter-spacing:0;border-radius:999px;border-width:1px}
+
 #p-ai .chat-in,#p-ai .chat-in::placeholder{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:15px}
-.eng-out{border-radius:var(--r-sm)}
-.eng-out-b{font-family:var(--font-body);font-size:14.5px;line-height:1.55}
-.eng-out-b .eng-grid{font-family:var(--font-mono)}
-.eng-out-h,.eng-reset{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px}
+
+.eng-reset{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:12px}
 /* Progresi i onboarding-ut lexohet si fjali: "Hapi 2 nga 5". */
 .onb-idx{font-family:var(--font-body);font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--t2)}
 .onb-idx i{display:none}
@@ -1822,7 +1551,7 @@ body.dark .band{background:var(--card)}
 /* 3. Kartat me hapësirë të brendshme; përmbajtja nuk prek kurrë skajin e ekranit. */
 .panel>.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:18px 16px 20px;margin:0 0 12px;box-shadow:none}
 .panel>.card>.ctitle,.panel>.card>.fb .ctitle{font-size:17px}
-.panel>.coach-card,.panel>.invite-card,.panel>.card.boxed,.panel>#set-pro-card,.panel>#plan-tweak-banner{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin:0 0 12px}
+.panel>.coach-card,.panel>#plan-tweak-banner{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin:0 0 12px}
 #active-sess{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r);padding:16px;margin:0 0 16px}
 .panel>.card.tc{padding-top:16px}
 /* 4. Animacioni vetëm kur ndryshon gjendja. */
@@ -1852,13 +1581,12 @@ body.dark .band{background:var(--card)}
 /* Rregulla shtesë me përparësi më të lartë. */
 .split-empty{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:13px;font-weight:500}
 .sec-tag{color:var(--t2);border-color:var(--bdr2);background:transparent}
-#p-ai .chat-chip,#p-ai .eng-presets .chat-chip,body.dark #p-ai .chat-chip{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--t);background:var(--surface);border:1px solid var(--bdr2);border-radius:999px;padding:8px 14px;box-shadow:none}
+
 #p-ai .chat-in{padding-left:16px}
 .onb-h,.onb-hero,body.dark .onb-h,body.dark .onb-hero{text-transform:none;line-height:1.05}
 .opt-row.on,body.dark .opt-row.on{border-left:0;box-shadow:none}
 /* Pa shenja terminali para mesazheve. */
-.eng-cmd-k,.eng-caret{display:none}
-.eng-cmd{gap:0}
+
 /* Seritë e ngrohjes dhe superseritë. Numri i serisë është çelësi;
    ngrohja duket si punë ndihmëse, jo si rekord. */
 .setn[role="button"]{cursor:pointer;border-radius:6px;user-select:none}
@@ -1924,21 +1652,20 @@ body.dark .band{background:var(--card)}
    pa pika gjendjeje. */
 .ptitle,.hero-title,html body .hero-title{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:-.02em;text-transform:none;line-height:1.1}
 .ptitle.sub{font-size:20px}
-.stat-num,.tr-vol .stat-num{font-weight:600;letter-spacing:-.03em;font-size:clamp(40px,11vw,52px)}
-.tr-vol-unit{font-weight:600;letter-spacing:0}
+
 .prc-num{font-size:36px;font-weight:600;letter-spacing:-.02em}
-.readout-v,.ring-v,.hud-v,.sw-time,.util-v,.sv{font-weight:600;letter-spacing:-.01em}
+.ring-v,.hud-v,.util-v,.sv{font-weight:600;letter-spacing:-.01em}
 .setn{font-weight:600}
 .onb-h,.onb-hero,body.dark .onb-h,body.dark .onb-hero{font-weight:600;font-size:26px;letter-spacing:-.02em}
 .eng-title{font-weight:600}
 .tlogo{font-weight:600}
 .hud-l,.hud-meta{font-family:var(--font-body)}
 body.dark{--glow-strength:0}
-body.dark .ring-arc,body.dark .spl-ring-a{filter:none}
+body.dark .spl-ring-a{filter:none}
 body.dark .meter-fill,body.dark .coach-mark,body.dark .chip.live{box-shadow:none}
-.hud-v,.tr-vol-unit,.stat-num,.prc-num,.ring-v{text-shadow:none}
-.setdone.on,.nv.on,.btn,.btn:hover,.pday.on,.seclabel-dot,.acc-pick.on{box-shadow:none}
-.eng-dot,.sw-live,.onb-eyebrow-dot{display:none}
+.hud-v,.prc-num,.ring-v{text-shadow:none}
+.setdone.on,.nv.on,.btn,.btn:hover,.pday.on,.acc-pick.on{box-shadow:none}
+.onb-eyebrow-dot{display:none}
 /* Skaneri i barkodit: kamera me raport fiks, rreshti i gjendjes që nuk
    lëviz, dhe fusha për shkrim me dorë gjithmonë në dispozicion. */
 .bc-stage{position:relative;width:100%;aspect-ratio:4/3;max-height:280px;background:#000;overflow:hidden}
@@ -1954,42 +1681,34 @@ body.dark .meter-fill,body.dark .coach-mark,body.dark .chip.live{box-shadow:none
 :root{--glow-train:none;--glow-fuel:none;--glow-water:none;--glow-sleep:none;--glow-strength:0}
 body.dark{--glow-train:none;--glow-fuel:none;--glow-water:none;--glow-sleep:none}
 /* ── Tipografia ───────────────────────────── */
-.ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand,
-.ctitle,.sb-logo,.tlogo,.band-kicker,.eng-title,.next-t,.targets-t,.spl-h,.alogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em;font-weight:600;line-height:1.2}
+.ptitle,.hero-title,.onb-h,.onb-hero,.wc-brand,.ctitle,.sb-logo,.tlogo,.band-kicker,.eng-title,.next-t,.targets-t,.spl-h,.alogo{font-family:var(--font-body);text-transform:none;letter-spacing:-.01em;font-weight:600;line-height:1.2}
 .ptitle{font-size:24px;margin-bottom:16px}
 .hero-title{font-size:26px}
 .wc-brand{font-size:36px;font-weight:600}
 .alogo{font-size:28px}
-.obp-title,.pw-hero-title{font-size:26px;line-height:1.15}
+
 .onb-hero,.onb-h{font-size:24px;line-height:1.2}
 .ctitle,.band-kicker,.next-t,.targets-t{font-size:15px;margin-bottom:12px;color:var(--t)}
 .sb-logo,.tlogo{letter-spacing:-.01em}
 .home-date{letter-spacing:0}
 .home-sub,.tm,.opt-sub,.coach-body,.act-meta{font-weight:400}
-.stat-num,.readout-v,.ring-v,.meter-v,.util-v,.hero-foot-v,.tile-mini .sv,.tr-vol-unit,
-.sv,.wkday-num,.set-v,.pr-v,.targets-n,.rp-h time,.kv td.num,.tbl td.num,.tbl th.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:0;text-shadow:none}
-.readout-l,.meter-l,.ring-u,.util-l,.hero-foot-l,.sync-t,.sync-l,.eng-out-h,.eng-grid th,
-.oauth-divider,.obp-eyebrow,.pro-lock,.seclabel,.act-time,.eng-status{text-transform:none;letter-spacing:0;font-weight:500;color:var(--t2)}
-.seclabel-dot{box-shadow:none;background:var(--t3)}
-.obp-eyebrow{color:var(--t2)}
-.obp-eyedot{display:none}
+.ring-v,.meter-v,.util-v,.sv,.targets-n,.rp-h time,.kv td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:0;text-shadow:none}
+.meter-l,.util-l,.sync-t,.sync-l,.eng-grid th,.oauth-divider,.act-time,.eng-status{text-transform:none;letter-spacing:0;font-weight:500;color:var(--t2)}
+
 /* ── Animacioni: pa hyrje të vonuara ──────── */
-.panel.on,.panel.on .card,.panel.on .sg,.band,.pair-cell,.fu,.eng-out,.rp{animation:none}
-button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:active,.pill:active,
-.qa-btn:active,.opt-item:active,.coach-card:active,.chat-chip:active,.mm-chip:active,.nv:active svg.ico{transform:none}
+.panel.on,.panel.on .card,.panel.on .sg,.band,.fu,.rp{animation:none}
+button:not([disabled]):active,.btn:active,.wc-cta:active,.btn-o:active,.pill:active,.qa-btn:active,.opt-item:active,.coach-card:active,.mm-chip:active,.nv:active svg.ico{transform:none}
 /* ── Sipërfaqet: të sheshta, me kornizë ───── */
-.card,.band,.exi,.mc,.acard,.opt-item,.obp-plan,.tip-card,.eng-out,.hero-card,.coach-card,.next,.targets,.util,
-.plan-card,.wk-card,.ex-card,.sg{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r);box-shadow:none}
-.band::before,.band::after,.sb-pro::before,.sb-pro::after,.pw-hero::before,.pw-hero::after{content:none;display:none}
-body.dark .card,body.dark .band,body.dark .exi,body.dark .mc,body.dark .acard,body.dark .msheet,
-body.dark .opt-item,body.dark .obp-plan,body.dark .eng-out,body.dark .chat-row,body.dark .eng-out-h,body.dark .eng-grid th{background:var(--card);box-shadow:none}
+.card,.band,.exi,.mc,.acard,.opt-item,.tip-card,.coach-card,.next,.targets,.util,.plan-card,.sg{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r);box-shadow:none}
+.band::before,.band::after{content:none;display:none}
+body.dark .card,body.dark .band,body.dark .exi,body.dark .mc,body.dark .acard,body.dark .msheet,body.dark .opt-item,body.dark .eng-grid th{background:var(--card);box-shadow:none}
 body.dark .opt-item:not(.on){background:var(--card)}
-.opt-item.on,.obp-plan.on{border:1px solid var(--accent);background:var(--adim);padding:14px 16px}
-.opt-ico,.qa-ico,.act-ico,.tile-ico,.coach-mark,.sb-pro-ico,.obp-tile{border-radius:var(--r-sm);box-shadow:none}
+.opt-item.on{border:1px solid var(--accent);background:var(--adim);padding:14px 16px}
+.opt-ico,.qa-ico,.act-ico,.coach-mark{border-radius:var(--r-sm);box-shadow:none}
 .coach-mark{background:var(--surface);color:var(--t2);border:1px solid var(--bdr2)}
 @media(min-width:900px){.panel{padding:28px 32px 48px}}
 .chip,.chip.live{border-radius:var(--r-chip);box-shadow:none;font-weight:500}
-.tr-vol-unit{text-shadow:none}
+
 .modal{background:rgba(30,32,28,.55)}
 .msheet{border:1px solid var(--bdr2);box-shadow:none}
 body.dark #toast{box-shadow:none}
@@ -1997,14 +1716,13 @@ body.dark #toast{box-shadow:none}
 .tip-spot{animation:none}
 .tip-card{box-shadow:none}
 /* ── Kontrollet ───────────────────────────── */
-.btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.chat-send,.rp-run{border-radius:var(--r-btn);box-shadow:none;background:var(--accent-fill);color:var(--accent-ink);font-weight:600;letter-spacing:0}
-.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover,.rp-run:hover{background:var(--accent-fill-d)}
+.btn,.wc-cta,.empty-cta,.tip-card .tip-ok,.rp-run{border-radius:var(--r-btn);box-shadow:none;background:var(--accent-fill);color:var(--accent-ink);font-weight:600;letter-spacing:0}
+.btn:hover,.wc-cta:hover,.rp-run:hover{background:var(--accent-fill-d)}
 .btn:disabled{background:var(--surface-2);color:var(--t3)}
-.btn-o,.btn-oauth,.eng-reset,.rp-mic,.btnsm.btn-o{border-radius:var(--r-btn);border:1px solid var(--bdr2);background:var(--card);color:var(--t);box-shadow:none;font-weight:500}
+.btn-o,.btn-oauth,.eng-reset,.btnsm.btn-o{border-radius:var(--r-btn);border:1px solid var(--bdr2);background:var(--card);color:var(--t);box-shadow:none;font-weight:500}
 .btn-o:hover,.btn-oauth:hover,.eng-reset:hover{background:var(--surface);border-color:var(--bdr3)}
 .lnk{color:var(--accent);font-weight:500}
-.pill,.gpill,.badge,.chip,.streak-pill,.bm-chip,.obp-badge,.pw-plan-badge,.tb-pro-pill,.pro-lock,
-.mm-chip,.onb-multi-chip,.rest-preset,.chat-chip,.mm-mode-btn,.atabs,.atab,.wc-link{border-radius:var(--r-chip)}
+.pill,.gpill,.badge,.chip,.streak-pill,.bm-chip,.mm-chip,.onb-multi-chip,.rest-preset,.mm-mode-btn,.atabs,.atab,.wc-link{border-radius:var(--r-chip)}
 .pill,.gpill,.mm-chip,.onb-multi-chip,.rest-preset{border:1px solid var(--bdr2);background:var(--card);color:var(--t2);font-weight:500}
 .pill.on,.gpill.on,.mm-chip.on,.onb-multi-chip.on{background:var(--adim);border-color:var(--accent);color:var(--accent)}
 body:not(.dark) .pill.on,body:not(.dark) .gpill.on,body:not(.dark) .onb-multi-chip.on{color:var(--accent-d)}
@@ -2012,20 +1730,16 @@ body:not(.dark) .pill.on,body:not(.dark) .gpill.on,body:not(.dark) .onb-multi-ch
 .mm-chip.def .mm-chip-dot{background:var(--sig-fuel)}
 .mm-chip.exc .mm-chip-dot{background:var(--t4)}
 .badge{font-weight:500;letter-spacing:0}
-.tb-pro-pill,.obp-badge,.pw-plan-badge,.pro-lock{background:var(--accent-fill);color:var(--accent-ink);box-shadow:none;font-weight:600;letter-spacing:0}
-.pro-soft::after{background:var(--accent)}
-.pw-hero{background:var(--card);color:var(--t);border-bottom:1px solid var(--bdr2);margin:-2px -22px 18px;border-radius:var(--r) var(--r) 0 0}
-.pw-hero-badge{letter-spacing:0}
-.pw-tl-line.a,.pw-tl-line.b{background:var(--bdr3)}
+
 .musc-best-badge{background:var(--sig-fuel);border-radius:var(--r-chip)}
 .ach.on{background:var(--adim);border:1px solid var(--accent)}
 .atab.on{background:var(--card);color:var(--t);box-shadow:none;border:1px solid var(--bdr2)}
 body.dark .atab.on{background:var(--card2)}
 .f label{font-size:13px;font-weight:500;color:var(--t)}
-.f input,.f select,.f textarea,.si,.rp-details{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r-btn);color:var(--t);padding:10px 12px;font-size:16px;font-weight:400;box-shadow:none}
-.f input:focus,.f select:focus,.f textarea:focus,.si:focus,.rp-details:focus{border-color:var(--accent);background:var(--card);box-shadow:0 0 0 3px var(--adim);outline:none}
-body.dark .f input:focus,body.dark .f select:focus,body.dark .si:focus,body.dark .rp-details:focus{background:var(--card)}
-.f input::placeholder,.rp-details::placeholder{color:var(--t3)}
+.f input,.f select,.f textarea,.si{background:var(--card);border:1px solid var(--bdr2);border-radius:var(--r-btn);color:var(--t);padding:10px 12px;font-size:16px;font-weight:400;box-shadow:none}
+.f input:focus,.f select:focus,.f textarea:focus,.si:focus{border-color:var(--accent);background:var(--card);box-shadow:0 0 0 3px var(--adim);outline:none}
+body.dark .f input:focus,body.dark .f select:focus,body.dark .si:focus{background:var(--card)}
+.f input::placeholder{color:var(--t3)}
 :focus-visible{outline-offset:2px}
 .tog-row{border-bottom:1px solid var(--bdr)}
 /* ── Navigimi ─────────────────────────────── */
@@ -2038,19 +1752,19 @@ body:not(.dark) .sb-item.on{color:var(--accent-d)}
 body:not(.dark) .nv.on{color:var(--accent-d)}
 .avatar,.sb-avatar{border-radius:var(--r-sm);background:var(--surface);color:var(--t);border:1px solid var(--bdr2);font-weight:600}
 /* ── Të dhënat: tabela, shirita, lista ────── */
-.tbl,.kv{width:100%;border-collapse:collapse;font-size:14px}
-.tbl th,.kv th{text-align:left;font-weight:500;color:var(--t2);font-size:12.5px;padding:0 0 8px;border-bottom:1px solid var(--bdr2)}
-.tbl td,.kv td{padding:9px 0;border-bottom:1px solid var(--bdr);color:var(--t);vertical-align:middle}
-.tbl tr:last-child td,.kv tr:last-child td{border-bottom:none}
-.tbl td.num,.tbl th.num,.kv td.num{text-align:right;color:var(--t);font-weight:500;white-space:nowrap}
+.kv{width:100%;border-collapse:collapse;font-size:14px}
+.kv th{text-align:left;font-weight:500;color:var(--t2);font-size:12.5px;padding:0 0 8px;border-bottom:1px solid var(--bdr2)}
+.kv td{padding:9px 0;border-bottom:1px solid var(--bdr);color:var(--t);vertical-align:middle}
+.kv tr:last-child td{border-bottom:none}
+.kv td.num{text-align:right;color:var(--t);font-weight:500;white-space:nowrap}
 .kv td.num small,.kv td.num .su{font-family:var(--font-body);color:var(--t3);font-weight:400;font-size:12px;margin-left:3px}
 .kv td:first-child{width:50%}
-.kv-note{font-size:12.5px;color:var(--t3);margin-top:8px}
+
 .band-head{margin-bottom:12px;align-items:center}
 .band-note{font-weight:400;color:var(--t2)}
 .tr-caption{display:none}
 .tr-vol{display:none}
-.readout{display:none}
+
 .fuel-grid{display:block}
 .fuel-bars{gap:14px}
 .meter-head{margin-bottom:6px}
@@ -2091,7 +1805,7 @@ body:not(.dark) .nv.on{color:var(--accent-d)}
 @media (prefers-reduced-motion:reduce){.sync-bar::after,.skel,.exdemo-skel{animation:none}}
 .plan-why{border-left:none;padding-left:0;padding-top:8px}
 .ring-track{stroke:var(--sig-track)}
-.ring-arc{filter:none}
+
 .sring-track{stroke:var(--sig-track)}
 .ach-grid .ach{border-radius:var(--r);border:1px solid var(--bdr2)}
 .cal-cell,.wkday-dot,.mm-chip-dot{box-shadow:none}
@@ -2101,22 +1815,14 @@ body:not(.dark) .nv.on{color:var(--accent-d)}
 .eng-head{padding-bottom:14px;margin-bottom:16px;align-items:center}
 .eng-title{letter-spacing:-.01em}
 .eng-status{font-family:var(--font-body);font-size:13px;color:var(--t2);margin-top:3px;font-weight:400}
-.eng-dot{display:none}
+
 .eng-reset{font-family:var(--font-body);font-size:13px}
-.rp-form{border:1px solid var(--bdr2);border-radius:var(--r);background:var(--card);padding:16px;margin-bottom:16px;flex-shrink:0}
-.rp-form .f{margin-bottom:12px}
-.rp-form .f:last-of-type{margin-bottom:0}
-.rp-details{width:100%;display:block;resize:vertical;min-height:72px;max-height:180px;line-height:1.5;font-family:inherit;-webkit-appearance:none}
-.rp-actions{display:flex;align-items:center;gap:8px;margin-top:12px}
+
 .rp-run{width:auto;padding:10px 16px;font-size:14px;border:none;cursor:pointer;font-family:inherit;-webkit-appearance:none;display:inline-flex;align-items:center;gap:8px}
 .rp-run:disabled{background:var(--surface-2);color:var(--t3);cursor:default}
-.rp-mic{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);-webkit-appearance:none;flex-shrink:0;padding:0}
-.rp-mic:hover{color:var(--t);background:var(--surface)}
-.rp-mic.on{background:var(--red);border-color:var(--red);color:#FFFFFF;animation:none}
-.rp-hint{font-size:12.5px;color:var(--t3);margin-left:auto}
+
 .chat-msgs{gap:12px;padding:0 0 12px}
-.rp-empty{margin:0;padding:28px 16px;text-align:center;font-size:14px;line-height:1.6}
-.rp-empty:not(:only-child){display:none}
+
 .rp{border:1px solid var(--bdr2);border-radius:var(--r);background:var(--card);flex-shrink:0;max-width:100%}
 .rp-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 14px;font-size:14px;font-weight:600;color:var(--t)}
 body.dark .rp-h{background:var(--card2)}
@@ -2128,8 +1834,7 @@ body.dark .rp-h{background:var(--card2)}
 .rp-b code{font-family:var(--font-mono);font-size:13px;color:var(--t2)}
 .rp-b .eng-log{margin:0}
 .rp-b .eng-log li{margin:4px 0}
-.rp-working{display:flex;align-items:center;gap:10px;color:var(--t2);font-size:13.5px}
-.rp-working .sync-bar{flex:0 0 120px}
+
 .eng-grid{font-family:var(--font-body);font-size:13.5px}
 .eng-grid th{letter-spacing:0;text-transform:none}
 .eng-grid td{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
@@ -2147,18 +1852,16 @@ body.dark .rp-h{background:var(--card2)}
 .spl-h{font-size:22px}
 .spl-step{color:var(--t2);font-weight:400}
 /* ── Peshat e tekstit në mirëseardhje / Pro ─ */
-.wc-tag,.asub,.obp-feat-b,.obp-plan-b,.obp-fine,.obp-trust{font-weight:400}
+.wc-tag,.asub{font-weight:400}
 .wc-foot{font-weight:400}
 .wc-link{font-weight:500;color:var(--accent)}
-.obp-feat-t,.obp-plan-t{font-weight:500}
-.obp-plan-v{font-family:var(--font-mono);font-weight:600}
-.obp-radio{border-radius:50%}
+
 .rp-b .eng-log{list-style:disc;padding-left:20px}
 .rp-b .eng-log li{padding-left:0}
 .rp-b .eng-log li::before{content:none}
 .rp-b .eng-log li::marker{color:var(--t3)}
 /* Elementet e zgjedhura mbushen me ngjyrën e theksit. */
-.pill.on,.gpill.on,.setdone.on,.wkday-dot.today.done,.cal-cell.tr-3,.pw-tl-dot.now{background:var(--accent-fill);border-color:var(--accent-fill);color:#FFFFFF}
+.pill.on,.gpill.on,.setdone.on,.wkday-dot.today.done,.cal-cell.tr-3{background:var(--accent-fill);border-color:var(--accent-fill);color:#FFFFFF}
 /* ── Trajneri: biseda ─────────────────────── */
 .cv-empty{margin:auto 0;padding:8px 0 16px}
 .cv-empty-t{margin:0 0 14px;line-height:1.6;max-width:46ch}
@@ -2210,38 +1913,33 @@ html.dark{background:#1F1E22}
 body.dark{--ground:#1F1E22;--surface-i:#29282E;--raised:#34333A;--line:#3D3C44;--line-strong:#8B8994;--ink:#EDEBF1;--ink-2:#B4B1BC;--ink-3:#A19EA8;--accent:#A9ABE3;--accent-d:#9A9CD6;--accent-fg:#1F1E22;--accent-dim:#3A3A55;--accent-rgb:169,171,227;--training:#A7B86C;--fuel:#DC8A55;--water:#5DB5B8;--sleep:#CDB68E;--danger:#F08A80;--fuel-tint:#3E2A1E;--training-tint:#2E321F;--water-tint:#1E3334;--sleep-tint:#3A3222}
 body{background:var(--ground);color:var(--ink);font-family:var(--font-body);font-feature-settings:"tnum"}
 /* ── Numrat: Archivo 88%, shifra me gjerësi fikse, të trasha ── */
-.stat-num,.readout-v,.ring-v,.meter-v,.util-v,.hero-foot-v,.tile-mini .sv,.tr-vol-unit,
-.sv,.wkday-num,.set-v,.pr-v,.targets-n,.kv td.num,.tbl td.num,.tbl th.num,
-.sw-time,.hud-v,.next-name,.prc-num,.obp-plan-v,.eng-grid td,.si,.rest-time,.rest-big,.bm-v,.cal-day-n{font-family:var(--font-figure);font-stretch:var(--figure-stretch);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:0}
-.kv td.num,.tbl td.num{font-size:17px}
+.ring-v,.meter-v,.util-v,.sv,.targets-n,.kv td.num,.hud-v,.next-name,.prc-num,.eng-grid td,.si,.rest-time{font-family:var(--font-figure);font-stretch:var(--figure-stretch);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:0}
+.kv td.num{font-size:17px}
 .kv td.num small,.kv td.num .su,.util-v .su,.hud-v small{font-family:var(--font-body);font-stretch:100%;font-weight:500;color:var(--ink-3)}
 .util-v{font-size:30px;line-height:1}
 .sv{font-size:30px}
-.tr-vol .stat-num{font-weight:700;letter-spacing:-.02em}
-.sw-time,.rest-time{font-size:36px;font-weight:700;letter-spacing:-.02em;line-height:1}
+
+.rest-time{font-size:36px;font-weight:700;letter-spacing:-.02em;line-height:1}
 .next-name{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1}
 .next-body b,.next-body strong{font-family:var(--font-figure);font-stretch:var(--figure-stretch);font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
 /* ── Tipografia: titujt të trashë, etiketat 13px/600 ── */
-.ptitle,.hero-title,.onb-h,.onb-hero,.obp-title,.pw-hero-title,.wc-brand,.alogo,.eng-title,.spl-h{font-family:var(--font-body);font-weight:700;letter-spacing:-.02em;line-height:32px}
+.ptitle,.hero-title,.onb-h,.onb-hero,.wc-brand,.alogo,.eng-title,.spl-h{font-family:var(--font-body);font-weight:700;letter-spacing:-.02em;line-height:32px}
 .ptitle,.hero-title{font-size:28px;margin-bottom:14px}
 .hero-title{margin-bottom:4px}
 .home-head{padding:0 0 16px}
 .home-head .hero-title{margin:2px 0 4px}
 .home-date{font-size:13px;font-weight:500;color:var(--ink-3)}
 .home-sub{font-size:14px;color:var(--ink-2)}
-.ctitle,.band-kicker,.next-t,.targets-t,.f label,.meter-l,.util-l,.readout-l,.seclabel,.tgt-l{font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:0;text-transform:none}
+.ctitle,.band-kicker,.next-t,.targets-t,.f label,.meter-l,.util-l,.tgt-l{font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:0;text-transform:none}
 .ctitle,.band-kicker,.next-t{margin-bottom:10px}
-.band-note,.util-s,.kv-note,.meter-note,.act-time,.rp-h time{font-size:12px;color:var(--ink-3)}
+.band-note,.util-s,.meter-note,.act-time,.rp-h time{font-size:12px;color:var(--ink-3)}
 .meter-v{font-size:13px;font-family:var(--font-body);font-stretch:100%;font-weight:500;color:var(--ink-3)}
 .sb-logo,.tlogo{font-weight:700;font-size:17px}
 .sb-logo span,.tlogo span,.wc-brand span,.alogo span{color:var(--accent)}
 b,strong{font-weight:600}
 /* ── Sipërfaqet: kartat me --surface, radius 16px, kornizë 1px --line ── */
-.card,.band,.exi,.mc,.acard,.opt-item,.obp-plan,.tip-card,.eng-out,.hero-card,.coach-card,.next,.targets,.util,
-.plan-card,.wk-card,.ex-card,.sg,.rp,.rp-form,.cv-starter,.cm.a,.qa-btn,.rest-preset,.ach-grid .ach,.sb-pro,.pw-hero,.msheet{background:var(--surface-i);border:1px solid var(--line);border-radius:var(--r);box-shadow:none}
-body.dark .card,body.dark .band,body.dark .exi,body.dark .mc,body.dark .acard,body.dark .msheet,
-body.dark .opt-item,body.dark .obp-plan,body.dark .eng-out,body.dark .chat-row,body.dark .rp-h,body.dark .eng-grid th,
-body.dark .opt-item:not(.on),body.dark .atab.on,body.dark .btn-oauth{background:var(--surface-i);box-shadow:none}
+.card,.band,.exi,.mc,.acard,.opt-item,.tip-card,.coach-card,.next,.targets,.util,.plan-card,.sg,.rp,.cv-starter,.cm.a,.qa-btn,.rest-preset,.ach-grid .ach,.msheet{background:var(--surface-i);border:1px solid var(--line);border-radius:var(--r);box-shadow:none}
+body.dark .card,body.dark .band,body.dark .exi,body.dark .mc,body.dark .acard,body.dark .msheet,body.dark .opt-item,body.dark .rp-h,body.dark .eng-grid th,body.dark .opt-item:not(.on),body.dark .atab.on,body.dark .btn-oauth{background:var(--surface-i);box-shadow:none}
 .card{padding:16px;margin-bottom:12px}
 .band{padding:16px;margin-bottom:12px}
 .next{padding:16px;margin-bottom:12px}
@@ -2252,11 +1950,10 @@ body.dark .opt-item:not(.on),body.dark .atab.on,body.dark .btn-oauth{background:
 .msheet{border-radius:var(--r) var(--r) 0 0;border-bottom:none}
 .mhandle{background:var(--line-strong)}
 .modal,.tip-overlay{background:rgba(31,30,34,.6)}
-.opt-item.on,.obp-plan.on,.ach.on,.rest-preset.on{border:2px solid var(--accent);background:var(--surface-i)}
+.opt-item.on,.ach.on,.rest-preset.on{border:2px solid var(--accent);background:var(--surface-i)}
 .opt-item.on{padding:13px 15px}
-.obp-plan.on{padding:15px 17px}
-.obp-radio{background:var(--raised);border-color:var(--line-strong)}
-.opt-ico,.qa-ico,.act-ico,.tile-ico,.coach-mark,.sb-pro-ico,.obp-tile,.avatar,.sb-avatar{border-radius:var(--r-sm)}
+
+.opt-ico,.qa-ico,.act-ico,.coach-mark,.avatar,.sb-avatar{border-radius:var(--r-sm)}
 .coach-mark,.act-ico{background:var(--raised);color:var(--ink-2);border:1px solid var(--line)}
 .util{gap:12px;border:none;background:transparent;border-radius:0;overflow:visible}
 .util-cell{background:var(--surface-i);border:1px solid var(--line);border-radius:var(--r);padding:14px}
@@ -2273,7 +1970,7 @@ body.dark .opt-item:not(.on),body.dark .atab.on,body.dark .btn-oauth{background:
 .util-cell:first-child .util-s{color:var(--water)}
 .util-cell:last-child .util-s{color:var(--sleep)}
 .hero-spark{margin:4px 0 12px}
-.kv td,.tbl td{padding:12px 0;border-bottom:1px solid var(--line)}
+.kv td{padding:12px 0;border-bottom:1px solid var(--line)}
 .kv td:first-child{color:var(--ink-2);font-weight:500}
 .tgt{padding:12px 0;border-bottom:1px solid var(--line)}
 .tgt-box{border-radius:6px;border:1px solid var(--line-strong)}
@@ -2286,31 +1983,30 @@ body.dark #toast{background:var(--ink);color:var(--ground)}
 .tip-card{border-radius:var(--r);border:1px solid var(--line)}
 .tip-spot{border-radius:var(--r);box-shadow:0 0 0 9999px rgba(31,30,34,.6),0 0 0 2px var(--accent)}
 .skel,.exdemo-skel{background:var(--raised)}
-.rp-empty{border:1px dashed var(--line-strong);border-radius:var(--r);color:var(--ink-3)}
+
 .bp{border:1px dashed var(--line-strong);border-radius:var(--r-btn)}
 .cal-cell{border-radius:var(--r-sm);background:var(--raised);color:var(--ink-3)}
 .wkday-dot{border-radius:var(--r-sm);background:var(--raised)}
 .wkday-dot.done{background:var(--training-tint);color:var(--training)}
 .wkday-dot.today{box-shadow:inset 0 0 0 2px var(--accent)}
-.wkday-dot.today.done,.cal-cell.tr-3,.pw-tl-dot.now{background:var(--accent);color:var(--accent-fg);box-shadow:none}
+.wkday-dot.today.done,.cal-cell.tr-3{background:var(--accent);color:var(--accent-fg);box-shadow:none}
 /* ── Kontrollet: butonat, fushat, çipat ── */
-.btn,.wc-cta,.obp-cta,.pw-cta,.empty-cta,.tip-card .tip-ok,.chat-send,.rp-run,.cv-send{border-radius:var(--r-btn);box-shadow:none;background:var(--accent);color:var(--accent-fg);font-weight:700;letter-spacing:0;border:none}
-.btn:hover,.wc-cta:hover,.obp-cta:hover,.pw-cta:hover,.rp-run:hover,.cv-send:hover,.empty-cta:hover{background:var(--accent-d);color:var(--accent-fg)}
-body.dark .btn,body.dark .wc-cta,body.dark .obp-cta,body.dark .pw-cta,body.dark .rp-run{color:var(--accent-fg)}
+.btn,.wc-cta,.empty-cta,.tip-card .tip-ok,.rp-run,.cv-send{border-radius:var(--r-btn);box-shadow:none;background:var(--accent);color:var(--accent-fg);font-weight:700;letter-spacing:0;border:none}
+.btn:hover,.wc-cta:hover,.rp-run:hover,.cv-send:hover,.empty-cta:hover{background:var(--accent-d);color:var(--accent-fg)}
+body.dark .btn,body.dark .wc-cta,body.dark .rp-run{color:var(--accent-fg)}
 .btn{min-height:52px;padding:14px 18px;font-size:16px}
 .btnsm{min-height:44px;padding:10px 16px;font-size:14px}
-.wc-cta,.obp-cta{height:52px;font-size:16px}
+.wc-cta{height:52px;font-size:16px}
 .empty-cta{min-height:44px;padding:10px 18px;font-size:14px}
 .btn:disabled,.rp-run:disabled,.cv-send:disabled{background:var(--raised);color:var(--line-strong)}
 .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
-.btn-o,.btn-oauth,.eng-reset,.rp-mic,.btnsm.btn-o,.empty-cta.ghost,.cv-mic,.lnk-btn{border-radius:var(--r-btn);border:1px solid var(--line-strong);background:var(--raised);color:var(--ink);box-shadow:none;font-weight:600}
+.btn-o,.btn-oauth,.eng-reset,.btnsm.btn-o,.empty-cta.ghost,.cv-mic{border-radius:var(--r-btn);border:1px solid var(--line-strong);background:var(--raised);color:var(--ink);box-shadow:none;font-weight:600}
 .btn-o{min-height:48px;padding:12px 18px;font-size:15px}
 .btn-o:hover,.btn-oauth:hover,.eng-reset:hover,.empty-cta.ghost:hover{background:var(--line);border-color:var(--line-strong);color:var(--ink)}
 .btn-g{border-radius:var(--r-btn);font-weight:600;color:var(--accent);min-height:44px}
 .btn-g:hover{color:var(--accent);background:var(--accent-dim)}
 .lnk,.wc-link{color:var(--accent);font-weight:600}
-.pill,.gpill,.badge,.chip,.streak-pill,.bm-chip,.obp-badge,.pw-plan-badge,.tb-pro-pill,.pro-lock,
-.mm-chip,.onb-multi-chip,.chat-chip,.mm-mode-btn,.atabs,.atab{border-radius:var(--r-chip)}
+.pill,.gpill,.badge,.chip,.streak-pill,.bm-chip,.mm-chip,.onb-multi-chip,.mm-mode-btn,.atabs,.atab{border-radius:var(--r-chip)}
 .pill,.gpill,.mm-chip,.onb-multi-chip{border:1px solid var(--line);background:var(--surface-i);color:var(--ink-2);font-weight:600;min-height:36px}
 .gpill{min-height:44px}
 .pill.on,.gpill.on,.mm-chip.on,.onb-multi-chip.on,body:not(.dark) .pill.on,body:not(.dark) .gpill.on,body:not(.dark) .onb-multi-chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
@@ -2319,17 +2015,16 @@ body.dark .btn,body.dark .wc-cta,body.dark .obp-cta,body.dark .pw-cta,body.dark 
 .mm-chip.grow{border-color:transparent;background:var(--training-tint);color:var(--training)}
 .mm-chip.def{border-color:transparent;background:var(--fuel-tint);color:var(--fuel)}
 .mm-chip.exc{border-color:var(--line);background:transparent;color:var(--ink-3)}
-.tb-pro-pill,.obp-badge,.pw-plan-badge,.pro-lock,.musc-best-badge{background:var(--accent);color:var(--accent-fg);font-weight:700}
-.pw-hero-badge{background:var(--accent-dim);color:var(--accent)}
+.musc-best-badge{background:var(--accent);color:var(--accent-fg);font-weight:700}
+
 .atabs{background:var(--raised);border:1px solid var(--line-strong);padding:3px}
 .atab{font-weight:600;color:var(--ink-2);min-height:40px}
 .atab.on,body.dark .atab.on{background:var(--accent);color:var(--accent-fg);border:none}
 .f label{margin-bottom:6px}
-.f input,.f select,.f textarea,.si,.rp-details,.cv-in{background:var(--raised);border:1px solid var(--line-strong);border-radius:var(--r-btn);color:var(--ink);padding:12px 14px;min-height:48px;font-size:16px;font-weight:500;box-shadow:none}
+.f input,.f select,.f textarea,.si,.cv-in{background:var(--raised);border:1px solid var(--line-strong);border-radius:var(--r-btn);color:var(--ink);padding:12px 14px;min-height:48px;font-size:16px;font-weight:500;box-shadow:none}
 .si{min-height:56px;font-size:24px;font-weight:600;padding:8px}
-.f input:focus,.f select:focus,.f textarea:focus,.si:focus,.rp-details:focus,.cv-in:focus,
-body.dark .f input:focus,body.dark .f select:focus,body.dark .si:focus,body.dark .rp-details:focus{border-color:var(--accent);background:var(--raised);box-shadow:0 0 0 2px var(--surface-i),0 0 0 4px var(--accent);outline:none}
-.f input::placeholder,.rp-details::placeholder,.cv-in::placeholder{color:var(--ink-3);font-weight:400}
+.f input:focus,.f select:focus,.f textarea:focus,.si:focus,.cv-in:focus,body.dark .f input:focus,body.dark .f select:focus,body.dark .si:focus{border-color:var(--accent);background:var(--raised);box-shadow:0 0 0 2px var(--surface-i),0 0 0 4px var(--accent);outline:none}
+.f input::placeholder,.cv-in::placeholder{color:var(--ink-3);font-weight:400}
 :focus-visible{outline:none;border-radius:var(--r-sm);box-shadow:0 0 0 2px var(--surface-i),0 0 0 4px var(--accent)}
 button:focus-visible,a:focus-visible,[role="button"]:focus-visible{box-shadow:0 0 0 2px var(--surface-i),0 0 0 4px var(--accent)}
 .setdone{border-radius:var(--r-sm);border:1px solid var(--line-strong);background:var(--raised);width:32px;height:32px}
@@ -2342,8 +2037,7 @@ body.dark .rest-preset:not(.on){background:var(--surface-i)}
 .avatar.on,.sb-avatar{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);border-radius:var(--r-chip)}
 .musc-tag.s,body.dark .musc-tag.s{background:var(--raised)}
 /* ── Efekti i shtypjes: zvogëlim 2% për 120ms ── */
-button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:active,.pill:active,
-.qa-btn:active,.opt-item:active,.coach-card:active,.cv-starter:active,.util-cell:active{transform:scale(.98);transition:transform var(--dur-tap) ease-out}
+button:not([disabled]):active,.btn:active,.wc-cta:active,.btn-o:active,.pill:active,.qa-btn:active,.opt-item:active,.coach-card:active,.cv-starter:active,.util-cell:active{transform:scale(.98);transition:transform var(--dur-tap) ease-out}
 .nv:active svg.ico{transform:none}
 .nv:active{opacity:1}
 .meter-fill,.util-bar i{transition:width 240ms ease-in-out}
@@ -2361,8 +2055,7 @@ button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:
 .sb-item:hover{background:var(--raised);color:var(--ink)}
 .sb-item.on,body.dark .sb-item.on{background:var(--accent-dim);color:var(--accent);font-weight:600}
 .sb-div{background:var(--line)}
-.sb-pro{background:var(--surface-i);border:1px solid var(--line);color:var(--ink);border-radius:var(--r)}
-.sb-pro-ico{background:var(--raised);color:var(--accent)}
+
 /* ── Trajneri: biseda ── */
 .eng-head{border-bottom:1px solid var(--line)}
 .eng-title{font-size:20px;line-height:24px}
@@ -2387,13 +2080,13 @@ button:not([disabled]):active,.btn:active,.wc-cta:active,.obp-cta:active,.btn-o:
 .cv-row{border-top:1px solid var(--line)}
 .cv-in{min-height:48px;padding:12px 14px}
 .cv-mic,.cv-send{width:48px;height:48px;border-radius:var(--r-btn)}
-.cv-mic.on,.rp-mic.on{background:var(--danger);border-color:var(--danger);color:#FFFFFF}
+.cv-mic.on{background:var(--danger);border-color:var(--danger);color:#FFFFFF}
 .cm-ty .dots span,.dots span{background:var(--ink-3)}
 .sync-bar{background:var(--line)}
 .sync-bar::after{background:var(--accent);opacity:.7}
 /* ── Grafikët dhe unazat ── */
 .ring-track,.sring-track,.spl-ring-t{stroke:var(--line)}
-.ring-arc{stroke-linecap:round}
+
 .spl-ring-a{stroke:var(--accent)}
 .spl-prog-fill{background:var(--accent)}
 /* ── Kur përdoruesi ka kërkuar më pak animacion ── */
@@ -2408,5 +2101,5 @@ body.dark .pill.on,body.dark .gpill.on,body.dark .mm-chip.on,body.dark .onb-mult
 .opt-item:hover,body:not(.dark) .opt-item:hover{background:var(--surface-i);border-color:var(--line-strong)}
 .opt-item.on,body:not(.dark) .opt-item.on,body.dark .opt-item.on{background:var(--surface-i)}
 .onb-multi-chip.on,body:not(.dark) .onb-multi-chip.on{background:var(--accent);color:var(--accent-fg);border-width:1px;padding:18px 16px}
-body.dark .eng-out,body.dark .eng-out-h,body.dark .chat-row,body.dark .eng-grid th,body.dark .btn-oauth{background:var(--surface-i)}
+body.dark .eng-grid th,body.dark .btn-oauth{background:var(--surface-i)}
 body.dark .btn-oauth{background:var(--raised)}

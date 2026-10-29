@@ -497,12 +497,6 @@ function _toCsv(rows){
   var cols=Object.keys(rows[0]);
   return cols.join(',')+'\n'+rows.map(function(r){return cols.map(function(c){return _csvEscape(r[c]);}).join(',');}).join('\n');
 }
-function _download(name,text){
-  var blob=new Blob([text],{type:'text/csv'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
-  setTimeout(function(){URL.revokeObjectURL(url);},1500);
-}
 /* ── IMPORTI NGA APPLE HEALTH / GOOGLE FIT ── */
 var _impt={source:null,parsed:null};
 
@@ -767,8 +761,7 @@ async function exportData(){
   toast('Bundling your data…');
   var JSZip;
   try{JSZip=await _loadJSZip();}catch(e){
-    toast('ZIP library failed to load — falling back to CSV downloads');
-    return _exportDataLegacy();
+    toast('Could not load the export tool — check your connection and try again');return;
   }
   var zip=new JSZip();
   var stamp=new Date().toISOString().slice(0,10);
@@ -855,25 +848,6 @@ async function exportData(){
   toast('Export ready — '+(Math.round(blob.size/1024))+' KB');
 }
 // Rezervë nëse CDN-ja e JSZip është e bllokuar: një CSV për tabelë.
-async function _exportDataLegacy(){
-  var queries=await Promise.all([
-    sb.from('workouts').select('*').eq('user_id',CU.id),
-    sb.from('exercises').select('*').eq('user_id',CU.id),
-    sb.from('sets').select('*').eq('user_id',CU.id),
-    sb.from('meals').select('*').eq('user_id',CU.id),
-    sb.from('water_logs').select('*').eq('user_id',CU.id),
-    sb.from('sleep_logs').select('*').eq('user_id',CU.id),
-    sb.from('weight_logs').select('*').eq('user_id',CU.id),
-    sb.from('body_measurements').select('*').eq('user_id',CU.id),
-    sb.from('cardio_sessions').select('*').eq('user_id',CU.id),
-    sb.from('daily_checkins').select('*').eq('user_id',CU.id)
-  ]);
-  var names=['workouts','exercises','sets','meals','water_logs','sleep_logs','weight_logs','body_measurements','cardio_sessions','daily_checkins'];
-  var stamp=new Date().toISOString().slice(0,10);
-  var any=false;
-  queries.forEach(function(q,i){if(q.data&&q.data.length){_download('athleteos-'+names[i]+'-'+stamp+'.csv',_toCsv(q.data));any=true;}});
-  toast(any?'Downloads started':'No data yet');
-}
 
 /* ── PRIVATËSIA / KUSHTET ─────────────────── */
 var LEGAL_HTML={
